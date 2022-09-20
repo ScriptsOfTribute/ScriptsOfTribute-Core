@@ -35,5 +35,10 @@ namespace TalesOfTribute
             Type = type;
             Amount = amount;
         }
+
+        public override string ToString()
+        {
+            return String.Format("Effect: {0} {1}", this.Type, this.Amount);
+        }
     }
 }

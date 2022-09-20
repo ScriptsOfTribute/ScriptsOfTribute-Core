@@ -63,6 +63,11 @@ namespace TalesOfTribute
             UpgradeCardID = upgradeCardID;
             Copies = copies;
             CopiesUpgraded = copiesUpgraded;
-        }        
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Card: {0}, Cost: {1}, Type: {2}, Effects: {3}", this.Name, this.Cost, this.Type, String.Join(", ", this.Effects));
+        }
     }
 }
