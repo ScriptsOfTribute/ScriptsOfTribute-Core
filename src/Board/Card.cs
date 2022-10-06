@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TalesOfTribute
-{
+{   
     public enum CardType
     {
         Action,
@@ -18,13 +18,12 @@ namespace TalesOfTribute
     public class Card
     {
         public string Name;
-        public int DeckID;
+        public string? Deck;
         public int InstanceID;
-        public uint Cost;
+        public int Cost;
         public readonly CardType Type;
         public int HP; // >=0 for Agent, -1 for other types
-        public bool Taunt;
-        public List<Effect> Effects;
+        public Effect[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
         public int Hash;
         public int UpgradeCardID;
         public int Copies;
@@ -33,31 +32,29 @@ namespace TalesOfTribute
         public Card()
         {
             Name = "null card";
-            Effects = new List<Effect>();
+            Effects = new Effect[4];
         }
 
-        public Card(string name, int deckID, int instanceID, uint cost, CardType type, int hp, bool taunt, List<Effect> effects, int hash)
+        public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash)
         {
             Name = name;
-            DeckID = deckID;
+            Deck = deck;
             InstanceID = instanceID;
             Cost = cost;
             Type = type;
             HP = hp;
-            Taunt = taunt;
             Effects = effects;
             Hash = hash;
         }
 
-        public Card(string name, int deckID, int instanceID, uint cost, CardType type, int hp, bool taunt, List<Effect> effects, int hash, int upgradeCardID, int copies, int copiesUpgraded)
+        public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int upgradeCardID, int copies, int copiesUpgraded)
         {
             Name = name;
-            DeckID = deckID;
+            Deck = deck;
             InstanceID = instanceID;
             Cost = cost;
             Type = type;
             HP = hp;
-            Taunt = taunt;
             Effects = effects;
             Hash = hash;
             UpgradeCardID = upgradeCardID;
@@ -67,7 +64,9 @@ namespace TalesOfTribute
 
         public override string ToString()
         {
-            return String.Format("Card: {0}, Cost: {1}, Type: {2}, Effects: {3}", this.Name, this.Cost, this.Type, String.Join(", ", this.Effects));
+            return String.Format($"Card: {this.Name}, " +
+                $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}, " +
+                $"Effects: {String.Join(", ", this.Effects.Select(p => p.ToString()).ToArray())}");
         }
     }
 }

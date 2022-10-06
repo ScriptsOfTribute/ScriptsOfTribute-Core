@@ -6,6 +6,7 @@ namespace TalesOfTribute
     {
         static void Main(string[] args)
         {
+            
         }
     }
 }
