@@ -8,6 +8,7 @@ namespace TalesOfTribute
 {
     public class Player
     {
+        public int Id;
         public uint CoinsAmount;
         public uint PrestigeAmount;
         public uint PowerAmount;
@@ -29,8 +30,9 @@ namespace TalesOfTribute
             CooldownPile = new List<Card>();
         }
 
-        public Player(uint coinsAmount, uint prestigeAmount, uint powerAmount, List<Card> hand, List<Card> draw, List<Card> played, List<Card> agents, List<Card> cooldownPile)
+        public Player(int id, uint coinsAmount, uint prestigeAmount, uint powerAmount, List<Card> hand, List<Card> draw, List<Card> played, List<Card> agents, List<Card> cooldownPile)
         {
+            Id = id;
             CoinsAmount = coinsAmount;
             PrestigeAmount = prestigeAmount;
             PowerAmount = powerAmount;
