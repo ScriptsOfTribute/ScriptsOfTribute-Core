@@ -118,7 +118,7 @@ namespace TalesOfTribute
     class  Rajhin: PatronBase
     {
         const int SWIPE = 88;
-        const int BEWILDERMENT = 8778;
+        const int BEWILDERMENT = 77;
 
         public Rajhin(Player player1, Player player2) : base(player1, player2)
         {
@@ -133,7 +133,7 @@ namespace TalesOfTribute
 
             if (player1.CoinsAmount < 3)
             {
-                return false
+                return false;
             }
 
             player1.PowerAmount -= 3;
