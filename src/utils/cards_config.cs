@@ -71,7 +71,8 @@ namespace TalesOfTribute
        ""Activation"":""Acquire 9"",
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":5
     },
     {
        ""id"":5,
@@ -83,7 +84,8 @@ namespace TalesOfTribute
        ""Activation"":""Acquire 9"",
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":5
     },
     {
        ""id"":6,
@@ -95,7 +97,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 7"",
        ""Combo 2"":""Acquire 7"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":7
     },
     {
        ""id"":7,
@@ -107,7 +110,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 6 AND Remove 2"",
        ""Combo 2"":""Acquire 7"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":7
     },
     {
        ""id"":8,
@@ -191,7 +195,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 3 AND Destroy 1"",
        ""Combo 2"":""Draw 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"": 15
     },
     {
        ""id"":15,
@@ -203,7 +208,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 2 AND Destroy 1"",
        ""Combo 2"":""Draw 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":15
     },
     {
        ""id"":16,
@@ -263,7 +269,8 @@ namespace TalesOfTribute
        ""Activation"":""Destroy 1"",
        ""Combo 2"":""Power 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":20
     },
     {
        ""id"":21,
@@ -275,7 +282,8 @@ namespace TalesOfTribute
        ""Activation"":""Destroy 1"",
        ""Combo 2"":""Power 3"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":20
     },
     {
        ""id"":22,
@@ -335,7 +343,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 2"",
        ""Combo 2"":null,
        ""Combo 3"":""Draw 1"",
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"": 36,
     },
     {
        ""id"":27,
@@ -383,7 +392,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 1"",
        ""Combo 2"":""Coin 2 AND Power 2"",
        ""Combo 3"":""Power 2"",
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":35
     },
     {
        ""id"":31,
@@ -443,7 +453,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 1"",
        ""Combo 2"":""Coin 2 AND Power 2"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":35
     },
     {
        ""id"":36,
@@ -455,7 +466,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 1"",
        ""Combo 2"":null,
        ""Combo 3"":""Draw 1"",
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"": 36
     },
     {
        ""id"":37,
@@ -503,7 +515,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 2 OR Return 1"",
        ""Combo 2"":""Coin 2"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":48
     },
     {
        ""id"":41,
@@ -575,9 +588,10 @@ namespace TalesOfTribute
        ""Activation"":""Power 5 OR Acquire 9"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
-    },
-    {
+       ""Combo 4"":null,
+       ""Family"":46,
+   },
+   {
        ""id"":47,
        ""Name"":""Ansei's Victory"",
        ""Deck"":""Ansei"",
@@ -587,7 +601,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 6 OR Acquire 10"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":46,
     },
     {
        ""id"":48,
@@ -599,7 +614,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 2 OR Return 1"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":48
     },
     {
        ""id"":49,
@@ -683,7 +699,8 @@ namespace TalesOfTribute
        ""Activation"":""Toss 4 AND Coin 1"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":58
     },
     {
        ""id"":56,
@@ -719,7 +736,8 @@ namespace TalesOfTribute
        ""Activation"":""Toss 4"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":58
     },
     {
        ""id"":59,
@@ -731,7 +749,8 @@ namespace TalesOfTribute
        ""Activation"":""Toss 4 AND Remove 1"",
        ""Combo 2"":""Power 3"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":60
     },
     {
        ""id"":60,
@@ -743,7 +762,8 @@ namespace TalesOfTribute
        ""Activation"":""Toss 4 AND Remove 1"",
        ""Combo 2"":""Power 2"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":60
     },
     {
        ""id"":61,
@@ -815,7 +835,8 @@ namespace TalesOfTribute
        ""Activation"":""Taunt AND Power 3"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":66
     },
     {
        ""id"":67,
@@ -827,7 +848,8 @@ namespace TalesOfTribute
        ""Activation"":""Taunt AND Power 3"",
        ""Combo 2"":""Heal 2"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":66
     },
     {
        ""id"":68,
@@ -839,7 +861,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 2"",
        ""Combo 2"":""Power 2"",
        ""Combo 3"":""Power 1"",
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":68
     },
     {
        ""id"":69,
@@ -863,7 +886,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 2"",
        ""Combo 2"":""Power 3"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":68
     },
     {
        ""id"":71,
@@ -887,7 +911,8 @@ namespace TalesOfTribute
        ""Activation"":""Taunt AND Coin 1"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":72
     },
     {
        ""id"":73,
@@ -899,7 +924,8 @@ namespace TalesOfTribute
        ""Activation"":""Taunt AND Coin 1"",
        ""Combo 2"":""Power 2"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":72
     },
     {
        ""id"":74,
@@ -935,7 +961,8 @@ namespace TalesOfTribute
        ""Activation"":""Discard 1"",
        ""Combo 2"":""Draw 1"",
        ""Combo 3"":""Discard 1"",
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":76
     },
     {
        ""id"":77,
@@ -959,7 +986,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 5"",
        ""Combo 2"":""KnockOut 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":82,
     },
     {
        ""id"":79,
@@ -1007,7 +1035,8 @@ namespace TalesOfTribute
        ""Activation"":""Coin 4"",
        ""Combo 2"":""KnockOut 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":82
     },
     {
        ""id"":83,
@@ -1031,7 +1060,8 @@ namespace TalesOfTribute
        ""Activation"":""Discard 1"",
        ""Combo 2"":""Draw 1"",
        ""Combo 3"":""Draw 1 Discard 1"",
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":76
     },
     {
        ""id"":85,
@@ -1127,7 +1157,8 @@ namespace TalesOfTribute
        ""Activation"":""Prestige 2"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":92
     },
     {
        ""id"":93,
@@ -1199,7 +1230,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 1"",
        ""Combo 2"":""Remove 2"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":101
     },
     {
        ""id"":99,
@@ -1235,7 +1267,8 @@ namespace TalesOfTribute
        ""Activation"":""Power 1"",
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":101
     },
     {
        ""id"":102,
@@ -1247,7 +1280,8 @@ namespace TalesOfTribute
        ""Activation"":""Prestige 2"",
        ""Combo 2"":""Coin 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":92
     },
     {
        ""id"":103,

@@ -18,25 +18,34 @@ namespace TalesOfTribute
             this.root = doc.RootElement;
         }
 
-        public List<Card> GetCardsByDeck(string[] Decks)
+        public List<Card> GetCardsByDeck(string[] decks)
         {
-            List<Card> collectedCards = new List<Card>();            
             var cardsEnumerator = this.root.EnumerateArray();
 
-            foreach(var card in cardsEnumerator)
-            {
-                string deck = card.GetProperty("Deck").ToString();
-                if (Decks.Contains(deck))
-                {
-                    collectedCards.Add(CreateCard(card));
-                }
-                
-            }
+            var collectedCards =
+                from card in cardsEnumerator
+                    let deck = card.GetProperty("Deck").ToString()
+                    where decks.Contains(deck)
+                    select CreateCard(card);
 
-            return collectedCards;
+            return FilterOutPreUpgradeCards(collectedCards).ToList();
         }
 
-        public Card CreateCard(JsonElement card)
+        // TODO: Add ability for user to configure which card he wants to keep.
+        // For now, we will keep cards after upgrade.
+        private IEnumerable<Card> FilterOutPreUpgradeCards(IEnumerable<Card> cards)
+        {
+            var cardsEnumerable = cards.ToList();
+            var families = cardsEnumerable
+                .Where(card => card.Family >= 0)
+                .Select(card => card.Family)
+                .Distinct();
+            // Pre-upgrade cards have the same ID as the family they are in.
+            return from card in cardsEnumerable
+                where !families.Contains(card.InstanceID) select card;
+        }
+
+        private Card CreateCard(JsonElement card)
         {
             int id = card.GetProperty("id").GetInt32();
             string name = card.GetProperty("Name").ToString();
@@ -45,6 +54,12 @@ namespace TalesOfTribute
             CardType type = ParseCardType(card.GetProperty("Type").ToString());
             int hp = card.GetProperty("HP").GetInt32();
             Effect[] effects = new Effect[4];
+
+            int family = -1;
+            if (card.TryGetProperty("Family", out var familyElement))
+            {
+                family = familyElement.GetInt32();
+            }
 
             string activation = card.GetProperty("Activation").ToString();
             effects[0] = ParseEffect(activation);
@@ -56,16 +71,16 @@ namespace TalesOfTribute
             effects[3] = ParseEffect(combo);
 
 
-            return new Card(name, deck, id, cost, type, hp, effects, -1);
+            return new Card(name, deck, id, cost, type, hp, effects, -1, family);
         }
 
-        private Effect ParseEffect(string EffectToParse)
+        private Effect ParseEffect(string effectToParse)
         {
 
-            if (EffectToParse == "")
+            if (effectToParse == "")
                 return new Effect();
 
-            string[] tokens = EffectToParse.Split(' ');
+            string[] tokens = effectToParse.Split(' ');
             Effect effect = new Effect();
 
             if (tokens.Length == 2)
@@ -86,25 +101,18 @@ namespace TalesOfTribute
             return effect;
         }
 
-        private CardType ParseCardType(string CardTypeToParse)
+        private CardType ParseCardType(string cardTypeToParse)
         {
-            switch (CardTypeToParse)
+            return cardTypeToParse switch
             {
-                case "Action":
-                    return CardType.Action;
-                case "Agent":
-                    return CardType.Agent;
-                case "Contract Action":
-                    return CardType.ContractAction;
-                case "Starter":
-                    return CardType.Starter;
-                case "Contract Agent":
-                    return CardType.ContractAgent;
-                case "Curse":
-                    return CardType.Curse;
-                default:
-                    return CardType.Action;
-            }
+                "Action" => CardType.Action,
+                "Agent" => CardType.Agent,
+                "Contract Action" => CardType.ContractAction,
+                "Starter" => CardType.Starter,
+                "Contract Agent" => CardType.ContractAgent,
+                "Curse" => CardType.Curse,
+                _ => CardType.Action
+            };
         }
     }
 }
