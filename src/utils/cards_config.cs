@@ -596,7 +596,7 @@ namespace TalesOfTribute
        ""Name"":""Ansei's Victory"",
        ""Deck"":""Ansei"",
        ""Cost"":9,
-        ""Type"":""Action"",
+       ""Type"":""Action"",
        ""HP"":-1,
        ""Activation"":""Power 6 OR Acquire 10"",
        ""Combo 2"":null,
