@@ -28,6 +28,7 @@ namespace TalesOfTribute
         public int UpgradeCardID;
         public int Copies;
         public int CopiesUpgraded;
+        public int Family;
 
         public Card()
         {
@@ -35,7 +36,7 @@ namespace TalesOfTribute
             Effects = new Effect[4];
         }
 
-        public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash)
+        public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int family)
         {
             Name = name;
             Deck = deck;
@@ -45,6 +46,7 @@ namespace TalesOfTribute
             HP = hp;
             Effects = effects;
             Hash = hash;
+            Family = family;
         }
 
         public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int upgradeCardID, int copies, int copiesUpgraded)
