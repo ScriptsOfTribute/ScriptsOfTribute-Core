@@ -13,7 +13,7 @@ namespace TalesOfTribute
     public class cards_config
     {
         public const string CARDS_JSON = @"[
-   {
+    {
        ""id"":0,
        ""Name"":""Currency Exchange"",
        ""Deck"":""Hlaalu"",
@@ -23,7 +23,7 @@ namespace TalesOfTribute
        ""Activation"":""Coin 6 AND Remove 2"",
        ""Combo 2"":""Patron 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null,
+       ""Combo 4"":null
     },
     {
        ""id"":1,
