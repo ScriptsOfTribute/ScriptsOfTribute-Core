@@ -12,9 +12,9 @@ namespace TalesOfTribute
     {
         public JsonElement root;
 
-        public Parser()
+        public Parser(string data)
         {
-            JsonDocument doc = JsonDocument.Parse(cards_config.CARDS_JSON);
+            JsonDocument doc = JsonDocument.Parse(data);
             this.root = doc.RootElement;
         }
 
