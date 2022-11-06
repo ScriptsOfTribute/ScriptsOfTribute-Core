@@ -8,48 +8,47 @@ namespace TalesOfTribute
 {
     public class Tavern
     {
-        public List<Card> cards;
-        public Card[] availableCards;
+        public List<Card> Cards;
+        public Card?[] AvailableCards;
 
-        public Tavern(string[] decks)
+        public Tavern(List<Card> cards)
         {
-            Parser parser = new Parser();
-            this.cards = parser.GetCardsByDeck(decks);
-            availableCards = new Card[5];
+            Cards = cards;
+            AvailableCards = new Card[5];
         }
 
         public void DrawCards()
         {
             Random rnd = new Random();
-            this.cards = this.cards.OrderBy(x => rnd.Next(0, cards.Count)).ToList<Card>();
+            this.Cards = this.Cards.OrderBy(x => rnd.Next(0, Cards.Count)).ToList<Card>();
             
-            for(int i = 0; i < this.availableCards.Length; i++)
+            for(int i = 0; i < this.AvailableCards.Length; i++)
             {
-                availableCards.SetValue(this.cards.ElementAt(i), i);
-                this.cards.RemoveAt(i);
+                AvailableCards.SetValue(this.Cards.ElementAt(i), i);
+                this.Cards.RemoveAt(i);
             }
         }
 
         public void ShuffleBack()
         {
-            for (int i = 0; i < this.availableCards.Length; i++)
+            for (int i = 0; i < this.AvailableCards.Length; i++)
             {
-                Card? elem = this.availableCards[i];
+                Card? elem = this.AvailableCards[i];
                 if (elem != null)
                 {
-                    this.cards.Add(elem);
-                    this.availableCards.SetValue(null, i);
+                    this.Cards.Add(elem);
+                    this.AvailableCards.SetValue(null, i);
                 }
             }
         }
 
         public Card? BuyCard(int idx)
         {
-            if (idx >= this.availableCards.Length)
+            if (idx >= this.AvailableCards.Length)
                 return null;
 
-            Card toReturn = this.availableCards[idx];
-            this.availableCards.SetValue(null, idx);
+            Card toReturn = this.AvailableCards[idx];
+            this.AvailableCards.SetValue(null, idx);
 
 
             return toReturn;
