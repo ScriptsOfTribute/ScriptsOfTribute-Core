@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TalesOfTribute
+﻿namespace TalesOfTribute
 {
     /// <summary>
     /// I'm 99% sure I shouldn't do it that way but it's easier to work with this than read JSON file,
@@ -344,7 +338,7 @@ namespace TalesOfTribute
        ""Combo 2"":null,
        ""Combo 3"":""Draw 1"",
        ""Combo 4"":null,
-       ""Family"": 36,
+       ""Family"": 36
     },
     {
        ""id"":27,
@@ -589,7 +583,7 @@ namespace TalesOfTribute
        ""Combo 2"":null,
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":46,
+       ""Family"":46
    },
    {
        ""id"":47,
@@ -602,7 +596,7 @@ namespace TalesOfTribute
        ""Combo 2"":null,
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":46,
+       ""Family"":46
     },
     {
        ""id"":48,
@@ -987,7 +981,7 @@ namespace TalesOfTribute
        ""Combo 2"":""KnockOut 1"",
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":82,
+       ""Family"":82
     },
     {
        ""id"":79,

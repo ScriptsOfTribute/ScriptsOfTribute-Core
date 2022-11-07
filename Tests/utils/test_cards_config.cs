@@ -2,7 +2,7 @@
 
 public class test_cards_config
 {
-   public const string CARDS_JSON_TWO_DECKS = @"[
+    public const string CARDS_JSON_TWO_DECKS = @"[
     {
        ""id"":1,
        ""Name"":""Luxury Exports"",
@@ -41,8 +41,8 @@ public class test_cards_config
        ""Combo 4"":null
     }
 ]";
-   
-   public const string CARDS_JSON_PREUPGRADE_CARDS = @"[
+
+    public const string CARDS_JSON_PREUPGRADE_CARDS = @"[
     {
        ""id"":1,
        ""Name"":""Luxury Exports"",

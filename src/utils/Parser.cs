@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace TalesOfTribute
 {
@@ -24,11 +18,24 @@ namespace TalesOfTribute
 
             var collectedCards =
                 from card in cardsEnumerator
-                    let deck = card.GetProperty("Deck").ToString()
-                    where decks.Contains(deck)
-                    select CreateCard(card);
+                let deck = card.GetProperty("Deck").ToString()
+                where decks.Contains(deck)
+                select CreateCard(card);
 
             return FilterOutPreUpgradeCards(collectedCards).ToList();
+        }
+
+        public Card GetCardByName(string CardName)
+        {
+            var cardsEnumerator = this.root.EnumerateArray();
+
+            var cardToReturn =
+                from card in cardsEnumerator
+                let name = card.GetProperty("Name").ToString()
+                where name.Equals(CardName)
+                select CreateCard(card);
+
+            return cardToReturn.ToList()[0];
         }
 
         // TODO: Add ability for user to configure which card he wants to keep.
@@ -42,14 +49,15 @@ namespace TalesOfTribute
                 .Distinct();
             // Pre-upgrade cards have the same ID as the family they are in.
             return from card in cardsEnumerable
-                where !families.Contains(card.InstanceID) select card;
+                   where !families.Contains(card.InstanceID)
+                   select card;
         }
 
         private Card CreateCard(JsonElement card)
         {
             int id = card.GetProperty("id").GetInt32();
             string name = card.GetProperty("Name").ToString();
-            string deck = card.GetProperty("Deck").ToString();
+            PatronEnum deck = Patron.FromString(card.GetProperty("Deck").ToString());
             int cost = card.GetProperty("Cost").GetInt32();
             CardType type = ParseCardType(card.GetProperty("Type").ToString());
             int hp = card.GetProperty("HP").GetInt32();
@@ -90,7 +98,7 @@ namespace TalesOfTribute
             else if (tokens.Length == 5)
             {
                 effect = new Effect(
-                    Effect.MapEffectType(tokens[0]), 
+                    Effect.MapEffectType(tokens[0]),
                     Int32.Parse(tokens[1]),
                     tokens[2],
                     Effect.MapEffectType(tokens[3]),
