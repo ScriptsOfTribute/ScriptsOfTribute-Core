@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TalesOfTribute
-{   
+﻿namespace TalesOfTribute
+{
     public enum CardType
     {
         Action,
@@ -18,7 +12,7 @@ namespace TalesOfTribute
     public class Card
     {
         public string Name;
-        public string? Deck;
+        public PatronEnum Deck;
         public int InstanceID;
         public int Cost;
         public readonly CardType Type;
@@ -36,7 +30,7 @@ namespace TalesOfTribute
             Effects = new Effect[4];
         }
 
-        public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int family)
+        public Card(string name, PatronEnum deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int family)
         {
             Name = name;
             Deck = deck;
@@ -49,7 +43,7 @@ namespace TalesOfTribute
             Family = family;
         }
 
-        public Card(string name, string? deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int upgradeCardID, int copies, int copiesUpgraded)
+        public Card(string name, PatronEnum deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int upgradeCardID, int copies, int copiesUpgraded)
         {
             Name = name;
             Deck = deck;

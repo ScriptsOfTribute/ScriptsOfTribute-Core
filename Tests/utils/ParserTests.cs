@@ -13,7 +13,7 @@ public class ParserTests
 
         var cards = sut.GetCardsByDeck(new[] { "Hlaalu" });
         Assert.Equal(2, cards.Count);
-        Assert.All(cards, card => Assert.Equal("Hlaalu", card.Deck));
+        Assert.All(cards, card => Assert.Equal(PatronEnum.Hlaalu, card.Deck));
     }
 
     [Fact]

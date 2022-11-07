@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TalesOfTribute
+﻿namespace TalesOfTribute
 {
     public class Tavern
     {
@@ -21,8 +15,8 @@ namespace TalesOfTribute
         {
             Random rnd = new Random();
             this.Cards = this.Cards.OrderBy(x => rnd.Next(0, Cards.Count)).ToList<Card>();
-            
-            for(int i = 0; i < this.AvailableCards.Length; i++)
+
+            for (int i = 0; i < this.AvailableCards.Length; i++)
             {
                 AvailableCards.SetValue(this.Cards.ElementAt(i), i);
                 this.Cards.RemoveAt(i);
@@ -47,7 +41,7 @@ namespace TalesOfTribute
             if (idx >= this.AvailableCards.Length)
                 return null;
 
-            Card toReturn = this.AvailableCards[idx];
+            Card? toReturn = this.AvailableCards[idx];
             this.AvailableCards.SetValue(null, idx);
 
 

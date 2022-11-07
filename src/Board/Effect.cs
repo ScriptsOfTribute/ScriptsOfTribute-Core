@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TalesOfTribute
-{   
+﻿namespace TalesOfTribute
+{
     public enum EffectType
     {
         GAIN_COIN,

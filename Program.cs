@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace TalesOfTribute
+﻿namespace TalesOfTribute
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            
+
         }
     }
 }
