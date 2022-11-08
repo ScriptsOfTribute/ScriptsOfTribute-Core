@@ -4,25 +4,18 @@ namespace Tests.utils;
 
 public class ParserTests
 {
-    private Parser? sut;
-
+    private Parser? _sut;
+    
     [Fact]
-    public void ShouldParseCardsForCorrectDeck()
+    void ShouldParseAllCardsCorrectly()
     {
-        sut = new Parser(test_cards_config.CARDS_JSON_TWO_DECKS);
+        _sut = new Parser(test_cards_config.CARDS_JSON_TWO_DECKS);
+        var cards = _sut.CreateAllCards().ToList();
+        Assert.Equal(3, cards.Count);
 
-        var cards = sut.GetCardsByDeck(new[] { "Hlaalu" });
-        Assert.Equal(2, cards.Count);
-        Assert.All(cards, card => Assert.Equal(PatronEnum.Hlaalu, card.Deck));
-    }
-
-    [Fact]
-    public void ShouldCorrectlyFilterOutPreUpgradeCard()
-    {
-        sut = new Parser(test_cards_config.CARDS_JSON_PREUPGRADE_CARDS);
-
-        var cards = sut.GetCardsByDeck(new[] { "Hlaalu" });
-        Assert.Equal(2, cards.Count);
-        Assert.DoesNotContain(5, cards.Select(card => card.InstanceID));
+        var cardIds = cards.Select(card => card.Id).ToList();
+        Assert.Contains(CardId.LUXURY_EXPORTS, cardIds);
+        Assert.Contains(CardId.HLAALU_COUNCILOR, cardIds);
+        Assert.Contains(CardId.HLAALU_KINSMAN, cardIds);
     }
 }

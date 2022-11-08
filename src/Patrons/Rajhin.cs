@@ -23,7 +23,7 @@
                 return false;
             }
 
-            enemy.CooldownPile.Add(new Parser(cards_config.CARDS_JSON).GetCardByName("Bewilderment"));
+            enemy.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.BEWILDERMENT));
 
             activator.CoinsAmount -= 3;
 

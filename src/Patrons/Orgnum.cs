@@ -28,7 +28,7 @@
             if (FavoredPlayer == activator.ID) // Favored
             {
                 activator.PowerAmount += ownerCardsAmount / 4;
-                activator.CooldownPile.Add(new Parser(cards_config.CARDS_JSON).GetCardByName("Maormer Boarding Party"));
+                activator.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
             }
             else if (FavoredPlayer == -1) // Neutral
                 activator.PowerAmount += ownerCardsAmount / 6;

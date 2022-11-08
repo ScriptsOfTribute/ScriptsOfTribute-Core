@@ -25,8 +25,8 @@
 
             activator.CoinsAmount -= 4;
 
-            enemy.Agents.Remove(card);
-            enemy.CooldownPile.Add(card);
+            enemy.Agents.Remove((Card)card);
+            enemy.CooldownPile.Add((Card)card);
 
             if (FavoredPlayer == -1)
                 FavoredPlayer = activator.ID;

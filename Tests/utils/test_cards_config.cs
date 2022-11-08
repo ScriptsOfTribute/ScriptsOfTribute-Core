@@ -29,16 +29,17 @@ public class test_cards_config
        ""Family"":5
     },
     {
-       ""id"":1,
-       ""Name"":""Luxury Exports"",
-       ""Deck"":""OtherDeck"",
-       ""Cost"":2,
-       ""Type"":""Action"",
-       ""HP"":-1,
-       ""Activation"":""Coin 3"",
-       ""Combo 2"":null,
+       ""id"":5,
+       ""Name"":""Hlaalu Kinsman"",
+       ""Deck"":""Hlaalu"",
+       ""Cost"":10,
+       ""Type"":""Agent"",
+       ""HP"":1,
+       ""Activation"":""Acquire 9"",
+       ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Family"":5
     }
 ]";
 
