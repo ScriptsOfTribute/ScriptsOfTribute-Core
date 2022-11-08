@@ -10,11 +10,7 @@
         public BoardManager(PatronId[] patrons)
         {
             this.patrons = GetPatrons(patrons);
-
-            var data = File.ReadAllText("cards.json");
-            
-            Parser parser = new Parser(data);
-            tavern = new Tavern(GlobalCardDatabase.Instance.AllCards);
+            tavern = new Tavern(GlobalCardDatabase.Instance.AllCardsWithoutUpgrades);
             players = new Player[] { new Player(0), new Player(1) };
             players[1].CoinsAmount = 1; // Second player starts with one gold
             currentPlayer = 0;
