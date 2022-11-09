@@ -2,60 +2,37 @@
 {
     public enum CardType
     {
-        Action,
-        Agent,
-        ContractAction,
-        ContractAgent,
-        Starter,
-        Curse
+        ACTION,
+        AGENT,
+        CONTRACT_ACTION,
+        CONTRACT_AGENT,
+        STARTER,
+        CURSE
     }
-    public class Card
+    
+    public struct Card
     {
         public string Name;
-        public PatronEnum Deck;
-        public int InstanceID;
+        public PatronId Deck;
+        public CardId Id;
         public int Cost;
         public readonly CardType Type;
         public int HP; // >=0 for Agent, -1 for other types
         public Effect[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
         public int Hash;
-        public int UpgradeCardID;
-        public int Copies;
-        public int CopiesUpgraded;
-        public int Family;
+        public CardId? Family;
 
-        public Card()
-        {
-            Name = "null card";
-            Effects = new Effect[4];
-        }
-
-        public Card(string name, PatronEnum deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int family)
+        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, Effect[] effects, int hash, CardId? family)
         {
             Name = name;
             Deck = deck;
-            InstanceID = instanceID;
+            Id = id;
             Cost = cost;
             Type = type;
             HP = hp;
             Effects = effects;
             Hash = hash;
             Family = family;
-        }
-
-        public Card(string name, PatronEnum deck, int instanceID, int cost, CardType type, int hp, Effect[] effects, int hash, int upgradeCardID, int copies, int copiesUpgraded)
-        {
-            Name = name;
-            Deck = deck;
-            InstanceID = instanceID;
-            Cost = cost;
-            Type = type;
-            HP = hp;
-            Effects = effects;
-            Hash = hash;
-            UpgradeCardID = upgradeCardID;
-            Copies = copies;
-            CopiesUpgraded = copiesUpgraded;
         }
 
         public override string ToString()

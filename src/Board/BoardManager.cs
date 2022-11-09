@@ -7,23 +7,18 @@
         Tavern tavern;
         Player[] players;
 
-        public BoardManager(string[] Patrons)
+        public BoardManager(PatronId[] patrons)
         {
-            patrons = GetPatrons(Patrons);
-            Parser parser = new Parser(cards_config.CARDS_JSON);
-            tavern = new Tavern(parser.GetCardsByDeck(Patrons));
+            this.patrons = GetPatrons(patrons);
+            tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             players = new Player[] { new Player(0), new Player(1) };
             players[1].CoinsAmount = 1; // Second player starts with one gold
             currentPlayer = 0;
         }
 
-        private Patron[] GetPatrons(string[] patrons)
+        private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
         {
-            return patrons.Select(
-                patron => Patron.FromEnum(
-                        Patron.FromString(patron)
-                    )
-                ).ToArray();
+            return patrons.Select(Patron.FromId).ToArray();
         }
 
         public void PatronCall(int patronID, Player activator, Player enemy)

@@ -17,6 +17,9 @@
 
   <ItemGroup>
     <None Remove="Tests\**" />
+    <None Update="cards.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

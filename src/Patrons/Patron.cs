@@ -1,16 +1,16 @@
 ﻿namespace TalesOfTribute
 {
-    public enum PatronEnum : int
+    public enum PatronId
     {
-        Ansei = 0,
-        DukeOfCrows = 1,
-        Rajhin = 2,
-        Psijic = 3,
-        Orgnum = 4,
-        Hlaalu = 5,
-        Pelin = 6,
-        RedEagle = 7,
-        Treasury = 8,
+        ANSEI = 0,
+        DUKE_OF_CROWS = 1,
+        RAJHIN = 2,
+        PSIJIC = 3,
+        ORGNUM = 4,
+        HLAALU = 5,
+        PELIN = 6,
+        RED_EAGLE = 7,
+        TREASURY = 8,
     }
     public abstract class Patron
     {
@@ -26,33 +26,33 @@
         public abstract bool PatronActivation(Player activator, Player enemy, Card? card = null);
         public abstract bool PatronPower(Player activator, Player enemy);
 
-        public static Patron FromEnum(PatronEnum patron)
+        public static Patron FromId(PatronId patron)
         {
             return patron switch
             {
-                PatronEnum.Ansei => new Ansei(),
-                PatronEnum.DukeOfCrows => new DukeOfCrows(),
-                PatronEnum.Rajhin => new Rajhin(),
-                PatronEnum.Orgnum => new Orgnum(),
-                PatronEnum.Hlaalu => new Hlaalu(),
-                PatronEnum.Psijic => new Psijic(),
+                PatronId.ANSEI => new Ansei(),
+                PatronId.DUKE_OF_CROWS => new DukeOfCrows(),
+                PatronId.RAJHIN => new Rajhin(),
+                PatronId.ORGNUM => new Orgnum(),
+                PatronId.HLAALU => new Hlaalu(),
+                PatronId.PSIJIC => new Psijic(),
                 _ => throw new InvalidOperationException()
             };
         }
 
-        public static PatronEnum FromString(string patron)
+        public static PatronId IdFromString(string patron)
         {
             return patron switch
             {
-                "Hlaalu" => PatronEnum.Hlaalu,
-                "Red Eagle" => PatronEnum.RedEagle,
-                "Crows" => PatronEnum.DukeOfCrows,
-                "Ansei" => PatronEnum.Ansei,
-                "Psijic" => PatronEnum.Psijic,
-                "Pelin" => PatronEnum.Pelin,
-                "Rajhin" => PatronEnum.Rajhin,
-                "Orgnum" => PatronEnum.Orgnum,
-                "Treasury" => PatronEnum.Treasury,
+                "Hlaalu" => PatronId.HLAALU,
+                "Red Eagle" => PatronId.RED_EAGLE,
+                "Crows" => PatronId.DUKE_OF_CROWS,
+                "Ansei" => PatronId.ANSEI,
+                "Psijic" => PatronId.PSIJIC,
+                "Pelin" => PatronId.PELIN,
+                "Rajhin" => PatronId.RAJHIN,
+                "Orgnum" => PatronId.ORGNUM,
+                "Treasury" => PatronId.TREASURY,
                 _ => throw new InvalidOperationException()
             };
         }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel;
+using System.Text.Json;
 
 namespace TalesOfTribute
 {
@@ -12,61 +13,26 @@ namespace TalesOfTribute
             this.root = doc.RootElement;
         }
 
-        public List<Card> GetCardsByDeck(string[] decks)
+        public IEnumerable<Card> CreateAllCards()
         {
             var cardsEnumerator = this.root.EnumerateArray();
-
-            var collectedCards =
-                from card in cardsEnumerator
-                let deck = card.GetProperty("Deck").ToString()
-                where decks.Contains(deck)
-                select CreateCard(card);
-
-            return FilterOutPreUpgradeCards(collectedCards).ToList();
-        }
-
-        public Card GetCardByName(string CardName)
-        {
-            var cardsEnumerator = this.root.EnumerateArray();
-
-            var cardToReturn =
-                from card in cardsEnumerator
-                let name = card.GetProperty("Name").ToString()
-                where name.Equals(CardName)
-                select CreateCard(card);
-
-            return cardToReturn.ToList()[0];
-        }
-
-        // TODO: Add ability for user to configure which card he wants to keep.
-        // For now, we will keep cards after upgrade.
-        private IEnumerable<Card> FilterOutPreUpgradeCards(IEnumerable<Card> cards)
-        {
-            var cardsEnumerable = cards.ToList();
-            var families = cardsEnumerable
-                .Where(card => card.Family >= 0)
-                .Select(card => card.Family)
-                .Distinct();
-            // Pre-upgrade cards have the same ID as the family they are in.
-            return from card in cardsEnumerable
-                   where !families.Contains(card.InstanceID)
-                   select card;
+            return from card in cardsEnumerator select CreateCard(card);
         }
 
         private Card CreateCard(JsonElement card)
         {
-            int id = card.GetProperty("id").GetInt32();
+            var id = (CardId)card.GetProperty("id").GetInt32();
             string name = card.GetProperty("Name").ToString();
-            PatronEnum deck = Patron.FromString(card.GetProperty("Deck").ToString());
+            PatronId deck = Patron.IdFromString(card.GetProperty("Deck").ToString());
             int cost = card.GetProperty("Cost").GetInt32();
             CardType type = ParseCardType(card.GetProperty("Type").ToString());
             int hp = card.GetProperty("HP").GetInt32();
             Effect[] effects = new Effect[4];
 
-            int family = -1;
+            CardId? family = null;
             if (card.TryGetProperty("Family", out var familyElement))
             {
-                family = familyElement.GetInt32();
+                family = (CardId?)familyElement.GetInt32();
             }
 
             string activation = card.GetProperty("Activation").ToString();
@@ -113,13 +79,13 @@ namespace TalesOfTribute
         {
             return cardTypeToParse switch
             {
-                "Action" => CardType.Action,
-                "Agent" => CardType.Agent,
-                "Contract Action" => CardType.ContractAction,
-                "Starter" => CardType.Starter,
-                "Contract Agent" => CardType.ContractAgent,
-                "Curse" => CardType.Curse,
-                _ => CardType.Action
+                "Action" => CardType.ACTION,
+                "Agent" => CardType.AGENT,
+                "Contract Action" => CardType.CONTRACT_ACTION,
+                "Starter" => CardType.STARTER,
+                "Contract Agent" => CardType.CONTRACT_AGENT,
+                "Curse" => CardType.CURSE,
+                _ => CardType.ACTION
             };
         }
     }

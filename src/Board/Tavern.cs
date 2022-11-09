@@ -8,13 +8,13 @@
         public Tavern(List<Card> cards)
         {
             Cards = cards;
-            AvailableCards = new Card[5];
+            AvailableCards = new Card?[5];
         }
 
         public void DrawCards()
         {
             Random rnd = new Random();
-            this.Cards = this.Cards.OrderBy(x => rnd.Next(0, Cards.Count)).ToList<Card>();
+            this.Cards = this.Cards.OrderBy(x => rnd.Next(0, Cards.Count)).ToList();
 
             for (int i = 0; i < this.AvailableCards.Length; i++)
             {
@@ -30,7 +30,7 @@
                 Card? elem = this.AvailableCards[i];
                 if (elem != null)
                 {
-                    this.Cards.Add(elem);
+                    this.Cards.Add((Card)elem);
                     this.AvailableCards.SetValue(null, i);
                 }
             }
