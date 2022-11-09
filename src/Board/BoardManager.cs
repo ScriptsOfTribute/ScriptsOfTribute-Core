@@ -10,7 +10,7 @@
         public BoardManager(PatronId[] patrons)
         {
             this.patrons = GetPatrons(patrons);
-            tavern = new Tavern(GlobalCardDatabase.Instance.AllCardsWithoutUpgrades);
+            tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             players = new Player[] { new Player(0), new Player(1) };
             players[1].CoinsAmount = 1; // Second player starts with one gold
             currentPlayer = 0;
