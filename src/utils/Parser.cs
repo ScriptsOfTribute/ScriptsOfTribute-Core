@@ -71,7 +71,7 @@ namespace TalesOfTribute
                 }
                 else if (tokens[2] == "AND")
                 {
-                    return new EffectComplex(
+                    return new EffectComposite(
                         new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
                         new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4])
                         )

@@ -49,6 +49,10 @@ namespace TalesOfTribute
                 case EffectType.GAIN_POWER:
                     player.PowerAmount += Amount;
                     break;
+                case EffectType.ACQUIRE_TAVERN:
+                    // TODO: Implement this, for now I make a test-only implementation for choice returning choice.
+                    return new Choice<CardId>(new List<CardId> { CardId.GOLD, CardId.PECK },
+                        _ => new Success());
                 default:
                     throw new Exception("Not implemented yet!");
             }
@@ -121,12 +125,12 @@ namespace TalesOfTribute
         }
     }
     
-    public class EffectComplex : ComplexEffect
+    public class EffectComposite : ComplexEffect
     {
         private readonly Effect _left;
         private readonly Effect _right;
 
-        public EffectComplex(Effect left, Effect right)
+        public EffectComposite(Effect left, Effect right)
         {
             _left = left;
             _right = right;

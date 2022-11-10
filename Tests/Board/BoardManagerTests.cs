@@ -29,7 +29,7 @@ public class BoardManagerTests
     }
     
     [Fact]
-    void TestBasicExecutionChainCompatibility()
+    void TestBasicExecutionChainInteraction()
     {
         var sut = new BoardManager(new[] { PatronId.ANSEI });
         sut.Players[0].Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST));

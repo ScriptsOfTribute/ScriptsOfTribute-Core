@@ -56,9 +56,9 @@
 
         public void EndTurn()
         {
-            Players[(int)CurrentPlayer].EndTurn();
             Players[(int)CurrentPlayer].PrestigeAmount += Players[(int)CurrentPlayer].PowerAmount;
             Players[(int)CurrentPlayer].CoinsAmount = 0;
+            Players[(int)CurrentPlayer].EndTurn();
 
             CurrentPlayer = (PlayerEnum)(1 - (int)CurrentPlayer);
         }
