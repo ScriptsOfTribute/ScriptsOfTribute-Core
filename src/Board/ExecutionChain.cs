@@ -4,26 +4,25 @@ public class ExecutionChain
 {
     public delegate void OnComplete();
 
-    private List<Func<PlayResult>> _chain;
+    private readonly Queue<Func<PlayResult>> _chain = new();
     private PlayResult? _current;
-    private OnComplete _onComplete;
-
-    public ExecutionChain(List<Func<PlayResult>> chain)
-    {
-        this._chain = chain;
-    }
+    private OnComplete? _onComplete;
 
     public void AddCompleteCallback(OnComplete onComplete)
     {
         _onComplete = onComplete;
     }
 
+    public void Add(Func<PlayResult> func)
+    {
+        _chain.Enqueue(func);
+    }
+
     public IEnumerable<PlayResult> Consume()
     {
         if (_current == null)
         {
-            _current = _chain[0]();
-            _chain.RemoveAt(0);
+            _current = _chain.Dequeue().Invoke();
             yield return _current;
         }
 
@@ -34,12 +33,11 @@ public class ExecutionChain
 
         if (_chain.Count == 0)
         {
-            _onComplete();
+            _onComplete?.Invoke();
             yield break;
         }
-        
-        _current = _chain[0]();
-        _chain.RemoveAt(0);
+
+        _current = _chain.Dequeue().Invoke();
         yield return _current;
     }
 }

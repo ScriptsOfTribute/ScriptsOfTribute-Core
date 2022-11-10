@@ -108,7 +108,7 @@
                 combo.Counter = 5;
             }
 
-            List<Func<PlayResult>> chain = new();
+            ExecutionChain chain = new();
 
             // TODO: This order is probably not correct, should be discussed.
             for (var i = 0; i < combo.Counter; i++)
@@ -119,7 +119,7 @@
                 });
             }
 
-            return new ExecutionChain(chain);
+            return chain;
         }
 
         public void EndTurn()
