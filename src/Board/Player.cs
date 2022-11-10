@@ -2,14 +2,14 @@
 {
     public class Combo
     {
-        public List<Effect>[] EffectsToEnact { get; } = new List<Effect>[5];
+        public List<BaseEffect>[] EffectsToEnact { get; } = new List<BaseEffect>[5];
         public int Counter { get; set; } = 0;
 
         public Combo()
         {
             for (var i = 0; i < 5; i++)
             {
-                EffectsToEnact[i] = new List<Effect>();
+                EffectsToEnact[i] = new List<BaseEffect>();
             }
         }
     }
@@ -83,6 +83,7 @@
 
         public ExecutionChain PlayCard(CardId cardId, Player other, Tavern tavern)
         {
+            // TODO: Change this to get it working.
             // var card = Hand.First(card => card.Id == cardId);
             var card = GlobalCardDatabase.Instance.GetCard(cardId);
             var patron = card.Deck;
@@ -96,9 +97,9 @@
             for (var i = 0; i < card.Effects.Length; i++)
             {
                 var effect = card.Effects[i];
-                if (effect.Type != EffectType.DUMMY)
+                if (effect != null)
                 {
-                    combo.EffectsToEnact[i].Add(effect);
+                    combo.EffectsToEnact[i].AddRange(effect.Decompose());
                 }
             }
 
@@ -108,14 +109,14 @@
                 combo.Counter = 5;
             }
 
-            ExecutionChain chain = new();
+            var chain = new ExecutionChain(this, other, tavern);
 
             // TODO: This order is probably not correct, should be discussed.
             for (var i = 0; i < combo.Counter; i++)
             {
                 combo.EffectsToEnact[i].ForEach(effect =>
                 {
-                    chain.Add(() => effect.Enact(this, other, tavern));
+                    chain.Add(effect.Enact);
                 });
             }
 
@@ -129,7 +130,7 @@
 
         public override string ToString()
         {
-            return String.Format("Player: ({0}, {1}, {2})", this.CoinsAmount, this.PrestigeAmount, this.PowerAmount);
+            return $"Player: ({this.CoinsAmount}, {this.PrestigeAmount}, {this.PowerAmount})";
         }
 
         public List<Card> GetAllPlayersCards()

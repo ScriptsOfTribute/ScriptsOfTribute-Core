@@ -4,16 +4,27 @@ public class ExecutionChain
 {
     public delegate void OnComplete();
 
-    private readonly Queue<Func<PlayResult>> _chain = new();
+    private readonly Queue<Func<Player, Player, Tavern, PlayResult>> _chain = new();
     private PlayResult? _current;
     private OnComplete? _onComplete;
+
+    private Player _owner;
+    private Player _enemy;
+    private Tavern _tavern;
+
+    public ExecutionChain(Player owner, Player enemy, Tavern tavern)
+    {
+        _owner = owner;
+        _enemy = enemy;
+        _tavern = tavern;
+    }
 
     public void AddCompleteCallback(OnComplete onComplete)
     {
         _onComplete = onComplete;
     }
 
-    public void Add(Func<PlayResult> func)
+    public void Add(Func<Player, Player, Tavern, PlayResult> func)
     {
         _chain.Enqueue(func);
     }
@@ -22,7 +33,7 @@ public class ExecutionChain
     {
         if (_current == null)
         {
-            _current = _chain.Dequeue().Invoke();
+            _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
             yield return _current;
         }
 
@@ -37,7 +48,7 @@ public class ExecutionChain
             yield break;
         }
 
-        _current = _chain.Dequeue().Invoke();
+        _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
         yield return _current;
     }
 }
