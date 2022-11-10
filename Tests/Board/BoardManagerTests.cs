@@ -1,13 +1,38 @@
 ﻿using TalesOfTribute;
 
-namespace Tests.utils;
+namespace Tests.Board;
 
 public class BoardManagerTests
 {
     [Fact]
-    void ShouldMakeChoiceCorrectly()
+    void TestBoardManagerSetUp()
+    {
+        var board = new BoardManager(
+                new[] { PatronId.ANSEI }
+            );
+        board.SetUpGame();
+
+        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayer);
+        Assert.Equal(1, board.Players[(int)PlayerEnum.PLAYER2].CoinsAmount);
+
+        Assert.Contains(
+            GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+            board.Players[(int)PlayerEnum.PLAYER2].DrawPile
+        );
+
+        Assert.Equal(6, board.Players[(int)PlayerEnum.PLAYER2].DrawPile.Count(card => card.Id == CardId.GOLD));
+
+        Assert.NotEqual(
+            board.Players[(int)PlayerEnum.PLAYER1].DrawPile,
+            board.Players[(int)PlayerEnum.PLAYER2].DrawPile
+        );
+    }
+    
+    [Fact]
+    void TestBasicExecutionChainCompatibility()
     {
         var sut = new BoardManager(new[] { PatronId.ANSEI });
+        sut.Players[0].Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST));
         var chain = sut.PlayCard(CardId.CONQUEST);
         var flag = 0;
 

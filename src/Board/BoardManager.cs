@@ -8,19 +8,19 @@
     
     public class BoardManager
     {
-        int _currentPlayer;
-        Patron[] _patrons;
-        Tavern _tavern;
-        Player[] _players;
-        public BoardState State { get; set; }
+        public PlayerEnum CurrentPlayer;
+        public Patron[] Patrons;
+        public Tavern Tavern;
+        public Player[] Players;
+        private Random _rnd;
+        public BoardState State { get; set; } = BoardState.NORMAL;
 
         public BoardManager(PatronId[] patrons)
         {
-            this._patrons = GetPatrons(patrons);
-            _tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
-            _players = new Player[] { new Player(0), new Player(1) };
-            _players[1].CoinsAmount = 1; // Second player starts with one gold
-            _currentPlayer = 0;
+            this.Patrons = GetPatrons(patrons);
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
+            Players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
+            _rnd = new Random();
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -30,7 +30,7 @@
 
         public void PatronCall(int patronID, Player activator, Player enemy)
         {
-            _patrons[patronID].PatronActivation(activator, enemy);
+            Patrons[patronID].PatronActivation(activator, enemy);
         }
 
         public ExecutionChain PlayCard(CardId cardID)
@@ -40,7 +40,7 @@
                 throw new Exception("Complete pending choice first!");
             }
             
-            var result = _players[_currentPlayer].PlayCard(cardID, _players[1-_currentPlayer], _tavern);
+            var result = Players[(int)CurrentPlayer].PlayCard(cardID, Players[1-(int)CurrentPlayer], Tavern);
 
             State = BoardState.CHOICE_PENDING;
 
@@ -49,33 +49,44 @@
             return result;
         }
 
-        public void BuyCard(int cardID)
+        public void BuyCard(Card card)
         {
             throw new NotImplementedException();
         }
 
         public void EndTurn()
         {
-            _players[_currentPlayer].EndTurn();
-            throw new NotImplementedException();
+            Players[(int)CurrentPlayer].EndTurn();
+            Players[(int)CurrentPlayer].PrestigeAmount += Players[(int)CurrentPlayer].PowerAmount;
+            Players[(int)CurrentPlayer].CoinsAmount = 0;
+
+            CurrentPlayer = (PlayerEnum)(1 - (int)CurrentPlayer);
         }
 
         public void SetUpGame()
         {
-            throw new NotImplementedException();
+            Players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
+            CurrentPlayer = PlayerEnum.PLAYER1;
+            Tavern.DrawCards();
+
+            List<Card> starterDecks = new List<Card>()
+            {
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+            };
+
+            foreach (var patron in this.Patrons)
+            {
+                starterDecks.Add(GlobalCardDatabase.Instance.GetCard(patron.GetStarterCard()));
+            }
+
+            Players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            Players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
         }
 
-        public void Move(string line)
-        {
-            /*
-             * Parser for commands from external bots
-             * Allowed moves:
-             * - PLAY <card_id> - Use card from your hand with certain id
-             * - CALL_PATRON <patron_id> - Use patron with certain id, <args> for certain patron
-             * - BUY <card_id> - Buy card from tavern
-             * - END - end turn
-             * - CALL_AGENT <agent_id> - use your agent
-             */
-        }
     }
 }

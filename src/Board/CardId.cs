@@ -1,6 +1,7 @@
 namespace TalesOfTribute;
 
-public enum CardId {
+public enum CardId
+{
     CURRENCY_EXCHANGE = 0,
     LUXURY_EXPORTS = 1,
     OATHMAN = 2,

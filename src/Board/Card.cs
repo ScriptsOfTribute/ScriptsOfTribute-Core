@@ -9,7 +9,7 @@
         STARTER,
         CURSE
     }
-    
+
     public struct Card
     {
         public string Name;

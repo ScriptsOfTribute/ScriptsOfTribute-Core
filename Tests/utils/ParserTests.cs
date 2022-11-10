@@ -5,7 +5,7 @@ namespace Tests.utils;
 public class ParserTests
 {
     private Parser? _sut;
-    
+
     [Fact]
     void ShouldParseAllCardsCorrectly()
     {
