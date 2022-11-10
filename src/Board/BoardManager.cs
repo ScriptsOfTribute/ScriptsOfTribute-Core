@@ -2,7 +2,7 @@
 {
     public class BoardManager
     {
-        public PlayerEnum currentPlayer;
+        public PlayerEnum CurrentPlayer;
         public Patron[] patrons;
         public Tavern tavern;
         public Player[] players;
@@ -39,16 +39,16 @@
 
         public void EndTurn()
         {
-            players[(int)currentPlayer].PrestigeAmount += players[(int)currentPlayer].PowerAmount;
-            players[(int)currentPlayer].CoinsAmount = 0;
+            players[(int)CurrentPlayer].PrestigeAmount += players[(int)CurrentPlayer].PowerAmount;
+            players[(int)CurrentPlayer].CoinsAmount = 0;
 
-            currentPlayer = (PlayerEnum)(1 - (int)currentPlayer);
+            CurrentPlayer = (PlayerEnum)(1 - (int)CurrentPlayer);
         }
 
         public void SetUpGame()
         {
             players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
-            currentPlayer = PlayerEnum.PLAYER1;
+            CurrentPlayer = PlayerEnum.PLAYER1;
             tavern.DrawCards();
 
             List<Card> starterDecks = new List<Card>()

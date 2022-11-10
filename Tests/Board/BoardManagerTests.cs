@@ -12,7 +12,7 @@ namespace Tests.Board
                 );
             board.SetUpGame();
 
-            Assert.Equal(PlayerEnum.PLAYER1, board.currentPlayer);
+            Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayer);
             Assert.Equal(1, board.players[(int)PlayerEnum.PLAYER2].CoinsAmount);
 
             Assert.Contains(
