@@ -21,10 +21,13 @@
          * Of course activating Patron moves favors as follows: unfavored -> neutral -> favored, with exception of Ansei which always
          * gives Favored effect
          */
-        public int FavoredPlayer { get; set; } = -1; // -1 for neutral, otherwise ID of player favored
+        public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
+        private CardId StarterCard;
 
         public abstract bool PatronActivation(Player activator, Player enemy, Card? card = null);
         public abstract bool PatronPower(Player activator, Player enemy);
+
+        public abstract CardId GetStarterCard();
 
         public static Patron FromId(PatronId patron)
         {

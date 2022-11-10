@@ -12,12 +12,12 @@ public class PatronTests
         {
             cards.Add(new Card());
         }
-        Player player1 = new Player(0, 5, 2, 7, cards, cards, cards, cards, cards);
-        Player player2 = new Player(1, 8, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, cards);
+        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
         Patron ansei = new Ansei();
 
         //Default is neutral state
-        Assert.Equal(-1, ansei.FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, ansei.FavoredPlayer);
 
         //Test patron's activation
         ansei.PatronActivation(player1, player2);
@@ -55,12 +55,12 @@ public class PatronTests
         {
             cards.Add(new Card());
         }
-        Player player1 = new Player(0, 5, 2, 7, cards, cards, cards, cards, cards);
-        Player player2 = new Player(1, 8, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, cards);
+        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
         Patron duke = new DukeOfCrows();
 
         //Default is neutral state
-        Assert.Equal(-1, duke.FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, duke.FavoredPlayer);
 
         //Test patron's activation
         Assert.True(duke.PatronActivation(player1, player2));
@@ -78,7 +78,7 @@ public class PatronTests
         Assert.True(duke.PatronActivation(player2, player1));
         Assert.Equal(12, player2.PowerAmount);
         Assert.Equal(0, player2.CoinsAmount);
-        Assert.Equal(-1, duke.FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, duke.FavoredPlayer);
 
         //If player has no money, activation doesnt work
         Assert.False(duke.PatronActivation(player1, player2));
@@ -92,12 +92,12 @@ public class PatronTests
         {
             cards.Add(new Card());
         }
-        Player player1 = new Player(0, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
-        Player player2 = new Player(1, 1, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
+        Player player2 = new Player(PlayerEnum.PLAYER2, 1, 1, 5, cards, cards, cards, cards, cards);
         Patron rajhin = new Rajhin();
 
         //Default is neutral state
-        Assert.Equal(-1, rajhin.FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, rajhin.FavoredPlayer);
 
         //Test patron's activation
         Assert.True(rajhin.PatronActivation(player1, player2));
@@ -119,12 +119,12 @@ public class PatronTests
         {
             cards.Add(new Card());
         }
-        Player player1 = new Player(0, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
-        Player player2 = new Player(1, 7, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
+        Player player2 = new Player(PlayerEnum.PLAYER2, 7, 1, 5, cards, cards, cards, cards, cards);
         Patron orgnum = new Orgnum();
 
         //Default is neutral state
-        Assert.Equal(-1, orgnum.FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, orgnum.FavoredPlayer);
 
         //Test patron's activation
         Assert.True(orgnum.PatronActivation(player1, player2));
@@ -144,7 +144,7 @@ public class PatronTests
         //Test patron's activation when not favored
         Assert.True(orgnum.PatronActivation(player2, player1));
         Assert.Equal(4, player2.CoinsAmount);
-        Assert.Equal(-1, orgnum.FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, orgnum.FavoredPlayer);
         Assert.Equal(7, player2.PowerAmount);
     }
 }
