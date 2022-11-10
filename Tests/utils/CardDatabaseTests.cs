@@ -11,7 +11,7 @@ public class CardDatabaseTests
     {
         var parser = new Parser(test_cards_config.CARDS_JSON_TWO_DECKS);
         sut = new CardDatabase(parser.CreateAllCards());
-        
+
         var cards = sut.GetCardsByPatron(new[] { PatronId.HLAALU });
         Assert.Equal(2, cards.Count);
         Assert.All(cards, card => Assert.Equal(PatronId.HLAALU, card.Deck));

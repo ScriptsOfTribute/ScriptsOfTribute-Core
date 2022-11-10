@@ -2,18 +2,18 @@
 {
     public class BoardManager
     {
-        int currentPlayer;
-        Patron[] patrons;
-        Tavern tavern;
-        Player[] players;
+        public PlayerEnum currentPlayer;
+        public Patron[] patrons;
+        public Tavern tavern;
+        public Player[] players;
+        private Random _rnd;
 
         public BoardManager(PatronId[] patrons)
         {
             this.patrons = GetPatrons(patrons);
             tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
-            players = new Player[] { new Player(0), new Player(1) };
-            players[1].CoinsAmount = 1; // Second player starts with one gold
-            currentPlayer = 0;
+            players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
+            _rnd = new Random();
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -26,37 +26,49 @@
             patrons[patronID].PatronActivation(activator, enemy);
         }
 
-        public void PlayCard(int cardID)
+        public void PlayCard(Card card)
         {
             throw new NotImplementedException();
+
         }
 
-        public void BuyCard(int cardID)
+        public void BuyCard(Card card)
         {
             throw new NotImplementedException();
         }
 
         public void EndTurn()
         {
-            throw new NotImplementedException();
+            players[(int)currentPlayer].PrestigeAmount += players[(int)currentPlayer].PowerAmount;
+            players[(int)currentPlayer].CoinsAmount = 0;
+
+            currentPlayer = (PlayerEnum)(1 - (int)currentPlayer);
         }
 
         public void SetUpGame()
         {
-            throw new NotImplementedException();
+            players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
+            currentPlayer = PlayerEnum.PLAYER1;
+            tavern.DrawCards();
+
+            List<Card> starterDecks = new List<Card>()
+            {
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+            };
+
+            foreach (var patron in this.patrons)
+            {
+                starterDecks.Add(GlobalCardDatabase.Instance.GetCard(patron.GetStarterCard()));
+            }
+
+            players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
         }
 
-        public void Move(string line)
-        {
-            /*
-             * Parser for commands from external bots
-             * Allowed moves:
-             * - PLAY <card_id> - Use card from your hand with certain id
-             * - CALL_PATRON <patron_id> - Use patron with certain id, <args> for certain patron
-             * - BUY <card_id> - Buy card from tavern
-             * - END - end turn
-             * - CALL_AGENT <agent_id> - use your agent
-             */
-        }
     }
 }

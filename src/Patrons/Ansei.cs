@@ -40,5 +40,10 @@
 
             return true;
         }
+
+        public override CardId GetStarterCard()
+        {
+            return CardId.WAY_OF_THE_SWORD;
+        }
     }
 }

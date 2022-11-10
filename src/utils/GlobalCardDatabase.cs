@@ -9,7 +9,7 @@ public class GlobalCardDatabase
         get
         {
             if (_instance != null) return _instance;
-            
+
             var data = File.ReadAllText("cards.json");
             var parser = new Parser(data);
             _instance = new CardDatabase(parser.CreateAllCards());

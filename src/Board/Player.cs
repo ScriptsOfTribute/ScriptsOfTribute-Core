@@ -1,8 +1,14 @@
 ﻿namespace TalesOfTribute
 {
+    public enum PlayerEnum
+    {
+        PLAYER1 = 0,
+        PLAYER2 = 1,
+        NO_PLAYER_SELECTED = 2,
+    }
     public class Player
     {
-        public int ID;
+        public PlayerEnum ID;
         public int CoinsAmount;
         public int PrestigeAmount;
         public int PowerAmount;
@@ -15,7 +21,7 @@
         public uint PatronCalls;
         public long ShuffleSeed;
 
-        public Player(int iD)
+        public Player(PlayerEnum iD)
         {
             CoinsAmount = 0;
             PrestigeAmount = 0;
@@ -29,7 +35,7 @@
         }
 
         public Player(
-            int iD, int coinsAmount, int prestigeAmount, int powerAmount,
+            PlayerEnum iD, int coinsAmount, int prestigeAmount, int powerAmount,
             List<Card> hand, List<Card> drawPile, List<Card> played, List<Card> agents, List<Card> cooldownPile
         )
         {
@@ -45,7 +51,7 @@
         }
 
         public Player(
-            int iD, int coinsAmount, int prestigeAmount,
+            PlayerEnum iD, int coinsAmount, int prestigeAmount,
             int powerAmount, List<Card> hand, List<Card> drawPile, List<Card> played,
             List<Card> agents, List<Card> cooldownPile, uint forcedDiscard,
             uint patronCalls, long shuffleSeed

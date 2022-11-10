@@ -28,5 +28,10 @@
 
             return true;
         }
+
+        public override CardId GetStarterCard()
+        {
+            return CardId.GOODS_SHIPMENT;
+        }
     }
 }
