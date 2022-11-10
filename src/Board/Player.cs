@@ -1,5 +1,19 @@
 ﻿namespace TalesOfTribute
 {
+    public class Combo
+    {
+        public List<Effect>[] EffectsToEnact { get; } = new List<Effect>[5];
+        public int Counter { get; set; } = 0;
+
+        public Combo()
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                EffectsToEnact[i] = new List<Effect>();
+            }
+        }
+    }
+    
     public class Player
     {
         public int ID;
@@ -14,6 +28,8 @@
         public uint ForcedDiscard;
         public uint PatronCalls;
         public long ShuffleSeed;
+
+        public Dictionary<PatronId, Combo> Combos { get; private set; } = new();
 
         public Player(int iD)
         {
@@ -63,6 +79,52 @@
             PatronCalls = patronCalls;
             ShuffleSeed = shuffleSeed;
             ID = iD;
+        }
+
+        public ExecutionChain PlayCard(CardId cardId, Player other, Tavern tavern)
+        {
+            // var card = Hand.First(card => card.Id == cardId);
+            var card = GlobalCardDatabase.Instance.GetCard(cardId);
+            var patron = card.Deck;
+
+            if (!Combos.TryGetValue(patron, out var combo))
+            {
+                combo = new Combo();
+                Combos.Add(patron, combo);
+            }
+            
+            for (var i = 0; i < card.Effects.Length; i++)
+            {
+                var effect = card.Effects[i];
+                if (effect.Type != EffectType.DUMMY)
+                {
+                    combo.EffectsToEnact[i].Add(effect);
+                }
+            }
+
+            combo.Counter += 1;
+            if (combo.Counter > 5)
+            {
+                combo.Counter = 5;
+            }
+
+            List<Func<PlayResult>> chain = new();
+
+            // TODO: This order is probably not correct, should be discussed.
+            for (var i = 0; i < combo.Counter; i++)
+            {
+                combo.EffectsToEnact[i].ForEach(effect =>
+                {
+                    chain.Add(() => effect.Enact(this, other, tavern));
+                });
+            }
+
+            return new ExecutionChain(chain);
+        }
+
+        public void EndTurn()
+        {
+            Combos = new();
         }
 
         public override string ToString()
