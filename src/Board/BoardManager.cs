@@ -1,11 +1,18 @@
 ﻿namespace TalesOfTribute
 {
+    public enum BoardState
+    {
+        NORMAL,
+        CHOICE_PENDING,
+    }
+    
     public class BoardManager
     {
         int currentPlayer;
         Patron[] patrons;
         Tavern tavern;
-        Player[] players;
+        public Player[] players;
+        public BoardState State { get; set; }
 
         public BoardManager(string[] Patrons)
         {
@@ -31,9 +38,31 @@
             patrons[patronID].PatronActivation(activator, enemy);
         }
 
-        public void PlayCard(int cardID)
+        public Result PlayCard(CardId cardID)
         {
-            throw new NotImplementedException();
+            if (State == BoardState.CHOICE_PENDING)
+            {
+                throw new Exception("Complete pending choice first!");
+            }
+            
+            var result = GlobalCardDatabase.Instance.GetCard(cardID)
+                .Effects[0].Enact(players[0], players[1], tavern);
+
+            if (result is not (Choice<CardId> or Choice<EffectType>)) return result;
+            
+            State = BoardState.CHOICE_PENDING;
+
+            switch (result)
+            {
+                case Choice<CardId> choiceCardId:
+                    choiceCardId.AddResolvedCallback(() => State = BoardState.NORMAL);
+                    break;
+                case Choice<EffectType> choiceEffectType:
+                    choiceEffectType.AddResolvedCallback(() => State = BoardState.NORMAL);
+                    break;
+            }
+
+            return result;
         }
 
         public void BuyCard(int cardID)

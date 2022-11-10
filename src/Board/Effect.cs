@@ -43,6 +43,30 @@
             secondAmount = secondamount;
         }
 
+        public Result Enact(Player player, Player enemy, Tavern tavern)
+        {
+            if (op == "OR")
+            {
+                return new Choice<EffectType>(new List<EffectType> { Type, (EffectType)secondType },
+                    choice =>
+                    {
+                        // This won't be implemented here, I propose separate classes, but this is just an experiment.
+                        if (choice == EffectType.GAIN_POWER)
+                        {
+                            player.PowerAmount += Amount;
+                        }
+                        else
+                        {
+                            return new Failure("Not implemented yet!");
+                        }
+
+                        return new Success();
+                    });
+            }
+
+            return new Failure("Not implemented yet!");
+        }
+
         public override string ToString()
         {
             if (this.op != null)
