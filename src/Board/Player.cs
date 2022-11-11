@@ -1,5 +1,19 @@
 ﻿namespace TalesOfTribute
 {
+    public class Combo
+    {
+        public List<BaseEffect>[] EffectsToEnact { get; } = new List<BaseEffect>[5];
+        public int Counter { get; set; } = 0;
+
+        public Combo()
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                EffectsToEnact[i] = new List<BaseEffect>();
+            }
+        }
+    }
+    
     public enum PlayerEnum
     {
         PLAYER1 = 0,
@@ -20,6 +34,7 @@
         public uint ForcedDiscard;
         public uint PatronCalls;
         public long ShuffleSeed;
+        public Dictionary<PatronId, Combo> Combos { get; private set; } = new();
 
         public Player(PlayerEnum iD)
         {
@@ -71,9 +86,54 @@
             ID = iD;
         }
 
+        public ExecutionChain PlayCard(CardId cardId, Player other, Tavern tavern)
+        {
+            var card = Hand.First(card => card.Id == cardId);
+            var patron = card.Deck;
+
+            if (!Combos.TryGetValue(patron, out var combo))
+            {
+                combo = new Combo();
+                Combos.Add(patron, combo);
+            }
+            
+            for (var i = 0; i < card.Effects.Length; i++)
+            {
+                var effect = card.Effects[i];
+                if (effect != null)
+                {
+                    combo.EffectsToEnact[i].AddRange(effect.Decompose());
+                }
+            }
+
+            combo.Counter += 1;
+            if (combo.Counter > 5)
+            {
+                combo.Counter = 5;
+            }
+
+            var chain = new ExecutionChain(this, other, tavern);
+
+            // TODO: This order is probably not correct, should be discussed.
+            for (var i = 0; i < combo.Counter; i++)
+            {
+                combo.EffectsToEnact[i].ForEach(effect =>
+                {
+                    chain.Add(effect.Enact);
+                });
+            }
+
+            return chain;
+        }
+
+        public void EndTurn()
+        {
+            Combos = new();
+        }
+
         public override string ToString()
         {
-            return String.Format("Player: ({0}, {1}, {2})", this.CoinsAmount, this.PrestigeAmount, this.PowerAmount);
+            return $"Player: ({this.CoinsAmount}, {this.PrestigeAmount}, {this.PowerAmount})";
         }
 
         public List<Card> GetAllPlayersCards()

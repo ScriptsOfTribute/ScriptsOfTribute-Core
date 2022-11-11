@@ -18,11 +18,11 @@
         public int Cost;
         public readonly CardType Type;
         public int HP; // >=0 for Agent, -1 for other types
-        public Effect[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
+        public ComplexEffect?[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
         public int Hash;
         public CardId? Family;
 
-        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, Effect[] effects, int hash, CardId? family)
+        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family)
         {
             Name = name;
             Deck = deck;

@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace TalesOfTribute
 {
     public enum EffectType
     {
@@ -16,77 +18,127 @@
         KNOCKOUT,
         PATRON_CALL,
         CREATE_BOARDINGPARTY,
-        DUMMY // null effect
+        HEAL,
     }
-    public class Effect
+
+    public interface BaseEffect
     {
-        public EffectType Type;
-        public int Amount;
+        public PlayResult Enact(Player player, Player enemy, Tavern tavern);
+    }
 
-        // if card has 2 possible effects
-        public string? op; // OR or AND
-        public EffectType? secondType;
-        public int? secondAmount;
-
-        public Effect()
-        {
-            this.Type = EffectType.DUMMY;
-            this.Amount = -1;
-        }
-
-        public Effect(EffectType type, int amount, string? _op = null, EffectType? secondtype = null, int? secondamount = null)
+    public interface ComplexEffect
+    {
+        public List<BaseEffect> Decompose();
+    }
+    
+    public class Effect : BaseEffect, ComplexEffect
+    {
+        public readonly EffectType Type;
+        public readonly int Amount;
+        
+        public Effect(EffectType type, int amount)
         {
             Type = type;
             Amount = amount;
-            op = _op;
-            secondType = secondtype;
-            secondAmount = secondamount;
+        }
+
+        public PlayResult Enact(Player player, Player enemy, Tavern tavern)
+        {
+            switch (Type)
+            {
+                case EffectType.GAIN_POWER:
+                    player.PowerAmount += Amount;
+                    break;
+                case EffectType.ACQUIRE_TAVERN:
+                    // TODO: Implement this, for now I make a test-only implementation for choice returning choice.
+                    return new Choice<CardId>(new List<CardId> { CardId.GOLD, CardId.PECK },
+                        _ => new Success());
+                default:
+                    throw new Exception("Not implemented yet!");
+            }
+
+            return new Success();
         }
 
         public override string ToString()
         {
-            if (this.op != null)
-            {
-                return String.Format($"Effect: {this.Type} {this.Amount} {this.op} {this.secondType} {this.secondAmount}");
-            }
-            return String.Format($"Effect: {this.Type} {this.Amount}");
+            return $"Effect: {this.Type} {this.Amount}";
+        }
+
+        public List<BaseEffect> Decompose()
+        {
+            return new List<BaseEffect> { this };
         }
 
         public static EffectType MapEffectType(string effect)
         {
-            switch (effect)
+            return effect switch
             {
-                case "Coin":
-                    return EffectType.GAIN_COIN;
-                case "Power":
-                    return EffectType.GAIN_POWER;
-                case "Prestige":
-                    return EffectType.GAIN_PRESTIGE;
-                case "OppPrestige":
-                    return EffectType.OPP_LOSE_PRESTIGE;
-                case "Remove":
-                    return EffectType.REMOVE_TAVERN;
-                case "Acquire":
-                    return EffectType.ACQUIRE_TAVERN;
-                case "Destroy":
-                    return EffectType.DESTROY_CARD;
-                case "Draw":
-                    return EffectType.DRAW;
-                case "Discard":
-                    return EffectType.OPP_DISCARD;
-                case "Return":
-                    return EffectType.RETURN_TOP;
-                case "Toss":
-                    return EffectType.TOSS;
-                case "KnockOut":
-                    return EffectType.KNOCKOUT;
-                case "Patron":
-                    return EffectType.PATRON_CALL;
-                case "Create":
-                    return EffectType.CREATE_BOARDINGPARTY;
-                default:
-                    return EffectType.DUMMY;
-            }
+                "Coin" => EffectType.GAIN_COIN,
+                "Power" => EffectType.GAIN_POWER,
+                "Prestige" => EffectType.GAIN_PRESTIGE,
+                "OppPrestige" => EffectType.OPP_LOSE_PRESTIGE,
+                "Remove" => EffectType.REMOVE_TAVERN,
+                "Acquire" => EffectType.ACQUIRE_TAVERN,
+                "Destroy" => EffectType.DESTROY_CARD,
+                "Draw" => EffectType.DRAW,
+                "Discard" => EffectType.OPP_DISCARD,
+                "Return" => EffectType.RETURN_TOP,
+                "Toss" => EffectType.TOSS,
+                "KnockOut" => EffectType.KNOCKOUT,
+                "Patron" => EffectType.PATRON_CALL,
+                "Create" => EffectType.CREATE_BOARDINGPARTY,
+                "Heal" => EffectType.HEAL,
+                _ => throw new Exception("Invalid effect type.")
+            };
+        }
+    }
+
+    public class EffectChoice : ComplexEffect, BaseEffect
+    {
+        private readonly Effect _left;
+        private readonly Effect _right;
+
+        public EffectChoice(Effect left, Effect right)
+        {
+            _left = left;
+            _right = right;
+        }
+
+        public List<BaseEffect> Decompose()
+        {
+            return new List<BaseEffect> { this };
+        }
+
+        public PlayResult Enact(Player player, Player enemy, Tavern tavern)
+        {
+            return new Choice<EffectType>(new List<EffectType> { _left.Type, _right.Type },
+                choice =>
+                {
+                    if (choice == _left.Type)
+                    {
+                        return _left.Enact(player, enemy, tavern);
+                    }
+
+                    return _right.Enact(player, enemy, tavern);
+                });
+        }
+    }
+    
+    public class EffectComposite : ComplexEffect
+    {
+        private readonly Effect _left;
+        private readonly Effect _right;
+
+        public EffectComposite(Effect left, Effect right)
+        {
+            _left = left;
+            _right = right;
+        }
+
+        public List<BaseEffect> Decompose()
+        {
+            return new List<BaseEffect> { _left, _right };
         }
     }
 }

@@ -1,18 +1,25 @@
 ﻿namespace TalesOfTribute
 {
+    public enum BoardState
+    {
+        NORMAL,
+        CHOICE_PENDING,
+    }
+    
     public class BoardManager
     {
         public PlayerEnum CurrentPlayer;
-        public Patron[] patrons;
-        public Tavern tavern;
-        public Player[] players;
+        public Patron[] Patrons;
+        public Tavern Tavern;
+        public Player[] Players;
         private Random _rnd;
+        public BoardState State { get; set; } = BoardState.NORMAL;
 
         public BoardManager(PatronId[] patrons)
         {
-            this.patrons = GetPatrons(patrons);
-            tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
-            players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
+            this.Patrons = GetPatrons(patrons);
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
+            Players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
             _rnd = new Random();
         }
 
@@ -23,13 +30,23 @@
 
         public void PatronCall(int patronID, Player activator, Player enemy)
         {
-            patrons[patronID].PatronActivation(activator, enemy);
+            Patrons[patronID].PatronActivation(activator, enemy);
         }
 
-        public void PlayCard(Card card)
+        public ExecutionChain PlayCard(CardId cardID)
         {
-            throw new NotImplementedException();
+            if (State == BoardState.CHOICE_PENDING)
+            {
+                throw new Exception("Complete pending choice first!");
+            }
+            
+            var result = Players[(int)CurrentPlayer].PlayCard(cardID, Players[1-(int)CurrentPlayer], Tavern);
 
+            State = BoardState.CHOICE_PENDING;
+
+            result.AddCompleteCallback(() => State = BoardState.NORMAL);
+
+            return result;
         }
 
         public void BuyCard(Card card)
@@ -39,17 +56,18 @@
 
         public void EndTurn()
         {
-            players[(int)CurrentPlayer].PrestigeAmount += players[(int)CurrentPlayer].PowerAmount;
-            players[(int)CurrentPlayer].CoinsAmount = 0;
+            Players[(int)CurrentPlayer].PrestigeAmount += Players[(int)CurrentPlayer].PowerAmount;
+            Players[(int)CurrentPlayer].CoinsAmount = 0;
+            Players[(int)CurrentPlayer].EndTurn();
 
             CurrentPlayer = (PlayerEnum)(1 - (int)CurrentPlayer);
         }
 
         public void SetUpGame()
         {
-            players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
+            Players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
             CurrentPlayer = PlayerEnum.PLAYER1;
-            tavern.DrawCards();
+            Tavern.DrawCards();
 
             List<Card> starterDecks = new List<Card>()
             {
@@ -61,13 +79,13 @@
                 GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
             };
 
-            foreach (var patron in this.patrons)
+            foreach (var patron in this.Patrons)
             {
                 starterDecks.Add(GlobalCardDatabase.Instance.GetCard(patron.GetStarterCard()));
             }
 
-            players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
-            players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            Players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            Players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
         }
 
     }
