@@ -4,7 +4,7 @@ public class ExecutionChain
 {
     public delegate void OnComplete();
 
-    public readonly Queue<Func<Player, Player, Tavern, PlayResult>> _chain = new();
+    private readonly Queue<Func<Player, Player, Tavern, PlayResult>> _chain = new();
     private PlayResult? _current;
     private OnComplete? _onComplete;
 

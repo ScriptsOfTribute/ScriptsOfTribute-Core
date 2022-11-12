@@ -1,5 +1,4 @@
 ﻿using TalesOfTribute;
-using Xunit.Abstractions;
 
 namespace Tests.Board;
 
@@ -106,7 +105,39 @@ public class ComboContextTests
         newChainList = newChain.Consume().ToList();
         Assert.Equal(2, newChainList.Count);
     }
-    
+        
+    [Fact]
+    void ShouldTriggerCombo3CorrectlyInOrder2()
+    {
+        var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
+        var chainList = chain.Consume().ToList();
+        Assert.Single(chainList);
+
+        var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.EBONY_MINE), _player1, _player2, _tavern);
+        var newChainList = newChain.Consume().ToList();
+        Assert.Single(newChainList);
+        
+        newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
+        newChainList = newChain.Consume().ToList();
+        Assert.Equal(2, newChainList.Count);
+    }
+        
+    [Fact]
+    void ShouldTriggerCombo3CorrectlyInOrder3()
+    {
+        var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.EBONY_MINE), _player1, _player2, _tavern);
+        var chainList = chain.Consume().ToList();
+        Assert.Single(chainList);
+
+        var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
+        var newChainList = newChain.Consume().ToList();
+        Assert.Single(newChainList);
+        
+        newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
+        newChainList = newChain.Consume().ToList();
+        Assert.Equal(2, newChainList.Count);
+    }
+
     [Fact]
     void ShouldNotTriggerComboOnFollowingTurn()
     {
