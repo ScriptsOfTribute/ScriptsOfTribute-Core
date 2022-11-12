@@ -1,19 +1,5 @@
 ﻿namespace TalesOfTribute
 {
-    public class Combo
-    {
-        public List<BaseEffect>[] EffectsToEnact { get; } = new List<BaseEffect>[5];
-        public int Counter { get; set; } = 0;
-
-        public Combo()
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                EffectsToEnact[i] = new List<BaseEffect>();
-            }
-        }
-    }
-    
     public enum PlayerEnum
     {
         PLAYER1 = 0,
@@ -34,7 +20,8 @@
         public uint ForcedDiscard;
         public uint PatronCalls;
         public long ShuffleSeed;
-        public Dictionary<PatronId, Combo> Combos { get; private set; } = new();
+
+        private ComboContext _comboContext = new ComboContext();
 
         public Player(PlayerEnum iD)
         {
@@ -88,47 +75,19 @@
 
         public ExecutionChain PlayCard(CardId cardId, Player other, Tavern tavern)
         {
-            var card = Hand.First(card => card.Id == cardId);
-            var patron = card.Deck;
-
-            if (!Combos.TryGetValue(patron, out var combo))
+            if (Hand.All(card => card.Id != cardId))
             {
-                combo = new Combo();
-                Combos.Add(patron, combo);
+                throw new Exception($"Can't play card {cardId} - Player doesn't have it!");
             }
             
-            for (var i = 0; i < card.Effects.Length; i++)
-            {
-                var effect = card.Effects[i];
-                if (effect != null)
-                {
-                    combo.EffectsToEnact[i].AddRange(effect.Decompose());
-                }
-            }
+            var card = Hand.First(card => card.Id == cardId);
 
-            combo.Counter += 1;
-            if (combo.Counter > 5)
-            {
-                combo.Counter = 5;
-            }
-
-            var chain = new ExecutionChain(this, other, tavern);
-
-            // TODO: This order is probably not correct, should be discussed.
-            for (var i = 0; i < combo.Counter; i++)
-            {
-                combo.EffectsToEnact[i].ForEach(effect =>
-                {
-                    chain.Add(effect.Enact);
-                });
-            }
-
-            return chain;
+            return _comboContext.PlayCard(card, this, other, tavern);
         }
 
         public void EndTurn()
         {
-            Combos = new();
+            _comboContext.Reset();
         }
 
         public override string ToString()

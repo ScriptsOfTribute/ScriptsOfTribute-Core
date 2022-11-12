@@ -30,7 +30,7 @@ public class ExecutionChainTests
         // Advance from OR choice to ACQUIRE choice.
         Assert.True(result is Choice<EffectType>);
         var choice = result as Choice<EffectType>;
-        var newResult = choice.Commit(EffectType.ACQUIRE_TAVERN);
+        var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
         Assert.True(newResult is Choice<CardId>);
         Assert.Throws<Exception>(() => consume.MoveNext());
     }
@@ -54,7 +54,7 @@ public class ExecutionChainTests
         // Advance from OR choice to GAIN_POWER this time, so no further choice is needed.
         Assert.True(result is Choice<EffectType>);
         var choice = result as Choice<EffectType>;
-        var newResult = choice.Commit(EffectType.GAIN_POWER);
+        var newResult = choice.Choose(EffectType.GAIN_POWER);
         Assert.True(newResult is Success);
         consume.MoveNext();
     }
@@ -95,10 +95,10 @@ public class ExecutionChainTests
                 {
                     Assert.True(result is Choice<EffectType>);
                     var choice = result as Choice<EffectType>;
-                    var newResult = choice.Commit(EffectType.ACQUIRE_TAVERN);
+                    var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
                     Assert.True(newResult is Choice<CardId>);
                     var newChoice = newResult as Choice<CardId>;
-                    Assert.True(newChoice.Commit(CardId.GOLD) is Success);
+                    Assert.True(newChoice.Choose(CardId.GOLD) is Success);
                     break;
                 }
                 // Should be power gain
@@ -113,7 +113,7 @@ public class ExecutionChainTests
                 {
                     Assert.True(result is Choice<CardId>);
                     var choice = result as Choice<CardId>;
-                    var newResult = choice.Commit(CardId.GOLD);
+                    var newResult = choice.Choose(CardId.GOLD);
                     Assert.True(newResult is Success);
                     break;
                 }

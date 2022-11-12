@@ -54,7 +54,9 @@ namespace TalesOfTribute
                     return new Choice<CardId>(new List<CardId> { CardId.GOLD, CardId.PECK },
                         _ => new Success());
                 default:
-                    throw new Exception("Not implemented yet!");
+                    // TODO: This is for testing only, throw an exception here when all effects are implemented.
+                    // throw new Exception("Not implemented yet!");
+                    return new Success();
             }
 
             return new Success();
@@ -115,7 +117,7 @@ namespace TalesOfTribute
             return new Choice<EffectType>(new List<EffectType> { _left.Type, _right.Type },
                 choice =>
                 {
-                    if (choice == _left.Type)
+                    if (choice.First() == _left.Type)
                     {
                         return _left.Enact(player, enemy, tavern);
                     }
