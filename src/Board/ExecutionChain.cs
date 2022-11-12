@@ -42,13 +42,12 @@ public class ExecutionChain
             throw new Exception("Complete pending events before consuming further!");
         }
 
-        if (_chain.Count == 0)
+        while (_chain.Count > 0)
         {
-            _onComplete?.Invoke();
-            yield break;
+            _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
+            yield return _current;
         }
 
-        _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
-        yield return _current;
+        _onComplete?.Invoke();
     }
 }

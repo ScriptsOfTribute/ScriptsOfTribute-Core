@@ -27,13 +27,14 @@ public class BaseChoice : PlayResult
 
 public class Choice<T> : BaseChoice
 {
-    public List<T> Choices { get; }
+    public List<T> PossibleChoices { get; }
+    public int MaxChoiceAmount { get; } = 1;
 
-    public delegate PlayResult ChoiceCallback(T t);
+    public delegate PlayResult ChoiceCallback(List<T> t);
 
-    private ChoiceCallback _callback;
+    private readonly ChoiceCallback _callback;
 
-    public Choice(List<T> choices, ChoiceCallback callback) : base()
+    public Choice(List<T> possibleChoices, ChoiceCallback callback) : base()
     {
         // Make sure choice of incorrect type is not created by mistake.
         if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType))
@@ -41,30 +42,64 @@ public class Choice<T> : BaseChoice
             throw new Exception("Choice can only be made for cards or effects!");
         }
         
-        Choices = choices;
+        PossibleChoices = possibleChoices;
         _callback = callback;
     }
-
-    public PlayResult Commit(T t)
+    
+    public Choice(List<T> possibleChoices, int maxChoiceAmount, ChoiceCallback callback) : this(possibleChoices, callback)
     {
-        if (!Choices.Contains(t))
+        if (maxChoiceAmount < 1 || maxChoiceAmount > possibleChoices.Count)
+        {
+            throw new Exception("Invalid choice amount specified!");
+        }
+
+        MaxChoiceAmount = maxChoiceAmount;
+    }
+
+    public PlayResult Choose(T t)
+    {
+        if (!PossibleChoices.Contains(t))
         {
             return new Failure("Invalid choice specified!");
         }
-        var result = _callback(t);
+        var result = _callback(new List<T> { t });
 
+        HandleResult(result);
+
+        return result;
+    }
+    
+    public PlayResult Choose(List<T> choices)
+    {
+        // Check if all choices are in possible choices.
+        if (choices.Except(PossibleChoices).Any() || choices.Count > MaxChoiceAmount)
+        {
+            return new Failure("Invalid choices specified!");
+        }
+        var result = _callback(choices);
+
+        HandleResult(result);
+
+        return result;
+    }
+
+    private void HandleResult(PlayResult result)
+    {
         switch (result)
         {
             case Success:
-                Completed = true;
-                _successCallback?.Invoke();
+                OnSuccess();
                 break;
             case BaseChoice choice:
-                choice.AddSuccessCallback(() => Completed = true);
+                choice.AddSuccessCallback(OnSuccess);
                 break;
         }
+    }
 
-        return result;
+    private void OnSuccess()
+    {
+        Completed = true;
+        _successCallback?.Invoke();
     }
 }
 
@@ -79,4 +114,3 @@ public class Failure : PlayResult
         Reason = reason;
     }
 }
-

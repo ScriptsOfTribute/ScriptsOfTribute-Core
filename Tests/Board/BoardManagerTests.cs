@@ -42,9 +42,9 @@ public class BoardManagerTests
             Assert.True(result is Choice<EffectType>);
             
             var choice = result as Choice<EffectType>;
-            Assert.Contains(EffectType.GAIN_POWER, choice.Choices);
-            Assert.Contains(EffectType.ACQUIRE_TAVERN, choice.Choices);
-            var newResult = choice.Commit(EffectType.GAIN_POWER);
+            Assert.Contains(EffectType.GAIN_POWER, choice.PossibleChoices);
+            Assert.Contains(EffectType.ACQUIRE_TAVERN, choice.PossibleChoices);
+            var newResult = choice.Choose(EffectType.GAIN_POWER);
             Assert.True(newResult is Success);
         }
         
