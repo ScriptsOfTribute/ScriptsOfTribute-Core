@@ -63,7 +63,7 @@
 
         public void DrawCards()
         {
-            Player player = this.Players[(int)CurrentPlayer];
+            var player = this.Players[(int)CurrentPlayer];
             for (var i = 0; i < 5; i++)
             {
                 if (player.DrawPile.Count == 0)

@@ -8,7 +8,6 @@
 
         public Tavern(List<Card> cards)
         {
-            Console.WriteLine(String.Join(", ", cards));
             Cards = cards;
             AvailableCards = new List<Card>(5);
             _rnd = new Random();
@@ -43,9 +42,9 @@
             return toReturn;
         }
 
-        public List<CardId> GetAffordableCards(int coin)
+        public List<Card> GetAffordableCards(int coin)
         {
-            return this.AvailableCards.Where(card => card.Cost <= coin).Select(card => card.Id).ToList();
+            return this.AvailableCards.Where(card => card.Cost <= coin).ToList();
         }
 
         public void ReplaceCard(CardId card)
