@@ -17,14 +17,14 @@ public class ComboContextTests
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
     }
-    
+
     [Fact]
     void ShouldPlayTwoCardsWithoutComboCorrectly()
     {
         var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD), _player1, _player2, _tavern);
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
-        
+
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);
@@ -37,43 +37,43 @@ public class ComboContextTests
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
     }
-    
+
     [Fact]
     void ShouldTriggerSingleComboCorrectly()
     {
         var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.MIDNIGHT_RAID), _player1, _player2, _tavern);
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
-        
+
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.WAR_SONG), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Equal(2, newChainList.Count);
     }
-    
+
     [Fact]
     void ShouldTriggerSingleComboCorrectlyInDifferentOrder()
     {
         var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.WAR_SONG), _player1, _player2, _tavern);
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
-        
+
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.MIDNIGHT_RAID), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Equal(2, newChainList.Count);
     }
-    
+
     [Fact]
     void ShouldNotTriggerSingleComboForDifferentPatrons()
     {
         var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.MIDNIGHT_RAID), _player1, _player2, _tavern);
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
-        
+
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);
     }
-    
+
     [Fact]
     void ShouldTriggerTwoCombosCorrectly()
     {
@@ -84,12 +84,12 @@ public class ComboContextTests
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.MIDNIGHT_RAID), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Equal(3, newChainList.Count);
-        
+
         newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.WAR_SONG), _player1, _player2, _tavern);
         newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);
     }
-    
+
     [Fact]
     void ShouldTriggerCombo3Correctly()
     {
@@ -100,12 +100,12 @@ public class ComboContextTests
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);
-        
+
         newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.EBONY_MINE), _player1, _player2, _tavern);
         newChainList = newChain.Consume().ToList();
         Assert.Equal(2, newChainList.Count);
     }
-        
+
     [Fact]
     void ShouldTriggerCombo3CorrectlyInOrder2()
     {
@@ -116,12 +116,12 @@ public class ComboContextTests
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.EBONY_MINE), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);
-        
+
         newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
         newChainList = newChain.Consume().ToList();
         Assert.Equal(2, newChainList.Count);
     }
-        
+
     [Fact]
     void ShouldTriggerCombo3CorrectlyInOrder3()
     {
@@ -132,7 +132,7 @@ public class ComboContextTests
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);
-        
+
         newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOODS_SHIPMENT), _player1, _player2, _tavern);
         newChainList = newChain.Consume().ToList();
         Assert.Equal(2, newChainList.Count);
@@ -144,9 +144,9 @@ public class ComboContextTests
         var chain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.WAR_SONG), _player1, _player2, _tavern);
         var chainList = chain.Consume().ToList();
         Assert.Single(chainList);
-        
+
         _sut.Reset();
-        
+
         var newChain = _sut.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.MIDNIGHT_RAID), _player1, _player2, _tavern);
         var newChainList = newChain.Consume().ToList();
         Assert.Single(newChainList);

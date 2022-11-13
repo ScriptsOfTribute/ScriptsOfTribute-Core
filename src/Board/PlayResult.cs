@@ -41,11 +41,11 @@ public class Choice<T> : BaseChoice
         {
             throw new Exception("Choice can only be made for cards or effects!");
         }
-        
+
         PossibleChoices = possibleChoices;
         _callback = callback;
     }
-    
+
     public Choice(List<T> possibleChoices, int maxChoiceAmount, ChoiceCallback callback) : this(possibleChoices, callback)
     {
         if (maxChoiceAmount < 1 || maxChoiceAmount > possibleChoices.Count)
@@ -68,7 +68,7 @@ public class Choice<T> : BaseChoice
 
         return result;
     }
-    
+
     public PlayResult Choose(List<T> choices)
     {
         // Check if all choices are in possible choices.

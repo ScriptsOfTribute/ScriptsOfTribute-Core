@@ -1,5 +1,4 @@
-﻿using Moq;
-using TalesOfTribute;
+﻿using TalesOfTribute;
 
 namespace Tests.Board;
 
@@ -19,7 +18,7 @@ public class ExecutionChainTests
         // First - OR choice and immediately after ACQUIRE choice
         var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
             new Effect(EffectType.ACQUIRE_TAVERN, 5));
-        
+
         _sut.Add(effect1.Decompose().First().Enact);
         _sut.Add(new Effect(EffectType.GAIN_POWER, 1).Enact);
 
@@ -34,7 +33,7 @@ public class ExecutionChainTests
         Assert.True(newResult is Choice<CardId>);
         Assert.Throws<Exception>(() => consume.MoveNext());
     }
-    
+
     [Fact]
     void ShouldAllowFinishedChoiceToPass()
     {
@@ -43,7 +42,7 @@ public class ExecutionChainTests
         // First - OR choice and immediately after ACQUIRE choice
         var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
             new Effect(EffectType.ACQUIRE_TAVERN, 5));
-        
+
         _sut.Add(effect1.Decompose().First().Enact);
         _sut.Add(new Effect(EffectType.GAIN_POWER, 1).Enact);
 
@@ -58,7 +57,7 @@ public class ExecutionChainTests
         Assert.True(newResult is Success);
         consume.MoveNext();
     }
-    
+
     [Fact]
     void ShouldCorrectlyFinishComplexFlow()
     {
@@ -92,31 +91,31 @@ public class ExecutionChainTests
             {
                 // Should be OR choice
                 case 0:
-                {
-                    Assert.True(result is Choice<EffectType>);
-                    var choice = result as Choice<EffectType>;
-                    var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
-                    Assert.True(newResult is Choice<CardId>);
-                    var newChoice = newResult as Choice<CardId>;
-                    Assert.True(newChoice.Choose(CardId.GOLD) is Success);
-                    break;
-                }
+                    {
+                        Assert.True(result is Choice<EffectType>);
+                        var choice = result as Choice<EffectType>;
+                        var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
+                        Assert.True(newResult is Choice<CardId>);
+                        var newChoice = newResult as Choice<CardId>;
+                        Assert.True(newChoice.Choose(CardId.GOLD) is Success);
+                        break;
+                    }
                 // Should be power gain
                 case 1:
-                {
-                    Assert.Equal(1, _player1.PowerAmount);
-                    Assert.True(result is Success);
-                    break;
-                }
+                    {
+                        Assert.Equal(1, _player1.PowerAmount);
+                        Assert.True(result is Success);
+                        break;
+                    }
                 // Should be standalone ACQUIRE choice
                 case 2:
-                {
-                    Assert.True(result is Choice<CardId>);
-                    var choice = result as Choice<CardId>;
-                    var newResult = choice.Choose(CardId.GOLD);
-                    Assert.True(newResult is Success);
-                    break;
-                }
+                    {
+                        Assert.True(result is Choice<CardId>);
+                        var choice = result as Choice<CardId>;
+                        var newResult = choice.Choose(CardId.GOLD);
+                        Assert.True(newResult is Success);
+                        break;
+                    }
             }
 
             counter += 1;

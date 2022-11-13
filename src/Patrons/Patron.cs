@@ -22,7 +22,6 @@
          * gives Favored effect
          */
         public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
-        private CardId StarterCard;
 
         public abstract bool PatronActivation(Player activator, Player enemy, Card? card = null);
         public abstract bool PatronPower(Player activator, Player enemy);
