@@ -49,16 +49,31 @@
             return result;
         }
 
-        public void BuyCard(CardId card)
+        public ExecutionChain BuyCard(CardId card)
         {
+
             Card boughtCard = this.Tavern.BuyCard(card);
+
+            if (boughtCard.Cost > Players[(int)CurrentPlayer].CoinsAmount)
+                throw new Exception($"You dont have enough coin to buy {card}");
+
+            Players[(int)CurrentPlayer].CoinsAmount -= boughtCard.Cost;
 
             if (boughtCard.Type == CardType.CONTRACT_AGENT)
                 Players[(int)CurrentPlayer].Agents.Add(boughtCard);
-            if (boughtCard.Type == CardType.CONTRACT_ACTION)
-                Players[(int)CurrentPlayer].PlayCard(boughtCard.Id, Players[(1 - (int)CurrentPlayer)], this.Tavern);
+            else if (boughtCard.Type == CardType.CONTRACT_ACTION)
+                return Players[(int)CurrentPlayer].PlayCard(
+                    boughtCard.Id, Players[(1 - (int)CurrentPlayer)], this.Tavern
+                );
             else
                 Players[(int)CurrentPlayer].CooldownPile.Add(boughtCard);
+
+            // Return empty ExecutionChain
+            return new ExecutionChain(
+                Players[(int)CurrentPlayer],
+                Players[1 - (int)CurrentPlayer],
+                this.Tavern
+            );
         }
 
         public void DrawCards()

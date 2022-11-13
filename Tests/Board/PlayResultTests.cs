@@ -13,7 +13,7 @@ public class PlayResultTests
         var result = sut.Choose(EffectType.HEAL);
         Assert.True(result is Failure);
     }
-    
+
     [Fact]
     void ShouldNotAllowTooManyChoices()
     {
@@ -23,7 +23,7 @@ public class PlayResultTests
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
         Assert.True(result is Failure);
     }
-    
+
     [Fact]
     void ShouldNotAllowIncorrectChoices()
     {
@@ -33,7 +33,7 @@ public class PlayResultTests
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.DESTROY_CARD });
         Assert.True(result is Failure);
     }
-    
+
     [Fact]
     void ShouldPassCorrectSingleChoice()
     {
@@ -43,7 +43,7 @@ public class PlayResultTests
         var result = sut.Choose(EffectType.DRAW);
         Assert.True(result is Success);
     }
-    
+
     [Fact]
     void ShouldPassCorrectMultipleChoice()
     {

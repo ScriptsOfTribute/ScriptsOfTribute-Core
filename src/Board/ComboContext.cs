@@ -30,7 +30,7 @@ public class Combo
                 EffectQueue[i].AddRange(effect.Decompose());
             }
         }
-        
+
         IncrementCombo();
     }
 
@@ -54,7 +54,7 @@ public class ComboContext
     public ExecutionChain PlayCard(Card card, Player owner, Player other, Tavern tavern)
     {
         var combo = GetCombo(card);
-        
+
         combo.AddEffects(card.Effects);
 
         var chain = new ExecutionChain(owner, other, tavern);

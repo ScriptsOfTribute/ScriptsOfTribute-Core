@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace TalesOfTribute
+﻿namespace TalesOfTribute
 {
     public enum EffectType
     {
