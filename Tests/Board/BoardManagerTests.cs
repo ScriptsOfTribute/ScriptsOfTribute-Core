@@ -20,7 +20,7 @@ public class BoardManagerTests
             );
         board.SetUpGame();
 
-        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayer);
+        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayerId);
         Assert.Equal(1, board.Players[(int)PlayerEnum.PLAYER2].CoinsAmount);
 
         Assert.Contains(
@@ -67,7 +67,7 @@ public class BoardManagerTests
 
         Assert.Contains(
             card,
-            sut.Players[(int)sut.CurrentPlayer].CooldownPile
+            sut.Players[(int)sut.CurrentPlayerId].CooldownPile
         );
 
         Assert.DoesNotContain(

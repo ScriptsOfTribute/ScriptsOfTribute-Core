@@ -93,7 +93,7 @@
     "Cost":8,
     "Type":"Action",
     "HP":-1,
-    "Activation":"Coin 6 AND Remove 2",
+    "Activation":"Coin 6",
     "Combo 2":"Acquire 7",
     "Combo 3":null,
     "Combo 4":null,

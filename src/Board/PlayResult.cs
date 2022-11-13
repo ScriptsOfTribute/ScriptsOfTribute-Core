@@ -37,7 +37,7 @@ public class Choice<T> : BaseChoice
     public Choice(List<T> possibleChoices, ChoiceCallback callback) : base()
     {
         // Make sure choice of incorrect type is not created by mistake.
-        if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType))
+        if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType) && typeof(T) != typeof(Location))
         {
             throw new Exception("Choice can only be made for cards or effects!");
         }
@@ -48,7 +48,7 @@ public class Choice<T> : BaseChoice
 
     public Choice(List<T> possibleChoices, int maxChoiceAmount, ChoiceCallback callback) : this(possibleChoices, callback)
     {
-        if (maxChoiceAmount < 1 || maxChoiceAmount > possibleChoices.Count)
+        if (maxChoiceAmount > possibleChoices.Count)
         {
             throw new Exception("Invalid choice amount specified!");
         }

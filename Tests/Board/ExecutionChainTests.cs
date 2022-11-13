@@ -63,15 +63,17 @@ public class ExecutionChainTests
     {
         // SETUP
         _sut = new ExecutionChain(_player1, _player2, _tavern);
+        _player1.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
+        _player1.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
 
-        // First - OR choice and immediately ACQUIRE choice
+        // First - OR choice and immediately TOSS choice
         var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
-            new Effect(EffectType.ACQUIRE_TAVERN, 5));
+            new Effect(EffectType.TOSS, 1));
 
         // Second - Gain Power
         // Third - ACQUIRE choice
         var effect2 = new EffectComposite(new Effect(EffectType.GAIN_POWER, 1),
-            new Effect(EffectType.ACQUIRE_TAVERN, 5));
+            new Effect(EffectType.TOSS, 1));
 
         var finalChain = new List<BaseEffect>();
         finalChain.AddRange(effect1.Decompose());
@@ -91,23 +93,23 @@ public class ExecutionChainTests
             {
                 // Should be OR choice
                 case 0:
-                    {
-                        Assert.True(result is Choice<EffectType>);
-                        var choice = result as Choice<EffectType>;
-                        var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
-                        Assert.True(newResult is Choice<CardId>);
-                        var newChoice = newResult as Choice<CardId>;
-                        Assert.True(newChoice.Choose(CardId.GOLD) is Success);
-                        break;
-                    }
+                {
+                    Assert.True(result is Choice<EffectType>);
+                    var choice = result as Choice<EffectType>;
+                    var newResult = choice.Choose(EffectType.TOSS);
+                    Assert.True(newResult is Choice<CardId>);
+                    var newChoice = newResult as Choice<CardId>;
+                    Assert.True(newChoice.Choose(CardId.GOLD) is Success);
+                    break;
+                }
                 // Should be power gain
                 case 1:
-                    {
-                        Assert.Equal(1, _player1.PowerAmount);
-                        Assert.True(result is Success);
-                        break;
-                    }
-                // Should be standalone ACQUIRE choice
+                {
+                    Assert.Equal(1, _player1.PowerAmount);
+                    Assert.True(result is Success);
+                    break;
+                }
+                // Should be standalone TOSS choice
                 case 2:
                     {
                         Assert.True(result is Choice<CardId>);

@@ -47,14 +47,114 @@
                 case EffectType.GAIN_POWER:
                     player.PowerAmount += Amount;
                     break;
+                
                 case EffectType.ACQUIRE_TAVERN:
-                    // TODO: Implement this, for now I make a test-only implementation for choice returning choice.
-                    return new Choice<CardId>(new List<CardId> { CardId.GOLD, CardId.PECK },
-                        _ => new Success());
+                    return new Choice<CardId>(tavern.GetAffordableCards(Amount).Select(card => card.Id).ToList(),
+                        choiceList =>
+                        {
+                            var choice = choiceList.First();
+                            var card = tavern.Acquire(choice);
+                            // TODO: Handle Agent and Action
+                            player.CooldownPile.Add(card);
+                            return new Success();
+                        });
+                case EffectType.GAIN_COIN:
+                    player.CoinsAmount += Amount;
+                    break;
+                case EffectType.GAIN_PRESTIGE:
+                    player.PrestigeAmount += Amount;
+                    break;
+                case EffectType.OPP_LOSE_PRESTIGE:
+                    enemy.PrestigeAmount -= Amount;
+                    break;
+                case EffectType.REPLACE_TAVERN:
+                    return new Choice<CardId>(
+                        tavern.AvailableCards.Select(card => card.Id).ToList(),
+                        Amount,
+                        choices =>
+                        {
+                            choices.ForEach(tavern.ReplaceCard);
+                            return new Success();
+                        });
+                case EffectType.DESTROY_CARD:
+                    return new Choice<Location>(
+                        new List<Location> { Location.HAND, Location.BOARD },
+                        choiceList =>
+                        {
+                            var choice = choiceList.First();
+                            if (choice == Location.HAND)
+                            {
+                                return new Choice<CardId>(
+                                    player.Hand.Select(card => card.Id).ToList(),
+                                    Amount,
+                                    choices =>
+                                    {
+                                        choices.ForEach(player.DestroyInHand);
+                                        return new Success();
+                                    }
+                                );
+                            }
+                            
+                            return new Choice<CardId>(
+                                player.Agents.Select(card => card.Id).ToList(),
+                                Amount,
+                                choices =>
+                                {
+                                    choices.ForEach(player.DestroyAgent);
+                                    return new Success();
+                                }
+                            );
+                        });
+                case EffectType.DRAW:
+                    for (var i = 0; i < Amount; i++)
+                        player.Draw();
+                    break;
+                case EffectType.OPP_DISCARD:
+                    // TODO: Implement this.
+                    break;
+                case EffectType.RETURN_TOP:
+                    return new Choice<CardId>(
+                        player.CooldownPile.Select(card => card.Id).ToList(),
+                        Amount,
+                        choices =>
+                        {
+                            choices.ForEach(player.Refresh);
+                            return new Success();
+                        }
+                        );
+                case EffectType.TOSS:
+                    return new Choice<CardId>(
+                        player.DrawPile.Select(card => card.Id).Take(Amount).ToList(),
+                        Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount,
+                        choices =>
+                        {
+                            choices.ForEach(player.Toss);
+                            return new Success();
+                        }
+                    );
+                case EffectType.KNOCKOUT:
+                    return new Choice<CardId>(
+                        enemy.Agents.Select(card => card.Id).Take(Amount).ToList(),
+                        Amount > enemy.Agents.Count ? enemy.Agents.Count : Amount,
+                        choices =>
+                        {
+                            choices.ForEach(enemy.KnockOut);
+                            return new Success();
+                        }
+                    );
+                case EffectType.PATRON_CALL:
+                    // TODO: This says 'gain 1 additional patron this round', so to be implemented when we have
+                    // patron calling.
+                    break;
+                case EffectType.CREATE_BOARDINGPARTY:
+                    for (var i = 0; i < Amount; i++)
+                        player.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
+                    break;
+                case EffectType.HEAL:
+                    // TODO: Implement this when we have agents.
+                    break;
                 default:
-                    // TODO: This is for testing only, throw an exception here when all effects are implemented.
-                    // throw new Exception("Not implemented yet!");
-                    return new Success();
+                    throw new Exception("Not implemented yet!");
             }
 
             return new Success();

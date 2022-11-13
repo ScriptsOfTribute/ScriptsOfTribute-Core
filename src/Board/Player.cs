@@ -45,7 +45,7 @@
             PrestigeAmount = prestigeAmount;
             PowerAmount = powerAmount;
             Hand = hand;
-            DrawPile = drawPile;
+            DrawPile = new List<Card>(drawPile);
             Played = played;
             Agents = agents;
             CooldownPile = cooldownPile;
@@ -63,7 +63,7 @@
             PrestigeAmount = prestigeAmount;
             PowerAmount = powerAmount;
             Hand = hand;
-            DrawPile = drawPile;
+            DrawPile = new List<Card>(drawPile);
             Played = played;
             Agents = agents;
             CooldownPile = cooldownPile;
@@ -85,11 +85,48 @@
             return _comboContext.PlayCard(card, this, other, tavern);
         }
 
+        public void Refresh(CardId cardId)
+        {
+            var card = CooldownPile.Find(card => card.Id == cardId);
+            DrawPile.Insert(0, card);
+            CooldownPile.Remove(card);
+        }
+
+        public void Draw()
+        {
+            Hand.Add(DrawPile.Last());
+            DrawPile.RemoveAt(DrawPile.Count - 1);
+        }
+
         public void EndTurn()
         {
             _comboContext.Reset();
             this.CooldownPile.AddRange(this.Played);
             this.Played = new List<Card>();
+        }
+
+        public void Toss(CardId cardId)
+        {
+            var card = DrawPile.First(card => card.Id == cardId);
+            DrawPile.Remove(card);
+            CooldownPile.Add(card);
+        }
+
+        public void KnockOut(CardId cardId)
+        {
+            var card = Agents.First(card => card.Id == cardId);
+            Agents.Remove(card);
+            CooldownPile.Add(card);
+        }
+
+        public void DestroyInHand(CardId cardId)
+        {
+            Hand.Remove(Hand.First(card => card.Id == cardId));
+        }
+        
+        public void DestroyAgent(CardId cardId)
+        {
+            Agents.Remove(Agents.First(card => card.Id == cardId));
         }
 
         public override string ToString()
