@@ -38,8 +38,9 @@
         public override string ToString()
         {
             return String.Format($"Card: {this.Name}, " +
-                $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}, " +
-                $"Effects: {String.Join(", ", this.Effects.Select(p => p.ToString()).ToArray())}");
+                $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}");
         }
+
+
     }
 }

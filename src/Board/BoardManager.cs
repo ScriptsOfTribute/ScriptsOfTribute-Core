@@ -5,7 +5,7 @@
         NORMAL,
         CHOICE_PENDING,
     }
-    
+
     public class BoardManager
     {
         public PlayerEnum CurrentPlayer;
@@ -39,8 +39,8 @@
             {
                 throw new Exception("Complete pending choice first!");
             }
-            
-            var result = Players[(int)CurrentPlayer].PlayCard(cardID, Players[1-(int)CurrentPlayer], Tavern);
+
+            var result = Players[(int)CurrentPlayer].PlayCard(cardID, Players[1 - (int)CurrentPlayer], Tavern);
 
             State = BoardState.CHOICE_PENDING;
 
@@ -49,9 +49,33 @@
             return result;
         }
 
-        public void BuyCard(Card card)
+        public void BuyCard(CardId card)
         {
-            throw new NotImplementedException();
+            Card boughtCard = this.Tavern.BuyCard(card);
+
+            if (boughtCard.Type == CardType.CONTRACT_AGENT)
+                Players[(int)CurrentPlayer].Agents.Add(boughtCard);
+            if (boughtCard.Type == CardType.CONTRACT_ACTION)
+                Players[(int)CurrentPlayer].PlayCard(boughtCard.Id, Players[(1 - (int)CurrentPlayer)], this.Tavern);
+            else
+                Players[(int)CurrentPlayer].CooldownPile.Add(boughtCard);
+        }
+
+        public void DrawCards()
+        {
+            Player player = this.Players[(int)CurrentPlayer];
+            for (var i = 0; i < 5; i++)
+            {
+                if (player.DrawPile.Count == 0)
+                {
+                    player.CooldownPile.OrderBy(x => this._rnd.Next(0, player.CooldownPile.Count)).ToList();
+                    player.DrawPile.AddRange(player.CooldownPile);
+                    player.CooldownPile = new List<Card>();
+                }
+                var card = player.DrawPile.First();
+                player.Hand.Add(card);
+                player.DrawPile.Remove(card);
+            }
         }
 
         public void EndTurn()
@@ -87,6 +111,5 @@
             Players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
             Players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
         }
-
     }
 }

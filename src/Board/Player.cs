@@ -79,7 +79,7 @@
             {
                 throw new Exception($"Can't play card {cardId} - Player doesn't have it!");
             }
-            
+
             var card = Hand.First(card => card.Id == cardId);
 
             return _comboContext.PlayCard(card, this, other, tavern);
@@ -88,6 +88,8 @@
         public void EndTurn()
         {
             _comboContext.Reset();
+            this.CooldownPile.AddRange(this.Played);
+            this.Played = new List<Card>();
         }
 
         public override string ToString()
@@ -103,5 +105,6 @@
                 .Concat(this.CooldownPile).ToList();
             return cards;
         }
+
     }
 }

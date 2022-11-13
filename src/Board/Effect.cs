@@ -8,7 +8,7 @@ namespace TalesOfTribute
         GAIN_POWER,
         GAIN_PRESTIGE,
         OPP_LOSE_PRESTIGE,
-        REMOVE_TAVERN,
+        REPLACE_TAVERN,
         ACQUIRE_TAVERN,
         DESTROY_CARD,
         DRAW,
@@ -30,12 +30,12 @@ namespace TalesOfTribute
     {
         public List<BaseEffect> Decompose();
     }
-    
+
     public class Effect : BaseEffect, ComplexEffect
     {
         public readonly EffectType Type;
         public readonly int Amount;
-        
+
         public Effect(EffectType type, int amount)
         {
             Type = type;
@@ -80,7 +80,7 @@ namespace TalesOfTribute
                 "Power" => EffectType.GAIN_POWER,
                 "Prestige" => EffectType.GAIN_PRESTIGE,
                 "OppPrestige" => EffectType.OPP_LOSE_PRESTIGE,
-                "Remove" => EffectType.REMOVE_TAVERN,
+                "Remove" => EffectType.REPLACE_TAVERN,
                 "Acquire" => EffectType.ACQUIRE_TAVERN,
                 "Destroy" => EffectType.DESTROY_CARD,
                 "Draw" => EffectType.DRAW,
@@ -126,7 +126,7 @@ namespace TalesOfTribute
                 });
         }
     }
-    
+
     public class EffectComposite : ComplexEffect
     {
         private readonly Effect _left;
