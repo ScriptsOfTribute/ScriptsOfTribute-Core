@@ -1,67 +1,130 @@
 ﻿namespace TalesOfTribute
 {
+    public enum BoardState
+    {
+        NORMAL,
+        CHOICE_PENDING,
+    }
+
     public class BoardManager
     {
-        int currentPlayer;
-        Patron[] patrons;
-        Tavern tavern;
-        Player[] players;
+        public PlayerEnum CurrentPlayer;
+        public Patron[] Patrons;
+        public Tavern Tavern;
+        public Player[] Players;
+        private Random _rnd;
+        public BoardState State { get; set; } = BoardState.NORMAL;
 
-        public BoardManager(string[] Patrons)
+        public BoardManager(PatronId[] patrons)
         {
-            patrons = GetPatrons(Patrons);
-            Parser parser = new Parser(cards_config.CARDS_JSON);
-            tavern = new Tavern(parser.GetCardsByDeck(Patrons));
-            players = new Player[] { new Player(0), new Player(1) };
-            players[1].CoinsAmount = 1; // Second player starts with one gold
-            currentPlayer = 0;
+            this.Patrons = GetPatrons(patrons);
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
+            Players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
+            _rnd = new Random();
         }
 
-        private Patron[] GetPatrons(string[] patrons)
+        private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
         {
-            return patrons.Select(
-                patron => Patron.FromEnum(
-                        Patron.FromString(patron)
-                    )
-                ).ToArray();
+            return patrons.Select(Patron.FromId).ToArray();
         }
 
         public void PatronCall(int patronID, Player activator, Player enemy)
         {
-            patrons[patronID].PatronActivation(activator, enemy);
+            Patrons[patronID].PatronActivation(activator, enemy);
         }
 
-        public void PlayCard(int cardID)
+        public ExecutionChain PlayCard(CardId cardID)
         {
-            throw new NotImplementedException();
+            if (State == BoardState.CHOICE_PENDING)
+            {
+                throw new Exception("Complete pending choice first!");
+            }
+
+            var result = Players[(int)CurrentPlayer].PlayCard(cardID, Players[1 - (int)CurrentPlayer], Tavern);
+
+            State = BoardState.CHOICE_PENDING;
+
+            result.AddCompleteCallback(() => State = BoardState.NORMAL);
+
+            return result;
         }
 
-        public void BuyCard(int cardID)
+        public ExecutionChain BuyCard(CardId card)
         {
-            throw new NotImplementedException();
+
+            Card boughtCard = this.Tavern.BuyCard(card);
+
+            if (boughtCard.Cost > Players[(int)CurrentPlayer].CoinsAmount)
+                throw new Exception($"You dont have enough coin to buy {card}");
+
+            Players[(int)CurrentPlayer].CoinsAmount -= boughtCard.Cost;
+
+            if (boughtCard.Type == CardType.CONTRACT_AGENT)
+                Players[(int)CurrentPlayer].Agents.Add(boughtCard);
+            else if (boughtCard.Type == CardType.CONTRACT_ACTION)
+                return Players[(int)CurrentPlayer].PlayCard(
+                    boughtCard.Id, Players[(1 - (int)CurrentPlayer)], this.Tavern
+                );
+            else
+                Players[(int)CurrentPlayer].CooldownPile.Add(boughtCard);
+
+            // Return empty ExecutionChain
+            return new ExecutionChain(
+                Players[(int)CurrentPlayer],
+                Players[1 - (int)CurrentPlayer],
+                this.Tavern
+            );
+        }
+
+        public void DrawCards()
+        {
+            var player = this.Players[(int)CurrentPlayer];
+            for (var i = 0; i < 5; i++)
+            {
+                if (player.DrawPile.Count == 0)
+                {
+                    player.CooldownPile.OrderBy(x => this._rnd.Next(0, player.CooldownPile.Count)).ToList();
+                    player.DrawPile.AddRange(player.CooldownPile);
+                    player.CooldownPile = new List<Card>();
+                }
+                var card = player.DrawPile.First();
+                player.Hand.Add(card);
+                player.DrawPile.Remove(card);
+            }
         }
 
         public void EndTurn()
         {
-            throw new NotImplementedException();
+            Players[(int)CurrentPlayer].PrestigeAmount += Players[(int)CurrentPlayer].PowerAmount;
+            Players[(int)CurrentPlayer].CoinsAmount = 0;
+            Players[(int)CurrentPlayer].EndTurn();
+
+            CurrentPlayer = (PlayerEnum)(1 - (int)CurrentPlayer);
         }
 
         public void SetUpGame()
         {
-            throw new NotImplementedException();
-        }
+            Players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
+            CurrentPlayer = PlayerEnum.PLAYER1;
+            Tavern.DrawCards();
 
-        public void Move(string line)
-        {
-            /*
-             * Parser for commands from external bots
-             * Allowed moves:
-             * - PLAY <card_id> - Use card from your hand with certain id
-             * - CALL_PATRON <patron_id> - Use patron with certain id, <args> for certain patron
-             * - BUY <card_id> - Buy card from tavern
-             * - END - end turn
-             * - CALL_AGENT <agent_id> - use your agent
-             */
+            List<Card> starterDecks = new List<Card>()
+            {
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
+            };
+
+            foreach (var patron in this.Patrons)
+            {
+                starterDecks.Add(GlobalCardDatabase.Instance.GetCard(patron.GetStarterCard()));
+            }
+
+            Players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            Players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
         }
     }
 }

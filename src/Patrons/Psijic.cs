@@ -25,13 +25,13 @@
 
             activator.CoinsAmount -= 4;
 
-            enemy.Agents.Remove(card);
-            enemy.CooldownPile.Add(card);
+            enemy.Agents.Remove((Card)card);
+            enemy.CooldownPile.Add((Card)card);
 
-            if (FavoredPlayer == -1)
+            if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
             else if (FavoredPlayer == enemy.ID)
-                FavoredPlayer = -1;
+                FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
             return true;
         }
@@ -41,6 +41,11 @@
             // No benefits
 
             return true;
+        }
+
+        public override CardId GetStarterCard()
+        {
+            return CardId.MAINLAND_INQUIRIES;
         }
     }
 }

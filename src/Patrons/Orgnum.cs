@@ -28,17 +28,17 @@
             if (FavoredPlayer == activator.ID) // Favored
             {
                 activator.PowerAmount += ownerCardsAmount / 4;
-                activator.CooldownPile.Add(new Parser(cards_config.CARDS_JSON).GetCardByName("Maormer Boarding Party"));
+                activator.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
             }
-            else if (FavoredPlayer == -1) // Neutral
+            else if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED) // Neutral
                 activator.PowerAmount += ownerCardsAmount / 6;
             else // Unfavored
                 activator.PowerAmount += 2;
 
-            if (FavoredPlayer == -1)
+            if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
             else if (FavoredPlayer == enemy.ID)
-                FavoredPlayer = -1;
+                FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
             return true;
         }
@@ -48,6 +48,11 @@
             // No benefits
 
             return true;
+        }
+
+        public override CardId GetStarterCard()
+        {
+            return CardId.SEA_ELF_RAID;
         }
     }
 }
