@@ -22,6 +22,7 @@
         public BoardManager(PatronId[] patrons)
         {
             this.Patrons = GetPatrons(patrons);
+            // TODO: This is actually not correct, as some cards should have multiple copies.
             Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             Players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
             _rnd = new Random();

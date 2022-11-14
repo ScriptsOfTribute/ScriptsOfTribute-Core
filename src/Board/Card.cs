@@ -10,17 +10,18 @@
         CURSE
     }
 
-    public struct Card
+    public class Card
     {
-        public string Name;
-        public PatronId Deck;
-        public CardId Id;
-        public int Cost;
+        public readonly string Name;
+        public readonly PatronId Deck;
+        public readonly CardId Id;
+        public readonly int Cost;
         public readonly CardType Type;
-        public int HP; // >=0 for Agent, -1 for other types
-        public ComplexEffect?[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
-        public int Hash;
-        public CardId? Family;
+        public readonly int HP; // >=0 for Agent, -1 for other types
+        public readonly ComplexEffect?[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
+        public readonly int Hash;
+        public readonly CardId? Family;
+        public Guid Guid { get; } = Guid.Empty;
 
         public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family)
         {
@@ -34,13 +35,25 @@
             Hash = hash;
             Family = family;
         }
+        
+        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, Guid guid)
+            : this(name, deck, id, cost, type, hp, effects, hash, family)
+        {
+            Guid = guid;
+        }
+
+        public Card CreateUniqueCopy()
+        {
+            var guid = Guid.NewGuid();
+            return new Card(Name, Deck, Id, Cost, Type, HP,
+                Effects.Select(effect => effect?.MakeUniqueCopy(guid)).ToArray(),
+                Hash, Family, guid);
+        }
 
         public override string ToString()
         {
             return String.Format($"Card: {this.Name}, " +
                 $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}");
         }
-
-
     }
 }

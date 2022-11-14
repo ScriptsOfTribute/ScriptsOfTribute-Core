@@ -85,6 +85,11 @@
             return _comboContext.PlayCard(card, this, other, tavern);
         }
 
+        public void HealAgent(Guid guid, int amount)
+        {
+            // TODO: Implement when agents are implemented.
+        }
+
         public void Refresh(CardId cardId)
         {
             var card = CooldownPile.Find(card => card.Id == cardId);

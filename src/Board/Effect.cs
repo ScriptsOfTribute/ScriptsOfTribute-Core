@@ -27,17 +27,27 @@
     public interface ComplexEffect
     {
         public List<BaseEffect> Decompose();
+
+        public ComplexEffect MakeUniqueCopy(Guid guid);
     }
 
     public class Effect : BaseEffect, ComplexEffect
     {
         public readonly EffectType Type;
         public readonly int Amount;
+        public Guid Guid { get; } = Guid.Empty;
 
         public Effect(EffectType type, int amount)
         {
             Type = type;
             Amount = amount;
+        }
+        
+        public Effect(EffectType type, int amount, Guid guid)
+        {
+            Type = type;
+            Amount = amount;
+            Guid = guid;
         }
 
         public PlayResult Enact(Player player, Player enemy, Tavern tavern)
@@ -65,7 +75,7 @@
                     player.PrestigeAmount += Amount;
                     break;
                 case EffectType.OPP_LOSE_PRESTIGE:
-                    enemy.PrestigeAmount -= Amount;
+                    enemy.PrestigeAmount += Amount;
                     break;
                 case EffectType.REPLACE_TAVERN:
                     return new Choice<CardId>(
@@ -95,6 +105,8 @@
                                 );
                             }
                             
+                            // TODO: This is actually not correct, because there can be multiple
+                            // agents with the same card id. Fix this when agents are implemented.
                             return new Choice<CardId>(
                                 player.Agents.Select(card => card.Id).ToList(),
                                 Amount,
@@ -151,7 +163,7 @@
                         player.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
                     break;
                 case EffectType.HEAL:
-                    // TODO: Implement this when we have agents.
+                    player.HealAgent(Guid.Empty, Amount);
                     break;
                 default:
                     throw new Exception("Not implemented yet!");
@@ -168,6 +180,11 @@
         public List<BaseEffect> Decompose()
         {
             return new List<BaseEffect> { this };
+        }
+
+        public ComplexEffect MakeUniqueCopy(Guid guid)
+        {
+            return new Effect(Type, Amount, guid);
         }
 
         public static EffectType MapEffectType(string effect)
@@ -198,6 +215,7 @@
     {
         private readonly Effect _left;
         private readonly Effect _right;
+        public Guid Guid { get; } = Guid.Empty;
 
         public EffectChoice(Effect left, Effect right)
         {
@@ -205,9 +223,25 @@
             _right = right;
         }
 
+        public EffectChoice(Effect left, Effect right, Guid guid)
+        {
+            _left = left;
+            _right = right;
+            Guid = guid;
+        }
+
         public List<BaseEffect> Decompose()
         {
             return new List<BaseEffect> { this };
+        }
+
+        public ComplexEffect MakeUniqueCopy(Guid guid)
+        {
+            return new EffectChoice(
+                _left.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
+                    _right.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
+                guid
+                );
         }
 
         public PlayResult Enact(Player player, Player enemy, Tavern tavern)
@@ -230,15 +264,33 @@
         private readonly Effect _left;
         private readonly Effect _right;
 
+        public Guid Guid { get; } = Guid.Empty;
+        
         public EffectComposite(Effect left, Effect right)
         {
             _left = left;
             _right = right;
         }
 
+        public EffectComposite(Effect left, Effect right, Guid guid)
+        {
+            _left = left;
+            _right = right;
+            Guid = guid;
+        }
+
         public List<BaseEffect> Decompose()
         {
             return new List<BaseEffect> { _left, _right };
+        }
+
+        public ComplexEffect MakeUniqueCopy(Guid guid)
+        {
+            return new EffectComposite(
+                _left.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
+                _right.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
+                guid
+            );
         }
     }
 }
