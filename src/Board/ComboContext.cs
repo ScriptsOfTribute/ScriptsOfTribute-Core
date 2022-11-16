@@ -51,7 +51,7 @@ public class ComboContext
 {
     private readonly Dictionary<PatronId, Combo> _combos = new();
 
-    public ExecutionChain PlayCard(Card card, Player owner, Player other, Tavern tavern)
+    public ExecutionChain PlayCard(Card card, IPlayer owner, IPlayer other, ITavern tavern)
     {
         var combo = GetCombo(card);
 

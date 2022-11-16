@@ -2,24 +2,24 @@
 
 public class CardDatabase
 {
-    public List<Card> AllCards { get; }
-    public List<Card> AllCardsWithoutUpgrades { get; }
+    private List<Card> _allCards;
+    public List<Card> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
+    public List<Card> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
 
     public CardDatabase(IEnumerable<Card> cards)
     {
         var cardsEnumerable = cards as Card[] ?? cards.ToArray();
-        AllCards = cardsEnumerable.ToList();
-        AllCardsWithoutUpgrades = FilterOutPreUpgradeCards(cardsEnumerable).ToList();
+        _allCards = cardsEnumerable.ToList();
     }
 
     public Card GetCard(CardId cardId)
     {
-        return AllCards.First(card => card.Id == cardId);
+        return _allCards.First(card => card.Id == cardId).CreateUniqueCopy();
     }
 
     public List<Card> GetCardsByPatron(PatronId[] patrons)
     {
-        var cardsFromDeck = from card in AllCardsWithoutUpgrades where patrons.Contains(card.Deck) select card;
+        var cardsFromDeck = from card in AllCardsWithoutUpgrades where patrons.Contains(card.Deck) select card.CreateUniqueCopy();
         return cardsFromDeck.ToList();
     }
 

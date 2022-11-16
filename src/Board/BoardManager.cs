@@ -8,16 +8,21 @@
 
     public class BoardManager
     {
-        public PlayerEnum CurrentPlayer;
+        public PlayerEnum CurrentPlayerId;
         public Patron[] Patrons;
         public Tavern Tavern;
         public Player[] Players;
         private Random _rnd;
+
+        public Player CurrentPlayer => Players[(int)CurrentPlayerId];
+        public Player EnemyPlayer => Players[1-(int)CurrentPlayerId];
+
         public BoardState State { get; set; } = BoardState.NORMAL;
 
         public BoardManager(PatronId[] patrons)
         {
             this.Patrons = GetPatrons(patrons);
+            // TODO: This is actually not correct, as some cards should have multiple copies.
             Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             Players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
             _rnd = new Random();
@@ -40,7 +45,7 @@
                 throw new Exception("Complete pending choice first!");
             }
 
-            var result = Players[(int)CurrentPlayer].PlayCard(cardID, Players[1 - (int)CurrentPlayer], Tavern);
+            var result = CurrentPlayer.PlayCard(cardID, EnemyPlayer, Tavern);
 
             State = BoardState.CHOICE_PENDING;
 
@@ -52,33 +57,19 @@
         public ExecutionChain BuyCard(CardId card)
         {
 
-            Card boughtCard = this.Tavern.BuyCard(card);
+            Card boughtCard = this.Tavern.Acquire(card);
 
-            if (boughtCard.Cost > Players[(int)CurrentPlayer].CoinsAmount)
+            if (boughtCard.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
 
-            Players[(int)CurrentPlayer].CoinsAmount -= boughtCard.Cost;
+            CurrentPlayer.CoinsAmount -= boughtCard.Cost;
 
-            if (boughtCard.Type == CardType.CONTRACT_AGENT)
-                Players[(int)CurrentPlayer].Agents.Add(boughtCard);
-            else if (boughtCard.Type == CardType.CONTRACT_ACTION)
-                return Players[(int)CurrentPlayer].PlayCard(
-                    boughtCard.Id, Players[(1 - (int)CurrentPlayer)], this.Tavern
-                );
-            else
-                Players[(int)CurrentPlayer].CooldownPile.Add(boughtCard);
-
-            // Return empty ExecutionChain
-            return new ExecutionChain(
-                Players[(int)CurrentPlayer],
-                Players[1 - (int)CurrentPlayer],
-                this.Tavern
-            );
+            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern);
         }
 
         public void DrawCards()
         {
-            var player = this.Players[(int)CurrentPlayer];
+            var player = CurrentPlayer;
             for (var i = 0; i < 5; i++)
             {
                 if (player.DrawPile.Count == 0)
@@ -95,17 +86,17 @@
 
         public void EndTurn()
         {
-            Players[(int)CurrentPlayer].PrestigeAmount += Players[(int)CurrentPlayer].PowerAmount;
-            Players[(int)CurrentPlayer].CoinsAmount = 0;
-            Players[(int)CurrentPlayer].EndTurn();
+            CurrentPlayer.PrestigeAmount += CurrentPlayer.PowerAmount;
+            CurrentPlayer.CoinsAmount = 0;
+            CurrentPlayer.EndTurn();
 
-            CurrentPlayer = (PlayerEnum)(1 - (int)CurrentPlayer);
+            CurrentPlayerId = (PlayerEnum)(1 - (int)CurrentPlayerId);
         }
 
         public void SetUpGame()
         {
-            Players[(int)PlayerEnum.PLAYER2].CoinsAmount = 1; // Second player starts with one gold
-            CurrentPlayer = PlayerEnum.PLAYER1;
+            EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
+            CurrentPlayerId = PlayerEnum.PLAYER1;
             Tavern.DrawCards();
 
             List<Card> starterDecks = new List<Card>()
@@ -123,8 +114,8 @@
                 starterDecks.Add(GlobalCardDatabase.Instance.GetCard(patron.GetStarterCard()));
             }
 
-            Players[(int)PlayerEnum.PLAYER1].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
-            Players[(int)PlayerEnum.PLAYER2].DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            CurrentPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            EnemyPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
         }
     }
 }

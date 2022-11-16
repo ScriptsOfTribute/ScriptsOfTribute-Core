@@ -20,12 +20,12 @@ public class BoardManagerTests
             );
         board.SetUpGame();
 
-        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayer);
+        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayerId);
         Assert.Equal(1, board.Players[(int)PlayerEnum.PLAYER2].CoinsAmount);
 
         Assert.Contains(
-            GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-            board.Players[(int)PlayerEnum.PLAYER2].DrawPile
+            CardId.GOLD,
+            board.Players[(int)PlayerEnum.PLAYER2].DrawPile.Select(card => card.Id)
         );
 
         Assert.Equal(6, board.Players[(int)PlayerEnum.PLAYER2].DrawPile.Count(card => card.Id == CardId.GOLD));
@@ -62,23 +62,35 @@ public class BoardManagerTests
         var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
         sut.SetUpGame();
 
+        sut.CurrentPlayer.CoinsAmount = 100;
+
         var card = sut.Tavern.AvailableCards.First();
         sut.BuyCard(card.Id);
 
         Assert.Contains(
-            card,
-            sut.Players[(int)sut.CurrentPlayer].CooldownPile
+            card.Id,
+            sut.Players[(int)sut.CurrentPlayerId].CooldownPile.Select(card => card.Id)
         );
 
         Assert.DoesNotContain(
-            card,
-            sut.Tavern.AvailableCards
+            card.Id,
+            sut.Tavern.AvailableCards.Select(card => card.Id)
         );
 
         Assert.Equal(
             5,
             sut.Tavern.AvailableCards.Count
         );
+    }
+    
+    [Fact]
+    void ShouldThrowWhenNotEnoughCoinsForCard()
+    {
+        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
+        sut.SetUpGame();
+
+        var card = sut.Tavern.AvailableCards.First();
+        Assert.Throws<Exception>(() => sut.BuyCard(card.Id));
     }
 
     [Fact]

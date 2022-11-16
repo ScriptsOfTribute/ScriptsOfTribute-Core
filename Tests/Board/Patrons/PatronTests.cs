@@ -10,7 +10,7 @@ public class PatronTests
         List<Card> cards = new List<Card>();
         for (int i = 0; i < 10; i++)
         {
-            cards.Add(new Card());
+            cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
         Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, cards);
         Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
@@ -53,7 +53,7 @@ public class PatronTests
         List<Card> cards = new List<Card>();
         for (int i = 0; i < 10; i++)
         {
-            cards.Add(new Card());
+            cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
         Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, cards);
         Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
@@ -90,7 +90,7 @@ public class PatronTests
         List<Card> cards = new List<Card>();
         for (int i = 0; i < 10; i++)
         {
-            cards.Add(new Card());
+            cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
         Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
         Player player2 = new Player(PlayerEnum.PLAYER2, 1, 1, 5, cards, cards, cards, cards, cards);
@@ -117,7 +117,7 @@ public class PatronTests
         List<Card> cards = new List<Card>();
         for (int i = 0; i < 4; i++)
         {
-            cards.Add(new Card());
+            cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
         Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
         Player player2 = new Player(PlayerEnum.PLAYER2, 7, 1, 5, cards, cards, cards, cards, cards);

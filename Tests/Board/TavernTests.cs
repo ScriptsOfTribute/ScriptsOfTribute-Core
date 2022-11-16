@@ -21,32 +21,32 @@ namespace Tests.Board
                 GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY) // Cost 9
             };
 
-            List<Card> result = this._tavern.GetAffordableCards(6);
+            var result = this._tavern.GetAffordableCards(6).Select(card => card.Id).ToList();
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS),
+                GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS).Id,
                 result
             );
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN),
+                GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN).Id,
                 result
             );
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST),
+                GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST).Id,
                 result
             );
 
             Assert.DoesNotContain(
-                GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE),
+                GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE).Id,
                 result
             );
 
-            result = this._tavern.GetAffordableCards(10);
+            result = this._tavern.GetAffordableCards(10).Select(card => card.Id).ToList();
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY),
+                GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY).Id,
                 result
             );
 
