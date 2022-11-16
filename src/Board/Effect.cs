@@ -21,7 +21,7 @@
 
     public interface BaseEffect
     {
-        public PlayResult Enact(Player player, Player enemy, Tavern tavern);
+        public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern);
     }
 
     public interface ComplexEffect
@@ -50,7 +50,7 @@
             Guid = guid;
         }
 
-        public PlayResult Enact(Player player, Player enemy, Tavern tavern)
+        public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
             switch (Type)
             {
@@ -64,8 +64,7 @@
                         {
                             var choice = choiceList.First();
                             var card = tavern.Acquire(choice);
-                            // TODO: Handle Agent and Action
-                            player.CooldownPile.Add(card);
+                            player.HandleAcquireDuringExecutionChain(card, enemy, tavern);
                             return new Success();
                         });
                 case EffectType.GAIN_COIN:
@@ -87,6 +86,7 @@
                             return new Success();
                         });
                 case EffectType.DESTROY_CARD:
+                    // TODO: Fix this in the future when we decide how to Guid etc.
                     return new Choice<Location>(
                         new List<Location> { Location.HAND, Location.BOARD },
                         choiceList =>
@@ -155,15 +155,19 @@
                         }
                     );
                 case EffectType.PATRON_CALL:
-                    // TODO: This says 'gain 1 additional patron this round', so to be implemented when we have
-                    // patron calling.
+                    player.PatronCalls += (uint)Amount;
                     break;
                 case EffectType.CREATE_BOARDINGPARTY:
                     for (var i = 0; i < Amount; i++)
-                        player.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
+                        player.AddToCooldownPile(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
                     break;
                 case EffectType.HEAL:
-                    player.HealAgent(Guid.Empty, Amount);
+                    if (Guid == Guid.Empty)
+                    {
+                        throw new Exception("This shouldn't happen - there is a bug in the engine!");
+                    }
+
+                    player.HealAgent(Guid, Amount);
                     break;
                 default:
                     throw new Exception("Not implemented yet!");
@@ -244,7 +248,7 @@
                 );
         }
 
-        public PlayResult Enact(Player player, Player enemy, Tavern tavern)
+        public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
             return new Choice<EffectType>(new List<EffectType> { _left.Type, _right.Type },
                 choice =>

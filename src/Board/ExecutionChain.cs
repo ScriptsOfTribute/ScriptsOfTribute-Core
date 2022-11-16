@@ -4,15 +4,17 @@ public class ExecutionChain
 {
     public delegate void OnComplete();
 
-    private readonly Queue<Func<Player, Player, Tavern, PlayResult>> _chain = new();
+    private readonly Queue<Func<IPlayer, IPlayer, ITavern, PlayResult>> _chain = new();
     private PlayResult? _current;
     private OnComplete? _onComplete;
 
-    private Player _owner;
-    private Player _enemy;
-    private Tavern _tavern;
+    private IPlayer _owner;
+    private IPlayer _enemy;
+    private ITavern _tavern;
 
-    public ExecutionChain(Player owner, Player enemy, Tavern tavern)
+    public bool Empty => _chain.Count == 0;
+
+    public ExecutionChain(IPlayer owner, IPlayer enemy, ITavern tavern)
     {
         _owner = owner;
         _enemy = enemy;
@@ -21,10 +23,10 @@ public class ExecutionChain
 
     public void AddCompleteCallback(OnComplete onComplete)
     {
-        _onComplete = onComplete;
+        _onComplete += onComplete;
     }
 
-    public void Add(Func<Player, Player, Tavern, PlayResult> func)
+    public void Add(Func<IPlayer, IPlayer, ITavern, PlayResult> func)
     {
         _chain.Enqueue(func);
     }
@@ -36,7 +38,7 @@ public class ExecutionChain
             yield break;
         }
 
-        while (_chain.Count > 0)
+        while (!Empty)
         {
             _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
             yield return _current;
@@ -48,5 +50,14 @@ public class ExecutionChain
         }
 
         _onComplete?.Invoke();
+    }
+
+    public void MergeWith(ExecutionChain other)
+    {
+        while (!other.Empty)
+        {
+            _chain.Enqueue(other._chain.Dequeue());
+        }
+        AddCompleteCallback(() => other._onComplete?.Invoke());
     }
 }

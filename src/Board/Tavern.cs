@@ -1,9 +1,9 @@
 ﻿namespace TalesOfTribute
 {
-    public class Tavern
+    public class Tavern : ITavern
     {
-        public List<Card> Cards;
-        public List<Card> AvailableCards;
+        public List<Card> Cards { get; set; }
+        public List<Card> AvailableCards { get; set; }
         private Random _rnd;
 
         public Tavern(List<Card> cards)

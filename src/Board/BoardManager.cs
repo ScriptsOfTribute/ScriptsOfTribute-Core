@@ -64,21 +64,7 @@
 
             CurrentPlayer.CoinsAmount -= boughtCard.Cost;
 
-            if (boughtCard.Type == CardType.CONTRACT_AGENT)
-                CurrentPlayer.Agents.Add(boughtCard);
-            else if (boughtCard.Type == CardType.CONTRACT_ACTION)
-                return CurrentPlayer.PlayCard(
-                    boughtCard.Id, EnemyPlayer, this.Tavern
-                );
-            else
-                Players[(int)CurrentPlayerId].CooldownPile.Add(boughtCard);
-
-            // Return empty ExecutionChain
-            return new ExecutionChain(
-                CurrentPlayer,
-                EnemyPlayer,
-                this.Tavern
-            );
+            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern);
         }
 
         public void DrawCards()
