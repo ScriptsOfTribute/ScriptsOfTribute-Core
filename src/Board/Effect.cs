@@ -74,7 +74,7 @@
                     player.PrestigeAmount += Amount;
                     break;
                 case EffectType.OPP_LOSE_PRESTIGE:
-                    enemy.PrestigeAmount += Amount;
+                    enemy.PrestigeAmount -= Amount;
                     break;
                 case EffectType.REPLACE_TAVERN:
                     return new Choice<CardId>(
@@ -146,7 +146,7 @@
                     );
                 case EffectType.KNOCKOUT:
                     return new Choice<CardId>(
-                        enemy.Agents.Select(card => card.Id).Take(Amount).ToList(),
+                        enemy.Agents.Select(card => card.Id).ToList(),
                         Amount > enemy.Agents.Count ? enemy.Agents.Count : Amount,
                         choices =>
                         {
@@ -198,7 +198,7 @@
                 "Coin" => EffectType.GAIN_COIN,
                 "Power" => EffectType.GAIN_POWER,
                 "Prestige" => EffectType.GAIN_PRESTIGE,
-                "OppPrestige" => EffectType.OPP_LOSE_PRESTIGE,
+                "OppLosePrestige" => EffectType.OPP_LOSE_PRESTIGE,
                 "Remove" => EffectType.REPLACE_TAVERN,
                 "Acquire" => EffectType.ACQUIRE_TAVERN,
                 "Destroy" => EffectType.DESTROY_CARD,

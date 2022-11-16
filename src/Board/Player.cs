@@ -98,14 +98,14 @@
         public void Refresh(CardId cardId)
         {
             var card = CooldownPile.Find(card => card.Id == cardId);
-            DrawPile.Insert(0, card);
+            DrawPile.Add(card);
             CooldownPile.Remove(card);
         }
 
         public void Draw()
         {
-            Hand.Add(DrawPile.Last());
-            DrawPile.RemoveAt(DrawPile.Count - 1);
+            Hand.Add(DrawPile.First());
+            DrawPile.RemoveAt(0);
         }
 
         public void EndTurn()

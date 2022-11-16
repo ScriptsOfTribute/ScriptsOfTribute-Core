@@ -43,7 +43,7 @@ public class EffectTests
     [Fact]
     void TestOpponentLosePrestige()
     {
-        var effect = new Effect(EffectType.OPP_LOSE_PRESTIGE, -1);
+        var effect = new Effect(EffectType.OPP_LOSE_PRESTIGE, 1);
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
 
