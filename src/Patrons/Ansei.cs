@@ -2,6 +2,8 @@
 {
     public class Ansei : Patron
     {
+        public PatronId ID = PatronId.ANSEI;
+
         public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
         {
             /*

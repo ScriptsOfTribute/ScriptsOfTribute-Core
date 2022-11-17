@@ -2,6 +2,8 @@
 {
     public class Psijic : Patron
     {
+        public PatronId ID = PatronId.PSIJIC;
+        
         public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
         {
             /*

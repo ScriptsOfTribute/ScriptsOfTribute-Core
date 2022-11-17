@@ -2,6 +2,8 @@
 {
     public class DukeOfCrows : Patron
     {
+        public PatronId ID = PatronId.DUKE_OF_CROWS;
+
         public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
         {
             /*
