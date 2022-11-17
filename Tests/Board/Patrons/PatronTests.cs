@@ -154,26 +154,29 @@ public class PatronTests
         Player player1 = new Player(PlayerEnum.PLAYER1);
         Player player2 = new Player(PlayerEnum.PLAYER2);
 
+        var card1 = GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE);
+        var card2 = GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS);
+
         player1.Hand.AddRange(new List<Card>() {
-            GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE),
-            GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS)
+            card1,
+            card2
         });
 
         BoardManager board = new BoardManager(new[] { PatronId.HLAALU });
 
         Assert.Equal(0, player1.PrestigeAmount);
-        Assert.Contains(GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE), player1.Hand);
+        Assert.Contains(card1, player1.Hand);
         Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.Patrons[0].FavoredPlayer);
 
-        var result = board.PatronCall(0, player1, player2) as Choice<CardId>;
-        Assert.IsType<Success>(result.Choose(new List<CardId>() { CardId.CURRENCY_EXCHANGE }));
+        var result = board.PatronCall(0, player1, player2) as Choice<Card>;
+        Assert.IsType<Success>(result.Choose(new List<Card>() { card1 }));
 
         Assert.Equal(6, player1.PrestigeAmount);
-        Assert.DoesNotContain(GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE), player1.Hand);
+        Assert.DoesNotContain(card1, player1.Hand);
         Assert.Equal(PlayerEnum.PLAYER1, board.Patrons[0].FavoredPlayer);
 
-        result = board.PatronCall(0, player2, player1) as Choice<CardId>;
-        Assert.IsType<Failure>(result.Choose(new List<CardId>() { CardId.LUXURY_EXPORTS }));
+        result = board.PatronCall(0, player2, player1) as Choice<Card>;
+        Assert.IsType<Failure>(result.Choose(new List<Card>() { card2 }));
 
     }
 }
