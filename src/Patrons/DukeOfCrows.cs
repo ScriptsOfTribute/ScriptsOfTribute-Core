@@ -2,7 +2,7 @@
 {
     public class DukeOfCrows : Patron
     {
-        public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
+        public override PlayResult PatronActivation(Player activator, Player enemy)
         {
             /*
              * Neutral:
@@ -13,12 +13,12 @@
              */
             if (FavoredPlayer == activator.ID)
             {
-                return true;
+                return new Success();
             }
 
             if (activator.CoinsAmount <= 0)
             {
-                return false;
+                return new Failure("Not enough Coin to activate Duke of Crows");
             }
 
             activator.PowerAmount += activator.CoinsAmount - 1;
@@ -29,14 +29,14 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return true;
+            return new Success();
         }
 
-        public override bool PatronPower(Player activator, Player enemy)
+        public override PlayResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 
-            return true;
+            return new Success();
         }
 
         public override CardId GetStarterCard()

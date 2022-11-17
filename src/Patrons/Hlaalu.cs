@@ -2,7 +2,7 @@
 {
     public class Hlaalu : Patron
     {
-        public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
+        public override PlayResult PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -18,15 +18,28 @@
              * Gain Prestige equal to the card's cost minus 1
              */
 
-            // TODO
-            return true;
+            if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
+                FavoredPlayer = activator.ID;
+            else if (FavoredPlayer == enemy.ID)
+                FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
+
+            return new Choice<CardId>(activator.Hand.Select(c => c.Id).ToList(),
+                cards =>
+                {
+                    var card = activator.Hand.First(c => c.Id == cards.First());
+                    if (card.Cost < 1)
+                        return new Failure("Card's Cost is too small to use Hlaalu");
+                    activator.Hand.Remove(card);
+                    activator.PrestigeAmount += card.Cost - 1;
+                    return new Success();
+                });
         }
 
-        public override bool PatronPower(Player activator, Player enemy)
+        public override PlayResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 
-            return true;
+            return new Success();
         }
 
         public override CardId GetStarterCard()

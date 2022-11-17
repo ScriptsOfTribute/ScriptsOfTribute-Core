@@ -2,7 +2,7 @@
 {
     public class Psijic : Patron
     {
-        public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
+        public override PlayResult PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -18,29 +18,26 @@
              * Knock Out 1 of enemy's agents into cooldown pile
              */
 
-            if (activator.CoinsAmount < 4 || enemy.Agents.Count <= 0 || card == null)
-            {
-                return false;
-            }
+            if (activator.CoinsAmount < 4)
+                return new Failure("Not enough Coin to activate Psijic");
+            if (enemy.Agents.Count <= 0)
+                return new Failure("Enemy has no agents, can't activate Psijic");
 
             activator.CoinsAmount -= 4;
-
-            enemy.Agents.Remove((Card)card);
-            enemy.CooldownPile.Add((Card)card);
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return true;
+            return new Choice<CardId>(enemy.Agents.Select(c => c.Id).ToList(), _ => new Success());
         }
 
-        public override bool PatronPower(Player activator, Player enemy)
+        public override PlayResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 
-            return true;
+            return new Success();
         }
 
         public override CardId GetStarterCard()

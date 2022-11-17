@@ -16,7 +16,7 @@
         private Random _rnd;
 
         public Player CurrentPlayer => Players[(int)CurrentPlayerId];
-        public Player EnemyPlayer => Players[1-(int)CurrentPlayerId];
+        public Player EnemyPlayer => Players[1 - (int)CurrentPlayerId];
 
         public BoardState State { get; set; } = BoardState.NORMAL;
 
@@ -34,9 +34,9 @@
             return patrons.Select(Patron.FromId).ToArray();
         }
 
-        public void PatronCall(int patronID, Player activator, Player enemy)
+        public PlayResult PatronCall(int patronID, Player activator, Player enemy)
         {
-            Patrons[patronID].PatronActivation(activator, enemy);
+            return Patrons[patronID].PatronActivation(activator, enemy);
         }
 
         public ExecutionChain PlayCard(Card card)

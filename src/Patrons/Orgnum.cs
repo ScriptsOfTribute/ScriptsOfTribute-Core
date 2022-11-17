@@ -2,7 +2,7 @@
 {
     public class Orgnum : Patron
     {
-        public override bool PatronActivation(Player activator, Player enemy, Card? card = null)
+        public override PlayResult PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -18,7 +18,7 @@
 
             if (activator.CoinsAmount < 3)
             {
-                return false;
+                return new Failure("Not enough Coin to activate Orgnum");
             }
 
             activator.CoinsAmount -= 3;
@@ -40,14 +40,14 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return true;
+            return new Success();
         }
 
-        public override bool PatronPower(Player activator, Player enemy)
+        public override PlayResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 
-            return true;
+            return new Success();
         }
 
         public override CardId GetStarterCard()

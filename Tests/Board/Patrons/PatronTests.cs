@@ -1,6 +1,6 @@
 ﻿using TalesOfTribute;
 
-namespace Tests.utils;
+namespace Tests.Patrons;
 
 public class PatronTests
 {
@@ -40,7 +40,7 @@ public class PatronTests
 
         //Test patron's activation if player doesn't have enough power
         player1.PowerAmount = 1;
-        Assert.False(ansei.PatronActivation(player1, player2));
+        Assert.IsType<Failure>(ansei.PatronActivation(player1, player2));
         Assert.Equal(1, player1.PowerAmount);
         Assert.Equal(7, player1.CoinsAmount);
         Assert.Equal(player2.ID, ansei.FavoredPlayer);
@@ -63,25 +63,25 @@ public class PatronTests
         Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, duke.FavoredPlayer);
 
         //Test patron's activation
-        Assert.True(duke.PatronActivation(player1, player2));
+        Assert.IsType<Success>(duke.PatronActivation(player1, player2));
         Assert.Equal(11, player1.PowerAmount);
         Assert.Equal(0, player1.CoinsAmount);
         Assert.Equal(player1.ID, duke.FavoredPlayer);
 
         //If player is favored, activation doesnt work
-        Assert.True(duke.PatronActivation(player1, player2));
+        Assert.IsType<Success>(duke.PatronActivation(player1, player2));
         Assert.Equal(11, player1.PowerAmount);
         Assert.Equal(0, player1.CoinsAmount);
         Assert.Equal(player1.ID, duke.FavoredPlayer);
 
 
-        Assert.True(duke.PatronActivation(player2, player1));
+        Assert.IsType<Success>(duke.PatronActivation(player2, player1));
         Assert.Equal(12, player2.PowerAmount);
         Assert.Equal(0, player2.CoinsAmount);
         Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, duke.FavoredPlayer);
 
         //If player has no money, activation doesnt work
-        Assert.False(duke.PatronActivation(player1, player2));
+        Assert.IsType<Failure>(duke.PatronActivation(player1, player2));
     }
 
     [Fact]
@@ -100,13 +100,13 @@ public class PatronTests
         Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, rajhin.FavoredPlayer);
 
         //Test patron's activation
-        Assert.True(rajhin.PatronActivation(player1, player2));
+        Assert.IsType<Success>(rajhin.PatronActivation(player1, player2));
         Assert.Equal(2, player1.CoinsAmount);
         Assert.Equal(player1.ID, rajhin.FavoredPlayer);
         Assert.Contains(player2.CooldownPile, card => card.Name == "Bewilderment");
 
         // Not enough gold
-        Assert.False(rajhin.PatronActivation(player2, player1));
+        Assert.IsType<Failure>(rajhin.PatronActivation(player2, player1));
         Assert.Equal(1, player2.CoinsAmount);
         Assert.DoesNotContain(player1.CooldownPile, card => card.Name == "Bewilderment");
     }
@@ -127,7 +127,7 @@ public class PatronTests
         Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, orgnum.FavoredPlayer);
 
         //Test patron's activation
-        Assert.True(orgnum.PatronActivation(player1, player2));
+        Assert.IsType<Success>(orgnum.PatronActivation(player1, player2));
         Assert.Equal(2, player1.CoinsAmount);
         Assert.Equal(player1.ID, orgnum.FavoredPlayer);
         Assert.Equal(9, player1.PowerAmount);
@@ -135,16 +135,45 @@ public class PatronTests
         player1.CoinsAmount = 6;
 
         //Test patron's activation when favored
-        Assert.True(orgnum.PatronActivation(player1, player2));
+        Assert.IsType<Success>(orgnum.PatronActivation(player1, player2));
         Assert.Equal(3, player1.CoinsAmount);
         Assert.Equal(player1.ID, orgnum.FavoredPlayer);
         Assert.Equal(13, player1.PowerAmount);
         Assert.Contains(player1.CooldownPile, card => card.Name == "Maormer Boarding Party");
 
         //Test patron's activation when not favored
-        Assert.True(orgnum.PatronActivation(player2, player1));
+        Assert.IsType<Success>(orgnum.PatronActivation(player2, player1));
         Assert.Equal(4, player2.CoinsAmount);
         Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, orgnum.FavoredPlayer);
         Assert.Equal(7, player2.PowerAmount);
+    }
+
+    [Fact]
+    public void HlaaluTest()
+    {
+        Player player1 = new Player(PlayerEnum.PLAYER1);
+        Player player2 = new Player(PlayerEnum.PLAYER2);
+
+        player1.Hand.AddRange(new List<Card>() {
+            GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE),
+            GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS)
+        });
+
+        BoardManager board = new BoardManager(new[] { PatronId.HLAALU });
+
+        Assert.Equal(0, player1.PrestigeAmount);
+        Assert.Contains(GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE), player1.Hand);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.Patrons[0].FavoredPlayer);
+
+        var result = board.PatronCall(0, player1, player2) as Choice<CardId>;
+        Assert.IsType<Success>(result.Choose(new List<CardId>() { CardId.CURRENCY_EXCHANGE }));
+
+        Assert.Equal(6, player1.PrestigeAmount);
+        Assert.DoesNotContain(GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE), player1.Hand);
+        Assert.Equal(PlayerEnum.PLAYER1, board.Patrons[0].FavoredPlayer);
+
+        result = board.PatronCall(0, player2, player1) as Choice<CardId>;
+        Assert.IsType<Failure>(result.Choose(new List<CardId>() { CardId.LUXURY_EXPORTS }));
+
     }
 }
