@@ -23,8 +23,8 @@
          */
         public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
 
-        public abstract bool PatronActivation(Player activator, Player enemy, Card? card = null);
-        public abstract bool PatronPower(Player activator, Player enemy);
+        public abstract PlayResult PatronActivation(Player activator, Player enemy);
+        public abstract PlayResult PatronPower(Player activator, Player enemy);
 
         public abstract CardId GetStarterCard();
 
