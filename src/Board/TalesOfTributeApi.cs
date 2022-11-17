@@ -1,5 +1,7 @@
+using System.Collections.Generic;
+
 namespace TalesOfTribute {
-  class TalesOfTribute {
+  class TalesOfTributeApi {
     //all numbers related
     /* Probably its better to have two function:
     GetMyAmountOfCoins and GetOpponentAmountOfCoins but it doubles numbers of functions */
@@ -86,11 +88,11 @@ namespace TalesOfTribute {
     // Agents related
     //I assume that we will handle Agents special
 
-    public List GetListOfAgents(int playerId) {
+    public List<Card> GetListOfAgents(int playerId) {
       throw new NotImplementedException();
     }
 
-    public List GetListOfActiveAgents(int playerId) {
+    public List<Card> GetListOfActiveAgents(int playerId) {
       throw new NotImplementedException();
     }
 
@@ -127,13 +129,19 @@ namespace TalesOfTribute {
       throw new NotImplementedException();
     }
 
+    /* TODO
     public Dictionary GetAllLevelsOfFavoritism(int playerId) {
       throw new NotImplementedException();
     }
+    */
 
     // cards related
 
     public Card DrawCard() {
+      throw new NotImplementedException();
+    }
+
+    public Card BuyCard() {
       throw new NotImplementedException();
     }
 
@@ -201,13 +209,137 @@ namespace TalesOfTribute {
     }
 
     //others
-    public List GetListOfPossibleMoves() {
-      throw new NotImplementedException();
+
+    public Move FromStringToMove(string move){
+        string[] splittedMove = move.Split(' ');
+
+        if (splittedMove.Length !=2){
+            throw new InvalidOperationException();
+        }
+
+        if (!Command.ValidateStringCommand(splittedMove[0])){
+            throw new InvalidOperationException();
+        }
+
+        try{
+            int value = Int32.Parse(splittedMove[1]);
+            return new Move(splittedMove[0], value);
+        }
+        catch (FormatException e){
+            throw new InvalidOperationException();
+        }
     }
 
-    public bool IsMoveLegal(string move) {
-      //we need schema and parser to validate that
-      throw new NotImplementedException();
+    public List<Move> GetListOfPossibleMoves(BoardManager boardManager) {
+      List<Move> possibleMoves = new List<Move>();
+      var current_player = boardManager.Players[(int)boardManager.CurrentPlayer];
+      var opponent = boardManager.Players[1 - (int)boardManager.CurrentPlayer];
+
+      foreach (Card card in current_player.Hand){
+        possibleMoves.Add(new Move(Command.PLAY_CARD, card.Id));
+      }
+
+      foreach (Card agent in current_player.Agents){
+        if (!agent.Activated){
+          possibleMoves.Add(new Move(Command.PLAY_CARD, agent.Id));
+        }
+      }
+
+      List<Card> tauntAgents = opponent.Agents.FindAll(agent => agent.Taunt);
+      if (current_player.PowerAmount>0){
+        if (tauntAgents.Any()){
+          foreach (Card agent in tauntAgents){
+            possibleMoves.Add(new Move(Command.ATTACK, agent.Id));
+          }
+        }
+        else{
+          foreach (Card agent in opponent.Agents){
+            possibleMoves.Add(new Move(Command.ATTACK, agent.Id));
+          }
+        }
+      }
+      if (current_player.CoinsAmount>0){
+        foreach (Card card in Tawern){
+          if (card.Cost<=current_player.CoinsAmount){
+            possibleMoves.Add(new Move(Command.BUY_CARD, card.Id));
+          }
+        }
+      }
+
+      List<Card> usedCards = current_player.Played.Concat(current_player.CooldownPile).ToList();
+      if (current_player.patronCalls>0){
+
+        if (current_player.CoinsAmount>=2){
+          foreach (Card card in usedCards){
+            possibleMoves.Add(new Move(Command.TREASURY, card.Id));
+          }
+        }
+
+        foreach (var patron in boardManager.Patrons){
+          if (patron.ID == PatronId.DUKE_OF_CROWS){
+            if (current_player.CoinsAmount>0 && patron.FavoredPlayer != current_player.ID){
+              possibleMoves.Add(new Move(Command.DUKE_OF_CROWS));
+            }
+          }
+
+          if (current_player.PowerAmount>=2){
+            if (patron.ID == PatronId.RED_EAGLE){
+              possibleMoves.Add(new Move(Command.RED_EAGLE));
+            }
+            if (patron.ID == PatronId.ANSEI && patron.FavoredPlayer != current_player.ID){
+              possibleMoves.Add(new Move(Command.ANSEI));
+            }
+            if (patron.ID == PatronId.PELIN){
+              List<Card> agentsInCooldownPile = current_player.CooldownPile.FindAll(card => card.Type==AGENT);
+              foreach (Card agent in agentsInCooldownPile){
+                possibleMoves.Add(new Move(Command.PELIN, agent.Id));
+              }
+            }
+          }
+
+          if (current_player.CoinsAmount>=3){
+            if (patron.ID == PatronId.RAJHIN){
+              possibleMoves.Add(new Move(Command.RAJHIN));
+            }
+            if (patron.ID == PatronId.ORGNUM){
+              possibleMoves.Add(new Move(Command.ORGNUM));
+            }
+          }
+
+          if (patron.ID == PatronId.PSIJIC && current_player.CoinsAmount>=4){
+            if (tauntAgents.Any()){
+              foreach (Card agent in tauntAgents){
+                possibleMoves.Add(new Move(Command.PSIJIC, agent.Id));
+              }
+            }
+            else{
+              foreach (Card agent in opponent.Agents){
+                possibleMoves.Add(new Move(Command.PSIJIC, agent.Id));
+              }
+            }
+          }
+
+          if (patron.ID == PatronId.PSIJIC){
+            // not sure it will be all card that player own or only all without drawpile
+            List<Card> cardsWithCost = current_player.GetAllPlayersCards().FindAll(card => card.Cost>=1);
+            foreach (var card in cardsWithCost){
+              possibleMoves.Add(new Move(Command.HLAALU, card.Id));
+            }
+          }
+        }
+      }
+
+      possibleMoves.Add(new Move(Command.END_TURN));
+
+      return possibleMoves;
+    }
+
+    public bool IsMoveLegal(string move, BoardManager boardManager) {
+      
+      Move playerMove = FromStringToMove(move);
+      List<Move> possibleMoves = GetListOfPossibleMoves(boardManager);
+
+      return possibleMoves.Contains(playerMove);
     }
 
     public void EndTurn() {

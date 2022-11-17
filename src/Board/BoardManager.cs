@@ -19,6 +19,7 @@
         public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
 
         public BoardState State { get; set; } = BoardState.NORMAL;
+        public int PrestigeTreshold = 40;
 
         public BoardManager(PatronId[] patrons)
         {
@@ -165,6 +166,35 @@
         public List<Card> GetAffordableCards(int coinAmount)
         {
             return this._tavern.GetAffordableCards(coinAmount);
+        }
+
+        public PlayerEnum CheckAndGetWinner(){
+            var current_player = Players[(int)CurrentPlayer];
+            var opponent = Players[1 - (int)CurrentPlayer];
+
+            if (current_player.PrestigeAmount>=80){
+                return CurrentPlayer;
+            }
+
+            bool win = true;
+
+            foreach (var patron in this.Patrons){
+                if (patron.FavoredPlayer != CurrentPlayer){
+                    win = false;
+                    break;
+                }
+            }
+
+            if (win){
+                return CurrentPlayer;
+            }
+
+            if (current_player.PrestigeAmount < opponent.PrestigeAmount && opponent.PrestigeAmount>=40){
+                return (PlayerEnum)(1 - (int)CurrentPlayer);
+            }
+            else{
+                return PlayerEnum.NO_PLAYER_SELECTED;
+            }
         }
     }
 }
