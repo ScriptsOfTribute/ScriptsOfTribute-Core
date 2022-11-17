@@ -33,13 +33,16 @@
             AvailableCards = new List<Card>(5);
         }
 
-        public Card Acquire(CardId card)
+        public Card Acquire(Card card)
         {
-            Card toReturn = this.AvailableCards.First(c => c.Id == card);
-            this.AvailableCards.Remove(toReturn);
-            this.AvailableCards.Add(this.Cards.First());
-            this.Cards.RemoveAt(0);
-            return toReturn;
+            if (!AvailableCards.Contains(card))
+            {
+                throw new Exception($"Card {card.Id} is not available!");
+            }
+            AvailableCards.Remove(card);
+            AvailableCards.Add(this.Cards.First());
+            Cards.RemoveAt(0);
+            return card;
         }
 
         public List<Card> GetAffordableCards(int coin)
@@ -47,14 +50,13 @@
             return this.AvailableCards.Where(card => card.Cost <= coin).ToList();
         }
 
-        public void ReplaceCard(CardId card)
+        public void ReplaceCard(Card toReplace)
         {
-            Card replaced = this.AvailableCards.First(c => c.Id == card);
-            Card replacer = this.Cards.First();
-            this.Cards.Remove(replacer);
-            this.Cards.Add(replaced);
-            this.AvailableCards.Remove(replaced);
-            this.AvailableCards.Add(replacer);
+            Card newCard = Cards.First();
+            Cards.Remove(newCard);
+            Cards.Add(toReplace);
+            AvailableCards.Remove(toReplace);
+            AvailableCards.Add(newCard);
         }
     }
 }

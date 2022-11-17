@@ -18,6 +18,8 @@
         public List<Card> Played { get; set; }
         public List<Card> Agents { get; set; }
         public List<Card> CooldownPile { get; set; }
+        public ExecutionChain? StartOfTurnEffectsChain { get; private set; }
+
         public uint ForcedDiscard;
         public uint PatronCalls { get; set; }
         public long ShuffleSeed;
@@ -55,14 +57,9 @@
             ID = iD;
         }
 
-        public ExecutionChain PlayCard(CardId cardId, IPlayer other, ITavern tavern)
+        public ExecutionChain PlayCard(Card card, IPlayer other, ITavern tavern)
         {
-            if (Hand.All(card => card.Id != cardId))
-            {
-                throw new Exception($"Can't play card {cardId} - Player doesn't have it!");
-            }
-
-            var card = Hand.First(card => card.Id == cardId);
+            AssertCardIn(card, Hand);
 
             return PlayCardWithoutChecks(card, other, tavern);
         }
@@ -95,9 +92,15 @@
             // TODO: Implement when agents are implemented.
         }
 
-        public void Refresh(CardId cardId)
+        public void Discard(Card card)
         {
-            var card = CooldownPile.Find(card => card.Id == cardId);
+            AssertCardIn(card, Hand);
+            Hand.Remove(card);
+        }
+
+        public void Refresh(Card card)
+        {
+            AssertCardIn(card, CooldownPile);
             DrawPile.Add(card);
             CooldownPile.Remove(card);
         }
@@ -111,8 +114,8 @@
         public void EndTurn()
         {
             _comboContext.Reset();
-            this.CooldownPile.AddRange(this.Played);
-            this.Played = new List<Card>();
+            CooldownPile.AddRange(this.Played);
+            Played = new List<Card>();
             PatronCalls = 1;
         }
 
@@ -143,16 +146,16 @@
             );
         }
 
-        public void Toss(CardId cardId)
+        public void Toss(Card card)
         {
-            var card = DrawPile.First(card => card.Id == cardId);
+            AssertCardIn(card, DrawPile);
             DrawPile.Remove(card);
             CooldownPile.Add(card);
         }
 
-        public void KnockOut(CardId cardId)
+        public void KnockOut(Card card)
         {
-            var card = Agents.First(card => card.Id == cardId);
+            AssertCardIn(card, Agents);
             Agents.Remove(card);
             CooldownPile.Add(card);
         }
@@ -162,14 +165,20 @@
             CooldownPile.Add(card);
         }
 
-        public void DestroyInHand(CardId cardId)
+        public void Destroy(Card card)
         {
-            Hand.Remove(Hand.First(card => card.Id == cardId));
-        }
-        
-        public void DestroyAgent(CardId cardId)
-        {
-            Agents.Remove(Agents.First(card => card.Id == cardId));
+            if (Hand.Contains(card))
+            {
+                Hand.Remove(card);
+            }
+            else if (Agents.Contains(card))
+            {
+                Agents.Remove(card);
+            }
+            else
+            {
+                throw new Exception($"Can't destroy card {card.Id} - it's not in Hand or on Board!");
+            }
         }
 
         public override string ToString()
@@ -186,5 +195,25 @@
             return cards;
         }
 
+        public void AddStartOfTurnEffects(ExecutionChain chain)
+        {
+            if (StartOfTurnEffectsChain != null)
+            {
+                StartOfTurnEffectsChain.MergeWith(chain);
+            }
+            else
+            {
+                StartOfTurnEffectsChain = chain;
+                StartOfTurnEffectsChain.AddCompleteCallback(() => StartOfTurnEffectsChain = null);
+            }
+        }
+
+        private void AssertCardIn(Card card, List<Card> list)
+        {
+            if (!list.Contains(card))
+            {
+                throw new Exception("Wrong card chosen!");
+            }
+        }
     }
 }

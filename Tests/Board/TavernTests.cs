@@ -55,11 +55,12 @@ namespace Tests.Board
         [Fact]
         public void ReplaceCardTest()
         {
+            var cardToReplace = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
             this._tavern.AvailableCards = new List<Card>()
             {
                 GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE),
                 GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS),
-                GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN),
+                cardToReplace,
                 GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST),
                 GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY)
             };
@@ -68,7 +69,7 @@ namespace Tests.Board
                 CardId.OATHMAN,
                 this._tavern.AvailableCards.Select(card => card.Id)
             );
-            this._tavern.ReplaceCard(CardId.OATHMAN);
+            this._tavern.ReplaceCard(cardToReplace);
 
             Assert.DoesNotContain(
                 CardId.OATHMAN,
@@ -76,7 +77,6 @@ namespace Tests.Board
             );
 
             Assert.Equal(5, this._tavern.AvailableCards.Count);
-
         }
     }
 }

@@ -17,8 +17,8 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowTooManyChoices()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS }, 1,
-            _ => new Success());
+        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+            _ => new Success(), 1);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
         Assert.True(result is Failure);
@@ -27,8 +27,8 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowIncorrectChoices()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS }, 2,
-            _ => new Success());
+        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+            _ => new Success(), 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.DESTROY_CARD });
         Assert.True(result is Failure);
@@ -47,10 +47,30 @@ public class PlayResultTests
     [Fact]
     void ShouldPassCorrectMultipleChoice()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS }, 2,
-            _ => new Success());
+        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+            _ => new Success(), 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
         Assert.True(result is Success);
+    }
+    
+    [Fact]
+    void ShouldNotAllowTooFewChoices()
+    {
+        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+            _ => new Success(), 2, 2);
+
+        var result = sut.Choose(new List<EffectType> { EffectType.HEAL });
+        Assert.True(result is Failure);
+    }
+
+    [Fact]
+    void ShouldNotAllowTooFewChoicesOverload()
+    {
+        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+            _ => new Success(), 2, 2);
+
+        var result = sut.Choose(EffectType.HEAL);
+        Assert.True(result is Failure);
     }
 }

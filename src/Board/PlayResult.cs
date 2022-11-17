@@ -29,6 +29,7 @@ public class Choice<T> : BaseChoice
 {
     public List<T> PossibleChoices { get; }
     public int MaxChoiceAmount { get; } = 1;
+    public int MinChoiceAmount { get; } = 0;
 
     public delegate PlayResult ChoiceCallback(List<T> t);
 
@@ -37,7 +38,7 @@ public class Choice<T> : BaseChoice
     public Choice(List<T> possibleChoices, ChoiceCallback callback) : base()
     {
         // Make sure choice of incorrect type is not created by mistake.
-        if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType) && typeof(T) != typeof(Location))
+        if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
         {
             throw new Exception("Choice can only be made for cards or effects!");
         }
@@ -46,7 +47,7 @@ public class Choice<T> : BaseChoice
         _callback = callback;
     }
 
-    public Choice(List<T> possibleChoices, int maxChoiceAmount, ChoiceCallback callback) : this(possibleChoices, callback)
+    public Choice(List<T> possibleChoices, ChoiceCallback callback, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback)
     {
         if (maxChoiceAmount > possibleChoices.Count)
         {
@@ -54,11 +55,12 @@ public class Choice<T> : BaseChoice
         }
 
         MaxChoiceAmount = maxChoiceAmount;
+        MinChoiceAmount = minChoiceAmount;
     }
 
     public PlayResult Choose(T t)
     {
-        if (!PossibleChoices.Contains(t))
+        if (!PossibleChoices.Contains(t) || MinChoiceAmount > 1)
         {
             return new Failure("Invalid choice specified!");
         }
@@ -72,7 +74,7 @@ public class Choice<T> : BaseChoice
     public PlayResult Choose(List<T> choices)
     {
         // Check if all choices are in possible choices.
-        if (choices.Except(PossibleChoices).Any() || choices.Count > MaxChoiceAmount)
+        if (choices.Except(PossibleChoices).Any() || choices.Count > MaxChoiceAmount || choices.Count < MinChoiceAmount)
         {
             return new Failure("Invalid choices specified!");
         }

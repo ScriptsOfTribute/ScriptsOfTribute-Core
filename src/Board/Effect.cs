@@ -59,7 +59,7 @@
                     break;
                 
                 case EffectType.ACQUIRE_TAVERN:
-                    return new Choice<CardId>(tavern.GetAffordableCards(Amount).Select(card => card.Id).ToList(),
+                    return new Choice<Card>(tavern.GetAffordableCards(Amount),
                         choiceList =>
                         {
                             var choice = choiceList.First();
@@ -77,82 +77,79 @@
                     enemy.PrestigeAmount -= Amount;
                     break;
                 case EffectType.REPLACE_TAVERN:
-                    return new Choice<CardId>(
-                        tavern.AvailableCards.Select(card => card.Id).ToList(),
-                        Amount,
+                    return new Choice<Card>(
+                        tavern.AvailableCards,
                         choices =>
                         {
                             choices.ForEach(tavern.ReplaceCard);
                             return new Success();
-                        });
+                        },
+                        Amount
+                    );
                 case EffectType.DESTROY_CARD:
-                    // TODO: Fix this in the future when we decide how to Guid etc.
-                    return new Choice<Location>(
-                        new List<Location> { Location.HAND, Location.BOARD },
-                        choiceList =>
+                    return new Choice<Card>(
+                        player.Hand.Concat(player.Agents).ToList(),
+                        choices =>
                         {
-                            var choice = choiceList.First();
-                            if (choice == Location.HAND)
-                            {
-                                return new Choice<CardId>(
-                                    player.Hand.Select(card => card.Id).ToList(),
-                                    Amount,
-                                    choices =>
-                                    {
-                                        choices.ForEach(player.DestroyInHand);
-                                        return new Success();
-                                    }
-                                );
-                            }
-                            
-                            // TODO: This is actually not correct, because there can be multiple
-                            // agents with the same card id. Fix this when agents are implemented.
-                            return new Choice<CardId>(
-                                player.Agents.Select(card => card.Id).ToList(),
-                                Amount,
-                                choices =>
-                                {
-                                    choices.ForEach(player.DestroyAgent);
-                                    return new Success();
-                                }
-                            );
-                        });
+                            choices.ForEach(player.Destroy);
+                            return new Success();
+                        },
+                        Amount
+                    );
                 case EffectType.DRAW:
                     for (var i = 0; i < Amount; i++)
                         player.Draw();
                     break;
                 case EffectType.OPP_DISCARD:
-                    // TODO: Implement this.
-                    break;
+                {
+                    var chain = new ExecutionChain(player, enemy, tavern);
+
+                    var howManyToDiscard = Amount > enemy.Hand.Count ? enemy.Hand.Count : Amount;
+
+                    chain.Add((_, enemy, _) => new Choice<Card>(
+                        enemy.Hand,
+                        choices =>
+                        {
+                            choices.ForEach(enemy.Discard);
+                            return new Success();
+                        },
+                        howManyToDiscard,
+                        howManyToDiscard
+                    ));
+
+                    enemy.AddStartOfTurnEffects(chain);
+
+                    return new Success();
+                }
                 case EffectType.RETURN_TOP:
-                    return new Choice<CardId>(
-                        player.CooldownPile.Select(card => card.Id).ToList(),
-                        Amount,
+                    return new Choice<Card>(
+                        player.CooldownPile,
                         choices =>
                         {
                             choices.ForEach(player.Refresh);
                             return new Success();
-                        }
-                        );
+                        },
+                        Amount
+                    );
                 case EffectType.TOSS:
-                    return new Choice<CardId>(
-                        player.DrawPile.Select(card => card.Id).Take(Amount).ToList(),
-                        Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount,
+                    return new Choice<Card>(
+                        player.DrawPile,
                         choices =>
                         {
                             choices.ForEach(player.Toss);
                             return new Success();
-                        }
+                        },
+                        Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
                     );
                 case EffectType.KNOCKOUT:
-                    return new Choice<CardId>(
-                        enemy.Agents.Select(card => card.Id).ToList(),
-                        Amount > enemy.Agents.Count ? enemy.Agents.Count : Amount,
+                    return new Choice<Card>(
+                        enemy.Agents,
                         choices =>
                         {
                             choices.ForEach(enemy.KnockOut);
                             return new Success();
-                        }
+                        },
+                        Amount > enemy.Agents.Count ? enemy.Agents.Count : Amount
                     );
                 case EffectType.PATRON_CALL:
                     player.PatronCalls += (uint)Amount;

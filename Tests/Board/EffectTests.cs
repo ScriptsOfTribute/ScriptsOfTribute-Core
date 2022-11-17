@@ -65,16 +65,16 @@ public class EffectTests
         _tavernMock.Setup(t => t.AvailableCards).Returns(cardsToChooseFrom);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
-        Assert.True(result is Choice<CardId>);
-        var choice = result as Choice<CardId>;
+        Assert.True(result is Choice<Card>);
+        var choice = result as Choice<Card>;
         Assert.All(choice.PossibleChoices,
-            card => Assert.Contains(card, cardsToChooseFrom.Select(card => card.Id)));
+            card => Assert.Contains(card, cardsToChooseFrom));
 
-        var newResult = choice.Choose(cardsToChooseFrom.Select(card => card.Id).ToList());
+        var newResult = choice.Choose(cardsToChooseFrom);
         Assert.True(newResult is Success);
         
-        _tavernMock.Verify(t => t.ReplaceCard(cardsToChooseFrom[0].Id), Times.Once);
-        _tavernMock.Verify(t => t.ReplaceCard(cardsToChooseFrom[1].Id), Times.Once);
+        _tavernMock.Verify(t => t.ReplaceCard(cardsToChooseFrom[0]), Times.Once);
+        _tavernMock.Verify(t => t.ReplaceCard(cardsToChooseFrom[1]), Times.Once);
     }
 
     [Fact]
@@ -100,21 +100,19 @@ public class EffectTests
             GlobalCardDatabase.Instance.GetCard(CardId.PECK),
         };
 
-        var cardIdsReturned = cardsToReturn.Select(card => card.Id);
-
         _player1.Setup(p => p.DrawPile).Returns(cardsToReturn);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         
-        Assert.True(result is Choice<CardId>);
+        Assert.True(result is Choice<Card>);
         
-        var choice = result as Choice<CardId>;
-        Assert.All(cardIdsReturned, cardId => Assert.Contains(cardId, choice.PossibleChoices));
+        var choice = result as Choice<Card>;
+        Assert.All(cardsToReturn, card => Assert.Contains(card, choice.PossibleChoices));
 
-        var newResult = choice.Choose(cardIdsReturned.ToList());
+        var newResult = choice.Choose(cardsToReturn);
         Assert.True(newResult is Success);
         
-        _player1.Verify(p => p.Toss(It.IsAny<CardId>()), Times.Exactly(2));
+        _player1.Verify(p => p.Toss(It.IsAny<Card>()), Times.Exactly(2));
     }
     
     [Fact]
@@ -128,21 +126,19 @@ public class EffectTests
             GlobalCardDatabase.Instance.GetCard(CardId.PECK),
         };
 
-        var cardIdsReturned = cardsToReturn.Select(card => card.Id);
-
         _player2.Setup(p => p.Agents).Returns(cardsToReturn);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         
-        Assert.True(result is Choice<CardId>);
+        Assert.True(result is Choice<Card>);
         
-        var choice = result as Choice<CardId>;
-        Assert.All(cardIdsReturned, cardId => Assert.Contains(cardId, choice.PossibleChoices));
+        var choice = result as Choice<Card>;
+        Assert.All(cardsToReturn, card => Assert.Contains(card, choice.PossibleChoices));
 
-        var newResult = choice.Choose(cardIdsReturned.ToList());
+        var newResult = choice.Choose(cardsToReturn);
         Assert.True(newResult is Success);
         
-        _player2.Verify(p => p.KnockOut(It.IsAny<CardId>()), Times.Exactly(2));
+        _player2.Verify(p => p.KnockOut(It.IsAny<Card>()), Times.Exactly(2));
     }
     
     [Fact]
@@ -176,5 +172,72 @@ public class EffectTests
 
         _player1.Verify(p => p.HealAgent(guid, 2),
             Times.Once());
+    }
+
+    [Fact]
+    void TestDestroy()
+    {
+        var effect = new Effect(EffectType.DESTROY_CARD, 2);
+        var cardInPlay1 = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+        var cardInPlay2 = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+        var cardInHand = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+
+        _player1.Setup(p => p.Agents).Returns(new List<Card> { cardInPlay1, cardInPlay2 });
+        _player1.Setup(p => p.Hand).Returns(new List<Card> { cardInHand });
+
+        var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
+        Assert.True(result is Choice<Card>);
+        var choice = result as Choice<Card>;
+        choice.Choose(new List<Card> { cardInPlay1, cardInHand });
+
+        _player1.Verify(p => p.Destroy(It.Is<Card>(card => card == cardInPlay1)), Times.Once);
+        _player1.Verify(p => p.Destroy(It.Is<Card>(card => card == cardInHand)), Times.Once);
+    }
+
+    [Fact]
+    void TestOppDiscardWithEmptyHand()
+    {
+        var effect = new Effect(EffectType.OPP_DISCARD, 1);
+        ExecutionChain? executionChainSet = null;
+        _player2.Setup(p => p.Hand).Returns(new List<Card>());
+        _player2.Setup(p => p.AddStartOfTurnEffects(It.IsAny<ExecutionChain>()))
+            .Callback<ExecutionChain>(e => executionChainSet = e);
+        var basicResult = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
+        Assert.True(basicResult is Success);
+
+        Assert.NotNull(executionChainSet);
+        var result = executionChainSet.Consume().First();
+        Assert.True(result is Choice<Card>);
+        var choice = result as Choice<Card>;
+        Assert.Equal(0, choice.MaxChoiceAmount);
+        Assert.Equal(0, choice.MinChoiceAmount);
+        Assert.Empty(choice.PossibleChoices);
+    }
+    
+    [Fact]
+    void TestOppDiscard()
+    {
+        var effect = new Effect(EffectType.OPP_DISCARD, 1);
+        ExecutionChain? executionChainSet = null;
+        var cardInHand = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+        _player2.Setup(p => p.Hand).Returns(new List<Card> { cardInHand });
+        _player2.Setup(p => p.AddStartOfTurnEffects(It.IsAny<ExecutionChain>()))
+            .Callback<ExecutionChain>(e => executionChainSet = e);
+
+        var basicResult = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
+        Assert.True(basicResult is Success);
+
+        Assert.NotNull(executionChainSet);
+        var result = executionChainSet.Consume().First();
+        Assert.True(result is Choice<Card>);
+        var choice = result as Choice<Card>;
+        Assert.Equal(1, choice.MaxChoiceAmount);
+        Assert.Equal(1, choice.MinChoiceAmount);
+        Assert.Single(choice.PossibleChoices);
+
+        var newResult = choice.Choose(cardInHand);
+        Assert.True(newResult is Success);
+        
+        _player2.Verify(p => p.Discard(cardInHand), Times.Once);
     }
 }
