@@ -11,13 +11,14 @@ public class PlayerTests
     [Fact]
     void TestAcquireCardFlowWithContractAction()
     {
-        // Contract Action with Coin 2
-        _tavern.AvailableCards.Add(GlobalCardDatabase.Instance.GetCard(CardId.KWAMA_EGG_MINE));
+        var contractActionWithCoin2 = GlobalCardDatabase.Instance.GetCard(CardId.KWAMA_EGG_MINE);
+        _tavern.AvailableCards.Add(contractActionWithCoin2);
 
         // Card with Acquire
-        _sut.Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.CUSTOMS_SEIZURE));
-        
-        var chain = _sut.PlayCard(CardId.CUSTOMS_SEIZURE, _enemy, _tavern);
+        var cardToPlay = GlobalCardDatabase.Instance.GetCard(CardId.CUSTOMS_SEIZURE);
+        _sut.Hand.Add(cardToPlay);
+
+        var chain = _sut.PlayCard(cardToPlay, _enemy, _tavern);
 
         var counter = 0;
 
@@ -28,8 +29,8 @@ public class PlayerTests
                 // Should be choice for which card to Acquire
                 case 0:
                 {
-                    var choice = result as Choice<CardId>;
-                    var newResult = choice.Choose(CardId.KWAMA_EGG_MINE);
+                    var choice = result as Choice<Card>;
+                    var newResult = choice.Choose(contractActionWithCoin2);
                     Assert.True(newResult is Success);
                     break;
                 }
@@ -46,5 +47,22 @@ public class PlayerTests
         }
         
         Assert.Equal(2, counter);
+    }
+
+    [Fact]
+    void DestroyShouldCorrectlyDestroyInHandOrAgents()
+    {
+        var agentInHand = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+        var agentInPlay = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+        
+        _sut.Hand.Add(agentInHand);
+        _sut.Agents.Add(agentInPlay);
+        
+        _sut.Destroy(agentInHand);
+        Assert.Empty(_sut.Hand);
+        Assert.Single(_sut.Agents);
+        
+        _sut.Destroy(agentInPlay);
+        Assert.Empty(_sut.Agents);
     }
 }

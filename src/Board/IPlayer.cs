@@ -12,18 +12,20 @@ public interface IPlayer
     List<Card> Played { get; set; }
     List<Card> Agents { get; set; }
     List<Card> CooldownPile { get; set; }
-    ExecutionChain PlayCard(CardId cardId, IPlayer other, ITavern tavern);
+    ExecutionChain? StartOfTurnEffectsChain { get; }
+    ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
     void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern);
     void HealAgent(Guid guid, int amount);
-    void Refresh(CardId cardId);
+    void Refresh(Card cardId);
     void Draw();
     void EndTurn();
     ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain=true);
-    void Toss(CardId cardId);
-    void KnockOut(CardId cardId);
+    void Toss(Card cardId);
+    void Discard(Card card);
+    void KnockOut(Card cardId);
     void AddToCooldownPile(Card card);
-    void DestroyInHand(CardId cardId);
-    void DestroyAgent(CardId cardId);
+    void Destroy(Card cardId);
     string ToString();
     List<Card> GetAllPlayersCards();
+    void AddStartOfTurnEffects(ExecutionChain chain);
 }

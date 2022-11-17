@@ -4,6 +4,7 @@
     {
         NORMAL,
         CHOICE_PENDING,
+        START_OF_TURN_CHOICE_PENDING,
     }
 
     public class BoardManager
@@ -38,14 +39,14 @@
             Patrons[patronID].PatronActivation(activator, enemy);
         }
 
-        public ExecutionChain PlayCard(CardId cardID)
+        public ExecutionChain PlayCard(Card card)
         {
             if (State == BoardState.CHOICE_PENDING)
             {
                 throw new Exception("Complete pending choice first!");
             }
 
-            var result = CurrentPlayer.PlayCard(cardID, EnemyPlayer, Tavern);
+            var result = CurrentPlayer.PlayCard(card, EnemyPlayer, Tavern);
 
             State = BoardState.CHOICE_PENDING;
 
@@ -54,9 +55,8 @@
             return result;
         }
 
-        public ExecutionChain BuyCard(CardId card)
+        public ExecutionChain BuyCard(Card card)
         {
-
             Card boughtCard = this.Tavern.Acquire(card);
 
             if (boughtCard.Cost > CurrentPlayer.CoinsAmount)
@@ -84,6 +84,17 @@
             }
         }
 
+        public ExecutionChain? HandleStartOfTurnChoices()
+        {
+            // TODO: This state should also block all other actions, just as CHOICE_PENDING state.
+            if (State != BoardState.START_OF_TURN_CHOICE_PENDING)
+            {
+                return null;
+            }
+
+            return CurrentPlayer.StartOfTurnEffectsChain;
+        }
+
         public void EndTurn()
         {
             CurrentPlayer.PrestigeAmount += CurrentPlayer.PowerAmount;
@@ -91,6 +102,12 @@
             CurrentPlayer.EndTurn();
 
             CurrentPlayerId = (PlayerEnum)(1 - (int)CurrentPlayerId);
+
+            if (CurrentPlayer.StartOfTurnEffectsChain != null)
+            {
+                State = BoardState.START_OF_TURN_CHOICE_PENDING;
+                CurrentPlayer.StartOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
+            }
         }
 
         public void SetUpGame()

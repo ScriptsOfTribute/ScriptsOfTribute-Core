@@ -6,7 +6,7 @@ public interface ITavern
     List<Card> AvailableCards { get; set; }
     void DrawCards();
     void ShuffleBack();
-    Card Acquire(CardId card);
+    Card Acquire(Card card);
     List<Card> GetAffordableCards(int coin);
-    void ReplaceCard(CardId card);
+    void ReplaceCard(Card card);
 }

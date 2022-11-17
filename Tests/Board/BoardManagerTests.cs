@@ -36,8 +36,9 @@ public class BoardManagerTests
     void TestBasicExecutionChainInteraction()
     {
         var sut = new BoardManager(new[] { PatronId.ANSEI });
-        sut.Players[0].Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST));
-        var chain = sut.PlayCard(CardId.CONQUEST);
+        var conquest = GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST);
+        sut.Players[0].Hand.Add(conquest);
+        var chain = sut.PlayCard(conquest);
         var flag = 0;
 
         foreach (var result in chain.Consume())
@@ -65,7 +66,7 @@ public class BoardManagerTests
         sut.CurrentPlayer.CoinsAmount = 100;
 
         var card = sut.Tavern.AvailableCards.First();
-        sut.BuyCard(card.Id);
+        sut.BuyCard(card);
 
         Assert.Contains(
             card.Id,
@@ -90,7 +91,7 @@ public class BoardManagerTests
         sut.SetUpGame();
 
         var card = sut.Tavern.AvailableCards.First();
-        Assert.Throws<Exception>(() => sut.BuyCard(card.Id));
+        Assert.Throws<Exception>(() => sut.BuyCard(card));
     }
 
     [Fact]

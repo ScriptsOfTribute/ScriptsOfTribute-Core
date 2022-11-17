@@ -30,7 +30,7 @@ public class ExecutionChainTests
         Assert.True(result is Choice<EffectType>);
         var choice = result as Choice<EffectType>;
         var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
-        Assert.True(newResult is Choice<CardId>);
+        Assert.True(newResult is Choice<Card>);
         Assert.Throws<Exception>(() => consume.MoveNext());
     }
 
@@ -63,8 +63,10 @@ public class ExecutionChainTests
     {
         // SETUP
         _sut = new ExecutionChain(_player1, _player2, _tavern);
-        _player1.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
-        _player1.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
+        var gold1 = GlobalCardDatabase.Instance.GetCard(CardId.GOLD);
+        var gold2 = GlobalCardDatabase.Instance.GetCard(CardId.GOLD);
+        _player1.DrawPile.Add(gold1);
+        _player1.DrawPile.Add(gold2);
 
         // First - OR choice and immediately TOSS choice
         var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
@@ -97,9 +99,9 @@ public class ExecutionChainTests
                     Assert.True(result is Choice<EffectType>);
                     var choice = result as Choice<EffectType>;
                     var newResult = choice.Choose(EffectType.TOSS);
-                    Assert.True(newResult is Choice<CardId>);
-                    var newChoice = newResult as Choice<CardId>;
-                    Assert.True(newChoice.Choose(CardId.GOLD) is Success);
+                    Assert.True(newResult is Choice<Card>);
+                    var newChoice = newResult as Choice<Card>;
+                    Assert.True(newChoice.Choose(gold1) is Success);
                     break;
                 }
                 // Should be power gain
@@ -112,9 +114,9 @@ public class ExecutionChainTests
                 // Should be standalone TOSS choice
                 case 2:
                     {
-                        Assert.True(result is Choice<CardId>);
-                        var choice = result as Choice<CardId>;
-                        var newResult = choice.Choose(CardId.GOLD);
+                        Assert.True(result is Choice<Card>);
+                        var choice = result as Choice<Card>;
+                        var newResult = choice.Choose(gold2);
                         Assert.True(newResult is Success);
                         break;
                     }
