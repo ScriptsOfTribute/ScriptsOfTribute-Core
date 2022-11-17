@@ -23,12 +23,10 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Choice<CardId>(activator.Hand.Select(c => c.Id).ToList(),
+            return new Choice<Card>(activator.Hand.Where(c => c.Cost >= 1).ToList(),
                 cards =>
                 {
-                    var card = activator.Hand.First(c => c.Id == cards.First());
-                    if (card.Cost < 1)
-                        return new Failure("Card's Cost is too small to use Hlaalu");
+                    var card = cards.First();
                     activator.Hand.Remove(card);
                     activator.PrestigeAmount += card.Cost - 1;
                     return new Success();
