@@ -30,7 +30,13 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Choice<CardId>(enemy.Agents.Select(c => c.Id).ToList(), _ => new Success());
+            return new Choice<Card>(enemy.Agents,
+                choices =>
+            {
+                enemy.Agents.Remove(choices.First());
+                enemy.CooldownPile.Add(choices.First());
+                return new Success();
+            });
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

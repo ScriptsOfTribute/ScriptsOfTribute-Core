@@ -83,7 +83,7 @@ public class BoardManagerTests
             sut.Tavern.AvailableCards.Count
         );
     }
-    
+
     [Fact]
     void ShouldThrowWhenNotEnoughCoinsForCard()
     {
