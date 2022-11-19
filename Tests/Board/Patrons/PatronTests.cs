@@ -166,14 +166,14 @@ public class PatronTests
 
         Assert.Equal(0, player1.PrestigeAmount);
         Assert.Contains(card1, player1.Hand);
-        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.Patrons[0].FavoredPlayer);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.GetPatronFavorism(0));
 
         var result = board.PatronCall(0, player1, player2) as Choice<Card>;
         Assert.IsType<Success>(result.Choose(new List<Card>() { card1 }));
 
         Assert.Equal(6, player1.PrestigeAmount);
         Assert.DoesNotContain(card1, player1.Hand);
-        Assert.Equal(PlayerEnum.PLAYER1, board.Patrons[0].FavoredPlayer);
+        Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(0));
 
         result = board.PatronCall(0, player2, player1) as Choice<Card>;
         Assert.IsType<Failure>(result.Choose(new List<Card>() { card2 }));

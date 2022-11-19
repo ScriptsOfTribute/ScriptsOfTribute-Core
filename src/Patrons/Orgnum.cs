@@ -50,9 +50,14 @@
             return new Success();
         }
 
-        public override CardId GetStarterCard()
+        public override List<CardId> GetStarterCards()
         {
-            return CardId.SEA_ELF_RAID;
+            return new List<CardId>() { CardId.SEA_ELF_RAID };
+        }
+
+        public override PatronId GetPatronID()
+        {
+            return PatronId.ORGNUM;
         }
     }
 }

@@ -33,10 +33,10 @@ public class CardDatabaseTests
     {
         var parser = new Parser(test_cards_config.CARDS_JSON_PREUPGRADE_CARDS);
         sut = new CardDatabase(parser.CreateAllCards());
-        
+
         var card1 = sut.GetCardsByPatron(new[] { PatronId.HLAALU }).First();
         var card2 = sut.GetCardsByPatron(new[] { PatronId.HLAALU }).First();
-        
+
         Assert.NotEqual(card1.Guid, card2.Guid);
     }
 }

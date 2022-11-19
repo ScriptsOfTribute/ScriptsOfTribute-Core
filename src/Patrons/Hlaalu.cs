@@ -40,9 +40,14 @@
             return new Success();
         }
 
-        public override CardId GetStarterCard()
+        public override List<CardId> GetStarterCards()
         {
-            return CardId.GOODS_SHIPMENT;
+            return new List<CardId>() { CardId.GOODS_SHIPMENT };
+        }
+
+        public override PatronId GetPatronID()
+        {
+            return PatronId.HLAALU;
         }
     }
 }

@@ -35,7 +35,7 @@
             Hash = hash;
             Family = family;
         }
-        
+
         public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, Guid guid)
             : this(name, deck, id, cost, type, hp, effects, hash, family)
         {
@@ -54,6 +54,39 @@
         {
             return String.Format($"Card: {this.Name}, " +
                 $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}");
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Card card = (Card)obj;
+                return this.Guid == card.Guid;
+            }
+        }
+
+        public static bool operator ==(Card card1, Card card2)
+        {
+            if ((object)card1 == null)
+            {
+                return (object)card2 == null;
+            }
+
+            return card1.Equals(card2);
+        }
+
+        public static bool operator !=(Card card1, Card card2)
+        {
+            return !(card1 == card2);
+        }
+
+        public override int GetHashCode()
+        {
+            return Guid.GetHashCode();
         }
     }
 }

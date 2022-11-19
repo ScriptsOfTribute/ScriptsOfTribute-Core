@@ -46,9 +46,14 @@
             return new Success();
         }
 
-        public override CardId GetStarterCard()
+        public override List<CardId> GetStarterCards()
         {
-            return CardId.MAINLAND_INQUIRIES;
+            return new List<CardId>() { CardId.MAINLAND_INQUIRIES };
+        }
+
+        public override PatronId GetPatronID()
+        {
+            return PatronId.PSIJIC;
         }
     }
 }

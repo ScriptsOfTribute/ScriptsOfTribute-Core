@@ -19,7 +19,7 @@ public interface IPlayer
     void Refresh(Card cardId);
     void Draw();
     void EndTurn();
-    ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain=true);
+    ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain = true);
     void Toss(Card cardId);
     void Discard(Card card);
     void KnockOut(Card cardId);

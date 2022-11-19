@@ -9,23 +9,23 @@
 
     public class BoardManager
     {
-        public PlayerEnum CurrentPlayerId;
-        public Patron[] Patrons;
-        public Tavern Tavern;
-        public Player[] Players;
+        private PlayerEnum CurrentPlayerId;
+        private Patron[] _patrons;
+        private Tavern _tavern;
+        private Player[] _players;
         private Random _rnd;
 
-        public Player CurrentPlayer => Players[(int)CurrentPlayerId];
-        public Player EnemyPlayer => Players[1 - (int)CurrentPlayerId];
+        public Player CurrentPlayer => _players[(int)CurrentPlayerId];
+        public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
 
         public BoardState State { get; set; } = BoardState.NORMAL;
 
         public BoardManager(PatronId[] patrons)
         {
-            this.Patrons = GetPatrons(patrons);
+            this._patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
-            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
-            Players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
+            _tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
+            _players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
             _rnd = new Random();
         }
 
@@ -36,17 +36,22 @@
 
         public PlayResult PatronCall(int patronID, Player activator, Player enemy)
         {
-            return Patrons[patronID].PatronActivation(activator, enemy);
-        }
-
-        public ExecutionChain PlayCard(Card card)
-        {
-            if (State == BoardState.CHOICE_PENDING)
+            if (State != BoardState.NORMAL)
             {
                 throw new Exception("Complete pending choice first!");
             }
 
-            var result = CurrentPlayer.PlayCard(card, EnemyPlayer, Tavern);
+            return _patrons[patronID].PatronActivation(activator, enemy);
+        }
+
+        public ExecutionChain PlayCard(Card card)
+        {
+            if (State != BoardState.NORMAL)
+            {
+                throw new Exception("Complete pending choice first!");
+            }
+
+            var result = CurrentPlayer.PlayCard(card, EnemyPlayer, _tavern);
 
             State = BoardState.CHOICE_PENDING;
 
@@ -57,14 +62,19 @@
 
         public ExecutionChain BuyCard(Card card)
         {
-            Card boughtCard = this.Tavern.Acquire(card);
+            if (State != BoardState.NORMAL)
+            {
+                throw new Exception("Complete pending choice first!");
+            }
+
+            Card boughtCard = this._tavern.Acquire(card);
 
             if (boughtCard.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
 
             CurrentPlayer.CoinsAmount -= boughtCard.Cost;
 
-            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern);
+            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, _tavern);
         }
 
         public void DrawCards()
@@ -78,7 +88,7 @@
                     player.DrawPile.AddRange(player.CooldownPile);
                     player.CooldownPile = new List<Card>();
                 }
-                var card = player.DrawPile.First();
+                var card = player.DrawPile[0];
                 player.Hand.Add(card);
                 player.DrawPile.Remove(card);
             }
@@ -97,8 +107,16 @@
 
         public void EndTurn()
         {
+            if (State != BoardState.NORMAL)
+            {
+                throw new Exception("Complete pending choice first!");
+            }
+
+
+
             CurrentPlayer.PrestigeAmount += CurrentPlayer.PowerAmount;
             CurrentPlayer.CoinsAmount = 0;
+            CurrentPlayer.PowerAmount = 0;
             CurrentPlayer.EndTurn();
 
             CurrentPlayerId = (PlayerEnum)(1 - (int)CurrentPlayerId);
@@ -112,27 +130,41 @@
 
         public void SetUpGame()
         {
-            EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
             CurrentPlayerId = PlayerEnum.PLAYER1;
-            Tavern.DrawCards();
+            EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
+            _tavern.DrawCards();
 
-            List<Card> starterDecks = new List<Card>()
-            {
-                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-                GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-            };
+            List<Card> starterDecks = new List<Card>();
 
-            foreach (var patron in this.Patrons)
+            foreach (var patron in this._patrons)
             {
-                starterDecks.Add(GlobalCardDatabase.Instance.GetCard(patron.GetStarterCard()));
+                starterDecks.AddRange(
+                    patron.GetStarterCards().Select(cardID => GlobalCardDatabase.Instance.GetCard(cardID)).ToList()
+                );
             }
 
             CurrentPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
             EnemyPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+        }
+
+        public BoardSerializer SerializeBoard()
+        {
+            return new BoardSerializer(_players[0], _players[1], _tavern, _patrons, CurrentPlayerId);
+        }
+
+        public PlayerEnum GetPatronFavorism(int idx)
+        {
+            return _patrons[idx].FavoredPlayer;
+        }
+
+        public List<Card> GetAvailableTavernCards()
+        {
+            return this._tavern.AvailableCards;
+        }
+
+        public List<Card> GetAffordableCards(int coinAmount)
+        {
+            return this._tavern.GetAffordableCards(coinAmount);
         }
     }
 }

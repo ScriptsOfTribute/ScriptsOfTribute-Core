@@ -39,9 +39,14 @@
             return new Success();
         }
 
-        public override CardId GetStarterCard()
+        public override List<CardId> GetStarterCards()
         {
-            return CardId.PECK;
+            return new List<CardId>() { CardId.PECK };
+        }
+
+        public override PatronId GetPatronID()
+        {
+            return PatronId.DUKE_OF_CROWS;
         }
     }
 }

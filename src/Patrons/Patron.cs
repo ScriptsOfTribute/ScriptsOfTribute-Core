@@ -26,7 +26,8 @@
         public abstract PlayResult PatronActivation(Player activator, Player enemy);
         public abstract PlayResult PatronPower(Player activator, Player enemy);
 
-        public abstract CardId GetStarterCard();
+        public abstract PatronId GetPatronID();
+        public abstract List<CardId> GetStarterCards();
 
         public static Patron FromId(PatronId patron)
         {
@@ -38,6 +39,7 @@
                 PatronId.ORGNUM => new Orgnum(),
                 PatronId.HLAALU => new Hlaalu(),
                 PatronId.PSIJIC => new Psijic(),
+                PatronId.TREASURY => new Treasury(),
                 _ => throw new InvalidOperationException()
             };
         }

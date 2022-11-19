@@ -37,9 +37,14 @@
             return new Success();
         }
 
-        public override CardId GetStarterCard()
+        public override List<CardId> GetStarterCards()
         {
-            return CardId.WAY_OF_THE_SWORD;
+            return new List<CardId>() { CardId.WAY_OF_THE_SWORD };
+        }
+
+        public override PatronId GetPatronID()
+        {
+            return PatronId.ANSEI;
         }
     }
 }
