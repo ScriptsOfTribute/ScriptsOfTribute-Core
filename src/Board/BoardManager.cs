@@ -112,7 +112,7 @@
                 throw new Exception("Complete pending choice first!");
             }
 
-
+            //TODO: Attack all agents
 
             CurrentPlayer.PrestigeAmount += CurrentPlayer.PowerAmount;
             CurrentPlayer.CoinsAmount = 0;
