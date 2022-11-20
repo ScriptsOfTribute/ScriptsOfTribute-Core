@@ -42,9 +42,11 @@
             return new Success();
         }
 
-        public override CardId GetStarterCard()
+        public override List<CardId> GetStarterCards()
         {
-            return CardId.SWIPE;
+            return new List<CardId>() { CardId.SWIPE };
         }
+
+        public override PatronId PatronID => PatronId.RAJHIN;
     }
 }

@@ -64,12 +64,12 @@
             return PlayCardWithoutChecks(card, other, tavern);
         }
 
-        private ExecutionChain PlayCardWithoutChecks(Card card, IPlayer other, ITavern tavern, bool replacePendingExecutionChain=true)
+        private ExecutionChain PlayCardWithoutChecks(Card card, IPlayer other, ITavern tavern, bool replacePendingExecutionChain = true)
         {
             var result = _comboContext.PlayCard(card, this, other, tavern);
 
             if (!replacePendingExecutionChain) return result;
-            
+
             _pendingExecutionChain = result;
             _pendingExecutionChain.AddCompleteCallback(() => _pendingExecutionChain = null);
 
@@ -83,7 +83,7 @@
             {
                 throw new Exception("This shouldn't happen - there is a bug in the app!");
             }
-            
+
             _pendingExecutionChain.MergeWith(result);
         }
 
@@ -119,7 +119,7 @@
             PatronCalls = 1;
         }
 
-        public ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain=true)
+        public ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain = true)
         {
             switch (card.Type)
             {
@@ -127,18 +127,18 @@
                     Agents.Add(card);
                     break;
                 case CardType.CONTRACT_ACTION:
-                {
-                    var result = PlayCardWithoutChecks(
-                        card, enemy, tavern, replacePendingExecutionChain
-                    );
-                    result.AddCompleteCallback(() => tavern.Cards.Add(card));
-                    return result;
-                }
+                    {
+                        var result = PlayCardWithoutChecks(
+                            card, enemy, tavern, replacePendingExecutionChain
+                        );
+                        result.AddCompleteCallback(() => tavern.Cards.Add(card));
+                        return result;
+                    }
                 default:
                     CooldownPile.Add(card);
                     break;
             }
-            
+
             return new ExecutionChain(
                 this,
                 enemy,

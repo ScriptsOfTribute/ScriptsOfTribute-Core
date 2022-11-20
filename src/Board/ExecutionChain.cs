@@ -42,7 +42,7 @@ public class ExecutionChain
         {
             _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
             yield return _current;
-            
+
             if (!_current.Completed)
             {
                 throw new Exception("Complete pending events before consuming further!");

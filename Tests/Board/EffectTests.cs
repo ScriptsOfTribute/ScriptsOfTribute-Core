@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using Moq;
+﻿using Moq;
 using TalesOfTribute;
 
 namespace Tests.Board;
@@ -9,24 +8,24 @@ public class EffectTests
     Mock<IPlayer> _player1 = new Mock<IPlayer>();
     Mock<IPlayer> _player2 = new Mock<IPlayer>();
     private Mock<ITavern> _tavernMock = new Mock<ITavern>();
-    
+
     [Fact]
     void TestGainPower()
     {
         var powerEffect = new Effect(EffectType.GAIN_POWER, 3);
         var result = powerEffect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
-        
+
         _player1.VerifySet(p => p.PowerAmount = 3);
     }
-    
+
     [Fact]
     void TestGainCoin()
     {
         var effect = new Effect(EffectType.GAIN_COIN, 1);
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
-        
+
         _player1.VerifySet(p => p.CoinsAmount = 1);
     }
 
@@ -36,7 +35,7 @@ public class EffectTests
         var effect = new Effect(EffectType.GAIN_PRESTIGE, 2);
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
-        
+
         _player1.VerifySet(p => p.PrestigeAmount = 2);
     }
 
@@ -49,7 +48,7 @@ public class EffectTests
 
         _player2.VerifySet(p => p.PrestigeAmount = -1);
     }
-    
+
     [Fact]
     void TestReplaceTavern()
     {
@@ -72,7 +71,7 @@ public class EffectTests
 
         var newResult = choice.Choose(cardsToChooseFrom);
         Assert.True(newResult is Success);
-        
+
         _tavernMock.Verify(t => t.ReplaceCard(cardsToChooseFrom[0]), Times.Once);
         _tavernMock.Verify(t => t.ReplaceCard(cardsToChooseFrom[1]), Times.Once);
     }
@@ -83,12 +82,12 @@ public class EffectTests
         var effect = new Effect(EffectType.DRAW, 2);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
-        
+
         Assert.True(result is Success);
-        
+
         _player1.Verify(p => p.Draw(), Times.Exactly(2));
     }
-    
+
     [Fact]
     void TestToss()
     {
@@ -103,18 +102,18 @@ public class EffectTests
         _player1.Setup(p => p.DrawPile).Returns(cardsToReturn);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
-        
+
         Assert.True(result is Choice<Card>);
-        
+
         var choice = result as Choice<Card>;
         Assert.All(cardsToReturn, card => Assert.Contains(card, choice.PossibleChoices));
 
         var newResult = choice.Choose(cardsToReturn);
         Assert.True(newResult is Success);
-        
+
         _player1.Verify(p => p.Toss(It.IsAny<Card>()), Times.Exactly(2));
     }
-    
+
     [Fact]
     void TestKnockout()
     {
@@ -129,18 +128,18 @@ public class EffectTests
         _player2.Setup(p => p.Agents).Returns(cardsToReturn);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
-        
+
         Assert.True(result is Choice<Card>);
-        
+
         var choice = result as Choice<Card>;
         Assert.All(cardsToReturn, card => Assert.Contains(card, choice.PossibleChoices));
 
         var newResult = choice.Choose(cardsToReturn);
         Assert.True(newResult is Success);
-        
+
         _player2.Verify(p => p.KnockOut(It.IsAny<Card>()), Times.Exactly(2));
     }
-    
+
     [Fact]
     void TestPatronCall()
     {
@@ -161,7 +160,7 @@ public class EffectTests
         _player1.Verify(p => p.AddToCooldownPile(It.Is<Card>(card => card.Id == CardId.MAORMER_BOARDING_PARTY)),
             Times.Exactly(2));
     }
-    
+
     [Fact]
     void TestHeal()
     {
@@ -213,7 +212,7 @@ public class EffectTests
         Assert.Equal(0, choice.MinChoiceAmount);
         Assert.Empty(choice.PossibleChoices);
     }
-    
+
     [Fact]
     void TestOppDiscard()
     {
@@ -237,7 +236,7 @@ public class EffectTests
 
         var newResult = choice.Choose(cardInHand);
         Assert.True(newResult is Success);
-        
+
         _player2.Verify(p => p.Discard(cardInHand), Times.Once);
     }
 }

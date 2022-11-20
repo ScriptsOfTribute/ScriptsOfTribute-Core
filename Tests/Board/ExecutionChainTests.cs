@@ -95,22 +95,22 @@ public class ExecutionChainTests
             {
                 // Should be OR choice
                 case 0:
-                {
-                    Assert.True(result is Choice<EffectType>);
-                    var choice = result as Choice<EffectType>;
-                    var newResult = choice.Choose(EffectType.TOSS);
-                    Assert.True(newResult is Choice<Card>);
-                    var newChoice = newResult as Choice<Card>;
-                    Assert.True(newChoice.Choose(gold1) is Success);
-                    break;
-                }
+                    {
+                        Assert.True(result is Choice<EffectType>);
+                        var choice = result as Choice<EffectType>;
+                        var newResult = choice.Choose(EffectType.TOSS);
+                        Assert.True(newResult is Choice<Card>);
+                        var newChoice = newResult as Choice<Card>;
+                        Assert.True(newChoice.Choose(gold1) is Success);
+                        break;
+                    }
                 // Should be power gain
                 case 1:
-                {
-                    Assert.Equal(1, _player1.PowerAmount);
-                    Assert.True(result is Success);
-                    break;
-                }
+                    {
+                        Assert.Equal(1, _player1.PowerAmount);
+                        Assert.True(result is Success);
+                        break;
+                    }
                 // Should be standalone TOSS choice
                 case 2:
                     {

@@ -53,7 +53,7 @@ public class PlayResultTests
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
         Assert.True(result is Success);
     }
-    
+
     [Fact]
     void ShouldNotAllowTooFewChoices()
     {

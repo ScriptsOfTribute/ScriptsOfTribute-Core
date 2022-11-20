@@ -16,19 +16,19 @@ public class BoardManagerTests
     void TestBoardManagerSetUp()
     {
         var board = new BoardManager(
-                new[] { PatronId.ANSEI }
+                new[] { PatronId.ANSEI, PatronId.TREASURY }
             );
         board.SetUpGame();
 
-        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayerId);
-        Assert.Equal(1, board.Players[(int)PlayerEnum.PLAYER2].CoinsAmount);
+        Assert.Equal(PlayerEnum.PLAYER1, board.CurrentPlayer.ID);
+        Assert.Equal(1, board.EnemyPlayer.CoinsAmount);
 
         Assert.Contains(
             CardId.GOLD,
-            board.Players[(int)PlayerEnum.PLAYER2].DrawPile.Select(card => card.Id)
+            board.EnemyPlayer.DrawPile.Select(card => card.Id)
         );
 
-        Assert.Equal(6, board.Players[(int)PlayerEnum.PLAYER2].DrawPile.Count(card => card.Id == CardId.GOLD));
+        Assert.Equal(6, board.EnemyPlayer.DrawPile.Count(card => card.Id == CardId.GOLD));
 
     }
 
@@ -37,7 +37,7 @@ public class BoardManagerTests
     {
         var sut = new BoardManager(new[] { PatronId.ANSEI });
         var conquest = GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST);
-        sut.Players[0].Hand.Add(conquest);
+        sut.CurrentPlayer.Hand.Add(conquest);
         var chain = sut.PlayCard(conquest);
         var flag = 0;
 
@@ -65,22 +65,22 @@ public class BoardManagerTests
 
         sut.CurrentPlayer.CoinsAmount = 100;
 
-        var card = sut.Tavern.AvailableCards.First();
+        var card = sut.GetAvailableTavernCards().First(c => c.Type == CardType.AGENT || c.Type == CardType.ACTION);
         sut.BuyCard(card);
 
         Assert.Contains(
             card.Id,
-            sut.Players[(int)sut.CurrentPlayerId].CooldownPile.Select(card => card.Id)
+            sut.CurrentPlayer.CooldownPile.Select(card => card.Id)
         );
 
         Assert.DoesNotContain(
             card.Id,
-            sut.Tavern.AvailableCards.Select(card => card.Id)
+            sut.GetAvailableTavernCards().Select(card => card.Id)
         );
 
         Assert.Equal(
             5,
-            sut.Tavern.AvailableCards.Count
+            sut.GetAvailableTavernCards().Count
         );
     }
 
@@ -90,46 +90,46 @@ public class BoardManagerTests
         var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
         sut.SetUpGame();
 
-        var card = sut.Tavern.AvailableCards.First();
+        var card = sut.GetAvailableTavernCards().First();
         Assert.Throws<Exception>(() => sut.BuyCard(card));
     }
 
     [Fact]
     void TestPlayerDraw()
     {
-        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
+        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC, PatronId.TREASURY });
         sut.SetUpGame();
 
-        Assert.Empty(sut.Players[0].Hand);
-        var cardsAmount = sut.Players[0].DrawPile.Count;
+        Assert.Empty(sut.CurrentPlayer.Hand);
+        var cardsAmount = sut.CurrentPlayer.DrawPile.Count;
 
         sut.DrawCards();
 
-        Assert.Equal(5, sut.Players[0].Hand.Count);
-        Assert.Equal(cardsAmount - 5, sut.Players[0].DrawPile.Count);
+        Assert.Equal(5, sut.CurrentPlayer.Hand.Count);
+        Assert.Equal(cardsAmount - 5, sut.CurrentPlayer.DrawPile.Count);
     }
 
     [Fact]
     void TestPlayerDrawWhenNotEnoughCards()
     {
         var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
-        sut.Players[0].DrawPile.AddRange(new List<Card>() {
+        sut.CurrentPlayer.DrawPile.AddRange(new List<Card>() {
             GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST),
             GlobalCardDatabase.Instance.GetCard(CardId.NO_SHIRA_POET)
         });
 
-        sut.Players[0].CooldownPile.AddRange(new List<Card>() {
+        sut.CurrentPlayer.CooldownPile.AddRange(new List<Card>() {
             GlobalCardDatabase.Instance.GetCard(CardId.PROPHESY),
             GlobalCardDatabase.Instance.GetCard(CardId.PSIJIC_APPRENTICE),
             GlobalCardDatabase.Instance.GetCard(CardId.TIME_MASTERY),
             GlobalCardDatabase.Instance.GetCard(CardId.CEPORAHS_INSIGHT),
         });
-        Assert.Empty(sut.Players[0].Hand);
-        Assert.Equal(2, sut.Players[0].DrawPile.Count);
-        Assert.Equal(4, sut.Players[0].CooldownPile.Count);
+        Assert.Empty(sut.CurrentPlayer.Hand);
+        Assert.Equal(2, sut.CurrentPlayer.DrawPile.Count);
+        Assert.Equal(4, sut.CurrentPlayer.CooldownPile.Count);
         sut.DrawCards();
-        Assert.Equal(5, sut.Players[0].Hand.Count);
-        Assert.Single(sut.Players[0].DrawPile);
-        Assert.Empty(sut.Players[0].CooldownPile);
+        Assert.Equal(5, sut.CurrentPlayer.Hand.Count);
+        Assert.Single(sut.CurrentPlayer.DrawPile);
+        Assert.Empty(sut.CurrentPlayer.CooldownPile);
     }
 }

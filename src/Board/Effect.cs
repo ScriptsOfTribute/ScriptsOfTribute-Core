@@ -42,7 +42,7 @@
             Type = type;
             Amount = amount;
         }
-        
+
         public Effect(EffectType type, int amount, Guid guid)
         {
             Type = type;
@@ -57,7 +57,7 @@
                 case EffectType.GAIN_POWER:
                     player.PowerAmount += Amount;
                     break;
-                
+
                 case EffectType.ACQUIRE_TAVERN:
                     return new Choice<Card>(tavern.GetAffordableCards(Amount),
                         choiceList =>
@@ -101,26 +101,26 @@
                         player.Draw();
                     break;
                 case EffectType.OPP_DISCARD:
-                {
-                    var chain = new ExecutionChain(player, enemy, tavern);
+                    {
+                        var chain = new ExecutionChain(player, enemy, tavern);
 
-                    var howManyToDiscard = Amount > enemy.Hand.Count ? enemy.Hand.Count : Amount;
+                        var howManyToDiscard = Amount > enemy.Hand.Count ? enemy.Hand.Count : Amount;
 
-                    chain.Add((_, enemy, _) => new Choice<Card>(
-                        enemy.Hand,
-                        choices =>
-                        {
-                            choices.ForEach(enemy.Discard);
-                            return new Success();
-                        },
-                        howManyToDiscard,
-                        howManyToDiscard
-                    ));
+                        chain.Add((_, enemy, _) => new Choice<Card>(
+                            enemy.Hand,
+                            choices =>
+                            {
+                                choices.ForEach(enemy.Discard);
+                                return new Success();
+                            },
+                            howManyToDiscard,
+                            howManyToDiscard
+                        ));
 
-                    enemy.AddStartOfTurnEffects(chain);
+                        enemy.AddStartOfTurnEffects(chain);
 
-                    return new Success();
-                }
+                        return new Success();
+                    }
                 case EffectType.RETURN_TOP:
                     return new Choice<Card>(
                         player.CooldownPile,
@@ -266,7 +266,7 @@
         private readonly Effect _right;
 
         public Guid Guid { get; } = Guid.Empty;
-        
+
         public EffectComposite(Effect left, Effect right)
         {
             _left = left;
