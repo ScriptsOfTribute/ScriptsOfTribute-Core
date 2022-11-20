@@ -132,4 +132,92 @@ public class BoardManagerTests
         Assert.Single(sut.CurrentPlayer.DrawPile);
         Assert.Empty(sut.CurrentPlayer.CooldownPile);
     }
+
+    [Fact]
+    void TestFullComboPlay()
+    {
+        var sut = new BoardManager(new[] { PatronId.DUKE_OF_CROWS });
+        var drawpile = new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.BLACKFEATHER_KNIGHT) };
+        var hand = new List<Card>()
+        {
+            GlobalCardDatabase.Instance.GetCard(CardId.MURDER_OF_CROWS),
+            GlobalCardDatabase.Instance.GetCard(CardId.SCRATCH),
+            GlobalCardDatabase.Instance.GetCard(CardId.PECK),
+            GlobalCardDatabase.Instance.GetCard(CardId.POOL_OF_SHADOW),
+        };
+        Assert.Equal(0, sut.CurrentPlayer.PowerAmount);
+        Assert.Equal(0, sut.CurrentPlayer.PrestigeAmount);
+        Assert.Equal(0, sut.CurrentPlayer.CoinsAmount);
+
+        sut.CurrentPlayer.Hand = hand;
+        sut.CurrentPlayer.DrawPile = drawpile;
+
+        var chain = sut.PlayCard(hand.First(c => c.Id == CardId.MURDER_OF_CROWS));
+        var counter = 0;
+        foreach (var result in chain.Consume())
+        {
+            switch (counter)
+            {
+                // Should be coin gain
+                case 0:
+                    {
+                        Assert.Equal(1, sut.CurrentPlayer.CoinsAmount);
+                        Assert.True(result is Success);
+                        break;
+                    }
+            }
+
+            counter += 1;
+        }
+        Assert.Equal(1, counter);
+        Assert.Equal(0, sut.CurrentPlayer.PowerAmount);
+        Assert.Equal(0, sut.CurrentPlayer.PrestigeAmount);
+        Assert.Equal(1, sut.CurrentPlayer.CoinsAmount);
+
+        chain = sut.PlayCard(hand.First(c => c.Id == CardId.SCRATCH));
+        counter = 0;
+        foreach (var result in chain.Consume())
+        {
+
+            Assert.True(result is Success);
+            counter += 1;
+        }
+
+        Assert.Equal(4, sut.CurrentPlayer.PowerAmount);
+        Assert.Equal(0, sut.CurrentPlayer.PrestigeAmount);
+        Assert.Equal(6, sut.CurrentPlayer.CoinsAmount);
+        Assert.Equal(5, counter); // Scratch Activation, Scratch Combo2 has 2 effect, Murder of crows combo2 has 2 effects
+
+        chain = sut.PlayCard(hand.First(c => c.Id == CardId.PECK));
+        counter = 0;
+        foreach (var result in chain.Consume())
+        {
+
+            Assert.True(result is Success);
+            counter += 1;
+        }
+
+        Assert.Equal(6, sut.CurrentPlayer.PowerAmount);
+        Assert.Equal(0, sut.CurrentPlayer.PrestigeAmount);
+        Assert.Equal(7, sut.CurrentPlayer.CoinsAmount);
+        Assert.Equal(2, counter); // Peck activ, Murder of Crows Combo3
+
+        Assert.Single(sut.CurrentPlayer.Hand);
+
+        chain = sut.PlayCard(hand.First(c => c.Id == CardId.POOL_OF_SHADOW));
+        counter = 0;
+        foreach (var result in chain.Consume())
+        {
+
+            Assert.True(result is Success);
+            counter += 1;
+        }
+
+        Assert.Equal(7, sut.CurrentPlayer.PowerAmount);
+        Assert.Equal(0, sut.CurrentPlayer.PrestigeAmount);
+        Assert.Equal(10, sut.CurrentPlayer.CoinsAmount);
+        Assert.Equal(3, counter); // PoolOfShadow activ, combo2 & combo4
+        Assert.Single(sut.CurrentPlayer.Hand); // PoolOfShadow has Draw on combo2
+        Assert.Contains(CardId.BLACKFEATHER_KNIGHT, sut.CurrentPlayer.Hand.Select(c => c.Id).ToList());
+    }
 }

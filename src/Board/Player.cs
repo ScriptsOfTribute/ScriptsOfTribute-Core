@@ -60,6 +60,8 @@
         public ExecutionChain PlayCard(Card card, IPlayer other, ITavern tavern)
         {
             AssertCardIn(card, Hand);
+            Hand.Remove(card);
+            Played.Add(card);
 
             return PlayCardWithoutChecks(card, other, tavern);
         }
