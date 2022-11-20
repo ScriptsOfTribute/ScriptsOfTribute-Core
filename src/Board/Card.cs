@@ -69,17 +69,17 @@
             }
         }
 
-        public static bool operator ==(Card card1, Card card2)
+        public static bool operator ==(Card? card1, Card? card2)
         {
-            if ((object)card1 == null)
+            if (card1 is null)
             {
-                return (object)card2 == null;
+                return card2 is null;
             }
 
             return card1.Equals(card2);
         }
 
-        public static bool operator !=(Card card1, Card card2)
+        public static bool operator !=(Card? card1, Card? card2)
         {
             return !(card1 == card2);
         }

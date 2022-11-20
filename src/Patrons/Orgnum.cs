@@ -55,9 +55,6 @@
             return new List<CardId>() { CardId.SEA_ELF_RAID };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.ORGNUM;
-        }
+        public override PatronId PatronID => PatronId.ORGNUM;
     }
 }

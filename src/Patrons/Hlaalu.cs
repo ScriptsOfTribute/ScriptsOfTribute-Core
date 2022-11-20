@@ -45,9 +45,6 @@
             return new List<CardId>() { CardId.GOODS_SHIPMENT };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.HLAALU;
-        }
+        public override PatronId PatronID => PatronId.HLAALU;
     }
 }

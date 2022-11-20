@@ -27,9 +27,6 @@
             };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.TREASURY;
-        }
+        public override PatronId PatronID => PatronId.TREASURY;
     }
 }

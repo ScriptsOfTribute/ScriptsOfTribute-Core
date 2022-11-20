@@ -42,9 +42,6 @@
             return new List<CardId>() { CardId.WAY_OF_THE_SWORD };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.ANSEI;
-        }
+        public override PatronId PatronID => PatronId.ANSEI;
     }
 }

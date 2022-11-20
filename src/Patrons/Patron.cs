@@ -26,7 +26,7 @@
         public abstract PlayResult PatronActivation(Player activator, Player enemy);
         public abstract PlayResult PatronPower(Player activator, Player enemy);
 
-        public abstract PatronId GetPatronID();
+        public abstract PatronId PatronID { get; }
         public abstract List<CardId> GetStarterCards();
 
         public static Patron FromId(PatronId patron)

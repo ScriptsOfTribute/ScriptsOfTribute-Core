@@ -47,9 +47,6 @@
             return new List<CardId>() { CardId.SWIPE };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.RAJHIN;
-        }
+        public override PatronId PatronID => PatronId.RAJHIN;
     }
 }

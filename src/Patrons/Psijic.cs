@@ -51,9 +51,6 @@
             return new List<CardId>() { CardId.MAINLAND_INQUIRIES };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.PSIJIC;
-        }
+        public override PatronId PatronID => PatronId.PSIJIC;
     }
 }

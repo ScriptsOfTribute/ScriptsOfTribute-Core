@@ -38,7 +38,7 @@ namespace TalesOfTribute
             PatronStates = new List<Tuple<PatronId, PlayerEnum>>();
             foreach (Patron patron in patrons)
             {
-                PatronStates.Add(new Tuple<PatronId, PlayerEnum>(patron.GetPatronID(), patron.FavoredPlayer));
+                PatronStates.Add(new Tuple<PatronId, PlayerEnum>(patron.PatronID, patron.FavoredPlayer));
             }
             CurrentPlayer = currentPlayer;
         }

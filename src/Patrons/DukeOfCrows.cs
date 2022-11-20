@@ -44,9 +44,6 @@
             return new List<CardId>() { CardId.PECK };
         }
 
-        public override PatronId GetPatronID()
-        {
-            return PatronId.DUKE_OF_CROWS;
-        }
+        public override PatronId PatronID => PatronId.DUKE_OF_CROWS;
     }
 }
