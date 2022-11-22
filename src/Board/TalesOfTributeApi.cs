@@ -193,10 +193,13 @@ namespace TalesOfTribute {
             switch (patron.PatronID) {
 
             case PatronId.TREASURY:
+              /*
               List < Card > usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
               foreach(Card card in usedCards) {
                 possibleMoves.Add(new Move(Command.TREASURY, card.Id));
               }
+              */
+              possibleMoves.Add(new Move(Command.TREASURY));
               break;
 
             case PatronId.DUKE_OF_CROWS:
@@ -212,6 +215,7 @@ namespace TalesOfTribute {
               break;
 
             case PatronId.PSIJIC:
+              /*
               if (tauntAgents.Any()) {
                 foreach(Card agent in tauntAgents) {
                   possibleMoves.Add(new Move(Command.PSIJIC, agent.Id));
@@ -221,14 +225,19 @@ namespace TalesOfTribute {
                   possibleMoves.Add(new Move(Command.PSIJIC, agent.Id));
                 }
               }
+              */
+              possibleMoves.Add(new Move(Command.PSIJIC));
               break;
 
             case PatronId.HLAALU:
               // not sure it will be all card that player own or only all without drawpile
+              /*
               List < Card > cardsWithCost = currentPlayer.GetAllPlayersCards().FindAll(card => card.Cost >= 1);
               foreach(var card in cardsWithCost) {
                 possibleMoves.Add(new Move(Command.HLAALU, card.Id));
               }
+              */
+              possibleMoves.Add(new Move(Command.HLAALU));
               breal;
 
             case PatronId.ANSEI:
@@ -239,10 +248,13 @@ namespace TalesOfTribute {
               possibleMoves.Add(new Move(Command.RED_EAGLE));
 
             case PatronId.PELIN:
+              /*
               List < Card > agentsInCooldownPile = currentPlayer.CooldownPile.FindAll(card => card.Type == AGENT);
               foreach(Card agent in agentsInCooldownPile) {
                 possibleMoves.Add(new Move(Command.PELIN, agent.Id));
               }
+              */
+              possibleMoves.Add(new Move(Command.PELIN));
             }
           }
         }
