@@ -19,7 +19,7 @@
         public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
 
         public BoardState State { get; set; } = BoardState.NORMAL;
-        public int PrestigeTreshold = 40;
+        private int PrestigeTreshold = 40;
 
         public BoardManager(PatronId[] patrons)
         {

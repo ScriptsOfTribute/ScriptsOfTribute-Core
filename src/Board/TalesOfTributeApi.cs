@@ -216,16 +216,14 @@ namespace TalesOfTribute {
         if (splittedMove.Length !=2){
             throw new InvalidOperationException();
         }
-
-        if (!Command.ValidateStringCommand(splittedMove[0])){
-            throw new InvalidOperationException();
-        }
-
         try{
             int value = Int32.Parse(splittedMove[1]);
             return new Move(splittedMove[0], value);
         }
         catch (FormatException e){
+            throw new InvalidOperationException();
+        }
+        catch (InvalidOperationException e){
             throw new InvalidOperationException();
         }
     }

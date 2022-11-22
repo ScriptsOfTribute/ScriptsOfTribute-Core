@@ -1,64 +1,47 @@
 namespace TalesOfTribute
 {
-    public static class Command
+    public enum CommandEnum
     {
-        public static string PLAY_CARD = "PlayCard";
-        public static string ATTACK = "Attack";
-        public static string BUY_CARD = "BuyCard";
-        public static string TREASURY = "Treasury";
-        public static string DUKE_OF_CROWS = "Crows";
-        public static string RED_EAGLE = "RedEagle";
-        public static string ANSEI = "Ansei";
-        public static string PELIN = "Pelin";
-        public static string RAJHIN = "Rajhin";
-        public static string ORGNUM = "Orgnum";
-        public static string PSIJIC = "Psijic";
-        public static string HLAALU = "Hlaalu";
-        public static string END_TURN = "EndTurn";
-
-        public static bool ValidateStringCommand(string move){
-            switch (move){
-                case "PlayCard":
-                    return true;
-                case "Attack":
-                    return true;
-                case "BuyCard":
-                    return true;
-                case "Tresury":
-                    return true;
-                case "Crows":
-                    return true;
-                case "RedEagle":
-                    return true;
-                case "Ansei":
-                    return true;
-                case "Pelin":
-                    return true;
-                case "Rajhin":
-                    return true;
-                case "Orgnum":
-                    return true;
-                case "Psijic":
-                    return true;
-                case "Hlaalu":
-                    return true;
-                case "EndTurn":
-                    return true;
-                default:
-                    return false;
-            }
-        }
+        PLAY_CARD = 0,
+        ATTACK = 1,
+        BUY_CARD = 2,
+        END_TURN = 3,
+        TREASURY = 4,
+        DUKE_OF_CROWS = 5,
+        RED_EAGLE = 6,
+        ANSEI = 7,
+        PELIN = 8,
+        RAJHIN = 9,
+        ORGNUM = 10,
+        PSIJIC = 11,
+        HLAALU = 12,
     }
+    
 
 
     public struct Move{
+
+        public CommandEnum Command { get; }
+        public int Value { get; }
+
+        public List<string> EnumToString= new List ["PLAY_CARD", "ATTACK", "BUY_CARD", "END_TURN", "TREASURY", "DUKE_OF_CROWS", "RED_EAGLE", "ANSEI", "PELIN", "RAJHIN", "ORGNUM", "PSIJIC", "HLAALU"];
+        
         public Move(string command, int value=-1){
+            int index = EnumToString.IndexOf(command); 
+            if (index != -1){
+                Command = Enum.GetName(typeof(Command), index)
+                Value = value;
+            }
+            else{
+                throw new InvalidOperationException();
+            }
+        }
+
+        public Move(CommandEnum command, int value=-1){
+            
             Command = command;
             Value = value;
         }
-
-        public double Command { get; }
-        public double Value { get; }
 
         public override string ToString() => $"({Command} {Value})";
     }
