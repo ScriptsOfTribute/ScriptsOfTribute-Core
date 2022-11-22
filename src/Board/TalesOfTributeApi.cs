@@ -49,22 +49,6 @@ namespace TalesOfTribute {
       throw new NotImplementedException();
     }
 
-    public int ChangeHPOfAgent(int agentId, int hpDelta) {
-      throw new NotImplementedException();
-    }
-
-    public int ChangeAmountOfCoins(int playerId, int coinsDelta) {
-      throw new NotImplementedException();
-    }
-
-    public int ChangeAmountOfPower(int playerId, int powerDelta) {
-      throw new NotImplementedException();
-    }
-
-    public int ChangeAmountOfPrestige(int playerId, int prestigeDelta) {
-      throw new NotImplementedException();
-    }
-
     // all to state of objects related
 
     public List < Card > GetHand(int playerId) {
@@ -143,52 +127,7 @@ namespace TalesOfTribute {
 
     // cards related
 
-    public Card DrawCard() {
-      throw new NotImplementedException();
-    }
-
     public Card BuyCard(int cardInstanceId) {
-      throw new NotImplementedException();
-    }
-
-    public Card DiscardCard(int cardInstanceId) {
-      throw new NotImplementedException();
-    }
-
-    public void Knockout(int agentId) {
-      throw new NotImplementedException();
-    }
-
-    public Card RemoveCard(int cardInstanceId) {
-      throw new NotImplementedException();
-    }
-
-    public Card RemoveCardFromTavern(int cardInstanceId) {
-      throw new NotImplementedException();
-    }
-
-    public Card DestroyCard(int cardInstanceId) {
-      throw new NotImplementedException();
-    }
-
-    public Card ReturnTop(int amountOfCards) {
-      throw new NotImplementedException();
-    }
-
-    public Card AddCard(int cardInstanceId) {
-      throw new NotImplementedException();
-    }
-
-    public Card CreateCard(int cardId) {
-      throw new NotImplementedException();
-    }
-
-    public Card AcquireCard(int cardInstanceId) {
-      // eg Oathman
-      throw new NotImplementedException();
-    }
-
-    public List < Card > Toss() {
       throw new NotImplementedException();
     }
 
@@ -203,10 +142,6 @@ namespace TalesOfTribute {
       ask player to choose cards one by one
       3) some cards moves another cards from one pile to another (Ansei return etc)
       */
-      throw new NotImplementedException();
-    }
-
-    public Player ChoosePlayer(int playerId) {
       throw new NotImplementedException();
     }
 
