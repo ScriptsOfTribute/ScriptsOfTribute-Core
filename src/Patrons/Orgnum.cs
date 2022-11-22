@@ -16,7 +16,7 @@
              * Pay 3 Coin -> Gain 2 Power.
              */
 
-            if (activator.CoinsAmount < 3)
+            if (!CanPatronBeActivated(activator, enemy))
             {
                 return new Failure("Not enough Coin to activate Orgnum");
             }
@@ -56,5 +56,9 @@
         }
 
         public override PatronId PatronID => PatronId.ORGNUM;
+
+        public override bool CanPatronBeActivated(Player activator, Player enemy){
+            return activator.CoinsAmount>=3;
+        }
     }
 }

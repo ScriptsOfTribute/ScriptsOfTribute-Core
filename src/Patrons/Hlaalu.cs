@@ -18,6 +18,11 @@
              * Gain Prestige equal to the card's cost minus 1
              */
 
+            if (!CanPatronBeActivated(activator, enemy))
+            {
+                return new Failure("Player has no card with cost >= 1, can't activate Hlaalu");
+            }
+
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
             else if (FavoredPlayer == enemy.ID)
@@ -46,5 +51,9 @@
         }
 
         public override PatronId PatronID => PatronId.HLAALU;
+
+        public override bool CanPatronBeActivated(Player activator, Player enemy){
+            return activator.GetAllPlayersCards().FindAll(card => card.Cost>=1).Any();
+        }
     }
 }

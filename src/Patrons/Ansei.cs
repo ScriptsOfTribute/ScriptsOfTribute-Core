@@ -9,12 +9,7 @@
              * Pay 2 power -> Gain 1 Coin. This Patron now favors you
              */
 
-            if (FavoredPlayer == activator.ID)
-            {
-                return new Success();
-            }
-
-            if (activator.PowerAmount < 2)
+            if (!CanPatronBeActivated(activator, enemy))
             {
                 return new Failure("Not enough Power to activate Ansei");
             }
@@ -43,5 +38,9 @@
         }
 
         public override PatronId PatronID => PatronId.ANSEI;
+
+        public override bool CanPatronBeActivated(Player activator, Player enemy){
+            return activator.PowerAmount>=2 && FavoredPlayer != activator.ID;
+        }
     }
 }

@@ -29,6 +29,8 @@
         public abstract PatronId PatronID { get; }
         public abstract List<CardId> GetStarterCards();
 
+        public abstract bool CanPatronBeActivated(Player activator, Player enemy);
+
         public static Patron FromId(PatronId patron)
         {
             return patron switch

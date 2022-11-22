@@ -168,18 +168,16 @@
             return this._tavern.GetAffordableCards(coinAmount);
         }
 
-        public PlayerEnum CheckAndGetWinner(){
-            var current_player = Players[(int)CurrentPlayer];
-            var opponent = Players[1 - (int)CurrentPlayer];
+        public Player CheckAndGetWinner(){
 
-            if (current_player.PrestigeAmount>=80){
+            if (CurrentPlayer.PrestigeAmount>=80){
                 return CurrentPlayer;
             }
 
             bool win = true;
 
             foreach (var patron in this.Patrons){
-                if (patron.FavoredPlayer != CurrentPlayer){
+                if (patron.FavoredPlayer != CurrentPlayer.ID){
                     win = false;
                     break;
                 }
@@ -189,11 +187,11 @@
                 return CurrentPlayer;
             }
 
-            if (current_player.PrestigeAmount < opponent.PrestigeAmount && opponent.PrestigeAmount>=40){
-                return (PlayerEnum)(1 - (int)CurrentPlayer);
+            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount>=40){
+                return EnemyPlayer;
             }
             else{
-                return PlayerEnum.NO_PLAYER_SELECTED;
+                return null;
             }
         }
     }
