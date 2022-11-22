@@ -19,7 +19,7 @@ public class CardDatabase
 
     public List<Card> GetCardsByPatron(PatronId[] patrons)
     {
-        var cardsFromDeck = from card in AllCardsWithoutUpgrades where patrons.Contains(card.Deck) select card.CreateUniqueCopy();
+        var cardsFromDeck = from card in AllCardsWithoutUpgrades where patrons.Contains(card.Deck) && card.Type != CardType.STARTER select card.CreateUniqueCopy();
         return cardsFromDeck.ToList();
     }
 
