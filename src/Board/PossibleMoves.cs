@@ -4,16 +4,8 @@ namespace TalesOfTribute {
       ATTACK = 1,
       BUY_CARD = 2,
       END_TURN = 3,
-      TREASURY = 4,
-      DUKE_OF_CROWS = 5,
-      RED_EAGLE = 6,
-      ANSEI = 7,
-      PELIN = 8,
-      RAJHIN = 9,
-      ORGNUM = 10,
-      PSIJIC = 11,
-      HLAALU = 12,
-      GET_POSSIBLE_MOVES = 13;
+      PATRON = 4,
+      GET_POSSIBLE_MOVES = 5;
   }
 
   public struct Move {
@@ -26,15 +18,7 @@ namespace TalesOfTribute {
       "ATTACK",
       "BUY_CARD",
       "END_TURN",
-      "TREASURY",
-      "DUKE_OF_CROWS",
-      "RED_EAGLE",
-      "ANSEI",
-      "PELIN",
-      "RAJHIN",
-      "ORGNUM",
-      "PSIJIC",
-      "HLAALU",
+      "PATRON",
       "GET_POSSIBLE_MOVES"];
 
     public Move(string command, int value = -1) {

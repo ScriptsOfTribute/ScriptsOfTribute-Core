@@ -12,18 +12,6 @@ namespace TalesOfTribute {
     /* Probably its better to have two function:
     GetMyAmountOfCoins and GetOpponentAmountOfCoins but it doubles numbers of functions */
 
-    public int GetAmountOfCoins(int playerId) {
-      throw new NotImplementedException();
-    }
-
-    public int GetAmountOfPower(int playerId) {
-      throw new NotImplementedException();
-    }
-
-    public int GetAmountOfPrestige(int playerId) {
-      throw new NotImplementedException();
-    }
-
     public int GetNumberOfCardsLeftInCooldownPile(int playerId) {
       throw new NotImplementedException();
     }
@@ -187,75 +175,10 @@ namespace TalesOfTribute {
       List < Card > usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
       if (currentPlayer.patronCalls > 0) {
 
-        foreach(var patron in boardManager.Patrons) {
+        foreach(var patron in _boardManager.Patrons) {
           if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer)) {
 
-            switch (patron.PatronID) {
-
-            case PatronId.TREASURY:
-              /*
-              List < Card > usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
-              foreach(Card card in usedCards) {
-                possibleMoves.Add(new Move(Command.TREASURY, card.Id));
-              }
-              */
-              possibleMoves.Add(new Move(Command.TREASURY));
-              break;
-
-            case PatronId.DUKE_OF_CROWS:
-              possibleMoves.Add(new Move(Command.DUKE_OF_CROWS));
-              break;
-
-            case PatronId.RAJHIN:
-              possibleMoves.Add(new Move(Command.RAJHIN));
-              break;
-
-            case PatronId.ORGNUM:
-              possibleMoves.Add(new Move(Command.ORGNUM));
-              break;
-
-            case PatronId.PSIJIC:
-              /*
-              if (tauntAgents.Any()) {
-                foreach(Card agent in tauntAgents) {
-                  possibleMoves.Add(new Move(Command.PSIJIC, agent.Id));
-                }
-              } else {
-                foreach(Card agent in enemyPlayer.Agents) {
-                  possibleMoves.Add(new Move(Command.PSIJIC, agent.Id));
-                }
-              }
-              */
-              possibleMoves.Add(new Move(Command.PSIJIC));
-              break;
-
-            case PatronId.HLAALU:
-              // not sure it will be all card that player own or only all without drawpile
-              /*
-              List < Card > cardsWithCost = currentPlayer.GetAllPlayersCards().FindAll(card => card.Cost >= 1);
-              foreach(var card in cardsWithCost) {
-                possibleMoves.Add(new Move(Command.HLAALU, card.Id));
-              }
-              */
-              possibleMoves.Add(new Move(Command.HLAALU));
-              breal;
-
-            case PatronId.ANSEI:
-              possibleMoves.Add(new Move(Command.ANSEI));
-              break;
-
-            case PatronId.RED_EAGLE:
-              possibleMoves.Add(new Move(Command.RED_EAGLE));
-
-            case PatronId.PELIN:
-              /*
-              List < Card > agentsInCooldownPile = currentPlayer.CooldownPile.FindAll(card => card.Type == AGENT);
-              foreach(Card agent in agentsInCooldownPile) {
-                possibleMoves.Add(new Move(Command.PELIN, agent.Id));
-              }
-              */
-              possibleMoves.Add(new Move(Command.PELIN));
-            }
+            possibleMoves.Add(new Move(Command.PATRON, patron.PatronID))
           }
         }
       }

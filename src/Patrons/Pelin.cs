@@ -33,7 +33,7 @@ namespace TalesOfTribute
                 choices =>
             {
                 activator.CooldownPile.Remove(choices.First());
-                activator.DrawPile.Add(choices.First());
+                activator.DrawPile.Insert(0, choices.First());
                 return new Success();
             });
 

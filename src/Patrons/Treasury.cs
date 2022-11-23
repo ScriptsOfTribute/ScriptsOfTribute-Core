@@ -12,15 +12,21 @@
             activator.CoinsAmount -= 2;
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
         
-            // not sure how to aproach that
             return new Choice<Card>(usedCards,
                 choices =>
             {
-                activator.CooldownPile.Remove(choices.First());
-                activator.DrawPile.Add(choices.First());
+                Card selectedCard = choices.First();
+                if (activator.Played.Contains(selectedCard)){
+                    activator.Played.Remove(selectedCard);
+                    activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
+                }
+                else{
+                    activator.CooldownPile.Remove(selectedCard);
+                    activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
+                }
                 return new Success();
             });
-            //
+
             return new Success();
         }
 
@@ -44,7 +50,7 @@
             };
         }
 
-        public override PatronId PatronID => PatronId.TREASURY;
+        public override PatronId  PatronID=> PatronId.TREASURY;
 
         public override bool CanPatronBeActivated(Player activator, Player enemy){
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();

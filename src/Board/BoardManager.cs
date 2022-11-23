@@ -177,6 +177,9 @@
             bool win = true;
 
             foreach (var patron in this.Patrons){
+                if (patron.PatronID == PatronId.TREASURY){
+                    continue;
+                }
                 if (patron.FavoredPlayer != CurrentPlayer.ID){
                     win = false;
                     break;
