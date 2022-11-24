@@ -332,16 +332,4 @@ namespace TalesOfTribute
             return _boardManager.EndTurn();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }
