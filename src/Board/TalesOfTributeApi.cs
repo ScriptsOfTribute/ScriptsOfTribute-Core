@@ -97,7 +97,7 @@ namespace TalesOfTribute
             return _boardManager.CurrentPlayer.CooldownPile;
         }
 
-        public List<Card> GetTawern()
+        public List<Card> GetTavern()
         {
             return _boardManager._tavern;
         }
@@ -181,13 +181,7 @@ namespace TalesOfTribute
 
         // Patron related
 
-        // we need that?
-        public Patron SelectPatron(PatronId patronID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PatronActivation(PatronId patronID)
+        public PlayResult PatronActivation(PatronId patronID)
         {
             // only for active player
             _boardManager.PatronCall(patronID, _boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
@@ -242,7 +236,7 @@ namespace TalesOfTribute
             throw new NotImplementedException();
         }
 
-        public Card PlayCard(int cardInstanceId)
+        public PlayResult PlayCard(int cardInstanceId)
         {
             throw new NotImplementedException();
         }
