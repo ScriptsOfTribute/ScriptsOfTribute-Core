@@ -52,8 +52,9 @@
 
         public override PatronId PatronID => PatronId.HLAALU;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
-            return activator.GetAllPlayersCards().FindAll(card => card.Cost>=1).Any();
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.GetAllPlayersCards().FindAll(card => card.Cost >= 1).Any();
         }
     }
 }

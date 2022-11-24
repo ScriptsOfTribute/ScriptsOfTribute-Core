@@ -39,8 +39,9 @@
 
         public override PatronId PatronID => PatronId.ANSEI;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
-            return activator.PowerAmount>=2 && FavoredPlayer != activator.ID;
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.PowerAmount >= 2 && FavoredPlayer != activator.ID;
         }
     }
 }

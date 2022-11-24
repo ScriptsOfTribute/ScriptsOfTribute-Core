@@ -168,32 +168,40 @@
             return this._tavern.GetAffordableCards(coinAmount);
         }
 
-        public Player CheckAndGetWinner(){
+        public Player CheckAndGetWinner()
+        {
 
-            if (CurrentPlayer.PrestigeAmount>=80){
+            if (CurrentPlayer.PrestigeAmount >= 80)
+            {
                 return CurrentPlayer;
             }
 
             bool win = true;
 
-            foreach (var patron in this.Patrons){
-                if (patron.PatronID == PatronId.TREASURY){
+            foreach (var patron in this.Patrons)
+            {
+                if (patron.PatronID == PatronId.TREASURY)
+                {
                     continue;
                 }
-                if (patron.FavoredPlayer != CurrentPlayer.ID){
+                if (patron.FavoredPlayer != CurrentPlayer.ID)
+                {
                     win = false;
                     break;
                 }
             }
 
-            if (win){
+            if (win)
+            {
                 return CurrentPlayer;
             }
 
-            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount>=40){
+            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= 40)
+            {
                 return EnemyPlayer;
             }
-            else{
+            else
+            {
                 return null;
             }
         }
