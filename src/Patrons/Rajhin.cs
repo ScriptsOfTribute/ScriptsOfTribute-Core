@@ -49,8 +49,9 @@
 
         public override PatronId PatronID => PatronId.RAJHIN;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
-            return activator.CoinsAmount>=3;
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.CoinsAmount >= 3;
         }
     }
 }

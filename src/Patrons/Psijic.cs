@@ -18,7 +18,8 @@
              * Knock Out 1 of enemy's agents into cooldown pile
              */
 
-            if (!CanPatronBeActivated(activator, enemy)){
+            if (!CanPatronBeActivated(activator, enemy))
+            {
                 return new Failure("Not enough Coin or enemy has no agents, can't activate Psijic");
             }
 
@@ -52,8 +53,9 @@
 
         public override PatronId PatronID => PatronId.PSIJIC;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
-            return activator.CoinsAmount>=4 && enemy.Agents.Any()
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.CoinsAmount >= 4 && enemy.Agents.Any()
         }
     }
 }

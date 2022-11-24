@@ -45,8 +45,9 @@ namespace TalesOfTribute
 
         public override PatronId PatronID => PatronId.RED_EAGLE;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
-            return activator.PowerAmount>=2;
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.PowerAmount >= 2;
         }
     }
 }

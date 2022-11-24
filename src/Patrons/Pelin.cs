@@ -27,7 +27,7 @@ namespace TalesOfTribute
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            List<Card> agentsInCooldownPile = CurrentPlayer.CooldownPile.FindAll(card => card.Type==AGENT);
+            List<Card> agentsInCooldownPile = CurrentPlayer.CooldownPile.FindAll(card => card.Type == AGENT);
 
             return new Choice<Card>(agentsInCooldownPile,
                 choices =>
@@ -54,8 +54,9 @@ namespace TalesOfTribute
 
         public override PatronId PatronID => PatronId.PELIN;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
-            return activator.PowerAmount>=2 && activator.CooldownPile.FindAll(card => card.Type==AGENT).Any();
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.PowerAmount >= 2 && activator.CooldownPile.FindAll(card => card.Type == AGENT).Any();
         }
     }
 }

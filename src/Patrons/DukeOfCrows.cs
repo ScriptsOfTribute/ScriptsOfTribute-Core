@@ -42,7 +42,8 @@
 
         public override PatronId PatronID => PatronId.DUKE_OF_CROWS;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
             return activator.CoinsAmount > 0 && FavoredPlayer != activator.ID;
         }
     }

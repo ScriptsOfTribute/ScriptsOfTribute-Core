@@ -8,19 +8,21 @@
             {
                 return new Failure("Not enough Coin to activate Treasury");
             }
-            
+
             activator.CoinsAmount -= 2;
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
-        
+
             return new Choice<Card>(usedCards,
                 choices =>
             {
                 Card selectedCard = choices.First();
-                if (activator.Played.Contains(selectedCard)){
+                if (activator.Played.Contains(selectedCard))
+                {
                     activator.Played.Remove(selectedCard);
                     activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
                 }
-                else{
+                else
+                {
                     activator.CooldownPile.Remove(selectedCard);
                     activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
                 }
@@ -50,11 +52,12 @@
             };
         }
 
-        public override PatronId  PatronID=> PatronId.TREASURY;
+        public override PatronId PatronID => PatronId.TREASURY;
 
-        public override bool CanPatronBeActivated(Player activator, Player enemy){
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
-            return activator.CoinsAmount>=2 && usedCards.Any();
+            return activator.CoinsAmount >= 2 && usedCards.Any();
         }
     }
 }
