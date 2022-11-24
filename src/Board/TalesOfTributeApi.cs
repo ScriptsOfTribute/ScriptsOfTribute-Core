@@ -8,131 +8,195 @@ namespace TalesOfTribute {
     public TalesOfTributeApi(BoardManager boardManager) {
       _boardManager = boardManager;
     }
-    //all numbers related
-    /* Probably its better to have two function:
-    GetMyAmountOfCoins and GetOpponentAmountOfCoins but it doubles numbers of functions */
 
     public int GetNumberOfCardsLeftInCooldownPile(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.CurrentPlayer.CooldownPile.Count;
+      }
+      else{
+        return _boardManager.EnemyPlayer.CooldownPile.Count;
+      }
     }
 
     public int GetNumberOfCardsLeftInDrawPile(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.CurrentPlayer.DrawPile.Count;
+      }
+      else{
+        return _boardManager.EnemyPlayer.DrawPile.Count;
+      }
     }
 
     public int GetNumberOfCardsLeftInHand(int playerId) {
       // propably only for active player
-      throw new NotImplementedException();
+      return _boardManager.CurrentPlayer.Hand.Count;
     }
 
     public int GetNumberOfAgents(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.CurrentPlayer.Agents.Count;
+      }
+      else{
+        return _boardManager.EnemyPlayer.Agents.Count;
+      }
     }
 
     public int GetNumberOfActiveAgents(int playerId) {
-      throw new NotImplementedException();
+      // active - not used in turn - probably also only for active player
+      return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated).Count;
     }
 
-    public int GetHPOfAgent(int agentId) {
-      throw new NotImplementedException();
+    public int GetHPOfAgent(Card agent) {
+      return agent.CurrentHP;
     }
 
     // all to state of objects related
 
     public List < Card > GetHand(int playerId) {
-      throw new NotImplementedException();
+      // only current player
+      return _boardManager.CurrentPlayer.Hand;
     }
 
     public List < Card > GetPlayedCards(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.CurrentPlayer.Played;
+      }
+      else{
+        return _boardManager.EnemyPlayer.Played;
+      }
     }
 
     public List < Card > GetDrawPile(int playerId) {
-      throw new NotImplementedException();
+      // only current player
+      return _boardManager.CurrentPlayer.DrawPile;
     }
 
     public List < Card > GetCooldownPile(int playerId) {
-      throw new NotImplementedException();
+      // only current player
+      return _boardManager.CurrentPlayer.CooldownPile;
     }
 
     public List < Card > GetTawern() {
-      throw new NotImplementedException();
+      return _boardManager._tavern;
     }
 
     public List < Card > GetAffordableCardsInTawern(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.GetAffordableCards(_boardManager.CurrentPlayer.CoinsAmount);
+      }
+      else{
+        return _boardManager.GetAffordableCards(_boardManager.EnemyPlayer.CoinsAmount);
+      }
     }
 
     // Agents related
-    //I assume that we will handle Agents special
 
     public List < Card > GetListOfAgents(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.CurrentPlayer.Agents;
+      }
+      else{
+        return _boardManager.EnemyPlayer.Agents;
+      }
     }
 
     public List < Card > GetListOfActiveAgents(int playerId) {
-      throw new NotImplementedException();
+      if (playerId == _boardManager.CurrentPlayer.ID){
+        return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
+      }
+      else{
+        return _boardManager.EnemyPlayer.Agents.FindAll(agent => !agent.Activated);
+      }
     }
 
-    public void ActivateAgent(int agentId) {
+    public void ActivateAgent(Card agent) {
       /* 
       - only active player can activate agent
       - it can activate player agent, not opponent
       - also every agent takes diffrent things to activate - I belive that 
       it's on us to check if it can be activated and takes good amount of Power/Coins etc
       from active player */
-      throw new NotImplementedException();
+      if (!agent.Activated && _boardManager.CurrentPlayer.Agents.Contains(agent)){
+        return _boardManager.PlayCard(agent);
+      }
+      else{
+        return new Failure("Picked agent has been already activated in your turn");
+      }
     }
 
-    public void CallAgent(int agentId) {
-      throw new NotImplementedException();
-    }
-
-    public void AttackAgent(int agentId) {
-      throw new NotImplementedException();
+    // maybe most of this function should go to BoardManager
+    public void AttackAgent(Card agent) {
+      if (_boardManager.EnemyPlayer.Agents.Contains(agent)){
+        int attact_value = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
+        CurrentPlayer.PowerAmount -= attact_value;
+        agent.CurrentHP -= attact_value;
+        if (agent.CurrentHP <=0){
+          agent.CurrentHP = agent.HP;
+          _boardManager.EnemyPlayer.Agents.Remove(agent);
+          _boardManager.EnemyPlayer.CooldownPile.Add(agent);
+        }
+      }
+      else{
+        return new Failure("Can't attack your own agents");
+      }
     }
 
     // Patron related
 
-    public Patron SelectPatron(string patronName) {
+    // we need that?
+    public Patron SelectPatron(PatronId patronID) {
       throw new NotImplementedException();
     }
 
-    public void PatronActivation(string patronName) {
+    public void PatronActivation(PatronId patronID) {
       // only for active player
-      throw new NotImplementedException();
+      _boardManager.PatronCall(patronID, _boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
     }
 
-    public int GetLevelOfFavoritism(int playerId, string patronName) {
-      throw new NotImplementedException();
+    public int GetLevelOfFavoritism(int playerId, PatronId patronID) {
+      int idx = _boardManager._patrons.IndexOf(patron => patron.PatronID==patronID);
+      PlayerEnum favoredPlayer = _boardManager.GetPatronFavorism(idx)
+      if (favoredPlayer == playerId){
+        return 1;
+      }
+      else if(favoredPlayer == PlayerEnum.NO_PLAYER_SELECTED){
+        return 0;
+      }
+      else{
+        return -1;
+      }
     }
 
-    /* TODO
+    
     public Dictionary GetAllLevelsOfFavoritism(int playerId) {
-      throw new NotImplementedException();
+
+      Dictionary<int, int> levelOfFavoritism = new Dictionary<int, int>();
+      foreach (patron in _boardManager._patrons){
+        if (patron.favoredPlayer == playerId){
+          levelOfFavoritism.Add(patron.PatronID, 1);
+        }
+        else if(patron.favoredPlayer == PlayerEnum.NO_PLAYER_SELECTED){
+          levelOfFavoritism.Add(patron.PatronID, 0);
+        }
+        else{
+          levelOfFavoritism.Add(patron.PatronID, -1);
+        }
+      }
+      return levelOfFavoritism;
     }
-    */
 
     // cards related
 
+    // Implemented in BoardManager - call it from there?
     public Card BuyCard(int cardInstanceId) {
       throw new NotImplementedException();
     }
 
-    // Important for future: some cards have Taunt efects and must be attacked first
-
     public Card PlayCard(int cardInstanceId) {
-      // playing a card could have multiple effects - sometimes player need to choose more than one card
-      /* We can handle it in two ways
-      1) PlayCard gets a string, schema sth like "cardInstanceId ChosenId1, ChosenId2, ...END"
-      we validate that move and apply effects or
-      2) PlayCard always takes only cardInstanceId but it's on our side to check if move is legal and
-      ask player to choose cards one by one
-      3) some cards moves another cards from one pile to another (Ansei return etc)
-      */
       throw new NotImplementedException();
     }
 
+    // do we need that?
     public Card ChooseCard(int cardInstanceId) {
       throw new NotImplementedException();
     }
@@ -196,52 +260,7 @@ namespace TalesOfTribute {
     }
 
     public void EndTurn() {
-      //move cards from used to cooldown pile, etc
-      throw new NotImplementedException();
+      return _boardManager.EndTurn();
     }
-
-    // Better place for that function is in Manager
-    public void CheckWinConditions() {
-      /* 1) four patrons favours active player - easy
-      2) win by prestige - harder to check - depends on another player and its next turn */
-      throw new NotImplementedException();
-    }
-
-    public Move FromStringToMove(string move) {
-      string[] splittedMove = move.Split(' ');
-
-      if (splittedMove.Length != 2) {
-        throw new InvalidOperationException();
-      }
-      try {
-        int value = Int32.Parse(splittedMove[1]);
-        return new Move(splittedMove[0], value);
-      } catch (FormatException e) {
-        throw new InvalidOperationException();
-      } catch (InvalidOperationException e) {
-        throw new InvalidOperationException();
-      }
-    }
-
-    public void Parser(string move) {
-      Move playerMove = FromStringToMove(move);
-
-      switch (playerMove.Command) {
-      case CommandEnum.GET_POSSIBLE_MOVES:
-        List < Move > moves = GetListOfPossibleMoves();
-        foreach(var move in moves) {
-          Console.WriteLine(move.ToString());
-        }
-        break;
-
-      case CommandEnum.END_TURN:
-        _boardManager.EndTurn();
-        break;
-        //TODO rest
-      default:
-        break;
-      }
-    }
-
   }
 }
