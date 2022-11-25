@@ -7,7 +7,7 @@ namespace TalesOfTribute
         BUY_CARD = 2,
         END_TURN = 3,
         PATRON = 4,
-        GET_POSSIBLE_MOVES = 5;
+        GET_POSSIBLE_MOVES = 5,
     }
 
     public struct Move
@@ -16,20 +16,11 @@ namespace TalesOfTribute
         public CommandEnum Command { get; }
         public int Value { get; }
 
-        public List<string> EnumToString = new List[
-          "PLAY_CARD",
-          "ATTACK",
-          "BUY_CARD",
-          "END_TURN",
-          "PATRON",
-          "GET_POSSIBLE_MOVES"];
-
         public Move(string command, int value = -1)
         {
-            int index = EnumToString.IndexOf(command);
-            if (index != -1)
+            if (Enum.TryParse(command, out CommandEnum commandConverted))
             {
-                Command = Enum.GetName(typeof(Command), index)
+              Command = commandConverted;
               Value = value;
             }
             else
