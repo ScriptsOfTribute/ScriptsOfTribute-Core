@@ -1,89 +1,66 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json.Linq;
 
 namespace TalesOfTribute
 {
     public class Parser
     {
-        public JsonElement root;
+        readonly JArray _root;
 
         public Parser(string data)
         {
-            JsonDocument doc = JsonDocument.Parse(data);
-            this.root = doc.RootElement;
+            this._root = JArray.Parse(data);
         }
 
         public IEnumerable<Card> CreateAllCards()
         {
-            var cardsEnumerator = this.root.EnumerateArray();
-            return from card in cardsEnumerator select CreateCard(card);
+            return from card in _root.Children<JObject>() select CreateCard(card);
         }
 
-        private Card CreateCard(JsonElement card)
+        private Card CreateCard(JObject card)
         {
-            var id = (CardId)card.GetProperty("id").GetInt32();
-            string name = card.GetProperty("Name").ToString();
-            PatronId deck = Patron.IdFromString(card.GetProperty("Deck").ToString());
-            int cost = card.GetProperty("Cost").GetInt32();
-            CardType type = ParseCardType(card.GetProperty("Type").ToString());
-            int hp = card.GetProperty("HP").GetInt32();
+            var id = card["id"].ToObject<CardId>();
+            string name = card["Name"].ToObject<string>();
+            PatronId deck = Patron.IdFromString(card["Deck"].ToObject<string>());
+            int cost = card["Cost"].ToObject<int>();
+            CardType type = ParseCardType(card["Type"].ToObject<string>());
+            int hp = card["HP"].ToObject<int>();
             ComplexEffect?[] effects = new ComplexEffect?[4];
+            bool taunt = card["Taunt"]?.ToObject<bool>() ?? false;
 
-            CardId? family = null;
-            if (card.TryGetProperty("Family", out var familyElement))
-            {
-                family = (CardId?)familyElement.GetInt32();
-            }
+            CardId? family = card["Family"]?.ToObject<CardId?>();
 
-            string activation = card.GetProperty("Activation").ToString();
+            var activation = card["Activation"]?.ToObject<string>();
             effects[0] = ParseEffect(activation);
-            string combo = card.GetProperty("Combo 2").ToString();
+            var combo = card["Combo 2"]?.ToObject<string>();
             effects[1] = ParseEffect(combo);
-            combo = card.GetProperty("Combo 3").ToString();
+            combo = card["Combo 3"]?.ToObject<string>();
             effects[2] = ParseEffect(combo);
-            combo = card.GetProperty("Combo 4").ToString();
+            combo = card["Combo 4"]?.ToObject<string>();
             effects[3] = ParseEffect(combo);
 
 
-            return new Card(name, deck, id, cost, type, hp, effects, -1, family);
+            return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt);
         }
 
-        private ComplexEffect? ParseEffect(string effectToParse)
+        private ComplexEffect? ParseEffect(string? effectToParse)
         {
 
-            if (effectToParse == "")
+            if (effectToParse == null)
                 return null;
 
             string[] tokens = effectToParse.Split(' ');
 
-            if (tokens.Length == 2)
+            return tokens.Length switch
             {
-                return new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1]));
-            }
-            else if (tokens.Length == 5)
-            {
-                if (tokens[2] == "OR")
-                {
-                    return new EffectChoice(
-                        new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
-                        new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4])
-                        )
-                    );
-                }
-                else if (tokens[2] == "AND")
-                {
-                    return new EffectComposite(
-                        new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
-                        new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4])
-                        )
-                    );
-                }
-                else
-                {
-                    throw new Exception("Invalid cards.json format!");
-                }
-            }
-
-            return null;
+                2 => new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
+                5 when tokens[2] == "OR" => new EffectChoice(
+                    new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
+                    new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]))),
+                5 when tokens[2] == "AND" => new EffectComposite(
+                    new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
+                    new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]))),
+                _ => throw new Exception("Invalid cards.json format!")
+            };
         }
 
         private CardType ParseCardType(string cardTypeToParse)
