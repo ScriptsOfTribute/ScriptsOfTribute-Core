@@ -4,6 +4,8 @@ namespace TalesOfTribute
 {
     public class Parser
     {
+        private const string InvalidJsonMessage = "Invalid cards.json format!";
+
         readonly JArray _root;
 
         public Parser(string data)
@@ -18,12 +20,12 @@ namespace TalesOfTribute
 
         private Card CreateCard(JObject card)
         {
-            var id = card["id"].ToObject<CardId>();
-            string name = card["Name"].ToObject<string>();
-            PatronId deck = Patron.IdFromString(card["Deck"].ToObject<string>());
-            int cost = card["Cost"].ToObject<int>();
-            CardType type = ParseCardType(card["Type"].ToObject<string>());
-            int hp = card["HP"].ToObject<int>();
+            var id = card["id"]?.ToObject<CardId>() ?? throw new Exception(InvalidJsonMessage);
+            string name = card["Name"]?.ToObject<string>() ?? throw new Exception(InvalidJsonMessage);
+            PatronId deck = Patron.IdFromString(card["Deck"]?.ToObject<string>() ?? throw new Exception(InvalidJsonMessage));
+            int cost = card["Cost"]?.ToObject<int>() ?? throw new Exception(InvalidJsonMessage);
+            CardType type = ParseCardType(card["Type"]?.ToObject<string>() ?? throw new Exception(InvalidJsonMessage));
+            int hp = card["HP"]?.ToObject<int>() ?? throw new Exception(InvalidJsonMessage);
             ComplexEffect?[] effects = new ComplexEffect?[4];
             bool taunt = card["Taunt"]?.ToObject<bool>() ?? false;
 
@@ -59,7 +61,7 @@ namespace TalesOfTribute
                 5 when tokens[2] == "AND" => new EffectComposite(
                     new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
                     new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]))),
-                _ => throw new Exception("Invalid cards.json format!")
+                _ => throw new Exception(InvalidJsonMessage)
             };
         }
 
