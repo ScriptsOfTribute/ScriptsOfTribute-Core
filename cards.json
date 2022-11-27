@@ -1050,7 +1050,7 @@
     "HP":-1,
     "Activation":"Discard 1",
     "Combo 2":"Draw 1",
-    "Combo 3":"Draw 1",
+    "Combo 3":"Draw 1 AND Discard 1",
     "Combo 4":null,
     "Family":76
   },
