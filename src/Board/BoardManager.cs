@@ -10,8 +10,8 @@
     public class BoardManager
     {
         private PlayerEnum CurrentPlayerId;
-        private Patron[] _patrons;
-        private Tavern _tavern;
+        public Patron[] _patrons;
+        public Tavern _tavern;
         private Player[] _players;
         private Random _rnd;
 
@@ -178,7 +178,7 @@
 
             bool win = true;
 
-            foreach (var patron in this.Patrons)
+            foreach (var patron in this._patrons)
             {
                 if (patron.PatronID == PatronId.TREASURY)
                 {
@@ -196,7 +196,7 @@
                 return CurrentPlayer;
             }
 
-            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= 40)
+            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
             {
                 return EnemyPlayer;
             }

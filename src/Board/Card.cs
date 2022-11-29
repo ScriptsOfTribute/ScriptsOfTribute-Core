@@ -42,8 +42,8 @@
             Family = family;
         }
 
-        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, Guid guid)
-            : this(name, deck, id, cost, type, hp, effects, hash, family)
+        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, Guid guid, bool taunt)
+            : this(name, deck, id, cost, type, hp, effects, hash, family, taunt)
         {
             Guid = guid;
         }
@@ -53,7 +53,7 @@
             var guid = Guid.NewGuid();
             return new Card(Name, Deck, Id, Cost, Type, HP,
                 Effects.Select(effect => effect?.MakeUniqueCopy(guid)).ToArray(),
-                Hash, Family, guid);
+                Hash, Family, guid, Taunt);
         }
 
         public override string ToString()

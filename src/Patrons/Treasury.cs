@@ -28,8 +28,6 @@
                 }
                 return new Success();
             });
-
-            return new Success();
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

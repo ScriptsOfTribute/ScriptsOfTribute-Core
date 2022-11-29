@@ -5,11 +5,17 @@ namespace TalesOfTribute
     public class Parser
     {
         public JsonElement root;
+        private TalesOfTributeApi _api;
 
         public Parser(string data)
         {
             JsonDocument doc = JsonDocument.Parse(data);
             this.root = doc.RootElement;
+        }
+
+        public Parser(TalesOfTributeApi api)
+        {
+            this._api = api;
         }
 
         public IEnumerable<Card> CreateAllCards()
@@ -43,8 +49,10 @@ namespace TalesOfTribute
             combo = card.GetProperty("Combo 4").ToString();
             effects[3] = ParseEffect(combo);
 
+            bool taunt = activation.ToLower().Contains("taunt");
 
-            return new Card(name, deck, id, cost, type, hp, effects, -1, family);
+
+            return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt);
         }
 
         private ComplexEffect? ParseEffect(string effectToParse)
@@ -123,22 +131,22 @@ namespace TalesOfTribute
             }
         }
 
-        public void Parser(string move)
+        public void MoveParser(string move)
         {
             Move playerMove = FromStringToMove(move);
 
             switch (playerMove.Command)
             {
                 case CommandEnum.GET_POSSIBLE_MOVES:
-                    List<Move> moves = GetListOfPossibleMoves();
-                    foreach (var move in moves)
+                    List<Move> moves = _api.GetListOfPossibleMoves();
+                    foreach (var possibleMove in moves)
                     {
-                        Console.WriteLine(move.ToString());
+                        Console.WriteLine(possibleMove.ToString());
                     }
                     break;
 
                 case CommandEnum.END_TURN:
-                    _boardManager.EndTurn();
+                    _api.EndTurn();
                     break;
                 //TODO rest
                 default:

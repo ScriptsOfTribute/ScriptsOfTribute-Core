@@ -36,6 +36,9 @@ namespace TalesOfTribute
             Value = value;
         }
 
-        public override string ToString() => $ "({Command} {Value})";
+        public override string ToString()
+        {
+            return $"{Command} {Value}";
+        }
   }
 }

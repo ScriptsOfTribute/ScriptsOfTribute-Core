@@ -55,7 +55,7 @@
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            return activator.CoinsAmount >= 4 && enemy.Agents.Any()
+            return activator.CoinsAmount >= 4 && enemy.Agents.Any();
         }
     }
 }

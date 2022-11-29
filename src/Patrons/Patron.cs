@@ -41,6 +41,8 @@
                 PatronId.ORGNUM => new Orgnum(),
                 PatronId.HLAALU => new Hlaalu(),
                 PatronId.PSIJIC => new Psijic(),
+                PatronId.PELIN => new Pelin(),
+                PatronId.RED_EAGLE => new RedEagle(),
                 PatronId.TREASURY => new Treasury(),
                 _ => throw new InvalidOperationException()
             };
