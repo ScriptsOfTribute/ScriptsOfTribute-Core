@@ -24,6 +24,7 @@
         public readonly ComplexEffect?[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
         public readonly int Hash;
         public readonly CardId? Family;
+        public readonly bool Taunt;
         public Guid Guid { get; } = Guid.Empty;
 
         public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt)
@@ -40,9 +41,10 @@
             Effects = effects;
             Hash = hash;
             Family = family;
+            Taunt = taunt;
         }
 
-        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, Guid guid, bool taunt)
+        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt, Guid guid)
             : this(name, deck, id, cost, type, hp, effects, hash, family, taunt)
         {
             Guid = guid;
@@ -53,7 +55,7 @@
             var guid = Guid.NewGuid();
             return new Card(Name, Deck, Id, Cost, Type, HP,
                 Effects.Select(effect => effect?.MakeUniqueCopy(guid)).ToArray(),
-                Hash, Family, guid, Taunt);
+                Hash, Family, Taunt, guid);
         }
 
         public override string ToString()
@@ -64,7 +66,7 @@
 
         public override bool Equals(object? obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if ((obj == null) || this.GetType() != obj.GetType())
             {
                 return false;
             }
