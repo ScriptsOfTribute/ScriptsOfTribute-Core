@@ -175,7 +175,7 @@
 
         public override string ToString()
         {
-            return $"Effect: {this.Type} {this.Amount}";
+            return $"{this.Type} {this.Amount}";
         }
 
         public List<BaseEffect> Decompose()
@@ -258,6 +258,11 @@
                     return _right.Enact(player, enemy, tavern);
                 });
         }
+
+        public override string ToString()
+        {
+            return $"{this._left} OR {this._right}";
+        }
     }
 
     public class EffectComposite : ComplexEffect
@@ -292,6 +297,11 @@
                 _right.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
                 guid
             );
+        }
+
+        public override string ToString()
+        {
+            return $"{this._left} AND {this._right}";
         }
     }
 }
