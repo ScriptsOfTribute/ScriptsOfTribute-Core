@@ -5,13 +5,7 @@ namespace Tests.Board;
 
 public class ApiTests
 {
-    private readonly ITestOutputHelper output;
     private BoardManager _boardManager = new BoardManager(new[] { PatronId.PELIN, PatronId.TREASURY });
-
-    public ApiTests(ITestOutputHelper output)
-    {
-        this.output = output;
-    }
 
     [Fact]
     void TestGetListOfPossibleMoves()
@@ -33,6 +27,5 @@ public class ApiTests
         _boardManager.CurrentPlayer.PowerAmount = 1;
         possibleMoves = api.GetListOfPossibleMoves();
         Assert.DoesNotContain(new Move(CommandEnum.PATRON, (int)PatronId.PELIN), possibleMoves);
-
     }
 }

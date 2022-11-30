@@ -12,7 +12,6 @@ namespace TalesOfTribute
 
     public struct Move
     {
-
         public CommandEnum Command { get; }
         public int Value { get; }
 
@@ -20,8 +19,8 @@ namespace TalesOfTribute
         {
             if (Enum.TryParse(command, out CommandEnum commandConverted))
             {
-              Command = commandConverted;
-              Value = value;
+                Command = commandConverted;
+                Value = value;
             }
             else
             {
@@ -31,7 +30,6 @@ namespace TalesOfTribute
 
         public Move(CommandEnum command, int value = -1)
         {
-
             Command = command;
             Value = value;
         }
@@ -40,5 +38,5 @@ namespace TalesOfTribute
         {
             return $"{Command} {Value}";
         }
-  }
+    }
 }

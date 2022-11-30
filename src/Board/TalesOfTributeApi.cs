@@ -12,9 +12,9 @@ namespace TalesOfTribute
             _boardManager = boardManager;
         }
 
-        public int GetNumberOfCardsLeftInCooldownPile(int playerId)
+        public int GetNumberOfCardsLeftInCooldownPile(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.CurrentPlayer.CooldownPile.Count;
             }
@@ -24,9 +24,9 @@ namespace TalesOfTribute
             }
         }
 
-        public int GetNumberOfCardsLeftInDrawPile(int playerId)
+        public int GetNumberOfCardsLeftInDrawPile(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.CurrentPlayer.DrawPile.Count;
             }
@@ -36,15 +36,15 @@ namespace TalesOfTribute
             }
         }
 
-        public int GetNumberOfCardsLeftInHand(int playerId)
+        public int GetNumberOfCardsLeftInHand()
         {
-            // propably only for active player
+            // probably only for active player
             return _boardManager.CurrentPlayer.Hand.Count;
         }
 
-        public int GetNumberOfAgents(int playerId)
+        public int GetNumberOfAgents(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.CurrentPlayer.Agents.Count;
             }
@@ -54,7 +54,7 @@ namespace TalesOfTribute
             }
         }
 
-        public int GetNumberOfActiveAgents(int playerId)
+        public int GetNumberOfActiveAgents()
         {
             // active - not used in turn - probably also only for active player
             return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated).Count;
@@ -62,20 +62,21 @@ namespace TalesOfTribute
 
         public int GetHPOfAgent(Card agent)
         {
-            return agent.CurrentHP;
+            //return agent.CurrentHP;
+            throw new NotImplementedException();
         }
 
         // all to state of objects related
 
-        public List<Card> GetHand(int playerId)
+        public List<Card> GetHand()
         {
             // only current player
             return _boardManager.CurrentPlayer.Hand;
         }
 
-        public List<Card> GetPlayedCards(int playerId)
+        public List<Card> GetPlayedCards(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.CurrentPlayer.Played;
             }
@@ -85,13 +86,13 @@ namespace TalesOfTribute
             }
         }
 
-        public List<Card> GetDrawPile(int playerId)
+        public List<Card> GetDrawPile()
         {
             // only current player
             return _boardManager.CurrentPlayer.DrawPile;
         }
 
-        public List<Card> GetCooldownPile(int playerId)
+        public List<Card> GetCooldownPile()
         {
             // only current player
             return _boardManager.CurrentPlayer.CooldownPile;
@@ -102,9 +103,9 @@ namespace TalesOfTribute
             return _boardManager.GetAvailableTavernCards();
         }
 
-        public List<Card> GetAffordableCardsInTawern(int playerId)
+        public List<Card> GetAffordableCardsInTawern(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.GetAffordableCards(_boardManager.CurrentPlayer.CoinsAmount);
             }
@@ -116,9 +117,9 @@ namespace TalesOfTribute
 
         // Agents related
 
-        public List<Card> GetListOfAgents(int playerId)
+        public List<Card> GetListOfAgents(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.CurrentPlayer.Agents;
             }
@@ -128,9 +129,9 @@ namespace TalesOfTribute
             }
         }
 
-        public List<Card> GetListOfActiveAgents(int playerId)
+        public List<Card> GetListOfActiveAgents(PlayerEnum playerId)
         {
-            if (playerId == (int)_boardManager.CurrentPlayer.ID)
+            if (playerId == _boardManager.CurrentPlayer.ID)
             {
                 return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
             }
@@ -161,11 +162,12 @@ namespace TalesOfTribute
         // maybe most of this function should go to BoardManager
         public void AttackAgent(Card agent)
         {
+            /*
             if (_boardManager.EnemyPlayer.Agents.Contains(agent))
             {
-                int attact_value = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
-                _boardManager.CurrentPlayer.PowerAmount -= attact_value;
-                agent.CurrentHP -= attact_value;
+                int attackValue = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
+                _boardManager.CurrentPlayer.PowerAmount -= attackValue;
+                agent.CurrentHP -= attackValue;
                 if (agent.CurrentHP <= 0)
                 {
                     agent.CurrentHP = agent.HP;
@@ -177,6 +179,8 @@ namespace TalesOfTribute
             {
                 throw new Exception("Can't attack your own agents");
             }
+            */
+            throw new NotImplementedException();
         }
 
         // Patron related
@@ -187,11 +191,11 @@ namespace TalesOfTribute
             return _boardManager.PatronCall((int)patronID, _boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
         }
 
-        public int GetLevelOfFavoritism(int playerId, PatronId patronID)
+        public int GetLevelOfFavoritism(PlayerEnum playerId, PatronId patronID)
         {
-            int idx = Array.FindIndex(_boardManager._patrons, patron => patron.PatronID == patronID);
+            int idx = Array.FindIndex(_boardManager.Patrons, patron => patron.PatronID == patronID);
             PlayerEnum favoredPlayer = _boardManager.GetPatronFavorism(idx);
-            if ((int)favoredPlayer == playerId)
+            if (favoredPlayer == playerId)
             {
                 return 1;
             }
@@ -206,13 +210,12 @@ namespace TalesOfTribute
         }
 
 
-        public Dictionary<int, int> GetAllLevelsOfFavoritism(int playerId)
+        public Dictionary<int, int> GetAllLevelsOfFavoritism(PlayerEnum playerId)
         {
-
             Dictionary<int, int> levelOfFavoritism = new Dictionary<int, int>();
-            foreach (var patron in _boardManager._patrons)
+            foreach (var patron in _boardManager.Patrons)
             {
-                if ((int)patron.FavoredPlayer == playerId)
+                if (patron.FavoredPlayer == playerId)
                 {
                     levelOfFavoritism.Add((int)patron.PatronID, 1);
                 }
@@ -282,7 +285,7 @@ namespace TalesOfTribute
             }
             if (currentPlayer.CoinsAmount > 0)
             {
-                foreach (Card card in _boardManager._tavern.GetAffordableCards(currentPlayer.CoinsAmount))
+                foreach (Card card in _boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount))
                 {
                     possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.Id));
                 }
@@ -292,11 +295,10 @@ namespace TalesOfTribute
             if (currentPlayer.PatronCalls > 0)
             {
 
-                foreach (var patron in _boardManager._patrons)
+                foreach (var patron in _boardManager.Patrons)
                 {
                     if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))
                     {
-
                         possibleMoves.Add(new Move(CommandEnum.PATRON, (int)patron.PatronID));
                     }
                 }
@@ -309,7 +311,6 @@ namespace TalesOfTribute
 
         public bool IsMoveLegal(Move playerMove)
         {
-
             List<Move> possibleMoves = GetListOfPossibleMoves();
 
             return possibleMoves.Contains(playerMove);

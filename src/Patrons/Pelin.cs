@@ -41,7 +41,6 @@ namespace TalesOfTribute
         public override PlayResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
-
             return new Success();
         }
 

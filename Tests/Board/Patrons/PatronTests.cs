@@ -210,6 +210,5 @@ public class PatronTests
         Assert.DoesNotContain(card1, player1.CooldownPile);
         Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(0));
         Assert.Contains(card1, player1.DrawPile);
-        
     }
 }

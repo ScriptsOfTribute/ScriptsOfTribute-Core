@@ -6,16 +6,10 @@ namespace TalesOfTribute
     {
         private const string InvalidJsonMessage = "Invalid cards.json format!";
         readonly JArray _root;
-        private TalesOfTributeApi _api;
 
         public Parser(string data)
         {
             this._root = JArray.Parse(data);
-        }
-
-        public Parser(TalesOfTributeApi api)
-        {
-            this._api = api;
         }
 
         public IEnumerable<Card> CreateAllCards()
@@ -44,8 +38,6 @@ namespace TalesOfTribute
             effects[2] = ParseEffect(combo);
             combo = card["Combo 4"]?.ToObject<string>();
             effects[3] = ParseEffect(combo);
-
-            bool taunt = activation.ToLower().Contains("taunt");
 
             return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt);
         }
@@ -83,52 +75,6 @@ namespace TalesOfTribute
                 "Curse" => CardType.CURSE,
                 _ => CardType.ACTION
             };
-        }
-
-        public Move FromStringToMove(string move)
-        {
-            string[] splittedMove = move.Split(' ');
-
-            if (splittedMove.Length != 2)
-            {
-                throw new InvalidOperationException();
-            }
-            try
-            {
-                int value = Int32.Parse(splittedMove[1]);
-                return new Move(splittedMove[0], value);
-            }
-            catch (FormatException e)
-            {
-                throw new InvalidOperationException();
-            }
-            catch (InvalidOperationException e)
-            {
-                throw new InvalidOperationException();
-            }
-        }
-
-        public void MoveParser(string move)
-        {
-            Move playerMove = FromStringToMove(move);
-
-            switch (playerMove.Command)
-            {
-                case CommandEnum.GET_POSSIBLE_MOVES:
-                    List<Move> moves = _api.GetListOfPossibleMoves();
-                    foreach (var possibleMove in moves)
-                    {
-                        Console.WriteLine(possibleMove.ToString());
-                    }
-                    break;
-
-                case CommandEnum.END_TURN:
-                    _api.EndTurn();
-                    break;
-                //TODO rest
-                default:
-                    break;
-            }
         }
     }
 }
