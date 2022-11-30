@@ -39,8 +39,9 @@
             {
                 throw new Exception($"Card {card.Id} is not available!");
             }
-            AvailableCards.Remove(card);
-            AvailableCards.Add(this.Cards.First());
+            int idx = AvailableCards.FindIndex(x => x.Guid == card.Guid);
+            AvailableCards.RemoveAt(idx);
+            AvailableCards.Insert(idx, this.Cards.First());
             Cards.RemoveAt(0);
             return card;
         }
