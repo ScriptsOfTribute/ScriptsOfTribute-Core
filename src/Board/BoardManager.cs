@@ -10,8 +10,8 @@
     public class BoardManager
     {
         private PlayerEnum CurrentPlayerId;
-        private Patron[] _patrons;
-        private Tavern _tavern;
+        public Patron[] Patrons;
+        public Tavern Tavern;
         private Player[] _players;
         private Random _rnd;
 
@@ -19,12 +19,13 @@
         public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
 
         public BoardState State { get; set; } = BoardState.NORMAL;
+        private int PrestigeTreshold = 40;
 
         public BoardManager(PatronId[] patrons)
         {
-            this._patrons = GetPatrons(patrons);
+            this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
-            _tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             _players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
             _rnd = new Random();
         }
@@ -41,7 +42,7 @@
                 throw new Exception("Complete pending choice first!");
             }
 
-            return Array.Find(_patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
+            return Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
         }
 
         public ExecutionChain PlayCard(Card card)
@@ -51,7 +52,7 @@
                 throw new Exception("Complete pending choice first!");
             }
 
-            var result = CurrentPlayer.PlayCard(card, EnemyPlayer, _tavern);
+            var result = CurrentPlayer.PlayCard(card, EnemyPlayer, Tavern);
 
             State = BoardState.CHOICE_PENDING;
 
@@ -67,14 +68,14 @@
                 throw new Exception("Complete pending choice first!");
             }
 
-            Card boughtCard = this._tavern.Acquire(card);
+            Card boughtCard = this.Tavern.Acquire(card);
 
             if (boughtCard.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
 
             CurrentPlayer.CoinsAmount -= boughtCard.Cost;
 
-            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, _tavern);
+            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern);
         }
 
         public void DrawCards()
@@ -132,11 +133,11 @@
         {
             CurrentPlayerId = PlayerEnum.PLAYER1;
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
-            _tavern.DrawCards();
+            Tavern.DrawCards();
 
             List<Card> starterDecks = new List<Card>();
 
-            foreach (var patron in this._patrons)
+            foreach (var patron in this.Patrons)
             {
                 starterDecks.AddRange(
                     patron.GetStarterCards().Select(cardID => GlobalCardDatabase.Instance.GetCard(cardID)).ToList()
@@ -149,22 +150,59 @@
 
         public BoardSerializer SerializeBoard()
         {
-            return new BoardSerializer(_players[0], _players[1], _tavern, _patrons, CurrentPlayerId);
+            return new BoardSerializer(_players[0], _players[1], Tavern, Patrons, CurrentPlayerId);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
         {
-            return Array.Find(_patrons, p => p.PatronID == patron).FavoredPlayer;
+            return Array.Find(Patrons, p => p.PatronID == patron).FavoredPlayer;
         }
 
         public List<Card> GetAvailableTavernCards()
         {
-            return this._tavern.AvailableCards;
+            return this.Tavern.AvailableCards;
         }
 
         public List<Card> GetAffordableCards(int coinAmount)
         {
-            return this._tavern.GetAffordableCards(coinAmount);
+            return this.Tavern.GetAffordableCards(coinAmount);
+        }
+
+        public Player CheckAndGetWinner()
+        {
+            if (CurrentPlayer.PrestigeAmount >= 80)
+            {
+                return CurrentPlayer;
+            }
+
+            bool win = true;
+
+            foreach (var patron in this.Patrons)
+            {
+                if (patron.PatronID == PatronId.TREASURY)
+                {
+                    continue;
+                }
+                if (patron.FavoredPlayer != CurrentPlayer.ID)
+                {
+                    win = false;
+                    break;
+                }
+            }
+
+            if (win)
+            {
+                return CurrentPlayer;
+            }
+
+            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
+            {
+                return EnemyPlayer;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -69,7 +69,7 @@ public class PatronTests
         Assert.Equal(player1.ID, duke.FavoredPlayer);
 
         //If player is favored, activation doesnt work
-        Assert.IsType<Success>(duke.PatronActivation(player1, player2));
+        Assert.IsType<Failure>(duke.PatronActivation(player1, player2));
         Assert.Equal(11, player1.PowerAmount);
         Assert.Equal(0, player1.CoinsAmount);
         Assert.Equal(player1.ID, duke.FavoredPlayer);
@@ -171,9 +171,35 @@ public class PatronTests
         Assert.DoesNotContain(card1, board.CurrentPlayer.Hand);
         Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(PatronId.HLAALU));
         board.EndTurn();
+        board.EndTurn();
 
         result = board.PatronCall(PatronId.HLAALU) as Choice<Card>;
-        Assert.IsType<Failure>(result.Choose(new List<Card>() { card2 }));
+        Assert.IsType<Success>(result.Choose(new List<Card>() { card2 }));
+    }
 
+    [Fact]
+    public void PelinTest()
+    {
+        var card1 = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
+
+        BoardManager board = new BoardManager(new[] { PatronId.PELIN });
+        board.CurrentPlayer.PowerAmount = 3;
+        board.CurrentPlayer.PrestigeAmount = 2;
+        board.CurrentPlayer.CoinsAmount = 5;
+        board.CurrentPlayer.CooldownPile.AddRange(new List<Card>() {
+            card1
+        });
+
+        Assert.Equal(3, board.CurrentPlayer.PowerAmount);
+        Assert.Contains(card1, board.CurrentPlayer.CooldownPile);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.GetPatronFavorism(PatronId.PELIN));
+
+        var result = board.PatronCall(PatronId.PELIN) as Choice<Card>;
+        Assert.IsType<Success>(result.Choose(new List<Card>() { card1 }));
+
+        Assert.Equal(1, board.CurrentPlayer.PowerAmount);
+        Assert.DoesNotContain(card1, board.CurrentPlayer.CooldownPile);
+        Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(PatronId.PELIN));
+        Assert.Contains(card1, board.CurrentPlayer.DrawPile);
     }
 }

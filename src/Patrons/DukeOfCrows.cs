@@ -11,14 +11,10 @@
              * Unfavored:
              * Pay all your Coin -> Gain Power equal to Coin paid minus 1
              */
-            if (FavoredPlayer == activator.ID)
-            {
-                return new Success();
-            }
 
-            if (activator.CoinsAmount <= 0)
+            if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Coin to activate Duke of Crows");
+                return new Failure("Not enough Coin to activate or player is already favored by Duke of Crows ");
             }
 
             activator.PowerAmount += activator.CoinsAmount - 1;
@@ -45,5 +41,10 @@
         }
 
         public override PatronId PatronID => PatronId.DUKE_OF_CROWS;
+
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.CoinsAmount > 0 && FavoredPlayer != activator.ID;
+        }
     }
 }

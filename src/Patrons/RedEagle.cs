@@ -1,31 +1,27 @@
-﻿namespace TalesOfTribute
+namespace TalesOfTribute
 {
-    public class Rajhin : Patron
+    public class RedEagle : Patron
     {
         public override PlayResult PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
-             * Pay 3 Coin -> Put 1 Bewilderment (empty/useless) card
-             * in your opponent's cooldown pile
+             * Pay 2 Power -> Draw a card.
              * 
              * Neutral:
-             * Pay 3 Coin -> Put 1 Bewilderment (empty/useless) card
-             * in your opponent's cooldown pile
+             * Pay 2 Power -> Draw a card.
              * 
              * Unfavored:
-             * Pay 3 Coin -> Put 1 Bewilderment (empty/useless) card
-             * in your opponent's cooldown pile
+             * Pay 2 Power -> Draw a card.
              */
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Coin to activate Rajhin");
+                return new Failure("Not enough Power to activate Red Eagle");
             }
 
-            enemy.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.BEWILDERMENT));
-
-            activator.CoinsAmount -= 3;
+            activator.PowerAmount -= 2;
+            activator.Draw();
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
@@ -38,20 +34,19 @@
         public override PlayResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
-
             return new Success();
         }
 
         public override List<CardId> GetStarterCards()
         {
-            return new List<CardId>() { CardId.SWIPE };
+            return new List<CardId>() { CardId.WAR_SONG };
         }
 
-        public override PatronId PatronID => PatronId.RAJHIN;
+        public override PatronId PatronID => PatronId.RED_EAGLE;
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            return activator.CoinsAmount >= 3;
+            return activator.PowerAmount >= 2;
         }
     }
 }

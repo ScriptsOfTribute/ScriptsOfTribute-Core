@@ -29,6 +29,8 @@
         public abstract PatronId PatronID { get; }
         public abstract List<CardId> GetStarterCards();
 
+        public abstract bool CanPatronBeActivated(Player activator, Player enemy);
+
         public static Patron FromId(PatronId patron)
         {
             return patron switch
@@ -39,6 +41,8 @@
                 PatronId.ORGNUM => new Orgnum(),
                 PatronId.HLAALU => new Hlaalu(),
                 PatronId.PSIJIC => new Psijic(),
+                PatronId.PELIN => new Pelin(),
+                PatronId.RED_EAGLE => new RedEagle(),
                 PatronId.TREASURY => new Treasury(),
                 _ => throw new InvalidOperationException()
             };

@@ -18,10 +18,10 @@
              * Knock Out 1 of enemy's agents into cooldown pile
              */
 
-            if (activator.CoinsAmount < 4)
-                return new Failure("Not enough Coin to activate Psijic");
-            if (enemy.Agents.Count <= 0)
-                return new Failure("Enemy has no agents, can't activate Psijic");
+            if (!CanPatronBeActivated(activator, enemy))
+            {
+                return new Failure("Not enough Coin or enemy has no agents, can't activate Psijic");
+            }
 
             activator.CoinsAmount -= 4;
 
@@ -29,7 +29,7 @@
                 FavoredPlayer = activator.ID;
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
-
+            // We should check if there is any taunt agent
             return new Choice<Card>(enemy.Agents,
                 choices =>
             {
@@ -52,5 +52,10 @@
         }
 
         public override PatronId PatronID => PatronId.PSIJIC;
+
+        public override bool CanPatronBeActivated(Player activator, Player enemy)
+        {
+            return activator.CoinsAmount >= 4 && enemy.Agents.Any();
+        }
     }
 }

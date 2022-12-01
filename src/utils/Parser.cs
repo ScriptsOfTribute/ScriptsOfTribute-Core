@@ -5,7 +5,6 @@ namespace TalesOfTribute
     public class Parser
     {
         private const string InvalidJsonMessage = "Invalid cards.json format!";
-
         readonly JArray _root;
 
         public Parser(string data)
@@ -39,7 +38,6 @@ namespace TalesOfTribute
             effects[2] = ParseEffect(combo);
             combo = card["Combo 4"]?.ToObject<string>();
             effects[3] = ParseEffect(combo);
-
 
             return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt);
         }
