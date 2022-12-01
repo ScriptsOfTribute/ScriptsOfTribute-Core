@@ -151,64 +151,55 @@ public class PatronTests
     [Fact]
     public void HlaaluTest()
     {
-        Player player1 = new Player(PlayerEnum.PLAYER1);
-        Player player2 = new Player(PlayerEnum.PLAYER2);
-
+        BoardManager board = new BoardManager(new[] { PatronId.HLAALU });
         var card1 = GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE);
         var card2 = GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS);
 
-        player1.Hand.AddRange(new List<Card>() {
+        board.CurrentPlayer.Hand.AddRange(new List<Card>() {
             card1,
             card2
         });
 
-        BoardManager board = new BoardManager(new[] { PatronId.HLAALU });
+        Assert.Equal(0, board.CurrentPlayer.PrestigeAmount);
+        Assert.Contains(card1, board.CurrentPlayer.Hand);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.GetPatronFavorism(PatronId.HLAALU));
 
-        Assert.Equal(0, player1.PrestigeAmount);
-        Assert.Contains(card1, player1.Hand);
-        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.GetPatronFavorism(0));
-
-        var result = board.PatronCall(0, player1, player2) as Choice<Card>;
+        var result = board.PatronCall(PatronId.HLAALU) as Choice<Card>;
         Assert.IsType<Success>(result.Choose(new List<Card>() { card1 }));
 
-        Assert.Equal(6, player1.PrestigeAmount);
-        Assert.DoesNotContain(card1, player1.Hand);
-        Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(0));
+        Assert.Equal(6, board.CurrentPlayer.PrestigeAmount);
+        Assert.DoesNotContain(card1, board.CurrentPlayer.Hand);
+        Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(PatronId.HLAALU));
+        board.EndTurn();
+        board.EndTurn();
 
-        result = board.PatronCall(0, player2, player1) as Choice<Card>;
-        Assert.IsType<Failure>(result.Choose(new List<Card>() { card2 }));
-
+        result = board.PatronCall(PatronId.HLAALU) as Choice<Card>;
+        Assert.IsType<Success>(result.Choose(new List<Card>() { card2 }));
     }
 
     [Fact]
     public void PelinTest()
     {
-        List<Card> cards = new List<Card>();
-        for (int i = 0; i < 10; i++)
-        {
-            cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
-        }
-        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 3, cards, cards, cards, cards, cards);
-        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
-
         var card1 = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
-        player1.CooldownPile.AddRange(new List<Card>() {
+        BoardManager board = new BoardManager(new[] { PatronId.PELIN });
+        board.CurrentPlayer.PowerAmount = 3;
+        board.CurrentPlayer.PrestigeAmount = 2;
+        board.CurrentPlayer.CoinsAmount = 5;
+        board.CurrentPlayer.CooldownPile.AddRange(new List<Card>() {
             card1
         });
 
-        BoardManager board = new BoardManager(new[] { PatronId.PELIN });
-        
-        Assert.Equal(3, player1.PowerAmount);
-        Assert.Contains(card1, player1.CooldownPile);
-        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.GetPatronFavorism(0));
+        Assert.Equal(3, board.CurrentPlayer.PowerAmount);
+        Assert.Contains(card1, board.CurrentPlayer.CooldownPile);
+        Assert.Equal(PlayerEnum.NO_PLAYER_SELECTED, board.GetPatronFavorism(PatronId.PELIN));
 
-        var result = board.PatronCall(0, player1, player2) as Choice<Card>;
+        var result = board.PatronCall(PatronId.PELIN) as Choice<Card>;
         Assert.IsType<Success>(result.Choose(new List<Card>() { card1 }));
 
-        Assert.Equal(1, player1.PowerAmount);
-        Assert.DoesNotContain(card1, player1.CooldownPile);
-        Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(0));
-        Assert.Contains(card1, player1.DrawPile);
+        Assert.Equal(1, board.CurrentPlayer.PowerAmount);
+        Assert.DoesNotContain(card1, board.CurrentPlayer.CooldownPile);
+        Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(PatronId.PELIN));
+        Assert.Contains(card1, board.CurrentPlayer.DrawPile);
     }
 }

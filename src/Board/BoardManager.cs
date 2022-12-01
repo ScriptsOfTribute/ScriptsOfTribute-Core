@@ -35,14 +35,14 @@
             return patrons.Select(Patron.FromId).ToArray();
         }
 
-        public PlayResult PatronCall(int patronID, Player activator, Player enemy)
+        public PlayResult PatronCall(PatronId patron)
         {
             if (State != BoardState.NORMAL)
             {
                 throw new Exception("Complete pending choice first!");
             }
 
-            return Patrons[patronID].PatronActivation(activator, enemy);
+            return Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
         }
 
         public ExecutionChain PlayCard(Card card)
@@ -153,9 +153,9 @@
             return new BoardSerializer(_players[0], _players[1], Tavern, Patrons, CurrentPlayerId);
         }
 
-        public PlayerEnum GetPatronFavorism(int idx)
+        public PlayerEnum GetPatronFavorism(PatronId patron)
         {
-            return Patrons[idx].FavoredPlayer;
+            return Array.Find(Patrons, p => p.PatronID == patron).FavoredPlayer;
         }
 
         public List<Card> GetAvailableTavernCards()

@@ -185,16 +185,16 @@ namespace TalesOfTribute
 
         // Patron related
 
-        public PlayResult PatronActivation(PatronId patronID)
+        public PlayResult PatronActivation(PatronId patronId)
         {
             // only for active player
-            return _boardManager.PatronCall((int)patronID, _boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
+            return _boardManager.PatronCall(patronId);
         }
 
-        public int GetLevelOfFavoritism(PlayerEnum playerId, PatronId patronID)
+        public int GetLevelOfFavoritism(PlayerEnum playerId, PatronId patronId)
         {
-            int idx = Array.FindIndex(_boardManager.Patrons, patron => patron.PatronID == patronID);
-            PlayerEnum favoredPlayer = _boardManager.GetPatronFavorism(idx);
+            int idx = Array.FindIndex(_boardManager.Patrons, patron => patron.PatronID == patronId);
+            PlayerEnum favoredPlayer = _boardManager.GetPatronFavorism(patronId);
             if (favoredPlayer == playerId)
             {
                 return 1;

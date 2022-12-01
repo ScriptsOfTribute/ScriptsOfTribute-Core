@@ -1387,7 +1387,7 @@
     "Name":"Writ of Coin",
     "Deck":"Treasury",
     "Cost":0,
-    "Type":"Action",
+    "Type":"Starter",
     "HP":-1,
     "Activation":"Coin 2",
     "Combo 2":null,
