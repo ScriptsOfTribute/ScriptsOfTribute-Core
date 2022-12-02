@@ -23,6 +23,7 @@ namespace TalesOfTribute
                 patrons = tempList.ToArray();
             }
             _boardManager = new BoardManager(patrons);
+            _boardManager.SetUpGame();
         }
 
         public BoardSerializer GetSerializer()
@@ -236,6 +237,11 @@ namespace TalesOfTribute
         public ExecutionChain PlayCard(Card card)
         {
             return _boardManager.PlayCard(card);
+        }
+
+        public void DrawCards()
+        {
+            _boardManager.DrawCards();
         }
 
         //others
