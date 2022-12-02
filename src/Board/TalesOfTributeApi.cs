@@ -13,16 +13,6 @@ namespace TalesOfTribute
             _boardManager = boardManager;
         }
 
-        public BoardSerializer GetSerializer()
-        {
-            return _boardManager.SerializeBoard();
-        }
-
-        public PlayerSerializer GetPlayersScores()
-        {
-            return _boardManager.GetScores();
-        }
-
         public TalesOfTributeApi(PatronId[] patrons)
         {
             if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
@@ -33,6 +23,16 @@ namespace TalesOfTribute
                 patrons = tempList.ToArray();
             }
             _boardManager = new BoardManager(patrons);
+        }
+
+        public BoardSerializer GetSerializer()
+        {
+            return _boardManager.SerializeBoard();
+        }
+
+        public PlayerSerializer GetPlayersScores()
+        {
+            return _boardManager.GetScores();
         }
 
         public int GetNumberOfCardsLeftInCooldownPile(PlayerEnum playerId)
@@ -166,7 +166,7 @@ namespace TalesOfTribute
         //}
         
         
-        //public void AttackAgent(Card agent) // yes, to BM
+        //public void AttackAgent(Card agent)
         //{
         //      ALL OF THIS TO BOARD MANAGER
         //    /*
