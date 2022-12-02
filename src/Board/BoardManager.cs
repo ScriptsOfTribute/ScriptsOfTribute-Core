@@ -43,7 +43,10 @@ namespace TalesOfTribute
             {
                 throw new Exception("Complete pending choice first!");
             }
-
+            if (CurrentPlayer.PatronCalls <= 0)
+            {
+                return new Failure("You cant use Patron calls anymore");
+            }
             return Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
         }
 
