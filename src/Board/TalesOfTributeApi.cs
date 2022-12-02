@@ -9,7 +9,30 @@ namespace TalesOfTribute
 
         public TalesOfTributeApi(BoardManager boardManager)
         {
+            // what is the use case of this??
             _boardManager = boardManager;
+        }
+
+        public TalesOfTributeApi(PatronId[] patrons)
+        {
+            if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
+            {
+                // In case user forgets about Treasury (she/he shouldnt)
+                List<PatronId> tempList = patrons.ToList();
+                tempList.Add(PatronId.TREASURY);
+                patrons = tempList.ToArray();
+            }
+            _boardManager = new BoardManager(patrons);
+        }
+
+        public BoardSerializer GetSerializer()
+        {
+            return _boardManager.SerializeBoard();
+        }
+
+        public PlayerSerializer GetPlayersScores()
+        {
+            return _boardManager.GetScores();
         }
 
         public int GetNumberOfCardsLeftInCooldownPile(PlayerEnum playerId)
@@ -40,24 +63,6 @@ namespace TalesOfTribute
         {
             // probably only for active player
             return _boardManager.CurrentPlayer.Hand.Count;
-        }
-
-        public int GetNumberOfAgents(PlayerEnum playerId)
-        {
-            if (playerId == _boardManager.CurrentPlayer.ID)
-            {
-                return _boardManager.CurrentPlayer.Agents.Count;
-            }
-            else
-            {
-                return _boardManager.EnemyPlayer.Agents.Count;
-            }
-        }
-
-        public int GetNumberOfActiveAgents()
-        {
-            // active - not used in turn - probably also only for active player
-            return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated).Count;
         }
 
         public int GetHPOfAgent(Card agent)
@@ -141,47 +146,49 @@ namespace TalesOfTribute
             }
         }
 
-        public ExecutionChain ActivateAgent(Card agent)
-        {
-            /* 
-            - only active player can activate agent
-            - it can activate player agent, not opponent
-            - also every agent takes diffrent things to activate - I belive that 
-            it's on us to check if it can be activated and takes good amount of Power/Coins etc
-            from active player */
-            if (!agent.Activated && _boardManager.CurrentPlayer.Agents.Contains(agent))
-            {
-                return _boardManager.PlayCard(agent);
-            }
-            else
-            {
-                throw new Exception("Picked agent has been already activated in your turn");
-            }
-        }
-
-        // maybe most of this function should go to BoardManager
-        public void AttackAgent(Card agent)
-        {
-            /*
-            if (_boardManager.EnemyPlayer.Agents.Contains(agent))
-            {
-                int attackValue = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
-                _boardManager.CurrentPlayer.PowerAmount -= attackValue;
-                agent.CurrentHP -= attackValue;
-                if (agent.CurrentHP <= 0)
-                {
-                    agent.CurrentHP = agent.HP;
-                    _boardManager.EnemyPlayer.Agents.Remove(agent);
-                    _boardManager.EnemyPlayer.CooldownPile.Add(agent);
-                }
-            }
-            else
-            {
-                throw new Exception("Can't attack your own agents");
-            }
-            */
-            throw new NotImplementedException();
-        }
+        //public ExecutionChain ActivateAgent(Card agent)
+        //{
+        //    WE DONT HANDLE IT IN BOARD MANAGER YET
+        //    /* 
+        //    - only active player can activate agent
+        //    - it can activate player agent, not opponent
+        //    - also every agent takes diffrent things to activate - I belive that 
+        //    it's on us to check if it can be activated and takes good amount of Power/Coins etc
+        //    from active player */
+        //    if (!agent.Activated && _boardManager.CurrentPlayer.Agents.Contains(agent))
+        //    {
+        //        
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("Picked agent has been already activated in your turn"); // return Failure
+        //    }
+        //}
+        
+        
+        //public void AttackAgent(Card agent)
+        //{
+        //      ALL OF THIS TO BOARD MANAGER
+        //    /*
+        //    if (_boardManager.EnemyPlayer.Agents.Contains(agent))
+        //    {
+        //        int attackValue = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
+        //        _boardManager.CurrentPlayer.PowerAmount -= attackValue;
+        //        agent.CurrentHP -= attackValue;
+        //        if (agent.CurrentHP <= 0)
+        //        {
+        //            agent.CurrentHP = agent.HP;
+        //            _boardManager.EnemyPlayer.Agents.Remove(agent);
+        //            _boardManager.EnemyPlayer.CooldownPile.Add(agent);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("Can't attack your own agents");
+        //    }
+        //    */
+        //    throw new NotImplementedException();
+        //}
 
         // Patron related
 
@@ -191,49 +198,36 @@ namespace TalesOfTribute
             return _boardManager.PatronCall(patronId);
         }
 
-        public int GetLevelOfFavoritism(PlayerEnum playerId, PatronId patronId)
+        public PlayerEnum GetLevelOfFavoritism(PatronId patronId)
         {
-            int idx = Array.FindIndex(_boardManager.Patrons, patron => patron.PatronID == patronId);
-            PlayerEnum favoredPlayer = _boardManager.GetPatronFavorism(patronId);
-            if (favoredPlayer == playerId)
-            {
-                return 1;
-            }
-            else if (favoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
-            {
-                return 0;
-            }
-            else
-            {
-                return -1;
-            }
+            return _boardManager.GetPatronFavorism(patronId);
         }
 
 
-        public Dictionary<int, int> GetAllLevelsOfFavoritism(PlayerEnum playerId)
-        {
-            Dictionary<int, int> levelOfFavoritism = new Dictionary<int, int>();
-            foreach (var patron in _boardManager.Patrons)
-            {
-                if (patron.FavoredPlayer == playerId)
-                {
-                    levelOfFavoritism.Add((int)patron.PatronID, 1);
-                }
-                else if (patron.FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
-                {
-                    levelOfFavoritism.Add((int)patron.PatronID, 0);
-                }
-                else
-                {
-                    levelOfFavoritism.Add((int)patron.PatronID, -1);
-                }
-            }
-            return levelOfFavoritism;
-        }
+        //public Dictionary<int, int> GetAllLevelsOfFavoritism(PlayerEnum playerId) // pointless imo
+        //{
+        //    Dictionary<int, int> levelOfFavoritism = new Dictionary<int, int>();
+        //    foreach (var patron in _boardManager.Patrons)
+        //    {
+        //        if (patron.FavoredPlayer == playerId)
+        //        {
+        //            levelOfFavoritism.Add((int)patron.PatronID, 1);
+        //        }
+        //        else if (patron.FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
+        //        {
+        //            levelOfFavoritism.Add((int)patron.PatronID, 0);
+        //        }
+        //        else
+        //        {
+        //            levelOfFavoritism.Add((int)patron.PatronID, -1);
+        //        }
+        //    }
+        //    return levelOfFavoritism;
+        //}
 
         // cards related
 
-        // Implemented in BoardManager - call it from there?
+        // Implemented in BoardManager - call it from there? //No
         public ExecutionChain BuyCard(Card card)
         {
             return _boardManager.BuyCard(card);
@@ -311,10 +305,12 @@ namespace TalesOfTribute
 
         public bool IsMoveLegal(Move playerMove)
         {
-            List<Move> possibleMoves = GetListOfPossibleMoves();
+            List<Move> possibleMoves = GetListOfPossibleMoves(); // might be expensive
 
             return possibleMoves.Contains(playerMove);
         }
+
+        // lack of general method that parse Move and does stuff
 
         public void EndTurn()
         {

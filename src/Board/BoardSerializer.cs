@@ -10,8 +10,7 @@ namespace TalesOfTribute
          * and make next move
          */
 
-        public Vector3 FirstPlayer;
-        public Vector3 SecondPlayer;
+        public PlayerSerializer playersScores;
         public List<Card> FirstPlayerHand;
         public List<Card> SecondPlayerHand;
         public List<Card> FirstPlayerPlayed;
@@ -24,12 +23,7 @@ namespace TalesOfTribute
             Player firstPlayer, Player secondPlayer, Tavern tavern, Patron[] patrons, PlayerEnum currentPlayer
         )
         {
-            this.FirstPlayer = new Vector3(
-                firstPlayer.CoinsAmount, firstPlayer.PrestigeAmount, firstPlayer.PowerAmount
-            );
-            this.SecondPlayer = new Vector3(
-                secondPlayer.CoinsAmount, secondPlayer.PrestigeAmount, secondPlayer.PowerAmount
-            );
+            playersScores = new PlayerSerializer(firstPlayer, secondPlayer);
             FirstPlayerHand = firstPlayer.Hand;
             SecondPlayerHand = secondPlayer.Hand;
             FirstPlayerPlayed = firstPlayer.Played;
@@ -42,6 +36,21 @@ namespace TalesOfTribute
             }
             CurrentPlayer = currentPlayer;
         }
+    }
 
+    public class PlayerSerializer
+    {
+        public Vector3 FirstPlayer;
+        public Vector3 SecondPlayer;
+
+        public PlayerSerializer(Player firstPlayer, Player secondPlayer)
+        {
+            this.FirstPlayer = new Vector3(
+                firstPlayer.CoinsAmount, firstPlayer.PrestigeAmount, firstPlayer.PowerAmount
+            );
+            this.SecondPlayer = new Vector3(
+                secondPlayer.CoinsAmount, secondPlayer.PrestigeAmount, secondPlayer.PowerAmount
+            );
+        }
     }
 }

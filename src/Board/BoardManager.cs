@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute
+﻿using System.Numerics;
+
+namespace TalesOfTribute
 {
     public enum BoardState
     {
@@ -151,6 +153,11 @@
         public BoardSerializer SerializeBoard()
         {
             return new BoardSerializer(_players[0], _players[1], Tavern, Patrons, CurrentPlayerId);
+        }
+
+        public PlayerSerializer GetScores()
+        { // Should be in BoardSerializer but it needs reconstruction and i got no time for that rn
+            return new PlayerSerializer(_players[0], _players[1]);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
