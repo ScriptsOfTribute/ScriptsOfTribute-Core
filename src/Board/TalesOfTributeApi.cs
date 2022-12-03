@@ -36,6 +36,11 @@ namespace TalesOfTribute
             return _boardManager.GetScores();
         }
 
+        public BoardState GetState()
+        {
+            return _boardManager.State;
+        }
+
         public int GetNumberOfCardsLeftInCooldownPile(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
