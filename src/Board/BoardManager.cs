@@ -133,6 +133,11 @@ namespace TalesOfTribute
                 State = BoardState.START_OF_TURN_CHOICE_PENDING;
                 CurrentPlayer.StartOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
             }
+
+            foreach(var patron in Patrons)
+            {
+                patron.PatronPower(CurrentPlayer, EnemyPlayer);
+            }
         }
 
         public void SetUpGame()
