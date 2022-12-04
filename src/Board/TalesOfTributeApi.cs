@@ -82,22 +82,6 @@ namespace TalesOfTribute
         }
 
         /// <summary>
-        /// Get cards in hand of <c>playerId player</c>
-        /// </summary>
-        /// <param name="playerId">ID of player</param>
-        public List<Card> GetHand(PlayerEnum playerId)
-        {
-            if (playerId == _boardManager.CurrentPlayer.ID)
-            {
-                return _boardManager.CurrentPlayer.Hand;
-            }
-            else
-            {
-                return _boardManager.EnemyPlayer.Hand;
-            }
-        }
-
-        /// <summary>
         /// Get played cards of <c>playerId player</c>
         /// </summary>
         /// <param name="playerId">ID of player</param>
