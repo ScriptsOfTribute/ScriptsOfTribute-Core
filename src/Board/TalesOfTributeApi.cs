@@ -14,6 +14,10 @@ namespace TalesOfTribute
             _boardManager = boardManager;
         }
 
+        /// <summary>
+        /// Initialize board with selected patrons. patrons argument should contain PatronId.TREASURY
+        /// but it handles situation when user doesn't put it.
+        /// </summary>
         public TalesOfTributeApi(PatronId[] patrons)
         {
             if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
@@ -403,6 +407,14 @@ namespace TalesOfTribute
         public void EndTurn()
         {
             _boardManager.EndTurn();
+        }
+
+        /// <summary>
+        /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
+        /// </summary>
+        public PlayerEnum CheckWinner()
+        {
+            return _boardManager.CheckAndGetWinner();
         }
     }
 }

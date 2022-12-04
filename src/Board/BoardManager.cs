@@ -184,11 +184,11 @@ namespace TalesOfTribute
             return this.Tavern.GetAffordableCards(coinAmount);
         }
 
-        public Player CheckAndGetWinner()
+        public PlayerEnum CheckAndGetWinner()
         {
             if (CurrentPlayer.PrestigeAmount >= 80)
             {
-                return CurrentPlayer;
+                return CurrentPlayer.ID;
             }
 
             bool win = true;
@@ -208,17 +208,15 @@ namespace TalesOfTribute
 
             if (win)
             {
-                return CurrentPlayer;
+                return CurrentPlayer.ID;
             }
 
             if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
             {
-                return EnemyPlayer;
+                return EnemyPlayer.ID;
             }
-            else
-            {
-                return null;
-            }
+
+            return PlayerEnum.NO_PLAYER_SELECTED;
         }
     }
 }
