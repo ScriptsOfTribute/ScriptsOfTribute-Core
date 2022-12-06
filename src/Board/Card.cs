@@ -18,7 +18,6 @@
         public readonly int Cost;
         public readonly CardType Type;
         public readonly int HP; // >=0 for Agent, -1 for other types
-        public bool Activated;
         public readonly ComplexEffect?[] Effects; // 0th - On activation, 1st - combo 2, 2nd - combo 3, 3rd - combo 4
         public readonly int Hash;
         public readonly CardId? Family;
@@ -33,7 +32,6 @@
             Cost = cost;
             Type = type;
             HP = hp;
-            Activated = false;
             Taunt = taunt;
             Effects = effects;
             Hash = hash;

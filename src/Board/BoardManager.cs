@@ -55,12 +55,8 @@ namespace TalesOfTribute
             }
 
             var result = CurrentPlayer.PlayCard(card, EnemyPlayer, Tavern);
-
-            State = BoardState.CHOICE_PENDING;
-
-            result.AddCompleteCallback(() => State = BoardState.NORMAL);
-
-            return result;
+            
+            return WrapWithStateRefresh(result);
         }
 
         public ExecutionChain BuyCard(Card card)
@@ -77,7 +73,15 @@ namespace TalesOfTribute
 
             CurrentPlayer.CoinsAmount -= boughtCard.Cost;
 
-            return CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern);
+            return WrapWithStateRefresh(CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern));
+        }
+
+        public ExecutionChain WrapWithStateRefresh(ExecutionChain chain)
+        {
+            State = BoardState.CHOICE_PENDING;
+            chain.AddCompleteCallback(() => State = BoardState.NORMAL);
+
+            return chain;
         }
 
         public void DrawCards()
@@ -142,7 +146,7 @@ namespace TalesOfTribute
             foreach (var patron in this.Patrons)
             {
                 starterDecks.AddRange(
-                    patron.GetStarterCards().Select(cardID => GlobalCardDatabase.Instance.GetCard(cardID)).ToList()
+                    patron.GetStarterCards().Select(cardId => GlobalCardDatabase.Instance.GetCard(cardId)).ToList()
                 );
             }
 
@@ -175,7 +179,7 @@ namespace TalesOfTribute
             return this.Tavern.GetAffordableCards(coinAmount);
         }
 
-        public Player CheckAndGetWinner()
+        public Player? CheckAndGetWinner()
         {
             if (CurrentPlayer.PrestigeAmount >= 80)
             {
@@ -210,6 +214,16 @@ namespace TalesOfTribute
             {
                 return null;
             }
+        }
+        
+        public ExecutionChain ActivateAgent(Card card)
+        {
+            return WrapWithStateRefresh(CurrentPlayer.ActivateAgent(card, EnemyPlayer, Tavern));
+        }
+
+        public ISimpleResult AttackAgent(Card agent)
+        {
+            return CurrentPlayer.AttackAgent(agent, EnemyPlayer);
         }
     }
 }

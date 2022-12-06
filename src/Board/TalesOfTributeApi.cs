@@ -122,7 +122,7 @@ namespace TalesOfTribute
 
         // Agents related
 
-        public List<Card> GetListOfAgents(PlayerEnum playerId)
+        public List<Agent> GetListOfAgents(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -134,7 +134,7 @@ namespace TalesOfTribute
             }
         }
 
-        public List<Card> GetListOfActiveAgents(PlayerEnum playerId)
+        public List<Agent> GetListOfActiveAgents(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -146,49 +146,12 @@ namespace TalesOfTribute
             }
         }
 
-        //public ExecutionChain ActivateAgent(Card agent)
-        //{
-        //    WE DONT HANDLE IT IN BOARD MANAGER YET
-        //    /* 
-        //    - only active player can activate agent
-        //    - it can activate player agent, not opponent
-        //    - also every agent takes diffrent things to activate - I belive that 
-        //    it's on us to check if it can be activated and takes good amount of Power/Coins etc
-        //    from active player */
-        //    if (!agent.Activated && _boardManager.CurrentPlayer.Agents.Contains(agent))
-        //    {
-        //        
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("Picked agent has been already activated in your turn"); // return Failure
-        //    }
-        //}
-        
-        
-        //public void AttackAgent(Card agent)
-        //{
-        //      ALL OF THIS TO BOARD MANAGER
-        //    /*
-        //    if (_boardManager.EnemyPlayer.Agents.Contains(agent))
-        //    {
-        //        int attackValue = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
-        //        _boardManager.CurrentPlayer.PowerAmount -= attackValue;
-        //        agent.CurrentHP -= attackValue;
-        //        if (agent.CurrentHP <= 0)
-        //        {
-        //            agent.CurrentHP = agent.HP;
-        //            _boardManager.EnemyPlayer.Agents.Remove(agent);
-        //            _boardManager.EnemyPlayer.CooldownPile.Add(agent);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("Can't attack your own agents");
-        //    }
-        //    */
-        //    throw new NotImplementedException();
-        //}
+        public ExecutionChain ActivateAgent(Card agent)
+            => _boardManager.ActivateAgent(agent);
+
+
+        public ISimpleResult AttackAgent(Card agent)
+            => _boardManager.AttackAgent(agent);
 
         // Patron related
 
@@ -251,29 +214,29 @@ namespace TalesOfTribute
                 possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)card.Id));
             }
 
-            foreach (Card agent in currentPlayer.Agents)
+            foreach (Agent agent in currentPlayer.Agents)
             {
                 if (!agent.Activated)
                 {
-                    possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.Id));
+                    possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.RepresentingCard.Id));
                 }
             }
 
-            List<Card> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.Taunt);
+            List<Agent> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
             if (currentPlayer.PowerAmount > 0)
             {
                 if (tauntAgents.Any())
                 {
-                    foreach (Card agent in tauntAgents)
+                    foreach (Agent agent in tauntAgents)
                     {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.Id));
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.Id));
                     }
                 }
                 else
                 {
-                    foreach (Card agent in enemyPlayer.Agents)
+                    foreach (Agent agent in enemyPlayer.Agents)
                     {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.Id));
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.Id));
                     }
                 }
             }
