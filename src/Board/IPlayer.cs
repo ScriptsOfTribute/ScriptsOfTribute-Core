@@ -11,7 +11,7 @@ public interface IPlayer
     List<Card> DrawPile { get; set; }
     List<Card> Played { get; set; }
     List<Agent> Agents { get; set; }
-    public List<Card> AgentCards { get; }
+    List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
     ExecutionChain? StartOfTurnEffectsChain { get; }
     ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);

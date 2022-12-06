@@ -121,6 +121,7 @@
             CooldownPile.AddRange(this.Played);
             Played = new List<Card>();
             PatronCalls = 1;
+            Agents.ForEach(agent => agent.Refresh());
         }
 
         public ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain = true)

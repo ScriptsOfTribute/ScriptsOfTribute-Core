@@ -35,4 +35,9 @@ public class Agent
     {
         return new Agent(card);
     }
+
+    public void Refresh()
+    {
+        Activated = false;
+    }
 }
