@@ -29,7 +29,6 @@ namespace TalesOfTribute
             }
             _boardManager = new BoardManager(patrons);
             _boardManager.SetUpGame();
-            _boardManager.DrawCards();
         }
 
         // Serialization
@@ -253,10 +252,7 @@ namespace TalesOfTribute
         public PlayResult PatronActivation(PatronId patronId)
         {
             // only for active player
-            var result = _boardManager.PatronCall(patronId);
-            if (result is not Failure)
-                _boardManager.CurrentPlayer.PatronCalls--;
-            return result;
+            return _boardManager.PatronCall(patronId);
         }
 
         /// <summary>
