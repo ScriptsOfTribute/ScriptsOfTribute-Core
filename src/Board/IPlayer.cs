@@ -10,7 +10,8 @@ public interface IPlayer
     List<Card> Hand { get; set; }
     List<Card> DrawPile { get; set; }
     List<Card> Played { get; set; }
-    List<Card> Agents { get; set; }
+    List<Agent> Agents { get; set; }
+    List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
     ExecutionChain? StartOfTurnEffectsChain { get; }
     ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
@@ -28,4 +29,6 @@ public interface IPlayer
     string ToString();
     List<Card> GetAllPlayersCards();
     void AddStartOfTurnEffects(ExecutionChain chain);
+    ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
+    ISimpleResult AttackAgent(Card agent, IPlayer enemy);
 }

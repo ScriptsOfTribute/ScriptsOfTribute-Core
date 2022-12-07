@@ -1,11 +1,15 @@
 ﻿namespace TalesOfTribute;
 
-public class PlayResult
+public interface ISimpleResult
+{
+}
+
+public abstract class PlayResult
 {
     public bool Completed { get; protected set; } = true;
 }
 
-public class Success : PlayResult
+public class Success : PlayResult, ISimpleResult
 {
 }
 
@@ -107,7 +111,7 @@ public class Choice<T> : BaseChoice
 
 // Failure should only be returned on user input error.
 // If error is not a consequence of a decision, an exception should be thrown.
-public class Failure : PlayResult
+public class Failure : PlayResult, ISimpleResult
 {
     public string Reason { get; }
 

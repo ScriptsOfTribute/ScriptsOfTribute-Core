@@ -30,10 +30,10 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
             // We should check if there is any taunt agent
-            return new Choice<Card>(enemy.Agents,
+            return new Choice<Card>(enemy.AgentCards,
                 choices =>
             {
-                enemy.Agents.Remove(choices.First());
+                enemy.Destroy(choices.First());
                 enemy.CooldownPile.Add(choices.First());
                 return new Success();
             });

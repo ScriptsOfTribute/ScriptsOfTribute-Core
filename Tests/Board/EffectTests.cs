@@ -125,7 +125,7 @@ public class EffectTests
             GlobalCardDatabase.Instance.GetCard(CardId.PECK),
         };
 
-        _player2.Setup(p => p.Agents).Returns(cardsToReturn);
+        _player2.Setup(p => p.AgentCards).Returns(cardsToReturn);
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
 
@@ -181,7 +181,8 @@ public class EffectTests
         var cardInPlay2 = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
         var cardInHand = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
-        _player1.Setup(p => p.Agents).Returns(new List<Card> { cardInPlay1, cardInPlay2 });
+        _player1.Setup(p => p.AgentCards).Returns(
+            new List<Card> { cardInPlay1, cardInPlay2 });
         _player1.Setup(p => p.Hand).Returns(new List<Card> { cardInHand });
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);

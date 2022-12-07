@@ -159,7 +159,7 @@ namespace TalesOfTribute
         /// <summary>
         /// Get list of agents currently on board for player with playerId
         /// </summary>
-        public List<Card> GetAgents(PlayerEnum playerId)
+        public List<Agent> GetAgents(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -174,7 +174,7 @@ namespace TalesOfTribute
         /// <summary>
         /// Get list of agents currently on board for current player
         /// </summary>
-        public List<Card> GetAgents()
+        public List<Agent> GetAgents()
         {
             return _boardManager.CurrentPlayer.Agents;
         }
@@ -183,7 +183,7 @@ namespace TalesOfTribute
         /// Get list of agents currently on board for player with playerId
         /// that are activated
         /// </summary>
-        public List<Card> GetActiveAgents(PlayerEnum playerId)
+        public List<Agent> GetActiveAgents(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -195,54 +195,16 @@ namespace TalesOfTribute
             }
         }
 
-        public List<Card> GetActiveAgents()
+        public List<Agent> GetActiveAgents()
         {
             return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
         }
 
-        //public ExecutionChain ActivateAgent(Card agent)
-        //{
-        //    WE DONT HANDLE IT IN BOARD MANAGER YET
-        //    /* 
-        //    - only active player can activate agent
-        //    - it can activate player agent, not opponent
-        //    - also every agent takes diffrent things to activate - I belive that 
-        //    it's on us to check if it can be activated and takes good amount of Power/Coins etc
-        //    from active player */
-        //    if (!agent.Activated && _boardManager.CurrentPlayer.Agents.Contains(agent))
-        //    {
-        //        
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("Picked agent has been already activated in your turn"); // return Failure
-        //    }
-        //}
+        public ExecutionChain ActivateAgent(Card agent)
+            => _boardManager.ActivateAgent(agent);
 
-
-        //public void AttackAgent(Card agent)
-        //{
-        //      ALL OF THIS TO BOARD MANAGER
-        //    /*
-        //    if (_boardManager.EnemyPlayer.Agents.Contains(agent))
-        //    {
-        //        int attackValue = Math.Min(agent.CurrentHP, _boardManager.CurrentPlayer.PowerAmount);
-        //        _boardManager.CurrentPlayer.PowerAmount -= attackValue;
-        //        agent.CurrentHP -= attackValue;
-        //        if (agent.CurrentHP <= 0)
-        //        {
-        //            agent.CurrentHP = agent.HP;
-        //            _boardManager.EnemyPlayer.Agents.Remove(agent);
-        //            _boardManager.EnemyPlayer.CooldownPile.Add(agent);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("Can't attack your own agents");
-        //    }
-        //    */
-        //    throw new NotImplementedException();
-        //}
+        public ISimpleResult AttackAgent(Card agent)
+            => _boardManager.AttackAgent(agent);
 
         // Patron related
 
@@ -263,28 +225,6 @@ namespace TalesOfTribute
         {
             return _boardManager.GetPatronFavorism(patronId);
         }
-
-
-        //public Dictionary<int, int> GetAllLevelsOfFavoritism(PlayerEnum playerId) // pointless imo
-        //{
-        //    Dictionary<int, int> levelOfFavoritism = new Dictionary<int, int>();
-        //    foreach (var patron in _boardManager.Patrons)
-        //    {
-        //        if (patron.FavoredPlayer == playerId)
-        //        {
-        //            levelOfFavoritism.Add((int)patron.PatronID, 1);
-        //        }
-        //        else if (patron.FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
-        //        {
-        //            levelOfFavoritism.Add((int)patron.PatronID, 0);
-        //        }
-        //        else
-        //        {
-        //            levelOfFavoritism.Add((int)patron.PatronID, -1);
-        //        }
-        //    }
-        //    return levelOfFavoritism;
-        //}
 
         // cards related
 
@@ -319,29 +259,29 @@ namespace TalesOfTribute
                 possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)card.Id));
             }
 
-            foreach (Card agent in currentPlayer.Agents)
+            foreach (Agent agent in currentPlayer.Agents)
             {
                 if (!agent.Activated)
                 {
-                    possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.Id));
+                    possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.RepresentingCard.Id));
                 }
             }
 
-            List<Card> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.Taunt);
+            List<Agent> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
             if (currentPlayer.PowerAmount > 0)
             {
                 if (tauntAgents.Any())
                 {
-                    foreach (Card agent in tauntAgents)
+                    foreach (Agent agent in tauntAgents)
                     {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.Id));
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.Id));
                     }
                 }
                 else
                 {
-                    foreach (Card agent in enemyPlayer.Agents)
+                    foreach (Agent agent in enemyPlayer.Agents)
                     {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.Id));
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.Id));
                     }
                 }
             }
@@ -352,11 +292,11 @@ namespace TalesOfTribute
                     possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.Id));
                 }
             }
-
+            
+            // TODO: Check why this is unused.
             List<Card> usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
             if (currentPlayer.PatronCalls > 0)
             {
-
                 foreach (var patron in _boardManager.Patrons)
                 {
                     if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))

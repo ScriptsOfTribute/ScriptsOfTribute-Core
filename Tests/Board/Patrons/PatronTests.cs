@@ -12,8 +12,8 @@ public class PatronTests
         {
             cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
-        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, cards);
-        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, new List<Agent>(), cards);
+        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, new List<Agent>(), cards);
         Patron ansei = new Ansei();
 
         //Default is neutral state
@@ -55,8 +55,8 @@ public class PatronTests
         {
             cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
-        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, cards);
-        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, new List<Agent>(), cards);
+        Player player2 = new Player(PlayerEnum.PLAYER2, 8, 1, 5, cards, cards, cards, new List<Agent>(), cards);
         Patron duke = new DukeOfCrows();
 
         //Default is neutral state
@@ -92,8 +92,8 @@ public class PatronTests
         {
             cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
-        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
-        Player player2 = new Player(PlayerEnum.PLAYER2, 1, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, new List<Agent>(), new List<Card>());
+        Player player2 = new Player(PlayerEnum.PLAYER2, 1, 1, 5, cards, cards, cards, new List<Agent>(), cards);
         Patron rajhin = new Rajhin();
 
         //Default is neutral state
@@ -119,8 +119,8 @@ public class PatronTests
         {
             cards.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
         }
-        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, cards, new List<Card>());
-        Player player2 = new Player(PlayerEnum.PLAYER2, 7, 1, 5, cards, cards, cards, cards, cards);
+        Player player1 = new Player(PlayerEnum.PLAYER1, 5, 2, 7, cards, cards, cards, new List<Agent>(), new List<Card>());
+        Player player2 = new Player(PlayerEnum.PLAYER2, 7, 1, 5, cards, cards, cards, new List<Agent>(), cards);
         Patron orgnum = new Orgnum();
 
         //Default is neutral state
@@ -138,7 +138,7 @@ public class PatronTests
         Assert.IsType<Success>(orgnum.PatronActivation(player1, player2));
         Assert.Equal(3, player1.CoinsAmount);
         Assert.Equal(player1.ID, orgnum.FavoredPlayer);
-        Assert.Equal(13, player1.PowerAmount);
+        Assert.Equal(12, player1.PowerAmount);
         Assert.Contains(player1.CooldownPile, card => card.Name == "Maormer Boarding Party");
 
         //Test patron's activation when not favored

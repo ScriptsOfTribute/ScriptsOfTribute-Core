@@ -60,4 +60,11 @@ public class ExecutionChain
         }
         AddCompleteCallback(() => other._onComplete?.Invoke());
     }
+
+    public static ExecutionChain Failed(string reason, IPlayer player, IPlayer enemy, ITavern tavern)
+    {
+        var result = new ExecutionChain(player, enemy, tavern);
+        result.Add((_, _, _) => new Failure(reason));
+        return result;
+    }
 }

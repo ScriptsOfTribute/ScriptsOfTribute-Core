@@ -88,7 +88,7 @@
                     );
                 case EffectType.DESTROY_CARD:
                     return new Choice<Card>(
-                        player.Hand.Concat(player.Agents).ToList(),
+                        player.Hand.Concat(player.AgentCards).ToList(),
                         choices =>
                         {
                             choices.ForEach(player.Destroy);
@@ -143,13 +143,13 @@
                     );
                 case EffectType.KNOCKOUT:
                     return new Choice<Card>(
-                        enemy.Agents,
+                        enemy.AgentCards,
                         choices =>
                         {
                             choices.ForEach(enemy.KnockOut);
                             return new Success();
                         },
-                        Amount > enemy.Agents.Count ? enemy.Agents.Count : Amount
+                        Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
                     );
                 case EffectType.PATRON_CALL:
                     player.PatronCalls += (uint)Amount;
