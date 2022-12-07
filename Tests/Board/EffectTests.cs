@@ -157,19 +157,19 @@ public class EffectTests
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
 
-        _player1.Verify(p => p.AddToCooldownPile(It.Is<Card>(card => card.Id == CardId.MAORMER_BOARDING_PARTY)),
+        _player1.Verify(p => p.AddToCooldownPile(It.Is<Card>(card => card.CommonId == CardId.MAORMER_BOARDING_PARTY)),
             Times.Exactly(2));
     }
 
     [Fact]
     void TestHeal()
     {
-        var guid = Guid.NewGuid();
-        var effect = new Effect(EffectType.HEAL, 2, guid);
+        var uniqueId = UniqueId.Create();
+        var effect = new Effect(EffectType.HEAL, 2, uniqueId);
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
 
-        _player1.Verify(p => p.HealAgent(guid, 2),
+        _player1.Verify(p => p.HealAgent(uniqueId, 2),
             Times.Once());
     }
 

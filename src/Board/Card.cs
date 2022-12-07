@@ -14,7 +14,7 @@
     {
         public readonly string Name;
         public readonly PatronId Deck;
-        public readonly CardId Id;
+        public readonly CardId CommonId;
         public readonly int Cost;
         public readonly CardType Type;
         public readonly int HP; // >=0 for Agent, -1 for other types
@@ -22,13 +22,13 @@
         public readonly int Hash;
         public readonly CardId? Family;
         public readonly bool Taunt;
-        public Guid Guid { get; } = Guid.Empty;
-
-        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt)
+        public UniqueId UniqueId { get; } = UniqueId.Empty;
+        
+        public Card(string name, PatronId deck, CardId commonId, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt)
         {
             Name = name;
             Deck = deck;
-            Id = id;
+            CommonId = commonId;
             Cost = cost;
             Type = type;
             HP = hp;
@@ -39,18 +39,18 @@
             Taunt = taunt;
         }
 
-        public Card(string name, PatronId deck, CardId id, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt, Guid guid)
-            : this(name, deck, id, cost, type, hp, effects, hash, family, taunt)
+        public Card(string name, PatronId deck, CardId commonId, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt, UniqueId uniqueId)
+            : this(name, deck, commonId, cost, type, hp, effects, hash, family, taunt)
         {
-            Guid = guid;
+            UniqueId = uniqueId;
         }
 
         public Card CreateUniqueCopy()
         {
-            var guid = Guid.NewGuid();
-            return new Card(Name, Deck, Id, Cost, Type, HP,
-                Effects.Select(effect => effect?.MakeUniqueCopy(guid)).ToArray(),
-                Hash, Family, Taunt, guid);
+            var uniqueId = UniqueId.Create();
+            return new Card(Name, Deck, CommonId, Cost, Type, HP,
+                Effects.Select(effect => effect?.MakeUniqueCopy(uniqueId)).ToArray(),
+                Hash, Family, Taunt, uniqueId);
         }
 
         public override string ToString()
@@ -68,7 +68,7 @@
             else
             {
                 Card card = (Card)obj;
-                return this.Guid == card.Guid;
+                return this.UniqueId == card.UniqueId;
             }
         }
 
@@ -89,7 +89,7 @@
 
         public override int GetHashCode()
         {
-            return Guid.GetHashCode();
+            return UniqueId.GetHashCode();
         }
     }
 }

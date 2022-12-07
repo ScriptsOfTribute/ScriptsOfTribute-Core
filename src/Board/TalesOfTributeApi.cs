@@ -256,14 +256,14 @@ namespace TalesOfTribute
 
             foreach (Card card in currentPlayer.Hand)
             {
-                possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)card.Id));
+                possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)card.UniqueId));
             }
 
             foreach (Agent agent in currentPlayer.Agents)
             {
                 if (!agent.Activated)
                 {
-                    possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.RepresentingCard.Id));
+                    possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.RepresentingCard.UniqueId));
                 }
             }
 
@@ -274,14 +274,14 @@ namespace TalesOfTribute
                 {
                     foreach (Agent agent in tauntAgents)
                     {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.Id));
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
                     }
                 }
                 else
                 {
                     foreach (Agent agent in enemyPlayer.Agents)
                     {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.Id));
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
                     }
                 }
             }
@@ -289,7 +289,7 @@ namespace TalesOfTribute
             {
                 foreach (Card card in _boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount))
                 {
-                    possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.Id));
+                    possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.UniqueId));
                 }
             }
             

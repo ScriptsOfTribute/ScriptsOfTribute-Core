@@ -13,7 +13,7 @@ public class ParserTests
         var cards = _sut.CreateAllCards().ToList();
         Assert.Equal(3, cards.Count);
 
-        var cardIds = cards.Select(card => card.Id).ToList();
+        var cardIds = cards.Select(card => card.CommonId).ToList();
         Assert.Contains(CardId.LUXURY_EXPORTS, cardIds);
         Assert.Contains(CardId.HLAALU_COUNCILOR, cardIds);
         Assert.Contains(CardId.HLAALU_KINSMAN, cardIds);
