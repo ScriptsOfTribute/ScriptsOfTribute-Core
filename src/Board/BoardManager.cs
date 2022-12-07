@@ -47,7 +47,7 @@ namespace TalesOfTribute
             {
                 return new Failure("You cant use Patron calls anymore");
             }
-            CurrentPlayer.PatronCalls--;
+
             return Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
         }
 
@@ -138,6 +138,8 @@ namespace TalesOfTribute
             {
                 patron.PatronPower(CurrentPlayer, EnemyPlayer);
             }
+
+            DrawCards();
         }
 
         public void SetUpGame()
