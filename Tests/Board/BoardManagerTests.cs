@@ -60,7 +60,7 @@ public class BoardManagerTests
     [Fact]
     void TestBuyCard()
     {
-        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
+        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC, PatronId.TREASURY, PatronId.DUKE_OF_CROWS, PatronId.ORGNUM });
         sut.SetUpGame();
 
         sut.CurrentPlayer.CoinsAmount = 100;
@@ -87,7 +87,7 @@ public class BoardManagerTests
     [Fact]
     void ShouldThrowWhenNotEnoughCoinsForCard()
     {
-        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC });
+        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC, PatronId.TREASURY, PatronId.DUKE_OF_CROWS, PatronId.ORGNUM });
         sut.SetUpGame();
 
         var card = sut.GetAvailableTavernCards().First();
@@ -97,16 +97,14 @@ public class BoardManagerTests
     [Fact]
     void TestPlayerDraw()
     {
-        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC, PatronId.TREASURY });
-        sut.SetUpGame();
+        var sut = new BoardManager(new[] { PatronId.ANSEI, PatronId.PSIJIC, PatronId.TREASURY, PatronId.HLAALU, PatronId.ORGNUM });
 
         Assert.Empty(sut.CurrentPlayer.Hand);
-        var cardsAmount = sut.CurrentPlayer.DrawPile.Count;
 
-        sut.DrawCards();
+        sut.SetUpGame();
 
         Assert.Equal(5, sut.CurrentPlayer.Hand.Count);
-        Assert.Equal(cardsAmount - 5, sut.CurrentPlayer.DrawPile.Count);
+        Assert.Equal(5, sut.CurrentPlayer.DrawPile.Count);
     }
 
     [Fact]

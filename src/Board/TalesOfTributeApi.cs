@@ -7,12 +7,17 @@ namespace TalesOfTribute
 
         private BoardManager _boardManager;
 
+        // Constructors
         public TalesOfTributeApi(BoardManager boardManager)
         {
             // what is the use case of this??
             _boardManager = boardManager;
         }
 
+        /// <summary>
+        /// Initialize board with selected patrons. patrons argument should contain PatronId.TREASURY
+        /// but it handles situation when user doesn't put it.
+        /// </summary>
         public TalesOfTributeApi(PatronId[] patrons)
         {
             if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
@@ -23,8 +28,10 @@ namespace TalesOfTribute
                 patrons = tempList.ToArray();
             }
             _boardManager = new BoardManager(patrons);
+            _boardManager.SetUpGame();
         }
 
+        // Serialization
         public BoardSerializer GetSerializer()
         {
             return _boardManager.SerializeBoard();
@@ -35,50 +42,49 @@ namespace TalesOfTribute
             return _boardManager.GetScores();
         }
 
-        public int GetNumberOfCardsLeftInCooldownPile(PlayerEnum playerId)
+        public BoardState GetState()
         {
-            if (playerId == _boardManager.CurrentPlayer.ID)
-            {
-                return _boardManager.CurrentPlayer.CooldownPile.Count;
-            }
-            else
-            {
-                return _boardManager.EnemyPlayer.CooldownPile.Count;
-            }
+            return _boardManager.State;
         }
 
-        public int GetNumberOfCardsLeftInDrawPile(PlayerEnum playerId)
-        {
-            if (playerId == _boardManager.CurrentPlayer.ID)
-            {
-                return _boardManager.CurrentPlayer.DrawPile.Count;
-            }
-            else
-            {
-                return _boardManager.EnemyPlayer.DrawPile.Count;
-            }
-        }
+        // Get cards
 
-        public int GetNumberOfCardsLeftInHand()
-        {
-            // probably only for active player
-            return _boardManager.CurrentPlayer.Hand.Count;
-        }
-
-        public int GetHPOfAgent(Card agent)
-        {
-            //return agent.CurrentHP;
-            throw new NotImplementedException();
-        }
-
-        // all to state of objects related
-
+        /// <summary>
+        /// Get cards in hand of current player
+        /// </summary>
         public List<Card> GetHand()
         {
-            // only current player
             return _boardManager.CurrentPlayer.Hand;
         }
 
+        /// <summary>
+        /// Get played cards of current player
+        /// </summary>
+        public List<Card> GetPlayedCards()
+        {
+            return _boardManager.CurrentPlayer.Played;
+        }
+
+        /// <summary>
+        /// Get draw pile of current player
+        /// </summary>
+        public List<Card> GetDrawPile()
+        {
+            return _boardManager.CurrentPlayer.DrawPile;
+        }
+
+        /// <summary>
+        /// Get cooldown pile of current player
+        /// </summary>
+        public List<Card> GetCooldownPile()
+        {
+            return _boardManager.CurrentPlayer.CooldownPile;
+        }
+
+        /// <summary>
+        /// Get played cards of <c>playerId player</c>
+        /// </summary>
+        /// <param name="playerId">ID of player</param>
         public List<Card> GetPlayedCards(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
@@ -91,23 +97,51 @@ namespace TalesOfTribute
             }
         }
 
-        public List<Card> GetDrawPile()
+        /// <summary>
+        /// Get cooldown pile of <c>playerId player</c>
+        /// </summary>
+        /// <param name="playerId">ID of player</param>
+        public List<Card> GetCooldownPile(PlayerEnum playerId)
         {
-            // only current player
-            return _boardManager.CurrentPlayer.DrawPile;
+            if (playerId == _boardManager.CurrentPlayer.ID)
+            {
+                return _boardManager.CurrentPlayer.CooldownPile;
+            }
+            else
+            {
+                return _boardManager.EnemyPlayer.CooldownPile;
+            }
         }
 
-        public List<Card> GetCooldownPile()
+        /// <summary>
+        /// Get drawpile of <c>playerId player</c>
+        /// </summary>
+        /// <param name="playerId">ID of player</param>
+        public List<Card> GetDrawPile(PlayerEnum playerId)
         {
-            // only current player
-            return _boardManager.CurrentPlayer.CooldownPile;
+            if (playerId == _boardManager.CurrentPlayer.ID)
+            {
+                return _boardManager.CurrentPlayer.DrawPile;
+            }
+            else
+            {
+                return _boardManager.EnemyPlayer.DrawPile;
+            }
         }
 
+        // Tavern
+
+        /// <summary>
+        /// Get currently avalaible cards from tavern
+        /// </summary>
         public List<Card> GetTavern()
         {
             return _boardManager.GetAvailableTavernCards();
         }
 
+        /// <summary>
+        /// Get cards from tavern that player with playerId can buy
+        /// </summary>
         public List<Card> GetAffordableCardsInTawern(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
@@ -122,7 +156,10 @@ namespace TalesOfTribute
 
         // Agents related
 
-        public List<Card> GetListOfAgents(PlayerEnum playerId)
+        /// <summary>
+        /// Get list of agents currently on board for player with playerId
+        /// </summary>
+        public List<Card> GetAgents(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -134,7 +171,19 @@ namespace TalesOfTribute
             }
         }
 
-        public List<Card> GetListOfActiveAgents(PlayerEnum playerId)
+        /// <summary>
+        /// Get list of agents currently on board for current player
+        /// </summary>
+        public List<Card> GetAgents()
+        {
+            return _boardManager.CurrentPlayer.Agents;
+        }
+
+        /// <summary>
+        /// Get list of agents currently on board for player with playerId
+        /// that are activated
+        /// </summary>
+        public List<Card> GetActiveAgents(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -144,6 +193,11 @@ namespace TalesOfTribute
             {
                 return _boardManager.EnemyPlayer.Agents.FindAll(agent => !agent.Activated);
             }
+        }
+
+        public List<Card> GetActiveAgents()
+        {
+            return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
         }
 
         //public ExecutionChain ActivateAgent(Card agent)
@@ -164,8 +218,8 @@ namespace TalesOfTribute
         //        throw new Exception("Picked agent has been already activated in your turn"); // return Failure
         //    }
         //}
-        
-        
+
+
         //public void AttackAgent(Card agent)
         //{
         //      ALL OF THIS TO BOARD MANAGER
@@ -192,12 +246,19 @@ namespace TalesOfTribute
 
         // Patron related
 
+        /// <summary>
+        /// Activate Patron with patronId. Only CurrentPlayer can activate patron
+        /// </summary>
         public PlayResult PatronActivation(PatronId patronId)
         {
             // only for active player
             return _boardManager.PatronCall(patronId);
         }
 
+        /// <summary>
+        /// Return <type>PlayerEnum</type> which states which player is favored
+        /// by Patron with patronId
+        /// </summary>
         public PlayerEnum GetLevelOfFavoritism(PatronId patronId)
         {
             return _boardManager.GetPatronFavorism(patronId);
@@ -227,12 +288,19 @@ namespace TalesOfTribute
 
         // cards related
 
-        // Implemented in BoardManager - call it from there? //No
+        /// <summary>
+        /// Buys card <c>card</c> in tavern for CurrentPlayer.
+        /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
+        /// </summary>
         public ExecutionChain BuyCard(Card card)
         {
             return _boardManager.BuyCard(card);
         }
 
+        /// <summary>
+        /// Plays card <c>card</c> from hand for CurrentPlayer
+        /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
+        /// </summary>
         public ExecutionChain PlayCard(Card card)
         {
             return _boardManager.PlayCard(card);
@@ -315,6 +383,14 @@ namespace TalesOfTribute
         public void EndTurn()
         {
             _boardManager.EndTurn();
+        }
+
+        /// <summary>
+        /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
+        /// </summary>
+        public PlayerEnum CheckWinner()
+        {
+            return _boardManager.CheckAndGetWinner();
         }
     }
 }

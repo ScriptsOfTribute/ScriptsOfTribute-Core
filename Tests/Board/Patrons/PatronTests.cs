@@ -170,11 +170,7 @@ public class PatronTests
         Assert.Equal(6, board.CurrentPlayer.PrestigeAmount);
         Assert.DoesNotContain(card1, board.CurrentPlayer.Hand);
         Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(PatronId.HLAALU));
-        board.EndTurn();
-        board.EndTurn();
-
-        result = board.PatronCall(PatronId.HLAALU) as Choice<Card>;
-        Assert.IsType<Success>(result.Choose(new List<Card>() { card2 }));
+        
     }
 
     [Fact]
