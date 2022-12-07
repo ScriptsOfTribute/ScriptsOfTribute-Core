@@ -16,7 +16,8 @@
         public List<Card> Hand { get; set; }
         public List<Card> DrawPile { get; set; }
         public List<Card> Played { get; set; }
-        public List<Card> Agents { get; set; }
+        public List<Agent> Agents { get; set; }
+        public List<Card> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
         public List<Card> CooldownPile { get; set; }
         public ExecutionChain? StartOfTurnEffectsChain { get; private set; }
 
@@ -35,7 +36,7 @@
             Hand = new List<Card>();
             DrawPile = new List<Card>();
             Played = new List<Card>();
-            Agents = new List<Card>();
+            Agents = new List<Agent>();
             CooldownPile = new List<Card>();
             ID = iD;
             PatronCalls = 1;
@@ -43,7 +44,7 @@
 
         public Player(
             PlayerEnum iD, int coinsAmount, int prestigeAmount, int powerAmount,
-            List<Card> hand, List<Card> drawPile, List<Card> played, List<Card> agents, List<Card> cooldownPile
+            List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile
         )
         {
             CoinsAmount = coinsAmount;
@@ -91,7 +92,8 @@
 
         public void HealAgent(Guid guid, int amount)
         {
-            // TODO: Implement when agents are implemented.
+            var agent = Agents.First(agent => agent.RepresentingCard.Guid == guid);
+            agent.Heal(amount);
         }
 
         public void Discard(Card card)
@@ -121,6 +123,7 @@
             Played = new List<Card>();
             Hand = new List<Card>();
             PatronCalls = 1;
+            Agents.ForEach(agent => agent.Refresh());
         }
 
         public ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain = true)
@@ -128,7 +131,7 @@
             switch (card.Type)
             {
                 case CardType.CONTRACT_AGENT:
-                    Agents.Add(card);
+                    Agents.Add(Agent.FromCard(card));
                     break;
                 case CardType.CONTRACT_ACTION:
                     {
@@ -159,8 +162,8 @@
 
         public void KnockOut(Card card)
         {
-            AssertCardIn(card, Agents);
-            Agents.Remove(card);
+            AssertCardIn(card, AgentCards);
+            Agents.RemoveAll(agent => agent.RepresentingCard.Guid == card.Guid);
             CooldownPile.Add(card);
         }
 
@@ -175,9 +178,9 @@
             {
                 Hand.Remove(card);
             }
-            else if (Agents.Contains(card))
+            else if (Agents.Any(agent => agent.RepresentingCard.Guid == card.Guid))
             {
-                Agents.Remove(card);
+                Agents.RemoveAll(agent => agent.RepresentingCard.Guid == card.Guid);
             }
             else
             {
@@ -193,9 +196,9 @@
         public List<Card> GetAllPlayersCards()
         {
             List<Card> cards = this.Hand.Concat(this.DrawPile)
-                .Concat(this.Played)
-                .Concat(this.Agents)
-                .Concat(this.CooldownPile).ToList();
+                .Concat(Played)
+                .Concat(AgentCards)
+                .Concat(CooldownPile).ToList();
             return cards;
         }
 
@@ -210,6 +213,40 @@
                 StartOfTurnEffectsChain = chain;
                 StartOfTurnEffectsChain.AddCompleteCallback(() => StartOfTurnEffectsChain = null);
             }
+        }
+
+        public ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern)
+        {
+            AssertCardIn(card, AgentCards);
+            var agent = Agents.First(agent => agent.RepresentingCard.Guid == card.Guid);
+            
+            if (!agent.Activated)
+            {
+                agent.MarkActivated();
+                return PlayCardWithoutChecks(card, enemy, tavern);
+            }
+
+            return ExecutionChain.Failed("Picked agent has been already activated in your turn", this, enemy, tavern);
+        }
+        
+        public ISimpleResult AttackAgent(Card card, IPlayer enemy)
+        {
+            if (!enemy.AgentCards.Contains(card))
+            {
+                return new Failure("Agent you are trying to attack doesn't exist!");
+            }
+
+            var agent = enemy.Agents.First(agent => agent.RepresentingCard == card);
+            var attackValue = Math.Min(agent.CurrentHp, PowerAmount);
+            PowerAmount -= attackValue;
+            agent.Damage(attackValue);
+            if (agent.CurrentHp <= 0)
+            {
+                enemy.Agents.Remove(agent);
+                enemy.CooldownPile.Add(agent.RepresentingCard);
+            }
+
+            return new Success();
         }
 
         private void AssertCardIn(Card card, List<Card> list)
