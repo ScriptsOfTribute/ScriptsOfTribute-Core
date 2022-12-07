@@ -25,7 +25,7 @@ public class CardDatabaseTests
 
         var cards = sut.GetCardsByPatron(new[] { PatronId.HLAALU });
         Assert.Equal(2, cards.Count);
-        Assert.DoesNotContain((CardId)5, cards.Select(card => card.Id));
+        Assert.DoesNotContain((CardId)5, cards.Select(card => card.CommonId));
     }
 
     [Fact]
@@ -37,6 +37,6 @@ public class CardDatabaseTests
         var card1 = sut.GetCardsByPatron(new[] { PatronId.HLAALU }).First();
         var card2 = sut.GetCardsByPatron(new[] { PatronId.HLAALU }).First();
 
-        Assert.NotEqual(card1.Guid, card2.Guid);
+        Assert.NotEqual(card1.UniqueId, card2.UniqueId);
     }
 }

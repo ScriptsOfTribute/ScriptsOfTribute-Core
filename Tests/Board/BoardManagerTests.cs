@@ -25,10 +25,10 @@ public class BoardManagerTests
 
         Assert.Contains(
             CardId.GOLD,
-            board.EnemyPlayer.DrawPile.Select(card => card.Id)
+            board.EnemyPlayer.DrawPile.Select(card => card.CommonId)
         );
 
-        Assert.Equal(6, board.EnemyPlayer.DrawPile.Count(card => card.Id == CardId.GOLD));
+        Assert.Equal(6, board.EnemyPlayer.DrawPile.Count(card => card.CommonId == CardId.GOLD));
 
     }
 
@@ -69,13 +69,13 @@ public class BoardManagerTests
         sut.BuyCard(card);
 
         Assert.Contains(
-            card.Id,
-            sut.CurrentPlayer.CooldownPile.Select(card => card.Id)
+            card.CommonId,
+            sut.CurrentPlayer.CooldownPile.Select(card => card.CommonId)
         );
 
         Assert.DoesNotContain(
-            card.Id,
-            sut.GetAvailableTavernCards().Select(card => card.Id)
+            card.CommonId,
+            sut.GetAvailableTavernCards().Select(card => card.CommonId)
         );
 
         Assert.Equal(
@@ -150,7 +150,7 @@ public class BoardManagerTests
         sut.CurrentPlayer.Hand = hand;
         sut.CurrentPlayer.DrawPile = drawpile;
 
-        var chain = sut.PlayCard(hand.First(c => c.Id == CardId.MURDER_OF_CROWS));
+        var chain = sut.PlayCard(hand.First(c => c.CommonId == CardId.MURDER_OF_CROWS));
         var counter = 0;
         foreach (var result in chain.Consume())
         {
@@ -172,7 +172,7 @@ public class BoardManagerTests
         Assert.Equal(0, sut.CurrentPlayer.PrestigeAmount);
         Assert.Equal(1, sut.CurrentPlayer.CoinsAmount);
 
-        chain = sut.PlayCard(hand.First(c => c.Id == CardId.SCRATCH));
+        chain = sut.PlayCard(hand.First(c => c.CommonId == CardId.SCRATCH));
         counter = 0;
         foreach (var result in chain.Consume())
         {
@@ -186,7 +186,7 @@ public class BoardManagerTests
         Assert.Equal(6, sut.CurrentPlayer.CoinsAmount);
         Assert.Equal(5, counter); // Scratch Activation, Scratch Combo2 has 2 effect, Murder of crows combo2 has 2 effects
 
-        chain = sut.PlayCard(hand.First(c => c.Id == CardId.PECK));
+        chain = sut.PlayCard(hand.First(c => c.CommonId == CardId.PECK));
         counter = 0;
         foreach (var result in chain.Consume())
         {
@@ -202,7 +202,7 @@ public class BoardManagerTests
 
         Assert.Single(sut.CurrentPlayer.Hand);
 
-        chain = sut.PlayCard(hand.First(c => c.Id == CardId.POOL_OF_SHADOW));
+        chain = sut.PlayCard(hand.First(c => c.CommonId == CardId.POOL_OF_SHADOW));
         counter = 0;
         foreach (var result in chain.Consume())
         {
@@ -216,6 +216,6 @@ public class BoardManagerTests
         Assert.Equal(10, sut.CurrentPlayer.CoinsAmount);
         Assert.Equal(3, counter); // PoolOfShadow activ, combo2 & combo4
         Assert.Single(sut.CurrentPlayer.Hand); // PoolOfShadow has Draw on combo2
-        Assert.Contains(CardId.BLACKFEATHER_KNIGHT, sut.CurrentPlayer.Hand.Select(c => c.Id).ToList());
+        Assert.Contains(CardId.BLACKFEATHER_KNIGHT, sut.CurrentPlayer.Hand.Select(c => c.CommonId).ToList());
     }
 }

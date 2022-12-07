@@ -16,7 +16,7 @@ public interface IPlayer
     ExecutionChain? StartOfTurnEffectsChain { get; }
     ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
     void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern);
-    void HealAgent(Guid guid, int amount);
+    void HealAgent(UniqueId uniqueId, int amount);
     void Refresh(Card cardId);
     void Draw();
     void EndTurn();
