@@ -28,7 +28,7 @@ public class UniqueId
         return left.Value == right.Value;
     }
 
-    public static bool operator !=(UniqueId? left, UniqueId? right)
+    public static bool operator!=(UniqueId? left, UniqueId? right)
     {
         return !(left == right);
     }
