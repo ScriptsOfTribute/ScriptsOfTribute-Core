@@ -7,7 +7,6 @@ namespace TalesOfTribute
         BUY_CARD = 2,
         END_TURN = 3,
         PATRON = 4,
-        GET_POSSIBLE_MOVES = 5,
     }
 
     public struct Move

@@ -4,7 +4,7 @@ public class UniqueId
 {
     public int Value { get; }
     
-    private static int _counter = 100;
+    private static int _counter = 10000;
 
     private UniqueId(int value)
     {

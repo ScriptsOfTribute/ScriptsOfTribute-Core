@@ -4,6 +4,7 @@ namespace TalesOfTribute
 {
     public class TalesOfTributeApi
     {
+        public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
 
         private BoardManager _boardManager;
 
@@ -35,6 +36,11 @@ namespace TalesOfTribute
         public BoardSerializer GetSerializer()
         {
             return _boardManager.SerializeBoard();
+        }
+
+        public ExecutionChain? HandleStartOfTurnChoices()
+        {
+            return _boardManager.HandleStartOfTurnChoices();
         }
 
         public PlayerSerializer GetPlayersScores()
@@ -132,7 +138,7 @@ namespace TalesOfTribute
         // Tavern
 
         /// <summary>
-        /// Get currently avalaible cards from tavern
+        /// Get currently available cards from tavern
         /// </summary>
         public List<Card> GetTavern()
         {
@@ -142,7 +148,7 @@ namespace TalesOfTribute
         /// <summary>
         /// Get cards from tavern that player with playerId can buy
         /// </summary>
-        public List<Card> GetAffordableCardsInTawern(PlayerEnum playerId)
+        public List<Card> GetAffordableCardsInTavern(PlayerEnum playerId)
         {
             if (playerId == _boardManager.CurrentPlayer.ID)
             {
@@ -244,6 +250,12 @@ namespace TalesOfTribute
         public ExecutionChain PlayCard(Card card)
         {
             return _boardManager.PlayCard(card);
+        }
+        
+        public ExecutionChain PlayCard(int uniqueId)
+        {
+            var card = _boardManager.CurrentPlayer.Hand.First(card => (int)card.UniqueId == uniqueId);
+            return PlayCard(card);
         }
 
         //others

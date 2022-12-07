@@ -12,11 +12,14 @@ namespace TalesOfTribute.src.AI
         {
         }
 
-        public abstract PatronId SelectPatron(List<PatronId> avalaiblePatrons); // Will be called only twice
+        // Round - which selection this is (first or second)
+        public abstract PatronId SelectPatron(List<PatronId> avalaiblePatrons, int round); // Will be called only twice
         public abstract Move Play(BoardSerializer board);
-        public abstract List<Effect> HandleEffectChoice(BoardSerializer board, Choice<Effect> choice);
-        public abstract List<Card> HandleCardChoice(BoardSerializer board, Choice<Card> choice);
+        public abstract List<Effect> HandleEffectChoice(BoardSerializer board, SerializedChoice<Effect> choice);
+        public abstract List<Card> HandleCardChoice(BoardSerializer board, SerializedChoice<Card> choice);
+        public abstract List<Card> HandleStartOfTurnChoice(BoardSerializer board, SerializedChoice<Card> choice);
 
-        public abstract
+        // TODO: Placeholder for now, will require more args
+        public abstract void HandleChoiceFailure(string reason);
     }
 }
