@@ -118,8 +118,10 @@
         public void EndTurn()
         {
             _comboContext.Reset();
+            CooldownPile.AddRange(this.Hand);
             CooldownPile.AddRange(this.Played);
             Played = new List<Card>();
+            Hand = new List<Card>();
             PatronCalls = 1;
             Agents.ForEach(agent => agent.Refresh());
         }

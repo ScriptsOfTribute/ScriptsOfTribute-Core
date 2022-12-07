@@ -43,8 +43,15 @@ namespace TalesOfTribute
             {
                 throw new Exception("Complete pending choice first!");
             }
+            if (CurrentPlayer.PatronCalls <= 0)
+            {
+                return new Failure("You cant use Patron calls anymore");
+            }
 
-            return Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
+            var result = Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
+            if (result is not Failure)
+                CurrentPlayer.PatronCalls--;
+            return result;
         }
 
         public ExecutionChain PlayCard(Card card)
@@ -133,6 +140,13 @@ namespace TalesOfTribute
                 State = BoardState.START_OF_TURN_CHOICE_PENDING;
                 CurrentPlayer.StartOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
             }
+
+            foreach(var patron in Patrons)
+            {
+                patron.PatronPower(CurrentPlayer, EnemyPlayer);
+            }
+
+            DrawCards();
         }
 
         public void SetUpGame()
@@ -152,6 +166,8 @@ namespace TalesOfTribute
 
             CurrentPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
             EnemyPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+
+            DrawCards();
         }
 
         public BoardSerializer SerializeBoard()

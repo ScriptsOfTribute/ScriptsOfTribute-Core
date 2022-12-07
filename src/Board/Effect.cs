@@ -175,7 +175,25 @@
 
         public override string ToString()
         {
-            return $"{this.Type} {this.Amount}";
+            return Type switch
+            {
+                EffectType.GAIN_COIN => $"Coin +{Amount}",
+                EffectType.GAIN_PRESTIGE => $"Prestige +{Amount}",
+                EffectType.GAIN_POWER => $"Power +{Amount}",
+                EffectType.OPP_LOSE_PRESTIGE => $"Enemy prestige -{Amount}",
+                EffectType.REPLACE_TAVERN => $"Replace {Amount} cards in tavern",
+                EffectType.ACQUIRE_TAVERN => $"Get card from tavern with cost up to {Amount}",
+                EffectType.DESTROY_CARD => $"Destroy {Amount} cards in play",
+                EffectType.DRAW => $"Draw {Amount} cards",
+                EffectType.OPP_DISCARD => $"Enemy discards {Amount} cards from hand at start of their turn",
+                EffectType.RETURN_TOP => $"Put {Amount} cards from cooldown pile on top of draw pile",
+                EffectType.TOSS => $"Choose up to {Amount} of draw pile cards to move to your cooldown pile.",
+                EffectType.KNOCKOUT => $"Knockout {Amount} enemy agents",
+                EffectType.PATRON_CALL => $"Get {Amount} patron calls",
+                EffectType.CREATE_BOARDINGPARTY => $"Create {Amount} Maormer Boarding Patry cards and place it in CD pile",
+                EffectType.HEAL => $"Heal selected agent by {Amount}",
+                _ => ""
+            };
         }
 
         public List<BaseEffect> Decompose()
