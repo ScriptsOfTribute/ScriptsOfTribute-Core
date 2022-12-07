@@ -166,31 +166,8 @@ namespace TalesOfTribute
             return _boardManager.GetPatronFavorism(patronId);
         }
 
-
-        //public Dictionary<int, int> GetAllLevelsOfFavoritism(PlayerEnum playerId) // pointless imo
-        //{
-        //    Dictionary<int, int> levelOfFavoritism = new Dictionary<int, int>();
-        //    foreach (var patron in _boardManager.Patrons)
-        //    {
-        //        if (patron.FavoredPlayer == playerId)
-        //        {
-        //            levelOfFavoritism.Add((int)patron.PatronID, 1);
-        //        }
-        //        else if (patron.FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
-        //        {
-        //            levelOfFavoritism.Add((int)patron.PatronID, 0);
-        //        }
-        //        else
-        //        {
-        //            levelOfFavoritism.Add((int)patron.PatronID, -1);
-        //        }
-        //    }
-        //    return levelOfFavoritism;
-        //}
-
         // cards related
 
-        // Implemented in BoardManager - call it from there? //No
         public ExecutionChain BuyCard(Card card)
         {
             return _boardManager.BuyCard(card);
@@ -247,11 +224,11 @@ namespace TalesOfTribute
                     possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.Id));
                 }
             }
-
+            
+            // TODO: Check why this is unused.
             List<Card> usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
             if (currentPlayer.PatronCalls > 0)
             {
-
                 foreach (var patron in _boardManager.Patrons)
                 {
                     if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))
