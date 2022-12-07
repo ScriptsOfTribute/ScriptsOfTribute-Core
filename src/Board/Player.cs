@@ -90,9 +90,9 @@
             _pendingExecutionChain.MergeWith(result);
         }
 
-        public void HealAgent(Guid guid, int amount)
+        public void HealAgent(UniqueId uniqueId, int amount)
         {
-            var agent = Agents.First(agent => agent.RepresentingCard.Guid == guid);
+            var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == uniqueId);
             agent.Heal(amount);
         }
 
@@ -163,7 +163,7 @@
         public void KnockOut(Card card)
         {
             AssertCardIn(card, AgentCards);
-            Agents.RemoveAll(agent => agent.RepresentingCard.Guid == card.Guid);
+            Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
             CooldownPile.Add(card);
         }
 
@@ -178,13 +178,13 @@
             {
                 Hand.Remove(card);
             }
-            else if (Agents.Any(agent => agent.RepresentingCard.Guid == card.Guid))
+            else if (Agents.Any(agent => agent.RepresentingCard.UniqueId == card.UniqueId))
             {
-                Agents.RemoveAll(agent => agent.RepresentingCard.Guid == card.Guid);
+                Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
             }
             else
             {
-                throw new Exception($"Can't destroy card {card.Id} - it's not in Hand or on Board!");
+                throw new Exception($"Can't destroy card {card.CommonId} - it's not in Hand or on Board!");
             }
         }
 
@@ -218,7 +218,7 @@
         public ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern)
         {
             AssertCardIn(card, AgentCards);
-            var agent = Agents.First(agent => agent.RepresentingCard.Guid == card.Guid);
+            var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
             
             if (!agent.Activated)
             {

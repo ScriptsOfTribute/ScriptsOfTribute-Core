@@ -14,7 +14,7 @@ public class CardDatabase
 
     public Card GetCard(CardId cardId)
     {
-        return _allCards.First(card => card.Id == cardId).CreateUniqueCopy();
+        return _allCards.First(card => card.CommonId == cardId).CreateUniqueCopy();
     }
 
     public List<Card> GetCardsByPatron(PatronId[] patrons)
@@ -36,7 +36,7 @@ public class CardDatabase
             .Distinct();
         // Pre-upgrade cards have the same ID as the family they are in.
         return from card in cardsEnumerable
-               where !families.Contains(card.Id)
+               where !families.Contains(card.CommonId)
                select card;
     }
 }

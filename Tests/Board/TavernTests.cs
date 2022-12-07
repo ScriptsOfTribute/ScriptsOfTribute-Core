@@ -21,32 +21,32 @@ namespace Tests.Board
                 GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY) // Cost 9
             };
 
-            var result = this._tavern.GetAffordableCards(6).Select(card => card.Id).ToList();
+            var result = this._tavern.GetAffordableCards(6).Select(card => card.CommonId).ToList();
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS).Id,
+                GlobalCardDatabase.Instance.GetCard(CardId.LUXURY_EXPORTS).CommonId,
                 result
             );
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN).Id,
+                GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN).CommonId,
                 result
             );
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST).Id,
+                GlobalCardDatabase.Instance.GetCard(CardId.CONQUEST).CommonId,
                 result
             );
 
             Assert.DoesNotContain(
-                GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE).Id,
+                GlobalCardDatabase.Instance.GetCard(CardId.CURRENCY_EXCHANGE).CommonId,
                 result
             );
 
-            result = this._tavern.GetAffordableCards(10).Select(card => card.Id).ToList();
+            result = this._tavern.GetAffordableCards(10).Select(card => card.CommonId).ToList();
 
             Assert.Contains(
-                GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY).Id,
+                GlobalCardDatabase.Instance.GetCard(CardId.ANSEIS_VICTORY).CommonId,
                 result
             );
 
@@ -67,13 +67,13 @@ namespace Tests.Board
 
             Assert.Contains(
                 CardId.OATHMAN,
-                this._tavern.AvailableCards.Select(card => card.Id)
+                this._tavern.AvailableCards.Select(card => card.CommonId)
             );
             this._tavern.ReplaceCard(cardToReplace);
 
             Assert.DoesNotContain(
                 CardId.OATHMAN,
-                this._tavern.AvailableCards.Select(card => card.Id)
+                this._tavern.AvailableCards.Select(card => card.CommonId)
             );
 
             Assert.Equal(5, this._tavern.AvailableCards.Count);

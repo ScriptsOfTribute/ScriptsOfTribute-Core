@@ -28,14 +28,14 @@
     {
         public List<BaseEffect> Decompose();
 
-        public ComplexEffect MakeUniqueCopy(Guid guid);
+        public ComplexEffect MakeUniqueCopy(UniqueId uniqueId);
     }
 
     public class Effect : BaseEffect, ComplexEffect
     {
         public readonly EffectType Type;
         public readonly int Amount;
-        public Guid Guid { get; } = Guid.Empty;
+        public UniqueId UniqueId { get; } = UniqueId.Empty;
 
         public Effect(EffectType type, int amount)
         {
@@ -43,11 +43,11 @@
             Amount = amount;
         }
 
-        public Effect(EffectType type, int amount, Guid guid)
+        public Effect(EffectType type, int amount, UniqueId uniqueId)
         {
             Type = type;
             Amount = amount;
-            Guid = guid;
+            UniqueId = uniqueId;
         }
 
         public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
@@ -159,12 +159,12 @@
                         player.AddToCooldownPile(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
                     break;
                 case EffectType.HEAL:
-                    if (Guid == Guid.Empty)
+                    if (UniqueId == UniqueId.Empty)
                     {
                         throw new Exception("This shouldn't happen - there is a bug in the engine!");
                     }
 
-                    player.HealAgent(Guid, Amount);
+                    player.HealAgent(UniqueId, Amount);
                     break;
                 default:
                     throw new Exception("Not implemented yet!");
@@ -201,9 +201,9 @@
             return new List<BaseEffect> { this };
         }
 
-        public ComplexEffect MakeUniqueCopy(Guid guid)
+        public ComplexEffect MakeUniqueCopy(UniqueId uniqueId)
         {
-            return new Effect(Type, Amount, guid);
+            return new Effect(Type, Amount, uniqueId);
         }
 
         public static EffectType MapEffectType(string effect)
@@ -234,7 +234,7 @@
     {
         private readonly Effect _left;
         private readonly Effect _right;
-        public Guid Guid { get; } = Guid.Empty;
+        public UniqueId UniqueId { get; } = UniqueId.Empty;
 
         public EffectChoice(Effect left, Effect right)
         {
@@ -242,11 +242,11 @@
             _right = right;
         }
 
-        public EffectChoice(Effect left, Effect right, Guid guid)
+        public EffectChoice(Effect left, Effect right, UniqueId uniqueId)
         {
             _left = left;
             _right = right;
-            Guid = guid;
+            UniqueId = uniqueId;
         }
 
         public List<BaseEffect> Decompose()
@@ -254,12 +254,12 @@
             return new List<BaseEffect> { this };
         }
 
-        public ComplexEffect MakeUniqueCopy(Guid guid)
+        public ComplexEffect MakeUniqueCopy(UniqueId uniqueId)
         {
             return new EffectChoice(
-                _left.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
-                    _right.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
-                guid
+                _left.MakeUniqueCopy(uniqueId) as Effect ?? throw new InvalidOperationException(),
+                    _right.MakeUniqueCopy(uniqueId) as Effect ?? throw new InvalidOperationException(),
+                uniqueId
                 );
         }
 
@@ -288,7 +288,7 @@
         private readonly Effect _left;
         private readonly Effect _right;
 
-        public Guid Guid { get; } = Guid.Empty;
+        public UniqueId UniqueId { get; } = UniqueId.Empty;
 
         public EffectComposite(Effect left, Effect right)
         {
@@ -296,11 +296,11 @@
             _right = right;
         }
 
-        public EffectComposite(Effect left, Effect right, Guid guid)
+        public EffectComposite(Effect left, Effect right, UniqueId uniqueId)
         {
             _left = left;
             _right = right;
-            Guid = guid;
+            UniqueId = uniqueId;
         }
 
         public List<BaseEffect> Decompose()
@@ -308,12 +308,12 @@
             return new List<BaseEffect> { _left, _right };
         }
 
-        public ComplexEffect MakeUniqueCopy(Guid guid)
+        public ComplexEffect MakeUniqueCopy(UniqueId uniqueId)
         {
             return new EffectComposite(
-                _left.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
-                _right.MakeUniqueCopy(guid) as Effect ?? throw new InvalidOperationException(),
-                guid
+                _left.MakeUniqueCopy(uniqueId) as Effect ?? throw new InvalidOperationException(),
+                _right.MakeUniqueCopy(uniqueId) as Effect ?? throw new InvalidOperationException(),
+                uniqueId
             );
         }
 
