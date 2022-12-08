@@ -20,6 +20,6 @@ namespace TalesOfTribute.src.AI
         public abstract List<Card> HandleStartOfTurnChoice(BoardSerializer board, SerializedChoice<Card> choice);
 
         // TODO: Placeholder for now, will require more args
-        public abstract void HandleChoiceFailure(string reason);
+        public abstract void HandleFailure(string reason);
     }
 }

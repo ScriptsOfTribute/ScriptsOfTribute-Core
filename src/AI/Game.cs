@@ -108,7 +108,7 @@ namespace TalesOfTribute.src.AI
 
                 if (result is Failure f)
                 {
-                    CurrentPlayer.HandleChoiceFailure(f.Reason);
+                    CurrentPlayer.HandleFailure(f.Reason);
                 }
             } while (result is Failure);
 
@@ -159,17 +159,33 @@ namespace TalesOfTribute.src.AI
 
         private void HandleAttack(int uniqueId)
         {
-            
+            if (_api.AttackAgent(uniqueId) is Failure)
+            {
+                throw new Exception("Invalid agent attacked!");
+            }
         }
 
         private void HandleBuyCard(int uniqueId)
         {
-            
+            var chain = _api.BuyCard(uniqueId);
+
+            foreach (var result in chain.Consume())
+            {
+                HandleTopLevelResult(result);
+            }
         }
 
         private void HandleCallPatron(int id)
         {
-            
+            if (!Enum.IsDefined(typeof(PatronId), id))
+            {
+                throw new Exception("Invalid patron!");
+            }
+
+            if (_api.PatronActivation((PatronId)id) is Failure f)
+            {
+                throw new Exception(f.Reason);
+            }
         }
 
         private void HandleTopLevelResult(PlayResult result)
@@ -183,7 +199,7 @@ namespace TalesOfTribute.src.AI
                     // the chain. If there are more elements, something is broken. Make sure that's true
                     // (mid chain failure should occur only after Choice, in other cases it doesn't make sense as we
                     // don't have anything to retry).
-                    CurrentPlayer.HandleChoiceFailure(failure.Reason);
+                    CurrentPlayer.HandleFailure(failure.Reason);
                     break;
                 default:
                     HandleChoice(result);
@@ -216,7 +232,7 @@ namespace TalesOfTribute.src.AI
                     // That means Failure occured after Choice, so we repeat previous Choice.
                     case Failure failure:
                     {
-                        CurrentPlayer.HandleChoiceFailure(failure.Reason);
+                        CurrentPlayer.HandleFailure(failure.Reason);
                         newResult = result;
                         break;
                     }

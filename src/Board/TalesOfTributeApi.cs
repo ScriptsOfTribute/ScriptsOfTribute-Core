@@ -212,6 +212,11 @@ namespace TalesOfTribute
         public ISimpleResult AttackAgent(Card agent)
             => _boardManager.AttackAgent(agent);
 
+        public ISimpleResult AttackAgent(int uniqueId)
+        {
+            return _boardManager.AttackAgent(_boardManager.EnemyPlayer.GetCardByUniqueId(uniqueId));
+        }
+
         // Patron related
 
         /// <summary>
@@ -219,7 +224,6 @@ namespace TalesOfTribute
         /// </summary>
         public PlayResult PatronActivation(PatronId patronId)
         {
-            // only for active player
             return _boardManager.PatronCall(patronId);
         }
 
@@ -242,6 +246,11 @@ namespace TalesOfTribute
         {
             return _boardManager.BuyCard(card);
         }
+        
+        public ExecutionChain BuyCard(int uniqueId)
+        {
+            return _boardManager.BuyCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
+        }
 
         /// <summary>
         /// Plays card <c>card</c> from hand for CurrentPlayer
@@ -254,8 +263,7 @@ namespace TalesOfTribute
         
         public ExecutionChain PlayCard(int uniqueId)
         {
-            var card = _boardManager.CurrentPlayer.Hand.First(card => (int)card.UniqueId == uniqueId);
-            return PlayCard(card);
+            return PlayCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
         }
 
         //others
