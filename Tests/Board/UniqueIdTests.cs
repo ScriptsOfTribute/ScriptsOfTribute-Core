@@ -9,8 +9,8 @@ public class UniqueIdTests
     {
         var id1 = UniqueId.Create();
         var id2 = UniqueId.Create();
-        Assert.Equal(100, id1.Value);
-        Assert.Equal(101, (int)id2);
+        Assert.Equal(10000, id1.Value);
+        Assert.Equal(10001, (int)id2);
     }
     
     [Fact]

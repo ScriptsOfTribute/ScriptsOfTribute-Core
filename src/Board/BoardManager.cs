@@ -170,14 +170,9 @@ namespace TalesOfTribute
             DrawCards();
         }
 
-        public BoardSerializer SerializeBoard()
+        public SerializedBoard SerializeBoard()
         {
-            return new BoardSerializer(_players[0], _players[1], Tavern, Patrons, CurrentPlayerId);
-        }
-
-        public PlayerSerializer GetScores()
-        { // Should be in BoardSerializer but it needs reconstruction and i got no time for that rn
-            return new PlayerSerializer(_players[0], _players[1]);
+            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)

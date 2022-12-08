@@ -6,7 +6,7 @@ namespace TalesOfTribute
     {
         public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
 
-        private BoardManager _boardManager;
+        private readonly BoardManager _boardManager;
 
         // Constructors
         public TalesOfTributeApi(BoardManager boardManager)
@@ -33,7 +33,7 @@ namespace TalesOfTribute
         }
 
         // Serialization
-        public BoardSerializer GetSerializer()
+        public SerializedBoard GetSerializer()
         {
             return _boardManager.SerializeBoard();
         }
@@ -41,11 +41,6 @@ namespace TalesOfTribute
         public ExecutionChain? HandleStartOfTurnChoices()
         {
             return _boardManager.HandleStartOfTurnChoices();
-        }
-
-        public PlayerSerializer GetPlayersScores()
-        {
-            return _boardManager.GetScores();
         }
 
         public BoardState GetState()
