@@ -17,12 +17,12 @@ namespace TalesOfTribute
         public readonly List<Card> TavernCards;
 
         public SerializedBoard(
-            Player currentPlayer, Player enemyPlayer, Tavern tavern, IEnumerable<Patron> patrons
+            IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
-            TavernCards = tavern.AvailableCards;
+            TavernCards = tavern.AvailableCards.ToList();
             PatronStates = new PatronStates(patrons.ToList());
         }
     }

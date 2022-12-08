@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute.src.AI;
+﻿namespace TalesOfTribute.Serializers;
 
 public class SerializedChoice<T>
 {

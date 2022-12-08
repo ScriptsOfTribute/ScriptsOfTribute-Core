@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TalesOfTribute.Board;
 
 namespace TalesOfTribute
 {
@@ -343,7 +344,7 @@ namespace TalesOfTribute
         /// <summary>
         /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
         /// </summary>
-        public PlayerEnum CheckWinner()
+        public EndGameState? CheckWinner()
         {
             return _boardManager.CheckAndGetWinner();
         }

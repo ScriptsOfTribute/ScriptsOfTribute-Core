@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using TalesOfTribute.Board;
 
 namespace TalesOfTribute
 {
@@ -190,11 +191,11 @@ namespace TalesOfTribute
             return this.Tavern.GetAffordableCards(coinAmount);
         }
 
-        public PlayerEnum CheckAndGetWinner()
+        public EndGameState? CheckAndGetWinner()
         {
             if (CurrentPlayer.PrestigeAmount >= 80)
             {
-                return CurrentPlayer.ID;
+                return new EndGameState(CurrentPlayer.ID, GameEndReason.PRESTIGE_OVER_80);
             }
 
             bool win = true;
@@ -214,15 +215,15 @@ namespace TalesOfTribute
 
             if (win)
             {
-                return CurrentPlayer.ID;
+                return new EndGameState(CurrentPlayer.ID, GameEndReason.PATRON_FAVOR);
             }
 
             if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
             {
-                return EnemyPlayer.ID;
+                return new EndGameState(EnemyPlayer.ID, GameEndReason.PRESTIGE_OVE_40_NOT_MATCHED);
             }
 
-            return PlayerEnum.NO_PLAYER_SELECTED;
+            return null;
         }
         
         public ExecutionChain ActivateAgent(Card card)
