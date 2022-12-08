@@ -46,7 +46,8 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(false);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>())).Returns(new Move(CommandEnum.PATRON, 3));
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(new Move(CommandEnum.PATRON, 3));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -70,7 +71,8 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>())).Returns(new Move(CommandEnum.PLAY_CARD, 3));
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(new Move(CommandEnum.PLAY_CARD, 3));
         _player1.Setup(player => player.HandleCardChoice(
             It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
         ).Returns(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) });
@@ -97,7 +99,8 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>())).Returns(new Move(CommandEnum.PLAY_CARD, 3));
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(new Move(CommandEnum.PLAY_CARD, 3));
         _player1.Setup(player => player.HandleEffectChoice(
             It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
         ).Returns(new List<EffectType> { EffectType.HEAL });
@@ -119,7 +122,8 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.AttackAgent(It.IsAny<int>())).Returns(new Failure(""));
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>())).Returns(new Move(CommandEnum.ATTACK, 3));
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(new Move(CommandEnum.ATTACK, 3));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -141,7 +145,8 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.BuyCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>())).Returns(new Move(CommandEnum.BUY_CARD, 3));
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(new Move(CommandEnum.BUY_CARD, 3));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -163,7 +168,8 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.BuyCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>())).Returns(new Move(CommandEnum.BUY_CARD, 3));
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(new Move(CommandEnum.BUY_CARD, 3));
         _player1.Setup(player => player.HandleEffectChoice(
             It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
         ).Returns(new List<EffectType> { EffectType.HEAL });
@@ -194,7 +200,7 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>()))
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(new Move(CommandEnum.PLAY_CARD, 3))
             .Returns(new Move(CommandEnum.END_TURN, 3));
         _player1.Setup(player => player.HandleStartOfTurnChoice(
@@ -232,7 +238,7 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>()))
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(new Move(CommandEnum.PLAY_CARD, 3))
             .Returns(new Move(CommandEnum.END_TURN, 3));
         _player1.Setup(player => player.HandleCardChoice(
@@ -299,7 +305,7 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>()))
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(new Move(CommandEnum.PLAY_CARD, 3))
             .Returns(new Move(CommandEnum.END_TURN, 3));
         _player1.Setup(player => player.HandleCardChoice(
@@ -340,7 +346,7 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>()))
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(new Move(CommandEnum.PLAY_CARD, 3))
             .Returns(new Move(CommandEnum.END_TURN, 3));
         _player1.Setup(player => player.HandleCardChoice(
@@ -381,7 +387,7 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
         _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
 
-        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>()))
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(new Move(CommandEnum.PLAY_CARD, 3))
             .Returns(new Move(CommandEnum.END_TURN, 3));
         _player1.Setup(player => player.HandleCardChoice(

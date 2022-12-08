@@ -220,7 +220,7 @@ namespace TalesOfTribute
 
             if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
             {
-                return new EndGameState(EnemyPlayer.ID, GameEndReason.PRESTIGE_OVE_40_NOT_MATCHED);
+                return new EndGameState(EnemyPlayer.ID, GameEndReason.PRESTIGE_OVER_40_NOT_MATCHED);
             }
 
             return null;

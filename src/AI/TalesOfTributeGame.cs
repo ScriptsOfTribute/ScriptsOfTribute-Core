@@ -33,7 +33,7 @@ public class TalesOfTributeGame
             Move move;
             do
             {
-                move = CurrentPlayer.Play(_api.GetSerializer());
+                move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
                 var result = HandleMove(move);
                 if (result is not null)
                 {
