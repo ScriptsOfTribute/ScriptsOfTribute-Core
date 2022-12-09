@@ -23,7 +23,7 @@
         public readonly CardId? Family;
         public readonly bool Taunt;
         public UniqueId UniqueId { get; } = UniqueId.Empty;
-        
+
         public Card(string name, PatronId deck, CardId commonId, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt)
         {
             Name = name;

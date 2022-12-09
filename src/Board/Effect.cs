@@ -66,7 +66,8 @@
                             var card = tavern.Acquire(choice);
                             player.HandleAcquireDuringExecutionChain(card, enemy, tavern);
                             return new Success();
-                        });
+                        },
+                        ChoiceContext.ACQUIRE_TAVERN);
                 case EffectType.GAIN_COIN:
                     player.CoinsAmount += Amount;
                     break;
@@ -84,6 +85,7 @@
                             choices.ForEach(tavern.ReplaceCard);
                             return new Success();
                         },
+                        ChoiceContext.REPLACE_TAVERN,
                         Amount
                     );
                 case EffectType.DESTROY_CARD:
@@ -94,6 +96,7 @@
                             choices.ForEach(player.Destroy);
                             return new Success();
                         },
+                        ChoiceContext.DESTROY_CARD,
                         Amount
                     );
                 case EffectType.DRAW:
@@ -113,6 +116,7 @@
                                 choices.ForEach(enemy.Discard);
                                 return new Success();
                             },
+                            ChoiceContext.OPP_DISCARD,
                             howManyToDiscard,
                             howManyToDiscard
                         ));
@@ -129,6 +133,7 @@
                             choices.ForEach(player.Refresh);
                             return new Success();
                         },
+                        ChoiceContext.RETURN_TOP,
                         Amount
                     );
                 case EffectType.TOSS:
@@ -139,6 +144,7 @@
                             choices.ForEach(player.Toss);
                             return new Success();
                         },
+                        ChoiceContext.TOSS,
                         Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
                     );
                 case EffectType.KNOCKOUT:
@@ -149,6 +155,7 @@
                             choices.ForEach(enemy.KnockOut);
                             return new Success();
                         },
+                        ChoiceContext.KNOCKOUT,
                         Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
                     );
                 case EffectType.PATRON_CALL:
@@ -274,7 +281,8 @@
                     }
 
                     return _right.Enact(player, enemy, tavern);
-                });
+                },
+                ChoiceContext.OR);
         }
 
         public override string ToString()

@@ -32,11 +32,12 @@
             // We should check if there is any taunt agent
             return new Choice<Card>(enemy.AgentCards,
                 choices =>
-            {
-                enemy.Destroy(choices.First());
-                enemy.CooldownPile.Add(choices.First());
-                return new Success();
-            });
+                {
+                    enemy.Destroy(choices.First());
+                    enemy.CooldownPile.Add(choices.First());
+                    return new Success();
+                },
+                ChoiceContext.PATRON_ACTIVATION);
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

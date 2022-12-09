@@ -16,7 +16,6 @@ namespace TalesOfTribute
         public Patron[] Patrons;
         public Tavern Tavern;
         private Player[] _players;
-        private Random _rnd;
 
         public Player CurrentPlayer => _players[(int)CurrentPlayerId];
         public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
@@ -30,7 +29,6 @@ namespace TalesOfTribute
             // TODO: This is actually not correct, as some cards should have multiple copies.
             Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             _players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
-            _rnd = new Random();
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -63,7 +61,7 @@ namespace TalesOfTribute
             }
 
             var result = CurrentPlayer.PlayCard(card, EnemyPlayer, Tavern);
-            
+
             return WrapWithStateRefresh(result);
         }
 
@@ -74,10 +72,10 @@ namespace TalesOfTribute
                 throw new Exception("Complete pending choice first!");
             }
 
-            Card boughtCard = this.Tavern.Acquire(card);
-
-            if (boughtCard.Cost > CurrentPlayer.CoinsAmount)
+            if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
+
+            Card boughtCard = this.Tavern.Acquire(card);
 
             CurrentPlayer.CoinsAmount -= boughtCard.Cost;
 
@@ -94,18 +92,9 @@ namespace TalesOfTribute
 
         public void DrawCards()
         {
-            var player = CurrentPlayer;
             for (var i = 0; i < 5; i++)
             {
-                if (player.DrawPile.Count == 0)
-                {
-                    player.CooldownPile.OrderBy(x => this._rnd.Next(0, player.CooldownPile.Count)).ToList();
-                    player.DrawPile.AddRange(player.CooldownPile);
-                    player.CooldownPile = new List<Card>();
-                }
-                var card = player.DrawPile[0];
-                player.Hand.Add(card);
-                player.DrawPile.Remove(card);
+                CurrentPlayer.Draw();
             }
         }
 
@@ -142,7 +131,7 @@ namespace TalesOfTribute
                 CurrentPlayer.StartOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
             }
 
-            foreach(var patron in Patrons)
+            foreach (var patron in Patrons)
             {
                 patron.PatronPower(CurrentPlayer, EnemyPlayer);
             }
@@ -165,8 +154,8 @@ namespace TalesOfTribute
                 );
             }
 
-            CurrentPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
-            EnemyPlayer.DrawPile = starterDecks.OrderBy(x => this._rnd.Next(0, starterDecks.Count)).ToList();
+            CurrentPlayer.InitDrawPile(starterDecks);
+            EnemyPlayer.InitDrawPile(starterDecks);
 
             DrawCards();
         }
@@ -225,7 +214,7 @@ namespace TalesOfTribute
 
             return null;
         }
-        
+
         public ExecutionChain ActivateAgent(Card card)
         {
             return WrapWithStateRefresh(CurrentPlayer.ActivateAgent(card, EnemyPlayer, Tavern));

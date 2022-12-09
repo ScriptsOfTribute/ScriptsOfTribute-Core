@@ -2,6 +2,7 @@
 
 public class SerializedPlayer
 {
+    public readonly PlayerEnum PlayerID;
     public readonly List<Card> Hand;
     public readonly List<Card> DrawPile;
     public readonly List<Card> CooldownPile;
@@ -15,6 +16,7 @@ public class SerializedPlayer
 
     public SerializedPlayer(IPlayer player)
     {
+        PlayerID = player.ID;
         Hand = player.Hand.ToList();
         DrawPile = player.DrawPile.ToList();
         CooldownPile = player.CooldownPile.ToList();

@@ -27,6 +27,7 @@
         private ExecutionChain? _pendingExecutionChain;
 
         private ComboContext _comboContext = new ComboContext();
+        private Random _rnd = new Random();
 
         public Player(PlayerEnum iD)
         {
@@ -62,7 +63,14 @@
         {
             AssertCardIn(card, Hand);
             Hand.Remove(card);
-            Played.Add(card);
+            if (card.Type == CardType.AGENT)
+            {
+                Agents.Add(Agent.FromCard(card));
+            }
+            else
+            {
+                Played.Add(card);
+            }
 
             return PlayCardWithoutChecks(card, other, tavern);
         }
@@ -90,6 +98,11 @@
             _pendingExecutionChain.MergeWith(result);
         }
 
+        public void InitDrawPile(List<Card> starterCards)
+        {
+            DrawPile = starterCards.OrderBy(x => this._rnd.Next(0, starterCards.Count)).ToList();
+        }
+
         public void HealAgent(UniqueId uniqueId, int amount)
         {
             var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == uniqueId);
@@ -111,8 +124,20 @@
 
         public void Draw()
         {
+            if (DrawPile.Count == 0)
+            {
+                RefreshDrawPile();
+            }
+
             Hand.Add(DrawPile.First());
             DrawPile.RemoveAt(0);
+        }
+
+        private void RefreshDrawPile()
+        {
+            CooldownPile.OrderBy(x => this._rnd.Next(0, CooldownPile.Count)).ToList();
+            DrawPile.AddRange(CooldownPile);
+            CooldownPile = new List<Card>();
         }
 
         public void EndTurn()
@@ -219,7 +244,7 @@
         {
             AssertCardIn(card, AgentCards);
             var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
-            
+
             if (!agent.Activated)
             {
                 agent.MarkActivated();
@@ -228,7 +253,7 @@
 
             return ExecutionChain.Failed("Picked agent has been already activated in your turn", this, enemy, tavern);
         }
-        
+
         public ISimpleResult AttackAgent(Card card, IPlayer enemy)
         {
             if (!enemy.AgentCards.Contains(card))

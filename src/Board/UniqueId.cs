@@ -3,7 +3,7 @@
 public class UniqueId
 {
     public int Value { get; }
-    
+
     private static int _counter = 10000;
 
     private UniqueId(int value)
@@ -20,7 +20,7 @@ public class UniqueId
 
     public static explicit operator int(UniqueId id) => id.Value;
 
-    public static bool operator==(UniqueId? left, UniqueId? right)
+    public static bool operator ==(UniqueId? left, UniqueId? right)
     {
         if (left is null) return right is null;
         if (right is null) return false;
@@ -28,7 +28,7 @@ public class UniqueId
         return left.Value == right.Value;
     }
 
-    public static bool operator!=(UniqueId? left, UniqueId? right)
+    public static bool operator !=(UniqueId? left, UniqueId? right)
     {
         return !(left == right);
     }

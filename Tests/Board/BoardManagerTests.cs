@@ -1,4 +1,5 @@
-﻿using TalesOfTribute;
+﻿using Moq;
+using TalesOfTribute;
 using Xunit.Abstractions;
 
 namespace Tests.Board;
@@ -217,5 +218,11 @@ public class BoardManagerTests
         Assert.Equal(3, counter); // PoolOfShadow activ, combo2 & combo4
         Assert.Single(sut.CurrentPlayer.Hand); // PoolOfShadow has Draw on combo2
         Assert.Contains(CardId.BLACKFEATHER_KNIGHT, sut.CurrentPlayer.Hand.Select(c => c.CommonId).ToList());
+    }
+
+    [Fact]
+    void ContractActionCombo()
+    {
+        Mock<BoardManager> board = new();
     }
 }

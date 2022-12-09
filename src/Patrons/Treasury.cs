@@ -14,20 +14,21 @@
 
             return new Choice<Card>(usedCards,
                 choices =>
-            {
-                Card selectedCard = choices.First();
-                if (activator.Played.Contains(selectedCard))
                 {
-                    activator.Played.Remove(selectedCard);
-                    activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
-                }
-                else
-                {
-                    activator.CooldownPile.Remove(selectedCard);
-                    activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
-                }
-                return new Success();
-            });
+                    Card selectedCard = choices.First();
+                    if (activator.Played.Contains(selectedCard))
+                    {
+                        activator.Played.Remove(selectedCard);
+                        activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
+                    }
+                    else
+                    {
+                        activator.CooldownPile.Remove(selectedCard);
+                        activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
+                    }
+                    return new Success();
+                },
+                ChoiceContext.PATRON_ACTIVATION);
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

@@ -12,7 +12,7 @@ public class UniqueIdTests
         Assert.Equal(10000, id1.Value);
         Assert.Equal(10001, (int)id2);
     }
-    
+
     [Fact]
     void EqualityOperatorsShouldWorkCorrectly()
     {
@@ -33,7 +33,7 @@ public class UniqueIdTests
         var empty2 = UniqueId.Empty;
         var id1 = UniqueId.Create();
         var id2 = UniqueId.Create();
-        
+
         Assert.True(empty1 == empty2);
         Assert.False(empty1 != empty2);
         Assert.False(empty1 == id1);
