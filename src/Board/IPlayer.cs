@@ -31,4 +31,5 @@ public interface IPlayer
     void AddStartOfTurnEffects(ExecutionChain chain);
     ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
     ISimpleResult AttackAgent(Card agent, IPlayer enemy);
+    Card GetCardByUniqueId(int uniqueId);
 }

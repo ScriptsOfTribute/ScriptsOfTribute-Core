@@ -256,5 +256,17 @@
                 throw new Exception("Wrong card chosen!");
             }
         }
+
+        public Card GetCardByUniqueId(int uniqueId)
+        {
+            try
+            {
+                return GetAllPlayersCards().First(card => (int)card.UniqueId == uniqueId);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new Exception("Player doesn't have card specified by unique id!");
+            }
+        }
     }
 }

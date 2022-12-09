@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using TalesOfTribute.Board;
 
 namespace TalesOfTribute
 {
@@ -170,14 +171,9 @@ namespace TalesOfTribute
             DrawCards();
         }
 
-        public BoardSerializer SerializeBoard()
+        public SerializedBoard SerializeBoard()
         {
-            return new BoardSerializer(_players[0], _players[1], Tavern, Patrons, CurrentPlayerId);
-        }
-
-        public PlayerSerializer GetScores()
-        { // Should be in BoardSerializer but it needs reconstruction and i got no time for that rn
-            return new PlayerSerializer(_players[0], _players[1]);
+            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
@@ -195,11 +191,11 @@ namespace TalesOfTribute
             return this.Tavern.GetAffordableCards(coinAmount);
         }
 
-        public PlayerEnum CheckAndGetWinner()
+        public EndGameState? CheckAndGetWinner()
         {
             if (CurrentPlayer.PrestigeAmount >= 80)
             {
-                return CurrentPlayer.ID;
+                return new EndGameState(CurrentPlayer.ID, GameEndReason.PRESTIGE_OVER_80);
             }
 
             bool win = true;
@@ -219,15 +215,15 @@ namespace TalesOfTribute
 
             if (win)
             {
-                return CurrentPlayer.ID;
+                return new EndGameState(CurrentPlayer.ID, GameEndReason.PATRON_FAVOR);
             }
 
             if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
             {
-                return EnemyPlayer.ID;
+                return new EndGameState(EnemyPlayer.ID, GameEndReason.PRESTIGE_OVER_40_NOT_MATCHED);
             }
 
-            return PlayerEnum.NO_PLAYER_SELECTED;
+            return null;
         }
         
         public ExecutionChain ActivateAgent(Card card)
