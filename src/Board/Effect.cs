@@ -75,7 +75,10 @@
                     player.PrestigeAmount += Amount;
                     break;
                 case EffectType.OPP_LOSE_PRESTIGE:
-                    enemy.PrestigeAmount -= Amount;
+                    if (enemy.PrestigeAmount - Amount >= 0)
+                        enemy.PrestigeAmount -= Amount;
+                    else
+                        enemy.PrestigeAmount = 0;
                     break;
                 case EffectType.REPLACE_TAVERN:
                     return new Choice<Card>(

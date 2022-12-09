@@ -1,5 +1,4 @@
-﻿using Moq;
-using TalesOfTribute;
+﻿using TalesOfTribute;
 using Xunit.Abstractions;
 
 namespace Tests.Board;
@@ -220,9 +219,4 @@ public class BoardManagerTests
         Assert.Contains(CardId.BLACKFEATHER_KNIGHT, sut.CurrentPlayer.Hand.Select(c => c.CommonId).ToList());
     }
 
-    [Fact]
-    void ContractActionCombo()
-    {
-        Mock<BoardManager> board = new();
-    }
 }
