@@ -73,4 +73,14 @@ public class PlayResultTests
         var result = sut.Choose(EffectType.HEAL);
         Assert.True(result is Failure);
     }
+
+    [Fact]
+    void ShouldPassEmptyChoice()
+    {
+        var sut = new Choice<Card>(new List<Card>(),
+            _ => new Failure("just so we can differentiate ending"), ChoiceContext.DESTROY_CARD, 1);
+
+        var result = sut.Choose(new List<Card>());
+        Assert.True(result is Success);
+    }
 }

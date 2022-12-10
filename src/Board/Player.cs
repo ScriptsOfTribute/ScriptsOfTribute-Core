@@ -65,7 +65,9 @@
             Hand.Remove(card);
             if (card.Type == CardType.AGENT)
             {
-                Agents.Add(Agent.FromCard(card));
+                var agent = Agent.FromCard(card);
+                agent.MarkActivated();
+                Agents.Add(agent);
             }
             else
             {
@@ -156,7 +158,9 @@
             switch (card.Type)
             {
                 case CardType.CONTRACT_AGENT:
-                    Agents.Add(Agent.FromCard(card));
+                    var agent = Agent.FromCard(card);
+                    agent.MarkActivated();
+                    Agents.Add(agent);
                     break;
                 case CardType.CONTRACT_ACTION:
                     {

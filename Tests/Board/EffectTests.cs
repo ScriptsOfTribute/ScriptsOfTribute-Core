@@ -46,7 +46,7 @@ public class EffectTests
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(result is Success);
 
-        _player2.VerifySet(p => p.PrestigeAmount = -1);
+        _player2.VerifySet(p => p.PrestigeAmount = 0);
     }
 
     [Fact]
