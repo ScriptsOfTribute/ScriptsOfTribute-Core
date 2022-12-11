@@ -35,6 +35,7 @@ public class ExecutionChain
     {
         if (_chain.Count == 0)
         {
+            _onComplete?.Invoke();
             yield break;
         }
 

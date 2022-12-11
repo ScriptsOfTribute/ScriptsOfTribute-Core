@@ -218,4 +218,5 @@ public class BoardManagerTests
         Assert.Single(sut.CurrentPlayer.Hand); // PoolOfShadow has Draw on combo2
         Assert.Contains(CardId.BLACKFEATHER_KNIGHT, sut.CurrentPlayer.Hand.Select(c => c.CommonId).ToList());
     }
+
 }

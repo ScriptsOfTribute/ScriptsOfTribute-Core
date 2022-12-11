@@ -1,3 +1,5 @@
+using TalesOfTribute.Serializers;
+
 namespace TalesOfTribute.Board;
 
 public class TalesOfTributeApi : ITalesOfTributeApi
@@ -35,6 +37,18 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public SerializedBoard GetSerializer()
     {
         return _boardManager.SerializeBoard();
+    }
+
+    public SerializedPlayer GetPlayer(PlayerEnum playerId)
+    {
+        if (playerId == CurrentPlayerId)
+        {
+            return new SerializedPlayer(_boardManager.CurrentPlayer);
+        }
+        else
+        {
+            return new SerializedPlayer(_boardManager.EnemyPlayer);
+        }
     }
 
     public ExecutionChain? HandleStartOfTurnChoices()
@@ -281,44 +295,44 @@ public class TalesOfTributeApi : ITalesOfTributeApi
             }
         }
 
-        List<Agent> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
-        if (currentPlayer.PowerAmount > 0)
-        {
-            if (tauntAgents.Any())
+            List<Agent> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
+            if (currentPlayer.PowerAmount > 0)
             {
-                foreach (Agent agent in tauntAgents)
+                if (tauntAgents.Any())
                 {
-                    possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
+                    foreach (Agent agent in tauntAgents)
+                    {
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
+                    }
+                }
+                else
+                {
+                    foreach (Agent agent in enemyPlayer.Agents)
+                    {
+                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
+                    }
                 }
             }
-            else
+            if (currentPlayer.CoinsAmount > 0)
             {
-                foreach (Agent agent in enemyPlayer.Agents)
+                foreach (Card card in _boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount))
                 {
-                    possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
+                    possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.UniqueId));
                 }
             }
-        }
-        if (currentPlayer.CoinsAmount > 0)
-        {
-            foreach (Card card in _boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount))
-            {
-                possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.UniqueId));
-            }
-        }
             
-        // TODO: Check why this is unused.
-        List<Card> usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
-        if (currentPlayer.PatronCalls > 0)
-        {
-            foreach (var patron in _boardManager.Patrons)
+            // TODO: Check why this is unused.
+            List<Card> usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
+            if (currentPlayer.PatronCalls > 0)
             {
-                if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))
+                foreach (var patron in _boardManager.Patrons)
                 {
-                    possibleMoves.Add(new Move(CommandEnum.PATRON, (int)patron.PatronID));
+                    if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))
+                    {
+                        possibleMoves.Add(new Move(CommandEnum.PATRON, (int)patron.PatronID));
+                    }
                 }
             }
-        }
 
         possibleMoves.Add(new Move(CommandEnum.END_TURN));
 

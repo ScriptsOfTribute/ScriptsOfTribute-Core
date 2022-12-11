@@ -1,14 +1,16 @@
-﻿using TalesOfTribute;
+﻿using Moq;
+using TalesOfTribute;
 
 namespace Tests.Board;
 
 public class PlayResultTests
 {
+    private readonly Mock<Patron> _patron = new();
     [Fact]
     void ShouldNotAllowIncorrectChoice()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
 
         var result = sut.Choose(EffectType.HEAL);
         Assert.True(result is Failure);
@@ -18,7 +20,7 @@ public class PlayResultTests
     void ShouldNotAllowTooManyChoices()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
-            _ => new Success(), 1);
+            _ => new Success(), new ChoiceContext(_patron.Object), 1);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
         Assert.True(result is Failure);
@@ -28,7 +30,7 @@ public class PlayResultTests
     void ShouldNotAllowIncorrectChoices()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
-            _ => new Success(), 2);
+            _ => new Success(), new ChoiceContext(_patron.Object), 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.DESTROY_CARD });
         Assert.True(result is Failure);
@@ -38,7 +40,7 @@ public class PlayResultTests
     void ShouldPassCorrectSingleChoice()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
 
         var result = sut.Choose(EffectType.DRAW);
         Assert.True(result is Success);
@@ -48,7 +50,7 @@ public class PlayResultTests
     void ShouldPassCorrectMultipleChoice()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
-            _ => new Success(), 2);
+            _ => new Success(), new ChoiceContext(_patron.Object), 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
         Assert.True(result is Success);
@@ -58,7 +60,7 @@ public class PlayResultTests
     void ShouldNotAllowTooFewChoices()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
-            _ => new Success(), 2, 2);
+            _ => new Success(), new ChoiceContext(_patron.Object), 2, 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL });
         Assert.True(result is Failure);
@@ -68,9 +70,19 @@ public class PlayResultTests
     void ShouldNotAllowTooFewChoicesOverload()
     {
         var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
-            _ => new Success(), 2, 2);
+            _ => new Success(), new ChoiceContext(_patron.Object), 2, 2);
 
         var result = sut.Choose(EffectType.HEAL);
         Assert.True(result is Failure);
+    }
+
+    [Fact]
+    void ShouldPassEmptyChoice()
+    {
+        var sut = new Choice<Card>(new List<Card>(),
+            _ => new Failure("just so we can differentiate ending"), new ChoiceContext(_patron.Object), 1);
+
+        var result = sut.Choose(new List<Card>());
+        Assert.True(result is Success);
     }
 }

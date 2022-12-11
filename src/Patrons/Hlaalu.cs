@@ -28,14 +28,16 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Choice<Card>(activator.Hand.Where(c => c.Cost >= 1).ToList(),
+            List<Card> cardsInPlay = activator.Hand.Concat(activator.Played).ToList();
+            return new Choice<Card>(cardsInPlay,
                 cards =>
                 {
                     var card = cards.First();
                     activator.Hand.Remove(card);
                     activator.PrestigeAmount += card.Cost - 1;
                     return new Success();
-                });
+                },
+                new ChoiceContext(this));
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

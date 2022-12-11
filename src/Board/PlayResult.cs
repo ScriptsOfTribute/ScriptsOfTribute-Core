@@ -38,8 +38,9 @@ public class Choice<T> : BaseChoice
     public delegate PlayResult ChoiceCallback(List<T> t);
 
     private readonly ChoiceCallback _callback;
+    public readonly ChoiceContext? Context;
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback) : base()
+    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context) : base()
     {
         // Make sure choice of incorrect type is not created by mistake.
         if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
@@ -49,11 +50,12 @@ public class Choice<T> : BaseChoice
 
         PossibleChoices = possibleChoices;
         _callback = callback;
+        Context = context;
     }
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback)
+    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback, context)
     {
-        if (maxChoiceAmount > possibleChoices.Count)
+        if (minChoiceAmount > possibleChoices.Count)
         {
             throw new Exception("Invalid choice amount specified!");
         }
@@ -64,6 +66,15 @@ public class Choice<T> : BaseChoice
 
     public PlayResult Choose(T t)
     {
+        if (PossibleChoices.Count == 0)
+        {
+            // in case there is nothing to choose we should 
+            // just proceed 
+            var dummyResult = new Success();
+            HandleResult(dummyResult);
+            return dummyResult;
+        }
+
         if (!PossibleChoices.Contains(t) || MinChoiceAmount > 1)
         {
             return new Failure("Invalid choice specified!");
@@ -77,6 +88,12 @@ public class Choice<T> : BaseChoice
 
     public PlayResult Choose(List<T> choices)
     {
+        if (PossibleChoices.Count == 0)
+        {
+            var dummyResult = new Success();
+            HandleResult(dummyResult);
+            return dummyResult;
+        }
         // Check if all choices are in possible choices.
         if (choices.Except(PossibleChoices).Any() || choices.Count > MaxChoiceAmount || choices.Count < MinChoiceAmount)
         {

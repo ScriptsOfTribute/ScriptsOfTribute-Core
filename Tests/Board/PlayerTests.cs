@@ -16,7 +16,7 @@ public class PlayerTests
         _tavern.Setup(tavern => tavern.GetAffordableCards(It.IsAny<int>())).Returns(new List<Card> { contractActionWithCoin2 });
         _tavern.Setup(tavern => tavern.Acquire(It.IsAny<Card>())).Returns(contractActionWithCoin2);
         _tavern.Setup(tavern => tavern.Cards).Returns(new List<Card>());
-        
+
         // Card with Acquire
         var cardToPlay = GlobalCardDatabase.Instance.GetCard(CardId.CUSTOMS_SEIZURE);
         _sut.Hand.Add(cardToPlay);
@@ -68,7 +68,7 @@ public class PlayerTests
         _sut.Destroy(agentInPlay.RepresentingCard);
         Assert.Empty(_sut.Agents);
     }
-    
+
     [Fact]
     void ActivateAgentOnceShouldWorkTwiceShouldBeFailed()
     {
@@ -83,10 +83,10 @@ public class PlayerTests
             Assert.True(result is Success);
             counter += 1;
         }
-        
+
         Assert.Equal(1, counter);
         Assert.Equal(2, _sut.CoinsAmount);
-        
+
         chain = _sut.ActivateAgent(oathman, _enemy.Object, _tavern.Object);
         counter = 0;
         foreach (var result in chain.Consume())
@@ -94,7 +94,7 @@ public class PlayerTests
             Assert.True(result is Failure);
             counter += 1;
         }
-        
+
         Assert.Equal(1, counter);
         Assert.Equal(2, _sut.CoinsAmount);
     }
@@ -113,7 +113,7 @@ public class PlayerTests
         Assert.Empty(enemyAgents);
         Assert.Contains(oathman, enemyCooldownPile);
     }
-    
+
     [Fact]
     void CantDestroyAgentThatDoesntExist()
     {

@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute
 {

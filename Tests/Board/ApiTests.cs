@@ -21,7 +21,7 @@ public class ApiTests
         var conquest = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
         _boardManager.CurrentPlayer.CooldownPile.Add(conquest);
         _boardManager.CurrentPlayer.PowerAmount = 6;
-        
+
         possibleMoves = api.GetListOfPossibleMoves();
         Assert.Contains(new Move(CommandEnum.PATRON, (int)PatronId.PELIN), possibleMoves);
 

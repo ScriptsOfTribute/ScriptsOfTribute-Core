@@ -31,11 +31,12 @@ namespace TalesOfTribute
 
             return new Choice<Card>(agentsInCooldownPile,
                 choices =>
-            {
-                activator.CooldownPile.Remove(choices.First());
-                activator.DrawPile.Insert(0, choices.First());
-                return new Success();
-            });
+                {
+                    activator.CooldownPile.Remove(choices.First());
+                    activator.DrawPile.Insert(0, choices.First());
+                    return new Success();
+                },
+                new ChoiceContext(this));
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

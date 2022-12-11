@@ -11,6 +11,7 @@ public class TalesOfTributeGameTests
     private readonly Mock<ITalesOfTributeApi> _api = new();
     private readonly Mock<TalesOfTribute.AI.AI> _player1 = new();
     private readonly Mock<TalesOfTribute.AI.AI> _player2 = new();
+    private readonly Mock<Patron> _patron = new(); // empty value so we can pass with tests
 
     [Fact]
     void ShouldEndAfterAnInvalidMoveDuringStartOfTurnChoices()
@@ -18,7 +19,7 @@ public class TalesOfTributeGameTests
         var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
 
         var dummyChoice = new Choice<Card>(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.HLAALU_KINSMAN) },
-            _ => new Failure(""));
+            _ => new Failure(""), new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => dummyChoice);
 
@@ -60,7 +61,7 @@ public class TalesOfTributeGameTests
         var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
 
         var dummyChoice = new Choice<Card>(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.HLAALU_KINSMAN) },
-            _ => new Failure(""));
+            _ => new Failure(""), new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => dummyChoice);
 
@@ -88,7 +89,7 @@ public class TalesOfTributeGameTests
         var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
 
         var dummyChoice = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => new Failure(""));
+            _ => new Failure(""), new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => dummyChoice);
 
@@ -186,7 +187,7 @@ public class TalesOfTributeGameTests
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
         var dummyChoice = new Choice<Card>(new List<Card> { oathman },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => dummyChoice);
 
@@ -222,9 +223,9 @@ public class TalesOfTributeGameTests
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
         var effectChoice = new Choice<Card>(new List<Card> { oathman },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var cardChoice = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => effectChoice);
+            _ => effectChoice, new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => cardChoice);
 
@@ -261,9 +262,9 @@ public class TalesOfTributeGameTests
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
         var effectChoice = new Choice<Card>(new List<Card> { oathman },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var cardChoice = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => effectChoice);
+            _ => effectChoice, new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => cardChoice);
 
@@ -289,9 +290,9 @@ public class TalesOfTributeGameTests
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
         var effectChoice = new Choice<Card>(new List<Card> { oathman },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var cardChoice = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => effectChoice);
+            _ => effectChoice, new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => cardChoice);
 
@@ -328,9 +329,9 @@ public class TalesOfTributeGameTests
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
         var effectChoice = new Choice<Card>(new List<Card> { oathman },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var cardChoice = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => cardChoice);
         dummyExecutionChain.Add((_, _, _) => effectChoice);
@@ -369,9 +370,9 @@ public class TalesOfTributeGameTests
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
         var effectChoice = new Choice<Card>(new List<Card> { oathman },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var cardChoice = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
-            _ => new Success());
+            _ => new Success(), new ChoiceContext(_patron.Object));
         var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
         dummyExecutionChain.Add((_, _, _) => cardChoice);
         dummyExecutionChain.Add((_, _, _) => effectChoice);

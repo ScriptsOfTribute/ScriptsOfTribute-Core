@@ -170,7 +170,7 @@ public class PatronTests
         Assert.Equal(6, board.CurrentPlayer.PrestigeAmount);
         Assert.DoesNotContain(card1, board.CurrentPlayer.Hand);
         Assert.Equal(PlayerEnum.PLAYER1, board.GetPatronFavorism(PatronId.HLAALU));
-        
+
     }
 
     [Fact]

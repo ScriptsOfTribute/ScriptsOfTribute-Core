@@ -3,6 +3,7 @@
 public class CardDatabase
 {
     private List<Card> _allCards;
+    private List<Card> _allCardsInPlay;
     public List<Card> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
     public List<Card> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
 
@@ -10,11 +11,19 @@ public class CardDatabase
     {
         var cardsEnumerable = cards as Card[] ?? cards.ToArray();
         _allCards = cardsEnumerable.ToList();
+        _allCardsInPlay = new List<Card>();
     }
 
     public Card GetCard(CardId cardId)
     {
-        return _allCards.First(card => card.CommonId == cardId).CreateUniqueCopy();
+        Card card = _allCards.First(card => card.CommonId == cardId).CreateUniqueCopy();
+        _allCardsInPlay.Add(card);
+        return card;
+    }
+
+    public Card GetExistingCard(UniqueId id)
+    {
+        return _allCardsInPlay.First(card => card.UniqueId == id);
     }
 
     public List<Card> GetCardsByPatron(PatronId[] patrons)
