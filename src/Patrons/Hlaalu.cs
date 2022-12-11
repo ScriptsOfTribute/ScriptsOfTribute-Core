@@ -37,7 +37,7 @@
                     activator.PrestigeAmount += card.Cost - 1;
                     return new Success();
                 },
-                ChoiceContext.PATRON_ACTIVATION);
+                new ChoiceContext(this));
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

@@ -52,6 +52,7 @@
 
         public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
+            ChoiceContext? context;
             switch (Type)
             {
                 case EffectType.GAIN_POWER:
@@ -59,15 +60,18 @@
                     break;
 
                 case EffectType.ACQUIRE_TAVERN:
-                    return new Choice<Card>(tavern.GetAffordableCards(Amount),
-                        choiceList =>
-                        {
-                            var choice = choiceList.First();
-                            var card = tavern.Acquire(choice);
-                            player.HandleAcquireDuringExecutionChain(card, enemy, tavern);
-                            return new Success();
-                        },
-                        ChoiceContext.ACQUIRE_TAVERN);
+                    {
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.ACQUIRE_TAVERN) : null;
+                        return new Choice<Card>(tavern.GetAffordableCards(Amount),
+                            choiceList =>
+                            {
+                                var choice = choiceList.First();
+                                var card = tavern.Acquire(choice);
+                                player.HandleAcquireDuringExecutionChain(card, enemy, tavern);
+                                return new Success();
+                            },
+                            context);
+                    }
                 case EffectType.GAIN_COIN:
                     player.CoinsAmount += Amount;
                     break;
@@ -81,27 +85,33 @@
                         enemy.PrestigeAmount = 0;
                     break;
                 case EffectType.REPLACE_TAVERN:
-                    return new Choice<Card>(
-                        tavern.AvailableCards,
-                        choices =>
-                        {
-                            choices.ForEach(tavern.ReplaceCard);
-                            return new Success();
-                        },
-                        ChoiceContext.REPLACE_TAVERN,
-                        Amount
-                    );
+                    {
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.REPLACE_TAVERN) : null;
+                        return new Choice<Card>(
+                            tavern.AvailableCards,
+                            choices =>
+                            {
+                                choices.ForEach(tavern.ReplaceCard);
+                                return new Success();
+                            },
+                            context,
+                            Amount
+                        );
+                    }
                 case EffectType.DESTROY_CARD:
-                    return new Choice<Card>(
-                        player.Hand.Concat(player.AgentCards).ToList(),
-                        choices =>
-                        {
-                            choices.ForEach(player.Destroy);
-                            return new Success();
-                        },
-                        ChoiceContext.DESTROY_CARD,
-                        Amount
-                    );
+                    {
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.DESTROY_CARD) : null;
+                        return new Choice<Card>(
+                            player.Hand.Concat(player.AgentCards).ToList(),
+                            choices =>
+                            {
+                                choices.ForEach(player.Destroy);
+                                return new Success();
+                            },
+                            context,
+                            Amount
+                        );
+                    }
                 case EffectType.DRAW:
                     for (var i = 0; i < Amount; i++)
                         player.Draw();
@@ -112,6 +122,8 @@
 
                         var howManyToDiscard = Amount > enemy.Hand.Count ? enemy.Hand.Count : Amount;
 
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OPP_DISCARD) : null;
+
                         chain.Add((_, enemy, _) => new Choice<Card>(
                             enemy.Hand,
                             choices =>
@@ -119,7 +131,7 @@
                                 choices.ForEach(enemy.Discard);
                                 return new Success();
                             },
-                            ChoiceContext.OPP_DISCARD,
+                            context,
                             howManyToDiscard,
                             howManyToDiscard
                         ));
@@ -129,38 +141,47 @@
                         return new Success();
                     }
                 case EffectType.RETURN_TOP:
-                    return new Choice<Card>(
-                        player.CooldownPile,
-                        choices =>
-                        {
-                            choices.ForEach(player.Refresh);
-                            return new Success();
-                        },
-                        ChoiceContext.RETURN_TOP,
-                        Amount
-                    );
+                    {
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.RETURN_TOP) : null;
+                        return new Choice<Card>(
+                            player.CooldownPile,
+                            choices =>
+                            {
+                                choices.ForEach(player.Refresh);
+                                return new Success();
+                            },
+                            context,
+                            Amount
+                        );
+                    }
                 case EffectType.TOSS:
-                    return new Choice<Card>(
-                        player.DrawPile,
-                        choices =>
-                        {
-                            choices.ForEach(player.Toss);
-                            return new Success();
-                        },
-                        ChoiceContext.TOSS,
-                        Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
-                    );
+                    {
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.TOSS) : null;
+                        return new Choice<Card>(
+                            player.DrawPile,
+                            choices =>
+                            {
+                                choices.ForEach(player.Toss);
+                                return new Success();
+                            },
+                            context,
+                            Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
+                        );
+                    }
                 case EffectType.KNOCKOUT:
-                    return new Choice<Card>(
-                        enemy.AgentCards,
-                        choices =>
-                        {
-                            choices.ForEach(enemy.KnockOut);
-                            return new Success();
-                        },
-                        ChoiceContext.KNOCKOUT,
-                        Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
-                    );
+                    {
+                        context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.KNOCKOUT) : null;
+                        return new Choice<Card>(
+                            enemy.AgentCards,
+                            choices =>
+                            {
+                                choices.ForEach(enemy.KnockOut);
+                                return new Success();
+                            },
+                            context,
+                            Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
+                        );
+                    }
                 case EffectType.PATRON_CALL:
                     player.PatronCalls += (uint)Amount;
                     break;
@@ -275,6 +296,7 @@
 
         public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
+            var context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OR) : null;
             return new Choice<EffectType>(new List<EffectType> { _left.Type, _right.Type },
                 choice =>
                 {
@@ -285,7 +307,7 @@
 
                     return _right.Enact(player, enemy, tavern);
                 },
-                ChoiceContext.OR);
+                context);
         }
 
         public override string ToString()

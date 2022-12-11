@@ -1,17 +1,5 @@
 ﻿namespace TalesOfTribute;
 
-public enum ChoiceContext
-{
-    REPLACE_TAVERN,
-    ACQUIRE_TAVERN,
-    DESTROY_CARD,
-    OPP_DISCARD,
-    RETURN_TOP,
-    TOSS,
-    KNOCKOUT,
-    OR,
-    PATRON_ACTIVATION,
-}
 public interface ISimpleResult
 {
 }
@@ -50,9 +38,9 @@ public class Choice<T> : BaseChoice
     public delegate PlayResult ChoiceCallback(List<T> t);
 
     private readonly ChoiceCallback _callback;
-    public ChoiceContext Context { get; private set; }
+    public readonly ChoiceContext? Context;
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext context) : base()
+    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context) : base()
     {
         // Make sure choice of incorrect type is not created by mistake.
         if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
@@ -65,7 +53,7 @@ public class Choice<T> : BaseChoice
         Context = context;
     }
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback, context)
+    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {

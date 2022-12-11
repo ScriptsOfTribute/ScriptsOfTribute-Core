@@ -37,7 +37,7 @@
                     enemy.CooldownPile.Add(choices.First());
                     return new Success();
                 },
-                ChoiceContext.PATRON_ACTIVATION);
+                new ChoiceContext(this));
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

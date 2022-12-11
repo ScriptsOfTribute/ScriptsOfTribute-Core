@@ -36,7 +36,7 @@ namespace TalesOfTribute
                     activator.DrawPile.Insert(0, choices.First());
                     return new Success();
                 },
-                ChoiceContext.PATRON_ACTIVATION);
+                new ChoiceContext(this));
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)

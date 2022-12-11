@@ -12,7 +12,7 @@
         RED_EAGLE = 7,
         TREASURY = 8,
     }
-    public abstract class Patron
+    public abstract class Patron : Activable
     {
         /*
          * PatronActivation - used on activation, check if player can acitvate that and do action related to one-time activation
