@@ -31,6 +31,10 @@ public class ChoiceContext
 
     public ChoiceContext(UniqueId cardId, ChoiceType type)
     {
+        /*
+        Console.WriteLine("problematic card");
+        Console.WriteLine(cardId);
+        */
         Activator = GlobalCardDatabase.Instance.GetExistingCard(cardId);
         ChoiceType = type;
     }

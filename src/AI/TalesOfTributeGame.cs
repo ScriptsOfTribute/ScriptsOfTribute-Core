@@ -33,6 +33,12 @@ public class TalesOfTributeGame
             Move move;
             do
             {
+                /*
+                List<Card> t = _api.GetTavern();
+                foreach (Card c in t){
+                    Console.WriteLine((int)c.UniqueId);
+                }
+                */
                 move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
                 var result = HandleMove(move);
                 if (result is not null)

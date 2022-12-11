@@ -257,8 +257,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         
     public ExecutionChain BuyCard(int uniqueId)
     {
+        /*
         Card c = _boardManager.Tavern.GetCardByUniqueId(uniqueId);
         Console.WriteLine(c.Name);
+        */
         return _boardManager.BuyCard(_boardManager.Tavern.GetCardByUniqueId(uniqueId));
     }
 
@@ -273,8 +275,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         
     public ExecutionChain PlayCard(int uniqueId)
     {
+        /*
         Card c = _boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId);
         Console.WriteLine(c.Name);
+        */
         return PlayCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
     }
 

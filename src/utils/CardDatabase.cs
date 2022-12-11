@@ -31,6 +31,7 @@ public class CardDatabase
         var cardsFromDeck = from card in AllCardsWithoutUpgrades
                             where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
                             select card.CreateUniqueCopy();
+        _allCardsInPlay.AddRange(cardsFromDeck.ToList());
         return cardsFromDeck.ToList();
     }
 
