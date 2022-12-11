@@ -59,5 +59,17 @@
             AvailableCards.Remove(toReplace);
             AvailableCards.Add(newCard);
         }
+
+        public Card GetCardByUniqueId(int uniqueId)
+        {
+            try
+            {
+                return AvailableCards.First(card => (int)card.UniqueId == uniqueId);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new Exception("Tavern doesn't have card specified by unique id!");
+            }
+        }
     }
 }
