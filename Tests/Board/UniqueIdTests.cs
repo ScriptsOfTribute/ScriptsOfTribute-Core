@@ -9,8 +9,7 @@ public class UniqueIdTests
     {
         var id1 = UniqueId.Create();
         var id2 = UniqueId.Create();
-        Assert.Equal(10000, id1.Value);
-        Assert.Equal(10001, (int)id2);
+        Assert.Equal(id1.Value + 1, id2.Value);
     }
 
     [Fact]
@@ -40,5 +39,30 @@ public class UniqueIdTests
         Assert.False(empty1 == id2);
         Assert.True(empty1 != id1);
         Assert.True(empty1 != id2);
+    }
+
+    [Fact]
+    void ShouldGenerateAlreadyExistingUniqueIdCorrectly()
+    {
+        var id1 = UniqueId.Create();
+        var id2 = UniqueId.Create();
+
+        var id1Copy = UniqueId.FromExisting(id1.Value);
+        var id2Copy = UniqueId.FromExisting(id2.Value);
+        
+        Assert.Equal(id1, id1Copy);
+        Assert.Equal(id2, id2Copy);
+    }
+    
+    [Fact]
+    void ShouldThrowWhenTryingToCreateNewNotPreviouslyGeneratedId()
+    {
+        var id1 = UniqueId.Create();
+
+        var id1Copy = UniqueId.FromExisting(id1.Value);
+        
+        Assert.Equal(id1, id1Copy);
+
+        Assert.Throws<ArgumentException>(() => UniqueId.FromExisting(12345678));
     }
 }

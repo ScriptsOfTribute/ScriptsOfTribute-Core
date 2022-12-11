@@ -2,9 +2,10 @@
 
 public class UniqueId
 {
+    private const int InitialValue = 10000;
     public int Value { get; }
 
-    private static int _counter = 10000;
+    private static int _counter = InitialValue;
 
     private UniqueId(int value)
     {
@@ -31,5 +32,30 @@ public class UniqueId
     public static bool operator !=(UniqueId? left, UniqueId? right)
     {
         return !(left == right);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is not UniqueId id)
+        {
+            return false;
+        }
+
+        return this == id;
+    }
+
+    public override int GetHashCode()
+    {
+        return Value;
+    }
+
+    public static UniqueId FromExisting(int id)
+    {
+        if (id < InitialValue || id >= _counter)
+        {
+            throw new ArgumentException("Card with this ID hasn't been generated yet.");
+        }
+
+        return new UniqueId(id);
     }
 }
