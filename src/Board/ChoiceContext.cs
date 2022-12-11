@@ -17,20 +17,21 @@ public abstract class Activable
 {
 
 }
+
 public class ChoiceContext
 {
-    public readonly Activable activator;
-    public readonly ChoiceType choiceType;
+    public readonly Activable Activator;
+    public readonly ChoiceType ChoiceType;
 
     public ChoiceContext(Patron patron)
     {
-        activator = patron;
-        choiceType = ChoiceType.PATRON_ACTIVATION;
+        Activator = patron;
+        ChoiceType = ChoiceType.PATRON_ACTIVATION;
     }
 
-    public ChoiceContext(UniqueId cardID, ChoiceType type)
+    public ChoiceContext(UniqueId cardId, ChoiceType type)
     {
-        activator = GlobalCardDatabase.Instance.GetExistingCard(cardID);
-        choiceType = type;
+        Activator = GlobalCardDatabase.Instance.GetExistingCard(cardId);
+        ChoiceType = type;
     }
 }
