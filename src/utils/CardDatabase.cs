@@ -3,7 +3,7 @@
 public class CardDatabase
 {
     private List<Card> _allCards;
-    public List<Card> _allCardsInPlay;
+    private List<Card> _allCardsInPlay;
     public List<Card> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
     public List<Card> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
 
