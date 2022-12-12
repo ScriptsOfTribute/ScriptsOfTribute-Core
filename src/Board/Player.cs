@@ -24,7 +24,7 @@
         public uint ForcedDiscard;
         public uint PatronCalls { get; set; }
         public long ShuffleSeed;
-        private ExecutionChain? _pendingExecutionChain;
+        public ExecutionChain? PendingExecutionChain { get; private set; }
 
         private ComboContext _comboContext = new ComboContext();
         private Random _rnd = new Random();
@@ -83,8 +83,8 @@
 
             if (!replacePendingExecutionChain) return result;
 
-            _pendingExecutionChain = result;
-            _pendingExecutionChain.AddCompleteCallback(() => _pendingExecutionChain = null);
+            PendingExecutionChain = result;
+            PendingExecutionChain.AddCompleteCallback(() => PendingExecutionChain = null);
 
             return result;
         }
@@ -92,12 +92,12 @@
         public void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern)
         {
             var result = AcquireCard(card, other, tavern, false);
-            if (_pendingExecutionChain == null)
+            if (PendingExecutionChain == null)
             {
                 throw new Exception("This shouldn't happen - there is a bug in the app!");
             }
 
-            _pendingExecutionChain.MergeWith(result);
+            PendingExecutionChain.MergeWith(result);
         }
 
         public void InitDrawPile(List<Card> starterCards)

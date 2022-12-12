@@ -1,6 +1,6 @@
 ﻿namespace TalesOfTribute;
 
-public class Agent : Activable
+public class Agent : IChoiceSource
 {
     public int CurrentHp { get; private set; }
     public Card RepresentingCard { get; }

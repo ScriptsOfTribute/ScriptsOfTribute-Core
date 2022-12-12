@@ -162,7 +162,7 @@ namespace TalesOfTribute
 
         public SerializedBoard SerializeBoard()
         {
-            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons);
+            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, State);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)

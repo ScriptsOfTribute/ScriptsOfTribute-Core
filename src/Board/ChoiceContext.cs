@@ -13,25 +13,25 @@ public enum ChoiceType
     PATRON_ACTIVATION,
 }
 
-public abstract class Activable
+public interface IChoiceSource
 {
 
 }
 
 public class ChoiceContext
 {
-    public readonly Activable Activator;
+    public readonly IChoiceSource Source;
     public readonly ChoiceType ChoiceType;
 
     public ChoiceContext(Patron patron)
     {
-        Activator = patron;
+        Source = patron;
         ChoiceType = ChoiceType.PATRON_ACTIVATION;
     }
 
     public ChoiceContext(UniqueId cardId, ChoiceType type)
     {
-        Activator = GlobalCardDatabase.Instance.GetExistingCard(cardId);
+        Source = GlobalCardDatabase.Instance.GetExistingCard(cardId);
         ChoiceType = type;
     }
 }

@@ -15,18 +15,18 @@ public class ApiTests
         TalesOfTributeApi api = new TalesOfTributeApi(_boardManager);
 
         List<Move> possibleMoves = api.GetListOfPossibleMoves();
-        Assert.Contains(new Move(CommandEnum.END_TURN), possibleMoves);
-        Assert.DoesNotContain(new Move(CommandEnum.PATRON, (int)PatronId.PELIN), possibleMoves);
+        Assert.Contains(Move.EndTurn(), possibleMoves);
+        Assert.DoesNotContain(Move.CallPatron(PatronId.PELIN), possibleMoves);
 
         var conquest = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
         _boardManager.CurrentPlayer.CooldownPile.Add(conquest);
         _boardManager.CurrentPlayer.PowerAmount = 6;
 
         possibleMoves = api.GetListOfPossibleMoves();
-        Assert.Contains(new Move(CommandEnum.PATRON, (int)PatronId.PELIN), possibleMoves);
+        Assert.Contains(Move.CallPatron(PatronId.PELIN), possibleMoves);
 
         _boardManager.CurrentPlayer.PowerAmount = 1;
         possibleMoves = api.GetListOfPossibleMoves();
-        Assert.DoesNotContain(new Move(CommandEnum.PATRON, (int)PatronId.PELIN), possibleMoves);
+        Assert.DoesNotContain(Move.CallPatron(PatronId.PELIN), possibleMoves);
     }
 }

@@ -13,6 +13,8 @@ public interface IPlayer
     List<Agent> Agents { get; set; }
     List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
+    ExecutionChain? PendingExecutionChain { get; }
+
     ExecutionChain? StartOfTurnEffectsChain { get; }
     ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
     void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern);
