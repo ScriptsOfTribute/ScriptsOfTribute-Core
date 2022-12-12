@@ -3,7 +3,7 @@
 public class CardDatabase
 {
     private List<Card> _allCards;
-    private List<Card> _allCardsInPlay;
+    public List<Card> _allCardsInPlay;
     public List<Card> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
     public List<Card> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
 
@@ -28,10 +28,13 @@ public class CardDatabase
 
     public List<Card> GetCardsByPatron(PatronId[] patrons)
     {
-        var cardsFromDeck = from card in AllCardsWithoutUpgrades
-                            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
-                            select card.CreateUniqueCopy();
-        return cardsFromDeck.ToList();
+        List<Card> cardsFromDeck = (
+            from card in AllCardsWithoutUpgrades
+            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
+            select card.CreateUniqueCopy()
+        ).ToList();
+        _allCardsInPlay.AddRange(cardsFromDeck);
+        return cardsFromDeck;
     }
 
     // TODO: Add ability for user to configure which card he wants to keep.
