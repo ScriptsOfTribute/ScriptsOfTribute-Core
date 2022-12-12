@@ -106,7 +106,7 @@ public class TalesOfTributeGame
         }
 
         // This should probably be handled above (this move is not in legal moves), but you can never be to careful...
-        if (move is BaseMakeChoiceMove)
+        if (move.Command == CommandEnum.MAKE_CHOICE)
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "You don't have a pending choice.");
         }
@@ -116,21 +116,27 @@ public class TalesOfTributeGame
             CommandEnum.PLAY_CARD => HandlePlayCard(move as SimpleCardMove),
             CommandEnum.ATTACK => HandleAttack(move as SimpleCardMove),
             CommandEnum.BUY_CARD => HandleBuyCard(move as SimpleCardMove),
-            CommandEnum.END_TURN => null,
             CommandEnum.CALL_PATRON => HandleCallPatron(move as SimplePatronMove),
+            CommandEnum.ACTIVATE_AGENT => HandleActivateAgent(move as SimpleCardMove),
+            CommandEnum.END_TURN => null,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private EndGameState? HandlePlayCard(SimpleCardMove move)
-    {
-        var chain = _api.PlayCard(move.Card);
+    private EndGameState? HandleActivateAgent(SimpleCardMove move)
+        => ConsumeChain(_api.ActivateAgent(move.Card));
 
-        return chain
+    private EndGameState? HandlePlayCard(SimpleCardMove move)
+        => ConsumeChain(_api.PlayCard(move.Card));
+
+    private EndGameState? HandleBuyCard(SimpleCardMove move)
+        => ConsumeChain(_api.BuyCard(move.Card));
+
+    private EndGameState? ConsumeChain(ExecutionChain chain)
+        => chain
             .Consume()
             .Select(HandleTopLevelResult)
             .FirstOrDefault(endGameState => endGameState is not null);
-    }
 
     private EndGameState? HandleAttack(SimpleCardMove move)
     {
@@ -140,16 +146,6 @@ public class TalesOfTributeGame
         }
 
         return null;
-    }
-
-    private EndGameState? HandleBuyCard(SimpleCardMove move)
-    {
-        var chain = _api.BuyCard(move.Card);
-
-        return chain
-            .Consume()
-            .Select(HandleTopLevelResult)
-            .FirstOrDefault(endGameState => endGameState is not null);
     }
 
     private EndGameState? HandleCallPatron(SimplePatronMove move)

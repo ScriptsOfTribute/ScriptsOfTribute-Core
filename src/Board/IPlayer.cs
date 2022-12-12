@@ -13,8 +13,6 @@ public interface IPlayer
     List<Agent> Agents { get; set; }
     List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
-    ExecutionChain? PendingExecutionChain { get; }
-
     ExecutionChain? StartOfTurnEffectsChain { get; }
     ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
     void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern);
@@ -34,4 +32,5 @@ public interface IPlayer
     ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
     ISimpleResult AttackAgent(Card agent, IPlayer enemy);
     Card GetCardByUniqueId(int uniqueId);
+    BaseChoice? GetPendingChoice(BoardState state);
 }

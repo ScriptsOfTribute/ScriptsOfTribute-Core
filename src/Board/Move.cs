@@ -2,12 +2,13 @@ namespace TalesOfTribute
 {
     public enum CommandEnum
     {
-        PLAY_CARD = 0,
-        ATTACK = 1,
-        BUY_CARD = 2,
-        END_TURN = 3,
-        CALL_PATRON = 4,
-        MAKE_CHOICE = 5,
+        PLAY_CARD,
+        ACTIVATE_AGENT,
+        ATTACK,
+        BUY_CARD,
+        CALL_PATRON,
+        MAKE_CHOICE,
+        END_TURN ,
     }
 
     public class Move
@@ -22,6 +23,11 @@ namespace TalesOfTribute
         public static Move PlayCard(Card card)
         {
             return new SimpleCardMove(CommandEnum.PLAY_CARD, card);
+        }
+        
+        public static Move ActivateAgent(Card card)
+        {
+            return new SimpleCardMove(CommandEnum.ACTIVATE_AGENT, card);
         }
         
         public static Move Attack(Card card)

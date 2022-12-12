@@ -19,6 +19,7 @@ namespace TalesOfTribute
 
         public Player CurrentPlayer => _players[(int)CurrentPlayerId];
         public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
+        public BaseChoice? PendingChoice => CurrentPlayer.GetPendingChoice(State);
 
         public BoardState State { get; set; } = BoardState.NORMAL;
         private int PrestigeTreshold = 40;
@@ -159,10 +160,10 @@ namespace TalesOfTribute
 
             DrawCards();
         }
-
+        
         public SerializedBoard SerializeBoard()
         {
-            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, State);
+            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, State, PendingChoice);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)

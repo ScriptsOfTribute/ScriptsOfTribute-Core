@@ -279,7 +279,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public List<Move> GetListOfPossibleMoves()
     {
-        switch (_boardManager.CurrentPlayer.PendingExecutionChain?.PendingChoice)
+        switch (_boardManager.PendingChoice)
         {
             case Choice<Card> cardChoice:
             {
@@ -303,48 +303,27 @@ public class TalesOfTributeApi : ITalesOfTributeApi
             }
         }
 
-        List<Move> possibleMoves = new List<Move>();
-        Player currentPlayer = _boardManager.CurrentPlayer;
-        Player enemyPlayer = _boardManager.EnemyPlayer;
-
-        foreach (Card card in currentPlayer.Hand)
-        {
-            possibleMoves.Add(Move.PlayCard(card));
-        }
-
-        // TODO: Shouldn't there be 'activate agent' command?
-        foreach (Agent agent in currentPlayer.Agents)
-        {
-            if (!agent.Activated)
-            {
-                possibleMoves.Add(Move.PlayCard(agent.RepresentingCard));
-            }
-        }
+        var currentPlayer = _boardManager.CurrentPlayer;
+        var enemyPlayer = _boardManager.EnemyPlayer;
+        var possibleMoves = currentPlayer
+            .Hand
+            .Select(Move.PlayCard)
+            .Concat(from agent in currentPlayer.Agents
+                where !agent.Activated
+                select Move.ActivateAgent(agent.RepresentingCard))
+            .ToList();
 
         var tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
         if (currentPlayer.PowerAmount > 0)
         {
-            if (tauntAgents.Any())
-            {
-                foreach (Agent agent in tauntAgents)
-                {
-                    possibleMoves.Add(Move.Attack(agent.RepresentingCard));
-                }
-            }
-            else
-            {
-                foreach (Agent agent in enemyPlayer.Agents)
-                {
-                    possibleMoves.Add(Move.Attack(agent.RepresentingCard));
-                }
-            }
+            possibleMoves.AddRange(tauntAgents.Any()
+                ? tauntAgents.Select(agent => Move.Attack(agent.RepresentingCard))
+                : enemyPlayer.Agents.Select(agent => Move.Attack(agent.RepresentingCard)));
         }
+
         if (currentPlayer.CoinsAmount > 0)
         {
-            foreach (Card card in _boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount))
-            {
-                possibleMoves.Add(Move.BuyCard(card));
-            }
+            possibleMoves.AddRange(_boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount).Select(Move.BuyCard));
         }
             
         // TODO: Check why this is unused.
@@ -380,7 +359,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     }
 
     /// <summary>
-    /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
+    /// Returns state of game after it had ended, including information like who won and in what way.
+    /// If game is still going it returns null.
     /// </summary>
     public EndGameState? CheckWinner()
     {

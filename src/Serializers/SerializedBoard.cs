@@ -19,7 +19,7 @@ namespace TalesOfTribute
 
         public SerializedBoard(
             IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state
+            BoardState state, BaseChoice? maybeChoice
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
@@ -27,7 +27,6 @@ namespace TalesOfTribute
             TavernCards = tavern.AvailableCards.ToList();
             PatronStates = new PatronStates(patrons.ToList());
             BoardState = state;
-            var maybeChoice = currentPlayer.PendingExecutionChain?.PendingChoice;
             PendingChoice = maybeChoice switch
             {
                 Choice<Card> cardChoice => SerializedChoice<Card>.FromChoice(cardChoice),

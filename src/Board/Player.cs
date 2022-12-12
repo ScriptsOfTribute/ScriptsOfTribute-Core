@@ -24,7 +24,7 @@
         public uint ForcedDiscard;
         public uint PatronCalls { get; set; }
         public long ShuffleSeed;
-        public ExecutionChain? PendingExecutionChain { get; private set; }
+        private ExecutionChain? _pendingExecutionChain;
 
         private ComboContext _comboContext = new ComboContext();
         private Random _rnd = new Random();
@@ -83,8 +83,8 @@
 
             if (!replacePendingExecutionChain) return result;
 
-            PendingExecutionChain = result;
-            PendingExecutionChain.AddCompleteCallback(() => PendingExecutionChain = null);
+            _pendingExecutionChain = result;
+            _pendingExecutionChain.AddCompleteCallback(() => _pendingExecutionChain = null);
 
             return result;
         }
@@ -92,12 +92,12 @@
         public void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern)
         {
             var result = AcquireCard(card, other, tavern, false);
-            if (PendingExecutionChain == null)
+            if (_pendingExecutionChain == null)
             {
                 throw new Exception("This shouldn't happen - there is a bug in the app!");
             }
 
-            PendingExecutionChain.MergeWith(result);
+            _pendingExecutionChain.MergeWith(result);
         }
 
         public void InitDrawPile(List<Card> starterCards)
@@ -296,6 +296,17 @@
             {
                 throw new Exception("Player doesn't have card specified by unique id!");
             }
+        }
+
+        public BaseChoice? GetPendingChoice(BoardState state)
+        {
+            return state switch
+            {
+                BoardState.NORMAL => null,
+                BoardState.CHOICE_PENDING => _pendingExecutionChain?.PendingChoice,
+                BoardState.START_OF_TURN_CHOICE_PENDING => StartOfTurnEffectsChain?.PendingChoice,
+                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+            };
         }
     }
 }
