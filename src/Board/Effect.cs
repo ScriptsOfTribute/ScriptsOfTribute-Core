@@ -120,7 +120,7 @@
                     {
                         var chain = new ExecutionChain(player, enemy, tavern);
 
-                        var howManyToDiscard = Amount > enemy.Hand.Count ? enemy.Hand.Count : Amount;
+                        var howManyToDiscard = Amount > 5 ? 5 : Amount;
 
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OPP_DISCARD) : null;
 
@@ -175,7 +175,11 @@
                             enemy.AgentCards,
                             choices =>
                             {
-                                choices.ForEach(enemy.KnockOut);
+                                var contractAgents = choices.FindAll(card => card.Type == CardType.CONTRACT_AGENT);
+                                var normalAgents = choices.FindAll(card => card.Type == CardType.AGENT);
+                                contractAgents.ForEach(enemy.Destroy);
+                                tavern.Cards.AddRange(contractAgents);
+                                normalAgents.ForEach(enemy.KnockOut);
                                 return new Success();
                             },
                             context,

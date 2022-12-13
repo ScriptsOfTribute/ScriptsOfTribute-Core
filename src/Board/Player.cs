@@ -115,12 +115,13 @@
         {
             AssertCardIn(card, Hand);
             Hand.Remove(card);
+            CooldownPile.Add(card);
         }
 
         public void Refresh(Card card)
         {
             AssertCardIn(card, CooldownPile);
-            DrawPile.Add(card);
+            DrawPile.Insert(0, card);
             CooldownPile.Remove(card);
         }
 
@@ -158,10 +159,16 @@
             switch (card.Type)
             {
                 case CardType.CONTRACT_AGENT:
-                    var agent = Agent.FromCard(card);
-                    agent.MarkActivated();
-                    Agents.Add(agent);
-                    break;
+                    {
+                        var agent = Agent.FromCard(card);
+                        agent.MarkActivated();
+                        Agents.Add(agent);
+                        var result = PlayCardWithoutChecks(
+                                card, enemy, tavern, replacePendingExecutionChain
+                            );
+                        result.AddCompleteCallback(() => tavern.Cards.Add(card));
+                        return result;
+                    }
                 case CardType.CONTRACT_ACTION:
                     {
                         var result = PlayCardWithoutChecks(
@@ -258,7 +265,7 @@
             return ExecutionChain.Failed("Picked agent has been already activated in your turn", this, enemy, tavern);
         }
 
-        public ISimpleResult AttackAgent(Card card, IPlayer enemy)
+        public ISimpleResult AttackAgent(Card card, IPlayer enemy, ITavern tavern)
         {
             if (!enemy.AgentCards.Contains(card))
             {
@@ -272,7 +279,10 @@
             if (agent.CurrentHp <= 0)
             {
                 enemy.Agents.Remove(agent);
-                enemy.CooldownPile.Add(agent.RepresentingCard);
+                if (agent.RepresentingCard.Type == CardType.AGENT)
+                    enemy.CooldownPile.Add(agent.RepresentingCard);
+                else if (agent.RepresentingCard.Type == CardType.CONTRACT_AGENT)
+                    tavern.Cards.Add(card);
             }
 
             return new Success();

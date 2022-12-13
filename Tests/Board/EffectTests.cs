@@ -195,26 +195,6 @@ public class EffectTests
     }
 
     [Fact]
-    void TestOppDiscardWithEmptyHand()
-    {
-        var effect = new Effect(EffectType.OPP_DISCARD, 1);
-        ExecutionChain? executionChainSet = null;
-        _player2.Setup(p => p.Hand).Returns(new List<Card>());
-        _player2.Setup(p => p.AddStartOfTurnEffects(It.IsAny<ExecutionChain>()))
-            .Callback<ExecutionChain>(e => executionChainSet = e);
-        var basicResult = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
-        Assert.True(basicResult is Success);
-
-        Assert.NotNull(executionChainSet);
-        var result = executionChainSet.Consume().First();
-        Assert.True(result is Choice<Card>);
-        var choice = result as Choice<Card>;
-        Assert.Equal(0, choice.MaxChoiceAmount);
-        Assert.Equal(0, choice.MinChoiceAmount);
-        Assert.Empty(choice.PossibleChoices);
-    }
-
-    [Fact]
     void TestOppDiscard()
     {
         var effect = new Effect(EffectType.OPP_DISCARD, 1);
