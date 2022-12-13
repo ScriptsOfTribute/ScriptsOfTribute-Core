@@ -32,4 +32,5 @@ public interface IPlayer
     ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
     ISimpleResult AttackAgent(Card agent, IPlayer enemy);
     Card GetCardByUniqueId(int uniqueId);
+    BaseChoice? GetPendingChoice(BoardState state);
 }

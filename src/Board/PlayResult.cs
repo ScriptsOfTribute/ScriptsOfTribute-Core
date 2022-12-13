@@ -43,7 +43,7 @@ public class Choice<T> : BaseChoice
     public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context) : base()
     {
         // Make sure choice of incorrect type is not created by mistake.
-        if (typeof(T) != typeof(CardId) && typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
+        if (typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
         {
             throw new Exception("Choice can only be made for cards or effects!");
         }

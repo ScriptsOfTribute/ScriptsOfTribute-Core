@@ -2,7 +2,6 @@
 using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
 
 namespace Tests.AI;
 
@@ -27,15 +26,33 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.HandleStartOfTurnChoices()).Returns(dummyExecutionChain);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
 
-        _player1.Setup(player => player.HandleStartOfTurnChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) });
+        _player1.Setup(player => player.Play(
+            It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
+        ).Returns(Move.MakeChoice(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) }));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
+    [Fact]
+    void ShouldEndWhenTryingToMakeChoiceWhenThereIsNothingToChoose()
+    {
+        var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
+
+        _api.Setup(api => api.CheckWinner()).Returns<EndGameState?>(null);
+        _api.Setup(api => api.HandleStartOfTurnChoices()).Returns<ExecutionChain?>(null);
+        _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
+
+        _player1.Setup(player => player.Play(
+            It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
+        ).Returns(Move.MakeChoice(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) }));
+
+        var result = sut.Play();
+        Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
+        Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
+    }
+
     [Fact]
     void ShouldEndAfterAnInvalidMove()
     {
@@ -48,13 +65,13 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(false);
 
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PATRON, 3));
+            .Returns(Move.CallPatron(PatronId.ANSEI));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
     [Fact]
     void ShouldEndAfterAnInvalidCardChoice()
     {
@@ -70,19 +87,17 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3));
-        _player1.Setup(player => player.HandleCardChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) });
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) }));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
     [Fact]
     void ShouldEndAfterAnInvalidEffectChoice()
     {
@@ -98,19 +113,17 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3));
-        _player1.Setup(player => player.HandleEffectChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
-        ).Returns(new List<EffectType> { EffectType.HEAL });
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
     [Fact]
     void ShouldEndAfterAnInvalidAttackTargetChoice()
     {
@@ -121,16 +134,16 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.AttackAgent(It.IsAny<int>())).Returns(new Failure(""));
+        _api.Setup(api => api.AttackAgent(It.IsAny<Card>())).Returns(new Failure(""));
 
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.ATTACK, 3));
+            .Returns(Move.Attack(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
     [Fact]
     void ShouldEndAfterAnInvalidBuyCardChoice()
     {
@@ -144,16 +157,39 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.BuyCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.BuyCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.BUY_CARD, 3));
+            .Returns(Move.BuyCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
+    [Fact]
+    void ShouldEndAfterAnInvalidActivateAgentChoice()
+    {
+        var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
+        
+        var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
+        dummyExecutionChain.Add((_, _, _) => new Failure(""));
+
+        _api.Setup(api => api.CheckWinner()).Returns<EndGameState?>(null);
+        _api.Setup(api => api.HandleStartOfTurnChoices()).Returns<ExecutionChain?>(null);
+        _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
+        _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
+        _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
+        _api.Setup(api => api.ActivateAgent(It.IsAny<Card>())).Returns(dummyExecutionChain);
+
+        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(Move.ActivateAgent(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)));
+
+        var result = sut.Play();
+        Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
+        Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
+    }
+
     [Fact]
     void ShouldEndAfterAnInvalidChoiceAfterBuyCard()
     {
@@ -167,13 +203,11 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.BuyCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.BuyCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
-        _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.BUY_CARD, 3));
-        _player1.Setup(player => player.HandleEffectChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
-        ).Returns(new List<EffectType> { EffectType.HEAL });
+        _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
+            .Returns(Move.BuyCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -186,36 +220,36 @@ public class TalesOfTributeGameTests
         var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
         var oathman = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
 
-        var dummyChoice = new Choice<Card>(new List<Card> { oathman },
+        var dummyChoice1 = new Choice<Card>(new List<Card> { oathman },
             _ => new Success(), new ChoiceContext(_patron.Object));
-        var dummyExecutionChain = new ExecutionChain(null!, null!, null!);
-        dummyExecutionChain.Add((_, _, _) => dummyChoice);
+        var dummyExecutionChain1 = new ExecutionChain(null!, null!, null!);
+        dummyExecutionChain1.Add((_, _, _) => dummyChoice1);
+        var dummyChoice2 = new Choice<Card>(new List<Card> { oathman },
+            _ => new Success(), new ChoiceContext(_patron.Object));
+        var dummyExecutionChain2 = new ExecutionChain(null!, null!, null!);
+        dummyExecutionChain2.Add((_, _, _) => dummyChoice2);
 
         EndGameState? nullEndGameState = null;
         _api.SetupSequence(api => api.CheckWinner())
             .Returns(nullEndGameState)
             .Returns(new EndGameState(PlayerEnum.PLAYER1, GameEndReason.PATRON_FAVOR));
-        _api.Setup(api => api.HandleStartOfTurnChoices()).Returns(dummyExecutionChain);
+        _api.Setup(api => api.HandleStartOfTurnChoices()).Returns(dummyExecutionChain1);
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain2);
 
         _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3))
-            .Returns(new Move(CommandEnum.END_TURN, 3));
-        _player1.Setup(player => player.HandleStartOfTurnChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
-        _player1.Setup(player => player.HandleCardChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
+            .Returns(Move.MakeChoice(new List<Card> { oathman }))
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<Card> { oathman }))
+            .Returns(Move.EndTurn);
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
         Assert.Equal(GameEndReason.PATRON_FAVOR, result.Reason);
     }
-    
+
     [Fact]
     void ShouldPassSingleComplexFlowWithChoiceReturningChoice()
     {
@@ -237,24 +271,19 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
         _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3))
-            .Returns(new Move(CommandEnum.END_TURN, 3));
-        _player1.Setup(player => player.HandleCardChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
-        _player1.Setup(player => player.HandleEffectChoice(
-                It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
-        )
-        .Returns(new List<EffectType> { EffectType.DRAW });
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<EffectType> { EffectType.DRAW }))
+            .Returns(Move.MakeChoice(new List<Card> { oathman }))
+            .Returns(Move.EndTurn());
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
         Assert.Equal(GameEndReason.PATRON_FAVOR, result.Reason);
     }
-    
+
     [Fact]
     void ChoiceReturningChoiceShouldFailStartOfTurnHandler()
     {
@@ -276,13 +305,13 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
 
-        _player1.Setup(player => player.HandleStartOfTurnChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
+        _player1.Setup(player => player.Play(
+            It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
+        ).Returns(Move.MakeChoice(new List<Card> { oathman }));
 
         Assert.Throws<Exception>(() => sut.Play());
     }
-    
+
     [Fact]
     void ShouldFailSingleComplexFlowWithChoiceReturningChoiceIfSecondChoiceFails()
     {
@@ -304,24 +333,22 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
         _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3))
-            .Returns(new Move(CommandEnum.END_TURN, 3));
-        _player1.Setup(player => player.HandleCardChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
-        _player1.Setup(player => player.HandleEffectChoice(
-                It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
-        )
-        .Returns(new List<EffectType> { EffectType.HEAL });
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.EndTurn());
+        _player1.SetupSequence(player => player.Play(
+                It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
+            )
+            .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }))
+            .Returns(Move.MakeChoice(new List<Card> { oathman }));
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
         Assert.Equal(GameEndReason.INCORRECT_MOVE, result.Reason);
     }
-    
+
     [Fact]
     void ShouldPassSingleComplexFlowWithChoiceChainAndSuccess()
     {
@@ -345,25 +372,20 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
         _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3))
-            .Returns(new Move(CommandEnum.END_TURN, 3));
-        _player1.Setup(player => player.HandleCardChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
-        _player1.Setup(player => player.HandleEffectChoice(
-                It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
-        )
-        .Returns(new List<EffectType> { EffectType.DRAW });
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<EffectType> { EffectType.DRAW }))
+            .Returns(Move.MakeChoice(new List<Card> { oathman }))
+            .Returns(Move.EndTurn);
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
         Assert.Equal(GameEndReason.PATRON_FAVOR, result.Reason);
     }
-    
-        [Fact]
+
+    [Fact]
     void ShouldFailSingleComplexFlowWithChoiceChainWhereSecondChoiceFails()
     {
         var sut = new TalesOfTributeGame(new []{ _player1.Object, _player2.Object }, _api.Object);
@@ -386,18 +408,13 @@ public class TalesOfTributeGameTests
         _api.Setup(api => api.GetSerializer()).Returns<SerializedBoard>(null!);
         _api.Setup(api => api.EnemyPlayerId).Returns(PlayerEnum.PLAYER2);
         _api.Setup(api => api.IsMoveLegal(It.IsAny<Move>())).Returns(true);
-        _api.Setup(api => api.PlayCard(It.IsAny<int>())).Returns(dummyExecutionChain);
+        _api.Setup(api => api.PlayCard(It.IsAny<Card>())).Returns(dummyExecutionChain);
 
         _player1.SetupSequence(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
-            .Returns(new Move(CommandEnum.PLAY_CARD, 3))
-            .Returns(new Move(CommandEnum.END_TURN, 3));
-        _player1.Setup(player => player.HandleCardChoice(
-            It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<Card>>())
-        ).Returns(new List<Card> { oathman });
-        _player1.Setup(player => player.HandleEffectChoice(
-                It.IsAny<SerializedBoard>(), It.IsAny<SerializedChoice<EffectType>>())
-        )
-        .Returns(new List<EffectType> { EffectType.HEAL });
+            .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
+            .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }))
+            .Returns(Move.MakeChoice(new List<Card> { oathman }))
+            .Returns(Move.EndTurn());
 
         var result = sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);

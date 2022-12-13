@@ -1,6 +1,6 @@
 ﻿namespace TalesOfTribute;
 
-public class UniqueId
+public readonly struct UniqueId
 {
     private const int InitialValue = 10000;
     public int Value { get; }
@@ -23,30 +23,12 @@ public class UniqueId
 
     public static bool operator ==(UniqueId? left, UniqueId? right)
     {
-        if (left is null) return right is null;
-        if (right is null) return false;
-
-        return left.Value == right.Value;
+        return left?.Value == right?.Value;
     }
 
     public static bool operator !=(UniqueId? left, UniqueId? right)
     {
         return !(left == right);
-    }
-
-    public override bool Equals(object obj)
-    {
-        if (obj is not UniqueId id)
-        {
-            return false;
-        }
-
-        return this == id;
-    }
-
-    public override int GetHashCode()
-    {
-        return Value;
     }
 
     public static UniqueId FromExisting(int id)

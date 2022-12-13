@@ -6,7 +6,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 {
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
-
+    public BoardState BoardState => _boardManager.State;
+    
     private readonly BoardManager _boardManager;
 
     // Constructors
@@ -278,63 +279,65 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public List<Move> GetListOfPossibleMoves()
     {
-        List<Move> possibleMoves = new List<Move>();
-        Player currentPlayer = _boardManager.CurrentPlayer;
-        Player enemyPlayer = _boardManager.EnemyPlayer;
-
-        foreach (Card card in currentPlayer.Hand)
+        switch (_boardManager.PendingChoice)
         {
-            possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)card.UniqueId));
+            case Choice<Card> cardChoice:
+            {
+                var result = new List<Move>();
+                for (var i = cardChoice.MinChoiceAmount; i <= cardChoice.MaxChoiceAmount; i++)
+                {
+                    result.AddRange(cardChoice.PossibleChoices.GetCombinations(i).Select(Move.MakeChoice));
+                }
+
+                return result;
+            }
+            case Choice<EffectType> effectChoice:
+            {
+                var result = new List<Move>();
+                for (var i = effectChoice.MinChoiceAmount; i <= effectChoice.MaxChoiceAmount; i++)
+                {
+                    result.AddRange(effectChoice.PossibleChoices.GetCombinations(i).Select(Move.MakeChoice));
+                }
+
+                return result;
+            }
         }
 
-        foreach (Agent agent in currentPlayer.Agents)
+        var currentPlayer = _boardManager.CurrentPlayer;
+        var enemyPlayer = _boardManager.EnemyPlayer;
+        var possibleMoves = currentPlayer
+            .Hand
+            .Select(Move.PlayCard)
+            .Concat(from agent in currentPlayer.Agents
+                where !agent.Activated
+                select Move.ActivateAgent(agent.RepresentingCard))
+            .ToList();
+
+        var tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
+        if (currentPlayer.PowerAmount > 0)
         {
-            if (!agent.Activated)
+            possibleMoves.AddRange(tauntAgents.Any()
+                ? tauntAgents.Select(agent => Move.Attack(agent.RepresentingCard))
+                : enemyPlayer.Agents.Select(agent => Move.Attack(agent.RepresentingCard)));
+        }
+
+        if (currentPlayer.CoinsAmount > 0)
+        {
+            possibleMoves.AddRange(_boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount).Select(Move.BuyCard));
+        }
+
+        if (currentPlayer.PatronCalls > 0)
+        {
+            foreach (var patron in _boardManager.Patrons)
             {
-                possibleMoves.Add(new Move(CommandEnum.PLAY_CARD, (int)agent.RepresentingCard.UniqueId));
+                if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))
+                {
+                    possibleMoves.Add(Move.CallPatron(patron.PatronID));
+                }
             }
         }
 
-            List<Agent> tauntAgents = enemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
-            if (currentPlayer.PowerAmount > 0)
-            {
-                if (tauntAgents.Any())
-                {
-                    foreach (Agent agent in tauntAgents)
-                    {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
-                    }
-                }
-                else
-                {
-                    foreach (Agent agent in enemyPlayer.Agents)
-                    {
-                        possibleMoves.Add(new Move(CommandEnum.ATTACK, (int)agent.RepresentingCard.UniqueId));
-                    }
-                }
-            }
-            if (currentPlayer.CoinsAmount > 0)
-            {
-                foreach (Card card in _boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount))
-                {
-                    possibleMoves.Add(new Move(CommandEnum.BUY_CARD, (int)card.UniqueId));
-                }
-            }
-            
-            // TODO: Check why this is unused.
-            List<Card> usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
-            if (currentPlayer.PatronCalls > 0)
-            {
-                foreach (var patron in _boardManager.Patrons)
-                {
-                    if (patron.CanPatronBeActivated(currentPlayer, enemyPlayer))
-                    {
-                        possibleMoves.Add(new Move(CommandEnum.PATRON, (int)patron.PatronID));
-                    }
-                }
-            }
-
-        possibleMoves.Add(new Move(CommandEnum.END_TURN));
+        possibleMoves.Add(Move.EndTurn());
 
         return possibleMoves;
     }
@@ -354,7 +357,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     }
 
     /// <summary>
-    /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
+    /// Returns state of game after it had ended, including information like who won and in what way.
+    /// If game is still going it returns null.
     /// </summary>
     public EndGameState? CheckWinner()
     {

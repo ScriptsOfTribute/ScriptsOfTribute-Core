@@ -34,7 +34,7 @@ public class TalesOfTributeGame
             do
             {
                 move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
-                var result = HandleMove(move);
+                var result = HandleFreeMove(move);
                 if (result is not null)
                 {
                     return EndGame(result);
@@ -75,10 +75,14 @@ public class TalesOfTributeGame
 
     private EndGameState? HandleStartOfTurnChoice(Choice<Card> choice)
     {
-        var playersChoice = CurrentPlayer.HandleStartOfTurnChoice(_api.GetSerializer(),
-            SerializedChoice<Card>.FromChoice(choice));
-            
-        var result = choice.Choose(playersChoice);
+        var playersChoice = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves()) as MakeChoiceMove<Card>;
+
+        if (playersChoice is null)
+        {
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Start of turn choice for now is always DESTROY, so should be of type Card.");
+        }
+
+        var result = choice.Choose(playersChoice.Choices);
 
         if (result is Failure f)
         {
@@ -88,43 +92,55 @@ public class TalesOfTributeGame
         if (result is not Success)
         {
             throw new Exception(
-                "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
+                "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating - start of turn choices shouldn't return choices!");
         }
 
         return null;
     }
 
-    private EndGameState? HandleMove(Move move)
+    private EndGameState? HandleFreeMove(Move move)
     {
         if (!_api.IsMoveLegal(move))
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Illegal move.");
         }
 
+        // This should probably be handled above (this move is not in legal moves), but you can never be to careful...
+        if (move.Command == CommandEnum.MAKE_CHOICE)
+        {
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "You don't have a pending choice.");
+        }
+
         return move.Command switch
         {
-            CommandEnum.PLAY_CARD => HandlePlayCard(move.Value),
-            CommandEnum.ATTACK => HandleAttack(move.Value),
-            CommandEnum.BUY_CARD => HandleBuyCard(move.Value),
+            CommandEnum.PLAY_CARD => HandlePlayCard(move as SimpleCardMove),
+            CommandEnum.ATTACK => HandleAttack(move as SimpleCardMove),
+            CommandEnum.BUY_CARD => HandleBuyCard(move as SimpleCardMove),
+            CommandEnum.CALL_PATRON => HandleCallPatron(move as SimplePatronMove),
+            CommandEnum.ACTIVATE_AGENT => HandleActivateAgent(move as SimpleCardMove),
             CommandEnum.END_TURN => null,
-            CommandEnum.PATRON => HandleCallPatron(move.Value),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private EndGameState? HandlePlayCard(int uniqueId)
-    {
-        var chain = _api.PlayCard(uniqueId);
+    private EndGameState? HandleActivateAgent(SimpleCardMove move)
+        => ConsumeChain(_api.ActivateAgent(move.Card));
 
-        return chain
+    private EndGameState? HandlePlayCard(SimpleCardMove move)
+        => ConsumeChain(_api.PlayCard(move.Card));
+
+    private EndGameState? HandleBuyCard(SimpleCardMove move)
+        => ConsumeChain(_api.BuyCard(move.Card));
+
+    private EndGameState? ConsumeChain(ExecutionChain chain)
+        => chain
             .Consume()
             .Select(HandleTopLevelResult)
             .FirstOrDefault(endGameState => endGameState is not null);
-    }
 
-    private EndGameState? HandleAttack(int uniqueId)
+    private EndGameState? HandleAttack(SimpleCardMove move)
     {
-        if (_api.AttackAgent(uniqueId) is Failure f)
+        if (_api.AttackAgent(move.Card) is Failure f)
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason);
         }
@@ -132,24 +148,14 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState? HandleBuyCard(int uniqueId)
+    private EndGameState? HandleCallPatron(SimplePatronMove move)
     {
-        var chain = _api.BuyCard(uniqueId);
-
-        return chain
-            .Consume()
-            .Select(HandleTopLevelResult)
-            .FirstOrDefault(endGameState => endGameState is not null);
-    }
-
-    private EndGameState? HandleCallPatron(int id)
-    {
-        if (!Enum.IsDefined(typeof(PatronId), id))
+        if (!Enum.IsDefined(typeof(PatronId), move.PatronId))
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Invalid patron selected.");
         }
 
-        if (_api.PatronActivation((PatronId)id) is Failure f)
+        if (_api.PatronActivation(move.PatronId) is Failure f)
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason);
         }
@@ -175,14 +181,24 @@ public class TalesOfTributeGame
             {
                 case Choice<Card> choice:
                 {
-                    var c = CurrentPlayer.HandleCardChoice(_api.GetSerializer(), SerializedChoice<Card>.FromChoice(choice));
-                    result = choice.Choose(c);
+                    var move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
+                    if (move is not MakeChoiceMove<Card> c)
+                    {
+                        return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
+                            "Choice of Card was required.");
+                    }
+                    result = choice.Choose(c.Choices);
                     break;
                 }
                 case Choice<EffectType> choice:
                 {
-                    var c= CurrentPlayer.HandleEffectChoice(_api.GetSerializer(), SerializedChoice<EffectType>.FromChoice(choice));
-                    result = choice.Choose(c);
+                    var move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
+                    if (move is not MakeChoiceMove<EffectType> c)
+                    {
+                        return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
+                            "Choice of Effect was required.");
+                    }
+                    result = choice.Choose(c.Choices);
                     break;
                 }
                 case Failure failure:

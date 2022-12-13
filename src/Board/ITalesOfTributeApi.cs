@@ -4,6 +4,7 @@ public interface ITalesOfTributeApi
 {
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
+    public BoardState BoardState { get; }
     SerializedBoard GetSerializer();
     ExecutionChain? HandleStartOfTurnChoices();
     BoardState GetState();
@@ -94,15 +95,12 @@ public interface ITalesOfTributeApi
     /// </summary>
     ExecutionChain BuyCard(Card card);
 
-    ExecutionChain BuyCard(int uniqueId);
-
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
     ExecutionChain PlayCard(Card card);
 
-    ExecutionChain PlayCard(int uniqueId);
     List<Move> GetListOfPossibleMoves();
     bool IsMoveLegal(Move playerMove);
     void EndTurn();

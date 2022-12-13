@@ -297,5 +297,16 @@
                 throw new Exception("Player doesn't have card specified by unique id!");
             }
         }
+
+        public BaseChoice? GetPendingChoice(BoardState state)
+        {
+            return state switch
+            {
+                BoardState.NORMAL => null,
+                BoardState.CHOICE_PENDING => _pendingExecutionChain?.PendingChoice,
+                BoardState.START_OF_TURN_CHOICE_PENDING => StartOfTurnEffectsChain?.PendingChoice,
+                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+            };
+        }
     }
 }

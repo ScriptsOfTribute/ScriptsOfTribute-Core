@@ -13,6 +13,7 @@ public class ExecutionChain
     private ITavern _tavern;
 
     public bool Empty => _chain.Count == 0;
+    public BaseChoice? PendingChoice { get; private set; } = null;
 
     public ExecutionChain(IPlayer owner, IPlayer enemy, ITavern tavern)
     {
@@ -41,7 +42,14 @@ public class ExecutionChain
 
         while (!Empty)
         {
+            PendingChoice = null;
+
             _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
+            if (_current is BaseChoice c)
+            {
+                PendingChoice = c;
+            }
+
             yield return _current;
 
             if (!_current.Completed)

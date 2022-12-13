@@ -14,15 +14,25 @@ namespace TalesOfTribute
         public readonly SerializedPlayer EnemyPlayer;
         public readonly PatronStates PatronStates;
         public readonly List<Card> TavernCards;
+        public readonly BoardState BoardState;
+        public readonly BaseSerializedChoice? PendingChoice;
 
         public SerializedBoard(
-            IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons
+            IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
+            BoardState state, BaseChoice? maybeChoice
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
             TavernCards = tavern.AvailableCards.ToList();
             PatronStates = new PatronStates(patrons.ToList());
+            BoardState = state;
+            PendingChoice = maybeChoice switch
+            {
+                Choice<Card> cardChoice => SerializedCardChoice.FromChoice(cardChoice),
+                Choice<EffectType> effectChoice => SerializedEffectChoice.FromChoice(effectChoice),
+                _ => null
+            };
         }
     }
 }
