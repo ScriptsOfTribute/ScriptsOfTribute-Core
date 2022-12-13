@@ -116,7 +116,11 @@ namespace TalesOfTribute
                 throw new Exception("Complete pending choice first!");
             }
 
-            //TODO: Attack all agents
+            var agentsWithTaunt = EnemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
+            foreach(var agent in agentsWithTaunt)
+            {
+                CurrentPlayer.AttackAgent(agent.RepresentingCard, EnemyPlayer, Tavern);
+            }
 
             CurrentPlayer.PrestigeAmount += CurrentPlayer.PowerAmount;
             CurrentPlayer.CoinsAmount = 0;
