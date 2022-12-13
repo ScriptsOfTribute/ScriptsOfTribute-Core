@@ -12,13 +12,13 @@ namespace TalesOfTribute
 
     public class BoardManager
     {
-        private PlayerEnum CurrentPlayerId;
+        private PlayerEnum _currentPlayerId;
         public Patron[] Patrons;
         public Tavern Tavern;
         private Player[] _players;
 
-        public Player CurrentPlayer => _players[(int)CurrentPlayerId];
-        public Player EnemyPlayer => _players[1 - (int)CurrentPlayerId];
+        public Player CurrentPlayer => _players[(int)_currentPlayerId];
+        public Player EnemyPlayer => _players[1 - (int)_currentPlayerId];
         public BaseChoice? PendingChoice => CurrentPlayer.GetPendingChoice(State);
 
         public BoardState State { get; set; } = BoardState.NORMAL;
@@ -124,7 +124,7 @@ namespace TalesOfTribute
             CurrentPlayer.PowerAmount = 0;
             CurrentPlayer.EndTurn();
 
-            CurrentPlayerId = (PlayerEnum)(1 - (int)CurrentPlayerId);
+            _currentPlayerId = (PlayerEnum)(1 - (int)_currentPlayerId);
 
             if (CurrentPlayer.StartOfTurnEffectsChain != null)
             {
@@ -142,7 +142,7 @@ namespace TalesOfTribute
 
         public void SetUpGame()
         {
-            CurrentPlayerId = PlayerEnum.PLAYER1;
+            _currentPlayerId = PlayerEnum.PLAYER1;
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
             Tavern.DrawCards();
 

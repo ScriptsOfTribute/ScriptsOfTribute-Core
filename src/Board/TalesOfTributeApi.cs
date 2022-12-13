@@ -325,9 +325,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         {
             possibleMoves.AddRange(_boardManager.Tavern.GetAffordableCards(currentPlayer.CoinsAmount).Select(Move.BuyCard));
         }
-            
-        // TODO: Check why this is unused.
-        List<Card> usedCards = currentPlayer.Played.Concat(currentPlayer.CooldownPile).ToList();
+
         if (currentPlayer.PatronCalls > 0)
         {
             foreach (var patron in _boardManager.Patrons)

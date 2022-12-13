@@ -29,8 +29,8 @@ namespace TalesOfTribute
             BoardState = state;
             PendingChoice = maybeChoice switch
             {
-                Choice<Card> cardChoice => SerializedChoice<Card>.FromChoice(cardChoice),
-                Choice<EffectType> effectChoice => SerializedChoice<EffectType>.FromChoice(effectChoice),
+                Choice<Card> cardChoice => SerializedCardChoice.FromChoice(cardChoice),
+                Choice<EffectType> effectChoice => SerializedEffectChoice.FromChoice(effectChoice),
                 _ => null
             };
         }
