@@ -9,7 +9,7 @@ public static class Extensions
         switch (k)
         {
             case 0:
-                return result;
+                return new List<List<T>> { new() };
             case 1:
                 return list.Select(i => new List<T> { i }).ToList();
         }

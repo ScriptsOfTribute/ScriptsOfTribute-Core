@@ -155,7 +155,7 @@ namespace TalesOfTribute
                 return false;
             }
 
-            return Command == m.Command && Choices == m.Choices;
+            return Command == m.Command && Choices.SequenceEqual(m.Choices);
         }
 
         public override int GetHashCode()
