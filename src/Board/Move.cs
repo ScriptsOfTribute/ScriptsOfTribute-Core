@@ -97,7 +97,10 @@ namespace TalesOfTribute
 
         public override int GetHashCode()
         {
-            return Command.GetHashCode() ^ Card.GetHashCode();
+            var hash = 13;
+            hash = (hash * 7) + Command.GetHashCode();
+            hash = (hash * 7) + Card.GetHashCode();
+            return hash;
         }
     }
     
@@ -122,7 +125,10 @@ namespace TalesOfTribute
 
         public override int GetHashCode()
         {
-            return Command.GetHashCode() ^ PatronId.GetHashCode();
+            var hash = 13;
+            hash = (hash * 7) + Command.GetHashCode();
+            hash = (hash * 7) + PatronId.GetHashCode();
+            return hash;
         }
     }
 
@@ -154,7 +160,10 @@ namespace TalesOfTribute
 
         public override int GetHashCode()
         {
-            return Command.GetHashCode() ^ Choices.GetHashCode();
+            var hash = 13;
+            hash = (hash * 7) + Command.GetHashCode();
+            hash = (hash * 7) + Choices.GetHashCode();
+            return hash;
         }
     }
 }
