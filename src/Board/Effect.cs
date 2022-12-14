@@ -311,7 +311,8 @@
 
                     return _right.Enact(player, enemy, tavern);
                 },
-                context);
+                context,
+                1, 1); // OR choice should always result in one choice
         }
 
         public override string ToString()
