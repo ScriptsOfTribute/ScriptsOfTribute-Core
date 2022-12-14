@@ -109,7 +109,7 @@ public class PlayerTests
         _enemy.Setup(enemy => enemy.Agents).Returns(enemyAgents);
         _enemy.Setup(enemy => enemy.AgentCards).Returns(new List<Card> { oathman });
         _enemy.Setup(enemy => enemy.CooldownPile).Returns(enemyCooldownPile);
-        Assert.True(_sut.AttackAgent(oathman, _enemy.Object) is Success);
+        Assert.True(_sut.AttackAgent(oathman, _enemy.Object, _tavern.Object) is Success);
         Assert.Empty(enemyAgents);
         Assert.Contains(oathman, enemyCooldownPile);
     }
@@ -122,6 +122,6 @@ public class PlayerTests
         var councilor = GlobalCardDatabase.Instance.GetCard(CardId.HLAALU_COUNCILOR);
         var enemyAgents = new List<Card> { oathman };
         _enemy.Setup(enemy => enemy.AgentCards).Returns(enemyAgents);
-        Assert.True(_sut.AttackAgent(councilor, _enemy.Object) is Failure);
+        Assert.True(_sut.AttackAgent(councilor, _enemy.Object, _tavern.Object) is Failure);
     }
 }
