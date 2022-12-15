@@ -72,7 +72,6 @@
         private List<Effect> _startOfTurnEffects = new();
 
         private ComboContext _comboContext = new ComboContext();
-        private Random _rnd = new Random();
 
         public Player(PlayerEnum iD)
         {
@@ -147,7 +146,7 @@
 
         public void InitDrawPile(List<Card> starterCards)
         {
-            DrawPile = starterCards.OrderBy(x => this._rnd.Next(0, starterCards.Count)).ToList();
+            DrawPile = starterCards.OrderBy(x => Guid.NewGuid()).ToList();
         }
 
         public void HealAgent(UniqueId uniqueId, int amount)
@@ -177,14 +176,19 @@
                 RefreshDrawPile();
             }
 
+            if (DrawPile.Count == 0)
+            {
+                return;
+            }
+
             Hand.Add(DrawPile.First());
             DrawPile.RemoveAt(0);
         }
 
         private void RefreshDrawPile()
         {
-            CooldownPile.OrderBy(x => this._rnd.Next(0, CooldownPile.Count)).ToList();
-            DrawPile.AddRange(CooldownPile);
+            var mixedCards = CooldownPile.OrderBy(x => Guid.NewGuid()).ToList();
+            DrawPile.AddRange(mixedCards);
             CooldownPile = new List<Card>();
         }
 
