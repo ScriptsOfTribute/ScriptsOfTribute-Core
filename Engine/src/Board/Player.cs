@@ -19,15 +19,59 @@
         public List<Agent> Agents { get; set; }
         public List<Card> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
         public List<Card> CooldownPile { get; set; }
-        public ExecutionChain? StartOfTurnEffectsChain { get; private set; }
+
+        public ExecutionChain? GetStartOfTurnEffectsChain(IPlayer enemy, ITavern tavern)
+        {
+            if (_startOfTurnEffectsChain is not null) return _startOfTurnEffectsChain;
+
+            if (_startOfTurnEffects.Count <= 0) return _startOfTurnEffectsChain;
+
+            _startOfTurnEffectsChain = new ExecutionChain(this, enemy, tavern);
+
+            _startOfTurnEffects.ForEach(effect =>
+            {
+                if (effect.Type != EffectType.OPP_DISCARD)
+                {
+                    throw new Exception(
+                        "Other Start of turn effects than Discard Card are not supported - the engine needs to be updated!");
+                }
+
+                _startOfTurnEffectsChain.Add((player, _, _) =>
+                {
+                    var howManyToDiscard = effect.Amount > player.Hand.Count ? player.Hand.Count : effect.Amount;
+                    if (howManyToDiscard == 0)
+                    {
+                        return new Success();
+                    }
+                        
+                    return new Choice<Card>(
+                        player.Hand,
+                        choices =>
+                        {
+                            choices.ForEach(player.Discard);
+                            return new Success();
+                        },
+                        new ChoiceContext(effect.UniqueId, ChoiceType.OPP_DISCARD),
+                        howManyToDiscard,
+                        howManyToDiscard
+                    );
+                });
+            });
+                
+            _startOfTurnEffectsChain.AddCompleteCallback(() => _startOfTurnEffectsChain = null);
+
+            return _startOfTurnEffectsChain;
+        }
+
+        private ExecutionChain? _startOfTurnEffectsChain;
 
         public uint ForcedDiscard;
         public uint PatronCalls { get; set; }
         public long ShuffleSeed;
         private ExecutionChain? _pendingExecutionChain;
+        private List<Effect> _startOfTurnEffects = new();
 
         private ComboContext _comboContext = new ComboContext();
-        private Random _rnd = new Random();
 
         public Player(PlayerEnum iD)
         {
@@ -102,7 +146,7 @@
 
         public void InitDrawPile(List<Card> starterCards)
         {
-            DrawPile = starterCards.OrderBy(x => this._rnd.Next(0, starterCards.Count)).ToList();
+            DrawPile = starterCards.OrderBy(x => Guid.NewGuid()).ToList();
         }
 
         public void HealAgent(UniqueId uniqueId, int amount)
@@ -132,14 +176,19 @@
                 RefreshDrawPile();
             }
 
+            if (DrawPile.Count == 0)
+            {
+                return;
+            }
+
             Hand.Add(DrawPile.First());
             DrawPile.RemoveAt(0);
         }
 
         private void RefreshDrawPile()
         {
-            CooldownPile.OrderBy(x => this._rnd.Next(0, CooldownPile.Count)).ToList();
-            DrawPile.AddRange(CooldownPile);
+            var mixedCards = CooldownPile.OrderBy(x => Guid.NewGuid()).ToList();
+            DrawPile.AddRange(mixedCards);
             CooldownPile = new List<Card>();
         }
 
@@ -152,6 +201,9 @@
             Hand = new List<Card>();
             PatronCalls = 1;
             Agents.ForEach(agent => agent.Refresh());
+
+            _startOfTurnEffectsChain = null;
+            _startOfTurnEffects.Clear();
         }
 
         public ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain = true)
@@ -166,7 +218,6 @@
                         var result = PlayCardWithoutChecks(
                                 card, enemy, tavern, replacePendingExecutionChain
                             );
-                        result.AddCompleteCallback(() => tavern.Cards.Add(card));
                         return result;
                     }
                 case CardType.CONTRACT_ACTION:
@@ -238,17 +289,9 @@
             return cards;
         }
 
-        public void AddStartOfTurnEffects(ExecutionChain chain)
+        public void AddStartOfTurnEffect(Effect effect)
         {
-            if (StartOfTurnEffectsChain != null)
-            {
-                StartOfTurnEffectsChain.MergeWith(chain);
-            }
-            else
-            {
-                StartOfTurnEffectsChain = chain;
-                StartOfTurnEffectsChain.AddCompleteCallback(() => StartOfTurnEffectsChain = null);
-            }
+            _startOfTurnEffects.Add(effect);
         }
 
         public ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern)
@@ -314,7 +357,7 @@
             {
                 BoardState.NORMAL => null,
                 BoardState.CHOICE_PENDING => _pendingExecutionChain?.PendingChoice,
-                BoardState.START_OF_TURN_CHOICE_PENDING => StartOfTurnEffectsChain?.PendingChoice,
+                BoardState.START_OF_TURN_CHOICE_PENDING => _startOfTurnEffectsChain?.PendingChoice,
                 _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
             };
         }

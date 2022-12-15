@@ -53,7 +53,7 @@ public class ExtensionsTests
     {
         var list = new List<int> { 1, 2, 3 };
         var expectedResult = new List<List<int>>
-        { };
+        { new() };
         Assert.Equal(expectedResult, list.GetCombinations(0));
     }
     

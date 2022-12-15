@@ -40,6 +40,14 @@ public class ExecutionChain
             yield break;
         }
 
+        void ChoiceFinishCallback(PlayResult newResult)
+        {
+            if (newResult is not BaseChoice baseChoice) return;
+
+            PendingChoice = baseChoice;
+            baseChoice.AddChoiceFinishCallback(ChoiceFinishCallback);
+        }
+
         while (!Empty)
         {
             PendingChoice = null;
@@ -48,7 +56,9 @@ public class ExecutionChain
             if (_current is BaseChoice c)
             {
                 PendingChoice = c;
+                c.AddChoiceFinishCallback(ChoiceFinishCallback);
             }
+
 
             yield return _current;
 

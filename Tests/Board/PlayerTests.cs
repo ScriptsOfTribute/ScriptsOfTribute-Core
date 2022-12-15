@@ -124,4 +124,28 @@ public class PlayerTests
         _enemy.Setup(enemy => enemy.AgentCards).Returns(enemyAgents);
         Assert.True(_sut.AttackAgent(councilor, _enemy.Object, _tavern.Object) is Failure);
     }
+
+    [Fact]
+    void TestGetPendingChoiceWithStartOfTurnChoices()
+    {
+        var ringsGuile = GlobalCardDatabase.Instance.GetCard(CardId.RINGS_GUILE);
+        _sut.Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.GOLD));
+        _sut.Hand.Add(ringsGuile);
+        _sut.AddStartOfTurnEffect((ringsGuile.Effects[0] as Effect)!);
+
+        var startOfTurnChain = _sut.GetStartOfTurnEffectsChain(_enemy.Object, _tavern.Object);
+
+        // Hang StartOfTurnChoice on unfinished choice.
+        foreach (var result in startOfTurnChain!.Consume())
+        {
+            if (result is BaseChoice)
+            {
+                break;
+            }
+        }
+
+        var pendingChoice = _sut.GetPendingChoice(BoardState.START_OF_TURN_CHOICE_PENDING);
+
+        Assert.Equal(ChoiceType.OPP_DISCARD, (pendingChoice as Choice<Card>)!.Context!.ChoiceType);
+    }
 }
