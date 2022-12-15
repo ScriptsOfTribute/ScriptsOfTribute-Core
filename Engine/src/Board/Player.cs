@@ -214,7 +214,6 @@
                         var result = PlayCardWithoutChecks(
                                 card, enemy, tavern, replacePendingExecutionChain
                             );
-                        result.AddCompleteCallback(() => tavern.Cards.Add(card));
                         return result;
                     }
                 case CardType.CONTRACT_ACTION:
