@@ -198,26 +198,16 @@ public class EffectTests
     void TestOppDiscard()
     {
         var effect = new Effect(EffectType.OPP_DISCARD, 1);
-        ExecutionChain? executionChainSet = null;
+        List<Effect> startOfTurnEffects = new();
         var cardInHand = GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN);
         _player2.Setup(p => p.Hand).Returns(new List<Card> { cardInHand });
-        _player2.Setup(p => p.AddStartOfTurnEffects(It.IsAny<ExecutionChain>()))
-            .Callback<ExecutionChain>(e => executionChainSet = e);
+        _player2.Setup(p => p.AddStartOfTurnEffect(It.IsAny<Effect>()))
+            .Callback<Effect>(e => startOfTurnEffects.Add(e));
 
         var basicResult = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
         Assert.True(basicResult is Success);
 
-        Assert.NotNull(executionChainSet);
-        var result = executionChainSet.Consume().First();
-        Assert.True(result is Choice<Card>);
-        var choice = result as Choice<Card>;
-        Assert.Equal(1, choice.MaxChoiceAmount);
-        Assert.Equal(1, choice.MinChoiceAmount);
-        Assert.Single(choice.PossibleChoices);
-
-        var newResult = choice.Choose(cardInHand);
-        Assert.True(newResult is Success);
-
-        _player2.Verify(p => p.Discard(cardInHand), Times.Once);
+        Assert.Single(startOfTurnEffects);
+        Assert.Equal(effect, startOfTurnEffects.First());
     }
 }

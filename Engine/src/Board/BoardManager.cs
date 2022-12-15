@@ -107,7 +107,7 @@ namespace TalesOfTribute
                 return null;
             }
 
-            return CurrentPlayer.StartOfTurnEffectsChain;
+            return CurrentPlayer.GetStartOfTurnEffectsChain(EnemyPlayer, Tavern);
         }
 
         public void EndTurn()
@@ -128,13 +128,14 @@ namespace TalesOfTribute
             CurrentPlayer.PowerAmount = 0;
             CurrentPlayer.EndTurn();
 
-            _currentPlayerId = (PlayerEnum)(1 - (int)_currentPlayerId);
-
-            if (CurrentPlayer.StartOfTurnEffectsChain != null)
+            var startOfTurnEffectsChain = CurrentPlayer.GetStartOfTurnEffectsChain(EnemyPlayer, Tavern);
+            if (startOfTurnEffectsChain != null)
             {
                 State = BoardState.START_OF_TURN_CHOICE_PENDING;
-                CurrentPlayer.StartOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
+                startOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
             }
+
+            _currentPlayerId = (PlayerEnum)(1 - (int)_currentPlayerId);
 
             foreach (var patron in Patrons)
             {

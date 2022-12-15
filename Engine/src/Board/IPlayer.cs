@@ -13,7 +13,7 @@ public interface IPlayer
     List<Agent> Agents { get; set; }
     List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
-    ExecutionChain? StartOfTurnEffectsChain { get; }
+    ExecutionChain? GetStartOfTurnEffectsChain(IPlayer enemy, ITavern tavern);
     ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
     void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern);
     void HealAgent(UniqueId uniqueId, int amount);
@@ -28,7 +28,7 @@ public interface IPlayer
     void Destroy(Card cardId);
     string ToString();
     List<Card> GetAllPlayersCards();
-    void AddStartOfTurnEffects(ExecutionChain chain);
+    void AddStartOfTurnEffect(Effect effect);
     ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
     ISimpleResult AttackAgent(Card agent, IPlayer enemy, ITavern tavern);
     Card GetCardByUniqueId(int uniqueId);

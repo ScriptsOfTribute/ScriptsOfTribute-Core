@@ -141,7 +141,7 @@
                             howManyToDiscard
                         ));
 
-                        enemy.AddStartOfTurnEffects(chain);
+                        enemy.AddStartOfTurnEffect(this);
 
                         return new Success();
                     }
