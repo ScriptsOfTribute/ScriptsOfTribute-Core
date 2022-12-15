@@ -2,7 +2,7 @@ using TalesOfTribute.Board;
 
 namespace RandomBotTests;
 
-public class UnitTest1
+public class RandomGamesTests
 {
     [Fact]
     public void RandomGameShouldEndWithoutErrors()
