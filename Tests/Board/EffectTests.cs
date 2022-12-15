@@ -121,11 +121,12 @@ public class EffectTests
 
         var cardsToReturn = new List<Card>
         {
-            GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
-            GlobalCardDatabase.Instance.GetCard(CardId.PECK),
+            GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN),
+            GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN),
         };
 
         _player2.Setup(p => p.AgentCards).Returns(cardsToReturn);
+        _tavernMock.Setup(tav => tav.Cards).Returns(new List<Card>());
 
         var result = effect.Enact(_player1.Object, _player2.Object, _tavernMock.Object);
 
