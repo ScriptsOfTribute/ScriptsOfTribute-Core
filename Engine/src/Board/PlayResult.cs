@@ -16,7 +16,9 @@ public class Success : PlayResult, ISimpleResult
 public class BaseChoice : PlayResult
 {
     public delegate void SuccessCallback();
+    public delegate void ChoiceFinishCallback(PlayResult result);
     protected SuccessCallback? _successCallback;
+    protected ChoiceFinishCallback? _choiceFinishCallback;
 
     public BaseChoice()
     {
@@ -26,6 +28,11 @@ public class BaseChoice : PlayResult
     public void AddSuccessCallback(SuccessCallback successCallback)
     {
         _successCallback = successCallback;
+    }
+    
+    public void AddChoiceFinishCallback(ChoiceFinishCallback choiceFinishCallback)
+    {
+        _choiceFinishCallback = choiceFinishCallback;
     }
 }
 
@@ -117,6 +124,7 @@ public class Choice<T> : BaseChoice
                 choice.AddSuccessCallback(OnSuccess);
                 break;
         }
+        _choiceFinishCallback?.Invoke(result);
     }
 
     private void OnSuccess()

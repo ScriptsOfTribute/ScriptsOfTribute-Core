@@ -65,6 +65,11 @@
                         return new Choice<Card>(tavern.GetAffordableCards(Amount),
                             choiceList =>
                             {
+                                if (choiceList.Count == 0)
+                                {
+                                    return new Success();
+                                }
+
                                 var choice = choiceList.First();
                                 var card = tavern.Acquire(choice);
                                 player.HandleAcquireDuringExecutionChain(card, enemy, tavern);

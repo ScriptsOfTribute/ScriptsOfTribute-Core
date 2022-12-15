@@ -135,7 +135,7 @@ public class TalesOfTributeGame
     private EndGameState? ConsumeChain(ExecutionChain chain)
         => chain
             .Consume()
-            .Select(HandleTopLevelResult)
+            .Select(r => HandleTopLevelResult(r, chain))
             .FirstOrDefault(endGameState => endGameState is not null);
 
     private EndGameState? HandleAttack(SimpleCardMove move)
@@ -163,17 +163,17 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState? HandleTopLevelResult(PlayResult result)
+    private EndGameState? HandleTopLevelResult(PlayResult result, ExecutionChain? chain = null)
     {
         return result switch
         {
             Success => null,
             Failure failure => new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, failure.Reason),
-            _ => HandleChoice(result)
+            _ => HandleChoice(result, chain)
         };
     }
 
-    private EndGameState? HandleChoice(PlayResult result)
+    private EndGameState? HandleChoice(PlayResult result, ExecutionChain? chain = null)
     {
         do
         {
