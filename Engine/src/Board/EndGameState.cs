@@ -15,6 +15,6 @@ public class EndGameState
 
     public override string ToString()
     {
-        return $"Winner: {Winner.ToString()}, reason: {Reason.ToString()}{(AdditionalContext == "" ? "" : "\n${AdditionalContext}")}";
+        return $"Winner: {Winner.ToString()}, reason: {Reason.ToString()}{(AdditionalContext == "" ? "" : $"\n{AdditionalContext}")}";
     }
 }
