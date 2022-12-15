@@ -128,7 +128,7 @@ namespace TalesOfTribute
             CurrentPlayer.PowerAmount = 0;
             CurrentPlayer.EndTurn();
 
-            var startOfTurnEffectsChain = CurrentPlayer.GetStartOfTurnEffectsChain(EnemyPlayer, Tavern);
+            var startOfTurnEffectsChain = EnemyPlayer.GetStartOfTurnEffectsChain(CurrentPlayer, Tavern);
             if (startOfTurnEffectsChain != null)
             {
                 State = BoardState.START_OF_TURN_CHOICE_PENDING;
