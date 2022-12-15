@@ -30,7 +30,7 @@ public interface IPlayer
     List<Card> GetAllPlayersCards();
     void AddStartOfTurnEffects(ExecutionChain chain);
     ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
-    ISimpleResult AttackAgent(Card agent, IPlayer enemy);
+    ISimpleResult AttackAgent(Card agent, IPlayer enemy, ITavern tavern);
     Card GetCardByUniqueId(int uniqueId);
     BaseChoice? GetPendingChoice(BoardState state);
 }

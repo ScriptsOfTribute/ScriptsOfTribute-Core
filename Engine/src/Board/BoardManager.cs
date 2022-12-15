@@ -117,7 +117,11 @@ namespace TalesOfTribute
                 throw new Exception("Complete pending choice first!");
             }
 
-            //TODO: Attack all agents
+            var agentsWithTaunt = EnemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
+            foreach(var agent in agentsWithTaunt)
+            {
+                CurrentPlayer.AttackAgent(agent.RepresentingCard, EnemyPlayer, Tavern);
+            }
 
             CurrentPlayer.PrestigeAmount += CurrentPlayer.PowerAmount;
             CurrentPlayer.CoinsAmount = 0;
@@ -183,9 +187,16 @@ namespace TalesOfTribute
 
         public EndGameState? CheckAndGetWinner()
         {
-            if (CurrentPlayer.PrestigeAmount >= 80)
+            /*
+             * ALWAYS USE THIS AFTER EndTurn()
+             * Since we have this assumption we have to check if:
+             * - Enemy (recent) player reached 80 or more prestige
+             * - Enemy (recent) has 4 patron favors
+             * - Current player has more than 40 prestige and Enemy (recent) player didn't match it
+             */
+            if (EnemyPlayer.PrestigeAmount >= 80) 
             {
-                return new EndGameState(CurrentPlayer.ID, GameEndReason.PRESTIGE_OVER_80);
+                return new EndGameState(EnemyPlayer.ID, GameEndReason.PRESTIGE_OVER_80);
             }
 
             bool win = true;
@@ -196,7 +207,7 @@ namespace TalesOfTribute
                 {
                     continue;
                 }
-                if (patron.FavoredPlayer != CurrentPlayer.ID)
+                if (patron.FavoredPlayer != EnemyPlayer.ID)
                 {
                     win = false;
                     break;
@@ -205,12 +216,12 @@ namespace TalesOfTribute
 
             if (win)
             {
-                return new EndGameState(CurrentPlayer.ID, GameEndReason.PATRON_FAVOR);
+                return new EndGameState(EnemyPlayer.ID, GameEndReason.PATRON_FAVOR);
             }
 
-            if (CurrentPlayer.PrestigeAmount < EnemyPlayer.PrestigeAmount && EnemyPlayer.PrestigeAmount >= PrestigeTreshold)
+            if (CurrentPlayer.PrestigeAmount >= PrestigeTreshold && EnemyPlayer.PrestigeAmount < PrestigeTreshold)
             {
-                return new EndGameState(EnemyPlayer.ID, GameEndReason.PRESTIGE_OVER_40_NOT_MATCHED);
+                return new EndGameState(CurrentPlayer.ID, GameEndReason.PRESTIGE_OVER_40_NOT_MATCHED);
             }
 
             return null;
@@ -223,7 +234,7 @@ namespace TalesOfTribute
 
         public ISimpleResult AttackAgent(Card agent)
         {
-            return CurrentPlayer.AttackAgent(agent, EnemyPlayer);
+            return CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
         }
     }
 }
