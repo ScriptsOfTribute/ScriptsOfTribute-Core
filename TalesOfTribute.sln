@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalesOfTribute", "TalesOfTribute.csproj", "{EB3F347F-352F-46A2-AE78-F18F6E26C4E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalesOfTribute", "Engine\TalesOfTribute.csproj", "{EB3F347F-352F-46A2-AE78-F18F6E26C4E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomBot", "RandomBot\RandomBot.csproj", "{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
