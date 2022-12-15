@@ -12,4 +12,9 @@ public class EndGameState
         Reason = reason;
         AdditionalContext = additionalContext;
     }
+
+    public override string ToString()
+    {
+        return $"Winner: {Winner.ToString()}, reason: {Reason.ToString()}{(AdditionalContext == "" ? "" : AdditionalContext)}";
+    }
 }
