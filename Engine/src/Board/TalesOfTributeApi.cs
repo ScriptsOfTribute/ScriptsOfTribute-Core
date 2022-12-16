@@ -25,7 +25,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     {
         if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
         {
-            // In case user forgets about Treasury (she/he shouldnt)
+            // In case user forgets about Treasury (she/he shouldn't)
             List<PatronId> tempList = patrons.ToList();
             tempList.Add(PatronId.TREASURY);
             patrons = tempList.ToArray();
@@ -42,14 +42,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public SerializedPlayer GetPlayer(PlayerEnum playerId)
     {
-        if (playerId == CurrentPlayerId)
-        {
-            return new SerializedPlayer(_boardManager.CurrentPlayer);
-        }
-        else
-        {
-            return new SerializedPlayer(_boardManager.EnemyPlayer);
-        }
+        return new SerializedPlayer(
+            playerId == CurrentPlayerId ? _boardManager.CurrentPlayer : _boardManager.EnemyPlayer
+        );
     }
 
     public ExecutionChain? HandleStartOfTurnChoices()

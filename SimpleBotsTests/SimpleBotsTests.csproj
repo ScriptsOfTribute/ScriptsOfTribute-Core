@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
+        <RootNamespace>SimpleBotsTests</RootNamespace>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     </PropertyGroup>
 
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RandomBot\RandomBot.csproj" />
+      <ProjectReference Include="..\SimpleBots\SimpleBots.csproj" />
     </ItemGroup>
 
 </Project>
