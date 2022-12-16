@@ -30,6 +30,7 @@ public class TalesOfTributeGameTests
             It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
         ).Returns(Move.MakeChoice(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -49,6 +50,7 @@ public class TalesOfTributeGameTests
             It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
         ).Returns(Move.MakeChoice(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -69,6 +71,7 @@ public class TalesOfTributeGameTests
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(Move.CallPatron(PatronId.ANSEI));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -96,6 +99,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
             .Returns(Move.MakeChoice(new List<Card> { GlobalCardDatabase.Instance.GetCard(CardId.OATHMAN) }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -123,6 +127,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.PlayCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
             .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -144,6 +149,7 @@ public class TalesOfTributeGameTests
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(Move.Attack(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -168,6 +174,7 @@ public class TalesOfTributeGameTests
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(Move.BuyCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -192,6 +199,7 @@ public class TalesOfTributeGameTests
         _player1.Setup(player => player.Play(It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>()))
             .Returns(Move.ActivateAgent(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -217,6 +225,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.BuyCard(GlobalCardDatabase.Instance.GetCard(CardId.GOLD)))
             .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -254,6 +263,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.MakeChoice(new List<Card> { oathman }))
             .Returns(Move.EndTurn);
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
@@ -289,6 +299,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.MakeChoice(new List<Card> { oathman }))
             .Returns(Move.EndTurn());
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
@@ -320,6 +331,7 @@ public class TalesOfTributeGameTests
             It.IsAny<SerializedBoard>(), It.IsAny<List<Move>>())
         ).Returns(Move.MakeChoice(new List<Card> { oathman }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         await Assert.ThrowsAsync<Exception>(async () => await sut.Play());
     }
@@ -356,6 +368,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.MakeChoice(new List<EffectType> { EffectType.HEAL }))
             .Returns(Move.MakeChoice(new List<Card> { oathman }));
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);
@@ -393,6 +406,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.MakeChoice(new List<Card> { oathman }))
             .Returns(Move.EndTurn);
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
@@ -430,6 +444,7 @@ public class TalesOfTributeGameTests
             .Returns(Move.MakeChoice(new List<Card> { oathman }))
             .Returns(Move.EndTurn());
         _player1.Setup(player => player.MoveTimeout).Returns(TimeSpan.FromSeconds(100));
+        _player1.Setup(player => player.TurnTimeout).Returns(TimeSpan.FromSeconds(100));
 
         var result = await sut.Play();
         Assert.Equal(PlayerEnum.PLAYER2, result.Winner);

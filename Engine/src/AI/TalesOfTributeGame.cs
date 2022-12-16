@@ -1,4 +1,5 @@
-﻿using TalesOfTribute.Board;
+﻿using System.Diagnostics;
+using TalesOfTribute.Board;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.AI;
@@ -7,10 +8,12 @@ public class TalesOfTributeGame
 {
     private ITalesOfTributeApi _api;
     private AI[] _players = new AI[2];
+    private TimeSpan _currentTurnTimeElapsed = TimeSpan.Zero;
     public EndGameState? EndGameState { get; private set; }
 
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
+    private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
 
     public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api)
     {
@@ -21,12 +24,31 @@ public class TalesOfTributeGame
 
     private async Task<Move> MoveTask(SerializedBoard board, List<Move> moves)
     {
-        return await Task.Run(() => CurrentPlayer.Play(board, moves));
+        return await Task.Run(() =>
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var result = CurrentPlayer.Play(board, moves);
+            stopwatch.Stop();
+            _currentTurnTimeElapsed += stopwatch.Elapsed;
+            return result;
+        });
     }
 
     private async Task<(EndGameState?, Move?)> PlayWithTimeout()
     {
-        var timeout = CurrentPlayer.MoveTimeout;
+        TimeSpan timeout;
+        GameEndReason timeoutType;
+        if (CurrentPlayer.MoveTimeout < CurrentTurnTimeRemaining)
+        {
+            timeout = CurrentPlayer.MoveTimeout;
+            timeoutType = GameEndReason.MOVE_TIMEOUT;
+        }
+        else
+        {
+            timeout = CurrentTurnTimeRemaining;
+            timeoutType = GameEndReason.TURN_TIMEOUT;
+        }
         var board = _api.GetSerializer();
         var moves = _api.GetListOfPossibleMoves();
         var task = MoveTask(board, moves);
@@ -37,7 +59,7 @@ public class TalesOfTributeGame
             return (null, task.Result);
         }
 
-        return (new EndGameState(_api.EnemyPlayerId, GameEndReason.TIMEOUT), null);
+        return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);
     }
     
     public async Task<EndGameState> Play()
@@ -73,10 +95,16 @@ public class TalesOfTributeGame
                 }
             } while (move.Command != CommandEnum.END_TURN);
 
+            HandleEndTurn();
             _api.EndTurn();
         }
 
         return EndGame(endGameState);
+    }
+
+    private void HandleEndTurn()
+    {
+        _currentTurnTimeElapsed = TimeSpan.Zero;
     }
 
 

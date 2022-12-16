@@ -4,9 +4,10 @@ using TalesOfTribute.Board;
 
 namespace SimpleBots;
 
-public class MoveTimeoutBot : AI
+public class TurnTimeoutBot : AI
 {
-    public override TimeSpan MoveTimeout { get; } = TimeSpan.FromSeconds(3);
+    public override TimeSpan MoveTimeout { get; } = TimeSpan.FromSeconds(2);
+    public override TimeSpan TurnTimeout { get; } = TimeSpan.FromSeconds(4);
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
     {
@@ -15,7 +16,7 @@ public class MoveTimeoutBot : AI
 
     public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
     {
-        Task.Delay(TimeSpan.FromSeconds(4)).Wait();
+        Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
         return possibleMoves[0];
     }
 

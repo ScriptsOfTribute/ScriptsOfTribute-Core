@@ -6,6 +6,7 @@ public enum GameEndReason
     PRESTIGE_OVER_40_NOT_MATCHED,
     PRESTIGE_OVER_80,
     PATRON_FAVOR,
-    TIMEOUT,
+    MOVE_TIMEOUT,
+    TURN_TIMEOUT,
 }
 

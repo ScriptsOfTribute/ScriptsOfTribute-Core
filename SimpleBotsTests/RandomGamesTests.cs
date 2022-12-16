@@ -18,7 +18,7 @@ public class RandomGamesTests
             var endState = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
         }
     }
 }
