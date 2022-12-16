@@ -1,4 +1,4 @@
-﻿namespace RandomBot;
+﻿namespace SimpleBots;
 
 public static class Extensions
 {

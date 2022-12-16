@@ -2,7 +2,7 @@
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
 
-namespace RandomBot;
+namespace SimpleBots;
 
 public class RandomBot : AI
 {

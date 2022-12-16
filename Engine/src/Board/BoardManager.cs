@@ -12,7 +12,7 @@ namespace TalesOfTribute
 
     public class BoardManager
     {
-        private PlayerEnum _currentPlayerId;
+        private PlayerEnum _currentPlayerId = PlayerEnum.PLAYER1;
         public Patron[] Patrons;
         public Tavern Tavern;
         private Player[] _players;

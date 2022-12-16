@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalesOfTribute", "Engine\Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomBot", "RandomBot\RandomBot.csproj", "{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBots", "SimpleBots\SimpleBots.csproj", "{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomBotTests", "RandomBotTests\RandomBotTests.csproj", "{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBotsTests", "SimpleBotsTests\SimpleBotsTests.csproj", "{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -18,23 +18,55 @@ public class TalesOfTributeGame
         _players[0] = players[0];
         _players[1] = players[1];
     }
+
+    private async Task<Move> MoveTask(SerializedBoard board, List<Move> moves)
+    {
+        return await Task.Run(() => CurrentPlayer.Play(board, moves));
+    }
+
+    private async Task<(EndGameState?, Move?)> PlayWithTimeout()
+    {
+        var timeout = CurrentPlayer.MoveTimeout;
+        var board = _api.GetSerializer();
+        var moves = _api.GetListOfPossibleMoves();
+        var task = MoveTask(board, moves);
+        var res = await Task.WhenAny(task, Task.Delay(timeout));
+
+        if (res == task)
+        {
+            return (null, task.Result);
+        }
+
+        return (new EndGameState(_api.EnemyPlayerId, GameEndReason.TIMEOUT), null);
+    }
     
-    public EndGameState Play()
+    public async Task<EndGameState> Play()
     {
         EndGameState? endGameState;
         while ((endGameState = _api.CheckWinner()) is null)
         {
-            var startOfTurnResult = HandleStartOfTurnChoices();
+            var startOfTurnResult = await HandleStartOfTurnChoices();
             if (startOfTurnResult is not null)
             {
                 return EndGame(startOfTurnResult);
             }
 
-            Move move;
+            Move? move;
             do
             {
-                move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
-                var result = HandleFreeMove(move);
+                (var timeout, move) = await PlayWithTimeout();
+
+                if (timeout is not null)
+                {
+                    return timeout;
+                }
+
+                if (move is null)
+                {
+                    throw new Exception("This shouldn't happen - there is a bug in the engine!");
+                }
+                
+                var result = await HandleFreeMove(move);
                 if (result is not null)
                 {
                     return EndGame(result);
@@ -48,7 +80,7 @@ public class TalesOfTributeGame
     }
 
 
-    private EndGameState? HandleStartOfTurnChoices()
+    private async Task<EndGameState?> HandleStartOfTurnChoices()
     {
         var startOfTurnChoices = _api.HandleStartOfTurnChoices();
 
@@ -62,7 +94,7 @@ public class TalesOfTributeGame
                     "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
             }
                 
-            var result = HandleStartOfTurnChoice(realChoice);
+            var result = await HandleStartOfTurnChoice(realChoice);
 
             if (result is not null)
             {
@@ -73,16 +105,21 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState? HandleStartOfTurnChoice(Choice<Card> choice)
+    private async Task<EndGameState?> HandleStartOfTurnChoice(Choice<Card> choice)
     {
-        var playersChoice = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves()) as MakeChoiceMove<Card>;
+        var (timeout, playersChoice) = await PlayWithTimeout();
 
-        if (playersChoice is null)
+        if (timeout is not null)
+        {
+            return timeout;
+        }
+
+        if (playersChoice is not MakeChoiceMove<Card> makeChoiceMove)
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Start of turn choice for now is always DESTROY, so should be of type Card.");
         }
 
-        var result = choice.Choose(playersChoice.Choices);
+        var result = choice.Choose(makeChoiceMove.Choices);
 
         if (result is Failure f)
         {
@@ -98,7 +135,7 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState? HandleFreeMove(Move move)
+    private async Task<EndGameState?> HandleFreeMove(Move move)
     {
         if (!_api.IsMoveLegal(move))
         {
@@ -113,30 +150,39 @@ public class TalesOfTributeGame
 
         return move.Command switch
         {
-            CommandEnum.PLAY_CARD => HandlePlayCard(move as SimpleCardMove),
+            CommandEnum.PLAY_CARD => await HandlePlayCard(move as SimpleCardMove),
             CommandEnum.ATTACK => HandleAttack(move as SimpleCardMove),
-            CommandEnum.BUY_CARD => HandleBuyCard(move as SimpleCardMove),
+            CommandEnum.BUY_CARD => await HandleBuyCard(move as SimpleCardMove),
             CommandEnum.CALL_PATRON => HandleCallPatron(move as SimplePatronMove),
-            CommandEnum.ACTIVATE_AGENT => HandleActivateAgent(move as SimpleCardMove),
+            CommandEnum.ACTIVATE_AGENT => await HandleActivateAgent(move as SimpleCardMove),
             CommandEnum.END_TURN => null,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private EndGameState? HandleActivateAgent(SimpleCardMove move)
-        => ConsumeChain(_api.ActivateAgent(move.Card));
+    private async Task<EndGameState?> HandleActivateAgent(SimpleCardMove move)
+        => await ConsumeChain(_api.ActivateAgent(move.Card));
 
-    private EndGameState? HandlePlayCard(SimpleCardMove move)
-        => ConsumeChain(_api.PlayCard(move.Card));
+    private async Task<EndGameState?> HandlePlayCard(SimpleCardMove move)
+        => await ConsumeChain(_api.PlayCard(move.Card));
 
-    private EndGameState? HandleBuyCard(SimpleCardMove move)
-        => ConsumeChain(_api.BuyCard(move.Card));
+    private async Task<EndGameState?> HandleBuyCard(SimpleCardMove move)
+        => await ConsumeChain(_api.BuyCard(move.Card));
 
-    private EndGameState? ConsumeChain(ExecutionChain chain)
-        => chain
-            .Consume()
-            .Select(HandleTopLevelResult)
-            .FirstOrDefault(endGameState => endGameState is not null);
+    private async Task<EndGameState?> ConsumeChain(ExecutionChain chain)
+    {
+        foreach (var result in chain.Consume())
+        {
+            var endGameState = await HandleTopLevelResult(result);
+
+            if (endGameState is not null)
+            {
+                return endGameState;
+            }
+        }
+
+        return null;
+    }
 
     private EndGameState? HandleAttack(SimpleCardMove move)
     {
@@ -163,17 +209,17 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState? HandleTopLevelResult(PlayResult result)
+    private async Task<EndGameState?> HandleTopLevelResult(PlayResult result)
     {
         return result switch
         {
             Success => null,
             Failure failure => new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, failure.Reason),
-            _ => HandleChoice(result)
+            _ => await HandleChoice(result)
         };
     }
 
-    private EndGameState? HandleChoice(PlayResult result)
+    private async Task<EndGameState?> HandleChoice(PlayResult result)
     {
         do
         {
@@ -181,7 +227,12 @@ public class TalesOfTributeGame
             {
                 case Choice<Card> choice:
                 {
-                    var move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
+                    var (timeout, move) = await PlayWithTimeout();
+                    if (timeout is not null)
+                    {
+                        return timeout;
+                    }
+
                     if (move is not MakeChoiceMove<Card> c)
                     {
                         return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
@@ -192,7 +243,12 @@ public class TalesOfTributeGame
                 }
                 case Choice<EffectType> choice:
                 {
-                    var move = CurrentPlayer.Play(_api.GetSerializer(), _api.GetListOfPossibleMoves());
+                    var (timeout, move) = await PlayWithTimeout();
+                    if (timeout is not null)
+                    {
+                        return timeout;
+                    }
+
                     if (move is not MakeChoiceMove<EffectType> c)
                     {
                         return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
