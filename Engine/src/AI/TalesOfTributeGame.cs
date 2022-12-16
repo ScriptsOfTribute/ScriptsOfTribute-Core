@@ -31,7 +31,7 @@ public class TalesOfTributeGame
         var moves = _api.GetListOfPossibleMoves();
         var task = MoveTask(board, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
-
+        
         if (res == task)
         {
             return (null, task.Result);

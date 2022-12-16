@@ -58,8 +58,8 @@ public class TalesOfTribute
         }
     }
 
-    public async Task<EndGameState> Play()
+    public EndGameState Play()
     {
-        return await _game.Play();
+        return _game.Play().Result;
     }
 }
