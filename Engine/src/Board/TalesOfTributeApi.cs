@@ -25,7 +25,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     {
         if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
         {
-            // In case user forgets about Treasury (she/he shouldnt)
+            // In case user forgets about Treasury (she/he shouldn't)
             List<PatronId> tempList = patrons.ToList();
             tempList.Add(PatronId.TREASURY);
             patrons = tempList.ToArray();
