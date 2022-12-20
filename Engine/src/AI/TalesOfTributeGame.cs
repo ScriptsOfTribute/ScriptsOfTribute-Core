@@ -14,12 +14,15 @@ public class TalesOfTributeGame
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
     private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
+    private int _moveCounter;
 
     public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api)
     {
         _api = api;
         _players[0] = players[0];
         _players[1] = players[1];
+        
+        File.AppendAllTextAsync("log.txt", $"Game start!\n");
     }
 
     private async Task<Move> MoveTask(SerializedBoard board, List<Move> moves)
@@ -51,6 +54,7 @@ public class TalesOfTributeGame
         }
         var board = _api.GetSerializer();
         var moves = _api.GetListOfPossibleMoves();
+        // await File.AppendAllTextAsync("possible_moves_log.txt", $"Possible Moves: {string.Join(' ', moves.Select(m => m.ToString()))}\n");
         var task = MoveTask(board, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
         
@@ -87,6 +91,9 @@ public class TalesOfTributeGame
                 {
                     throw new Exception("This shouldn't happen - there is a bug in the engine!");
                 }
+
+                var s = _api.GetSerializer();
+                await File.AppendAllTextAsync("log.txt", $"{_moveCounter++} {move}\nPrestige P1: {s.CurrentPlayer.Prestige} P2: {s.EnemyPlayer.Prestige}\n");
                 
                 var result = await HandleFreeMove(move);
                 if (result is not null)
@@ -116,6 +123,12 @@ public class TalesOfTributeGame
 
         foreach (var choice in startOfTurnChoices.Consume())
         {
+            // This can be Success in case there are no more cards to discard.
+            if (choice is Success)
+            {
+                continue;
+            }
+
             if (choice is not Choice<Card> realChoice)
             {
                 throw new Exception(
@@ -181,7 +194,7 @@ public class TalesOfTributeGame
             CommandEnum.PLAY_CARD => await HandlePlayCard(move as SimpleCardMove),
             CommandEnum.ATTACK => HandleAttack(move as SimpleCardMove),
             CommandEnum.BUY_CARD => await HandleBuyCard(move as SimpleCardMove),
-            CommandEnum.CALL_PATRON => HandleCallPatron(move as SimplePatronMove),
+            CommandEnum.CALL_PATRON => await HandleCallPatron(move as SimplePatronMove),
             CommandEnum.ACTIVATE_AGENT => await HandleActivateAgent(move as SimpleCardMove),
             CommandEnum.END_TURN => null,
             _ => throw new ArgumentOutOfRangeException()
@@ -222,19 +235,21 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState? HandleCallPatron(SimplePatronMove move)
+    private async Task<EndGameState?> HandleCallPatron(SimplePatronMove move)
     {
         if (!Enum.IsDefined(typeof(PatronId), move.PatronId))
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Invalid patron selected.");
         }
 
-        if (_api.PatronActivation(move.PatronId) is Failure f)
-        {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason);
-        }
+        var result = _api.PatronActivation(move.PatronId);
 
-        return null;
+        return result switch
+        {
+            Failure f => new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason),
+            BaseChoice => await HandleChoice(result),
+            _ => null
+        };
     }
 
     private async Task<EndGameState?> HandleTopLevelResult(PlayResult result)

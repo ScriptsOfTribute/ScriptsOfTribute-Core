@@ -10,7 +10,9 @@ public class RandomBot : AI
         => availablePatrons.PickRandom();
 
     public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
-        => possibleMoves.PickRandom();
+    {
+        return possibleMoves.PickRandom();
+    }
 
     public override void GameEnd(EndGameState state)
     {

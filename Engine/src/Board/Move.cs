@@ -74,6 +74,11 @@ namespace TalesOfTribute
         {
             return Command.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return $"Move: {Command}";
+        }
     }
 
     public class SimpleCardMove : Move
@@ -102,6 +107,11 @@ namespace TalesOfTribute
             hash = (hash * 7) + Card.GetHashCode();
             return hash;
         }
+
+        public override string ToString()
+        {
+            return $"Simple card move: {Command} {Card.CommonId}";
+        }
     }
     
     public class SimplePatronMove : Move
@@ -129,6 +139,11 @@ namespace TalesOfTribute
             hash = (hash * 7) + Command.GetHashCode();
             hash = (hash * 7) + PatronId.GetHashCode();
             return hash;
+        }
+
+        public override string ToString()
+        {
+            return $"Simple Patron Move: {PatronId}";
         }
     }
 
@@ -164,6 +179,11 @@ namespace TalesOfTribute
             hash = (hash * 7) + Command.GetHashCode();
             hash = (hash * 7) + Choices.GetHashCode();
             return hash;
+        }
+
+        public override string ToString()
+        {
+            return $"Make choice move: {string.Join(' ', Choices.Select(c => c?.ToString()))}";
         }
     }
 }

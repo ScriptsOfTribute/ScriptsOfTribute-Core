@@ -6,15 +6,15 @@
         {
             /*
              * Favored:
-             * Sacrifice 1 card you own in play that cost 1 or more Coin ->
+             * Sacrifice 1 card from your hand or your played cards that cost 1 or more Coin  ->
              * Gain Prestige equal to the card's cost minus 1
              * 
              * Neutral:
-             * Sacrifice 1 card you own in play that cost 1 or more Coin ->
+             * Sacrifice 1 card from your hand or your played cards that cost 1 or more Coin  ->
              * Gain Prestige equal to the card's cost minus 1
              * 
              * Unfavored:
-             * Sacrifice 1 card you own in play that cost 1 or more Coin ->
+             * Sacrifice 1 card from your hand or your played cards that cost 1 or more Coin  ->
              * Gain Prestige equal to the card's cost minus 1
              */
 
@@ -37,7 +37,7 @@
                     activator.PrestigeAmount += card.Cost - 1;
                     return new Success();
                 },
-                new ChoiceContext(this));
+                new ChoiceContext(this), 1, 1);
         }
 
         public override PlayResult PatronPower(Player activator, Player enemy)
@@ -56,7 +56,7 @@
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            return activator.GetAllPlayersCards().FindAll(card => card.Cost >= 1).Any();
+            return activator.Hand.Concat(activator.Played).ToList().FindAll(card => card.Cost >= 1).Any();
         }
     }
 }

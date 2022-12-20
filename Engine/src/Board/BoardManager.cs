@@ -8,6 +8,7 @@ namespace TalesOfTribute
         NORMAL,
         CHOICE_PENDING,
         START_OF_TURN_CHOICE_PENDING,
+        PATRON_CHOICE_PENDING,
     }
 
     public class BoardManager
@@ -19,7 +20,8 @@ namespace TalesOfTribute
 
         public Player CurrentPlayer => _players[(int)_currentPlayerId];
         public Player EnemyPlayer => _players[1 - (int)_currentPlayerId];
-        public BaseChoice? PendingChoice => CurrentPlayer.GetPendingChoice(State);
+        public BaseChoice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : CurrentPlayer.GetPendingChoice(State);
+        private BaseChoice? _pendingPatronChoice;
 
         public BoardState State { get; set; } = BoardState.NORMAL;
         private int PrestigeTreshold = 40;
@@ -43,6 +45,7 @@ namespace TalesOfTribute
             {
                 throw new Exception("Complete pending choice first!");
             }
+
             if (CurrentPlayer.PatronCalls <= 0)
             {
                 return new Failure("You cant use Patron calls anymore");
@@ -51,6 +54,28 @@ namespace TalesOfTribute
             var result = Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
             if (result is not Failure)
                 CurrentPlayer.PatronCalls--;
+
+            if (result is BaseChoice c)
+            {
+                State = BoardState.PATRON_CHOICE_PENDING;
+
+                void ChoiceFinishCallback(PlayResult newResult)
+                {
+                    if (newResult is not BaseChoice c) return;
+
+                    _pendingPatronChoice = c;
+                    c.AddChoiceFinishCallback(ChoiceFinishCallback);
+                }
+
+                c.AddSuccessCallback(() =>
+                {
+                    State = BoardState.NORMAL;
+                    _pendingPatronChoice = null;
+                });
+                c.AddChoiceFinishCallback(ChoiceFinishCallback);
+                _pendingPatronChoice = c;
+            }
+
             return result;
         }
 

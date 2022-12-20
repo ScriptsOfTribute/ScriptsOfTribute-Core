@@ -1,3 +1,4 @@
+using TalesOfTribute;
 using TalesOfTribute.Board;
 
 namespace RandomBotTests;
@@ -19,6 +20,8 @@ public class RandomGamesTests
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+
+            GlobalCardDatabase.Instance.Clear();
         }
     }
 }
