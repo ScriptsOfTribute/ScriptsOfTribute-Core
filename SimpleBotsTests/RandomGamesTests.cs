@@ -17,7 +17,7 @@ public class RandomGamesTests
     public void RandomGameShouldEndWithoutErrors()
     {
         const int testAmount = 1000;
-        var drawCount = 0;
+        GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
@@ -30,14 +30,11 @@ public class RandomGamesTests
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
 
-            if (endState.Reason == GameEndReason.TURN_LIMIT_EXCEEDED)
-            {
-                drawCount++;
-            }
+            counter.Add(endState);
             
             GlobalCardDatabase.Instance.Clear();
         }
 
-        _testOutputHelper.WriteLine($"Final amount of draws: {drawCount}/{testAmount} games ({100.0*drawCount/testAmount}%)");
+        _testOutputHelper.WriteLine(counter.ToString());
     }
 }
