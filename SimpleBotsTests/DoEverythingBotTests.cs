@@ -62,7 +62,7 @@ public class DoEverythingBotTests
             GlobalCardDatabase.Instance.Clear();
         }
 
-        Assert.True(Math.Abs(counter.P1WinPercentage - counter.P2WinPercentage) < 15.0);
         _testOutputHelper.WriteLine(counter.ToString());
+        Assert.True(Math.Abs(counter.P1WinPercentage - counter.P2WinPercentage) < 15.0);
     }
 }

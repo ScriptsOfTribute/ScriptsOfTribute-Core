@@ -22,8 +22,6 @@ public class TalesOfTributeGame
         _api = api;
         _players[0] = players[0];
         _players[1] = players[1];
-        
-        // File.AppendAllTextAsync("log.txt", $"Game start!\n");
     }
 
     private async Task<Move> MoveTask(SerializedBoard board, List<Move> moves)
@@ -55,7 +53,6 @@ public class TalesOfTributeGame
         }
         var board = _api.GetSerializer();
         var moves = _api.GetListOfPossibleMoves();
-        // await File.AppendAllTextAsync("possible_moves_log.txt", $"Possible Moves: {string.Join(' ', moves.Select(m => m.ToString()))}\n");
         var task = MoveTask(board, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
         
@@ -93,9 +90,6 @@ public class TalesOfTributeGame
                     throw new Exception("This shouldn't happen - there is a bug in the engine!");
                 }
 
-                var s = _api.GetSerializer();
-                // await File.AppendAllTextAsync("log.txt", $"{_moveCounter++} {move}\nPrestige P1: {s.CurrentPlayer.Prestige} P2: {s.EnemyPlayer.Prestige}\n");
-                
                 var result = await HandleFreeMove(move);
                 if (result is not null)
                 {
