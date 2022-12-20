@@ -6,11 +6,12 @@ namespace TalesOfTribute.AI;
 
 public class TalesOfTributeGame
 {
+    public const int TurnLimit = 500;
+
     private ITalesOfTributeApi _api;
     private AI[] _players = new AI[2];
     private TimeSpan _currentTurnTimeElapsed = TimeSpan.Zero;
     public EndGameState? EndGameState { get; private set; }
-
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
     private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
@@ -22,7 +23,7 @@ public class TalesOfTributeGame
         _players[0] = players[0];
         _players[1] = players[1];
         
-        File.AppendAllTextAsync("log.txt", $"Game start!\n");
+        // File.AppendAllTextAsync("log.txt", $"Game start!\n");
     }
 
     private async Task<Move> MoveTask(SerializedBoard board, List<Move> moves)
@@ -93,7 +94,7 @@ public class TalesOfTributeGame
                 }
 
                 var s = _api.GetSerializer();
-                await File.AppendAllTextAsync("log.txt", $"{_moveCounter++} {move}\nPrestige P1: {s.CurrentPlayer.Prestige} P2: {s.EnemyPlayer.Prestige}\n");
+                // await File.AppendAllTextAsync("log.txt", $"{_moveCounter++} {move}\nPrestige P1: {s.CurrentPlayer.Prestige} P2: {s.EnemyPlayer.Prestige}\n");
                 
                 var result = await HandleFreeMove(move);
                 if (result is not null)
@@ -102,16 +103,27 @@ public class TalesOfTributeGame
                 }
             } while (move.Command != CommandEnum.END_TURN);
 
-            HandleEndTurn();
+            endGameState = HandleEndTurn();
+            if (endGameState is not null)
+            {
+                return endGameState;
+            }
+
             _api.EndTurn();
         }
 
         return EndGame(endGameState);
     }
 
-    private void HandleEndTurn()
+    private EndGameState? HandleEndTurn()
     {
         _currentTurnTimeElapsed = TimeSpan.Zero;
+        if (_api.TurnCount > TurnLimit)
+        {
+            return new EndGameState(PlayerEnum.NO_PLAYER_SELECTED, GameEndReason.TURN_LIMIT_EXCEEDED);
+        }
+
+        return null;
     }
 
 
