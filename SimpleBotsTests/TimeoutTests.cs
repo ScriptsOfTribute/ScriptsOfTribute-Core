@@ -2,7 +2,7 @@
 using TalesOfTribute;
 using TalesOfTribute.Board;
 
-namespace RandomBotTests;
+namespace SimpleBotsTests;
 
 public class TimeoutTests
 {

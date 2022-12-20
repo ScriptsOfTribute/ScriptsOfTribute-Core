@@ -2,7 +2,7 @@ using TalesOfTribute;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
 
-namespace RandomBotTests;
+namespace SimpleBotsTests;
 
 public class RandomGamesTests
 {
