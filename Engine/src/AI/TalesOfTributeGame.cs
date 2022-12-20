@@ -15,7 +15,6 @@ public class TalesOfTributeGame
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
     private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
-    private int _moveCounter;
 
     public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api)
     {
