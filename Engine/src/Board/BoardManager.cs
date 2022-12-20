@@ -58,13 +58,13 @@ namespace TalesOfTribute
             if (result is BaseChoice c)
             {
                 State = BoardState.PATRON_CHOICE_PENDING;
-
+            
                 void ChoiceFinishCallback(PlayResult newResult)
                 {
-                    if (newResult is not BaseChoice c) return;
-
-                    _pendingPatronChoice = c;
-                    c.AddChoiceFinishCallback(ChoiceFinishCallback);
+                    if (newResult is not BaseChoice ch) return;
+            
+                    _pendingPatronChoice = ch;
+                    ch.AddChoiceFinishCallback(ChoiceFinishCallback);
                 }
 
                 c.AddSuccessCallback(() =>

@@ -28,7 +28,7 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            List<Card> cardsInPlay = activator.Hand.Concat(activator.Played).ToList();
+            var cardsInPlay = activator.Hand.Concat(activator.Played).Where(c => c.Cost >= 1).ToList();
             return new Choice<Card>(cardsInPlay,
                 cards =>
                 {
