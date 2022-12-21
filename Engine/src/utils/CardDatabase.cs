@@ -26,6 +26,11 @@ public class CardDatabase
         return _allCardsInPlay.First(card => card.UniqueId == id);
     }
 
+    public void Clear()
+    {
+        _allCardsInPlay.Clear();
+    }
+
     public List<Card> GetCardsByPatron(PatronId[] patrons)
     {
         List<Card> cardsFromDeck = (

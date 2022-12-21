@@ -189,7 +189,7 @@
         {
             var mixedCards = CooldownPile.OrderBy(x => Guid.NewGuid()).ToList();
             DrawPile.AddRange(mixedCards);
-            CooldownPile = new List<Card>();
+            CooldownPile.Clear();
         }
 
         public void EndTurn()
@@ -250,7 +250,12 @@
         public void KnockOut(Card card)
         {
             AssertCardIn(card, AgentCards);
+            var prevAgentsSize = Agents.Count;
             Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
+            if (Agents.Count != prevAgentsSize - 1)
+            {
+                throw new Exception("There is a bug in the engine - Agents.Count != prevAgentsSize - 1");
+            }
             CooldownPile.Add(card);
         }
 
@@ -267,7 +272,12 @@
             }
             else if (Agents.Any(agent => agent.RepresentingCard.UniqueId == card.UniqueId))
             {
+                var prevAgentsSize = Agents.Count;
                 Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
+                if (Agents.Count != prevAgentsSize - 1)
+                {
+                    throw new Exception("There is a bug in the engine - Agents.Count != prevAgentsSize - 1 when destroying card.");
+                }
             }
             else
             {

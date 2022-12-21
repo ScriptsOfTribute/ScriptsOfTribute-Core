@@ -2,6 +2,7 @@
 
 public interface ITalesOfTributeApi
 {
+    int TurnCount { get; }
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }

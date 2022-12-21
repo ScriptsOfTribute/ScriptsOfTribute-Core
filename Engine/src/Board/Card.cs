@@ -55,7 +55,7 @@
 
         public override string ToString()
         {
-            return String.Format($"Card: {this.Name}, " +
+            return string.Format($"Card: {this.Name}, " +
                 $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}");
         }
 

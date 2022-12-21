@@ -4,11 +4,13 @@ namespace TalesOfTribute.Board;
 
 public class TalesOfTributeApi : ITalesOfTributeApi
 {
+    public int TurnCount => _turnCount;
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.State;
     
     private readonly BoardManager _boardManager;
+    private int _turnCount;
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
@@ -348,6 +350,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public void EndTurn()
     {
+        _turnCount++;
         _boardManager.EndTurn();
     }
 
