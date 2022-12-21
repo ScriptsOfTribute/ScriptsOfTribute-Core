@@ -43,7 +43,7 @@ namespace TalesOfTribute
             var sb = new StringBuilder();
             sb.AppendLine(
                 $"Current player: (Prestige, Power, Coins) ({CurrentPlayer.Prestige}, {CurrentPlayer.Power}, {CurrentPlayer.Coins})");
-            sb.AppendLine($"Current player: (Prestige, Power, Coins) ({EnemyPlayer.Prestige}, {EnemyPlayer.Power}, {EnemyPlayer.Coins})");
+            sb.AppendLine($"Enemy player: (Prestige, Power, Coins) ({EnemyPlayer.Prestige}, {EnemyPlayer.Power}, {EnemyPlayer.Coins})");
             sb.AppendLine($"$Tavern Available Cards:\n{string.Join('\n', TavernAvailableCards.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"$Tavern Cards:\n{string.Join('\n', TavernCards.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"Current player Hand:\n{string.Join('\n', CurrentPlayer.Hand.Select(c => $"\t{c.ToString()}"))}");
