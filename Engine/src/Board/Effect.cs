@@ -63,7 +63,7 @@
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.ACQUIRE_TAVERN) : null;
                         return new Choice<Card>(tavern.GetAffordableCards(Amount),
-                            choiceList =>
+                            (choiceList, newPlayer, newEnemy, newTavern) =>
                             {
                                 if (choiceList.Count == 0)
                                 {

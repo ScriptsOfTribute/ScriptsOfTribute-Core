@@ -42,7 +42,7 @@ public class Choice<T> : BaseChoice
     public int MaxChoiceAmount { get; } = 1;
     public int MinChoiceAmount { get; } = 0;
 
-    public delegate PlayResult ChoiceCallback(List<T> t);
+    public delegate PlayResult ChoiceCallback(List<T> t, IPlayer current, IPlayer enemy, IPlayer tavern);
 
     private readonly ChoiceCallback _callback;
     public readonly ChoiceContext? Context;
@@ -71,7 +71,7 @@ public class Choice<T> : BaseChoice
         MinChoiceAmount = minChoiceAmount;
     }
 
-    public PlayResult Choose(T t)
+    public PlayResult Choose(T t, IPlayer current, IPlayer enemy, IPlayer tavern)
     {
         if (PossibleChoices.Count == 0)
         {
@@ -86,14 +86,14 @@ public class Choice<T> : BaseChoice
         {
             return new Failure("Invalid choice specified!");
         }
-        var result = _callback(new List<T> { t });
+        var result = _callback(new List<T> { t }, current, enemy, tavern);
 
         HandleResult(result);
 
         return result;
     }
 
-    public PlayResult Choose(List<T> choices)
+    public PlayResult Choose(List<T> choices, IPlayer current, IPlayer enemy, IPlayer tavern)
     {
         if (PossibleChoices.Count == 0)
         {
@@ -106,7 +106,7 @@ public class Choice<T> : BaseChoice
         {
             return new Failure("Invalid choices specified!");
         }
-        var result = _callback(choices);
+        var result = _callback(choices, current, enemy, tavern);
 
         HandleResult(result);
 

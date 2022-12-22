@@ -13,17 +13,16 @@ namespace TalesOfTribute
 
     public class BoardManager
     {
-        private PlayerEnum _currentPlayerId = PlayerEnum.PLAYER1;
         public Patron[] Patrons;
         public Tavern Tavern;
-        private Player[] _players;
+        private PlayerContext _playerContext;
 
-        public Player CurrentPlayer => _players[(int)_currentPlayerId];
-        public Player EnemyPlayer => _players[1 - (int)_currentPlayerId];
+        public Player CurrentPlayer => _playerContext.CurrentPlayer;
+        public Player EnemyPlayer => _playerContext.EnemyPlayer;
         public BaseChoice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : CurrentPlayer.GetPendingChoice(State);
         private BaseChoice? _pendingPatronChoice;
 
-        public BoardState State { get; set; } = BoardState.NORMAL;
+        public BoardState State { get; private set; } = BoardState.NORMAL;
         private int PrestigeTreshold = 40;
 
         public BoardManager(PatronId[] patrons)
@@ -31,7 +30,7 @@ namespace TalesOfTribute
             this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
             Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
-            _players = new Player[] { new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2) };
+            _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2));
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -160,7 +159,7 @@ namespace TalesOfTribute
                 startOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
             }
 
-            _currentPlayerId = (PlayerEnum)(1 - (int)_currentPlayerId);
+            _playerContext.Swap();
 
             foreach (var patron in Patrons)
             {
@@ -172,7 +171,6 @@ namespace TalesOfTribute
 
         public void SetUpGame()
         {
-            _currentPlayerId = PlayerEnum.PLAYER1;
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
             Tavern.DrawCards();
 
