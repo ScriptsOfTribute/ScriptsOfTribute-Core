@@ -140,7 +140,7 @@ namespace TalesOfTribute
         
         public SerializedBoard SerializeBoard()
         {
-            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, State, PendingChoice);
+            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)

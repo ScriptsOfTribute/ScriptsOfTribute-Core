@@ -9,7 +9,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
-    
+    public BaseChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice;
+
     private readonly BoardManager _boardManager;
     private int _turnCount;
 
@@ -41,6 +42,16 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public SerializedBoard GetSerializer()
     {
         return _boardManager.SerializeBoard();
+    }
+
+    public void MakeChoice<T>(List<T> choices)
+    {
+        _boardManager.CardActionManager.MakeChoice(choices);
+    }
+
+    public void MakeChoice<T>(T choice)
+    {
+        _boardManager.CardActionManager.MakeChoice(new List<T> { choice });
     }
 
     public SerializedPlayer GetPlayer(PlayerEnum playerId)

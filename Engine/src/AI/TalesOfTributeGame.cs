@@ -127,19 +127,10 @@ public class TalesOfTributeGame
         {
             return null;
         }
-        
-        var startOfTurnChoices = _api.HandleStartOfTurnChoices();
 
-        if (startOfTurnChoices is null) return null;
-
-        foreach (var choice in startOfTurnChoices.Consume())
+        BaseChoice? choice = null;
+        while ((choice = _api.PendingChoice) is not null)
         {
-            // This can be Success in case there are no more cards to discard.
-            if (choice is Success)
-            {
-                continue;
-            }
-
             if (choice is not Choice<Card> realChoice)
             {
                 throw new Exception(
@@ -171,17 +162,13 @@ public class TalesOfTributeGame
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Start of turn choice for now is always DESTROY, so should be of type Card.");
         }
 
-        var result = choice.Choose(makeChoiceMove.Choices);
-
-        if (result is Failure f)
+        try
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason);
+            _api.MakeChoice(makeChoiceMove.Choices);
         }
-
-        if (result is not Success)
+        catch (Exception e)
         {
-            throw new Exception(
-                "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating - start of turn choices shouldn't return choices!");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
         }
 
         return null;
@@ -213,24 +200,65 @@ public class TalesOfTributeGame
     }
 
     private async Task<EndGameState?> HandleActivateAgent(SimpleCardMove move)
-        => await ConsumeChain(_api.ActivateAgent(move.Card));
-
-    private async Task<EndGameState?> HandlePlayCard(SimpleCardMove move)
-        => await ConsumeChain(_api.PlayCard(move.Card));
-
-    private async Task<EndGameState?> HandleBuyCard(SimpleCardMove move)
-        => await ConsumeChain(_api.BuyCard(move.Card));
-
-    private async Task<EndGameState?> ConsumeChain(ExecutionChain chain)
     {
-        foreach (var result in chain.Consume())
+        try
         {
-            var endGameState = await HandleTopLevelResult(result);
+            _api.ActivateAgent(move.Card);
+        }
+        catch (Exception e)
+        {
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+        }
 
-            if (endGameState is not null)
+        return await ConsumePotentialPendingMoves();
+    }
+    
+    private async Task<EndGameState?> HandlePlayCard(SimpleCardMove move)
+    {
+        try
+        {
+            _api.PlayCard(move.Card);
+        }
+        catch (Exception e)
+        {
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+        }
+
+        return await ConsumePotentialPendingMoves();
+    }
+    
+    private async Task<EndGameState?> HandleBuyCard(SimpleCardMove move)
+    {
+        try
+        {
+            _api.BuyCard(move.Card);
+        }
+        catch (Exception e)
+        {
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+        }
+
+        return await ConsumePotentialPendingMoves();
+    }
+
+    private async Task<EndGameState?> ConsumePotentialPendingMoves()
+    {
+        BaseChoice? choice = null;
+        try
+        {
+            while ((choice = _api.PendingChoice) is not null)
             {
-                return endGameState;
+                var result = await HandleChoice(choice);
+
+                if (result is not null)
+                {
+                    return result;
+                }
             }
+        }
+        catch (Exception e)
+        {
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
         }
 
         return null;
@@ -253,71 +281,49 @@ public class TalesOfTributeGame
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Invalid patron selected.");
         }
 
-        var result = _api.PatronActivation(move.PatronId);
+        _api.PatronActivation(move.PatronId);
 
-        return result switch
-        {
-            Failure f => new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason),
-            BaseChoice => await HandleChoice(result),
-            _ => null
-        };
+        return await ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleTopLevelResult(PlayResult result)
+    private async Task<EndGameState?> HandleChoice(BaseChoice result)
     {
-        return result switch
+        switch (result)
         {
-            Success => null,
-            Failure failure => new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, failure.Reason),
-            _ => await HandleChoice(result)
-        };
-    }
-
-    private async Task<EndGameState?> HandleChoice(PlayResult result)
-    {
-        do
-        {
-            switch (result)
+            case Choice<Card> choice:
             {
-                case Choice<Card> choice:
+                var (timeout, move) = await PlayWithTimeout();
+                if (timeout is not null)
                 {
-                    var (timeout, move) = await PlayWithTimeout();
-                    if (timeout is not null)
-                    {
-                        return timeout;
-                    }
+                    return timeout;
+                }
 
-                    if (move is not MakeChoiceMove<Card> c)
-                    {
-                        return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
-                            "Choice of Card was required.");
-                    }
-                    result = choice.Choose(c.Choices);
-                    break;
-                }
-                case Choice<EffectType> choice:
+                if (move is not MakeChoiceMove<Card> c)
                 {
-                    var (timeout, move) = await PlayWithTimeout();
-                    if (timeout is not null)
-                    {
-                        return timeout;
-                    }
+                    return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
+                        "Choice of Card was required.");
+                }
+                
+                _api.MakeChoice(c.Choices);
+                break;
+            }
+            case Choice<EffectType> choice:
+            {
+                var (timeout, move) = await PlayWithTimeout();
+                if (timeout is not null)
+                {
+                    return timeout;
+                }
 
-                    if (move is not MakeChoiceMove<EffectType> c)
-                    {
-                        return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
-                            "Choice of Effect was required.");
-                    }
-                    result = choice.Choose(c.Choices);
-                    break;
-                }
-                case Failure failure:
+                if (move is not MakeChoiceMove<EffectType> c)
                 {
-                    return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, failure.Reason);
+                    return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
+                        "Choice of Effect was required.");
                 }
+                _api.MakeChoice(c.Choices);
+                break;
             }
         }
-        while (result is not Success);
 
         return null;
     }

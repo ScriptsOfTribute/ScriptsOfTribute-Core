@@ -8,7 +8,11 @@ public interface ITalesOfTributeApi
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
+    public BaseChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
+
+    public void MakeChoice<T>(List<T> choices);
+    public void MakeChoice<T>(T choice);
 
     /// <summary>
     /// Get cards in hand of current player

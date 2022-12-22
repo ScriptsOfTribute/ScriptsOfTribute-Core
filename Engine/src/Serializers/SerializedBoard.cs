@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute
