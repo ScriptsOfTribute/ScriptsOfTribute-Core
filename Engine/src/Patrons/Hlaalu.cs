@@ -30,17 +30,15 @@
 
             var cardsInPlay = activator.Hand.Concat(activator.Played).Where(c => c.Cost >= 1).ToList();
             return new Choice<Card>(cardsInPlay,
-                cards =>
+                (cards, complexEffectExecutor) =>
                 {
                     var card = cards.First();
-                    activator.Hand.Remove(card);
-                    activator.PrestigeAmount += card.Cost - 1;
-                    return new Success();
+                    return complexEffectExecutor.CompleteHlaalu(card);
                 },
                 new ChoiceContext(this), 1, 1);
         }
 
-        public override PlayResult PatronPower(Player activator, Player enemy)
+        public override ISimpleResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 

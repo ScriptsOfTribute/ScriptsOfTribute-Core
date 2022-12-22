@@ -13,25 +13,15 @@
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
 
             return new Choice<Card>(usedCards,
-                choices =>
+                (choices, complexChoiceExecutor) =>
                 {
-                    Card selectedCard = choices.First();
-                    if (activator.Played.Contains(selectedCard))
-                    {
-                        activator.Played.Remove(selectedCard);
-                        activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
-                    }
-                    else
-                    {
-                        activator.CooldownPile.Remove(selectedCard);
-                        activator.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
-                    }
-                    return new Success();
+                    var selectedCard = choices.First();
+                    return complexChoiceExecutor.CompleteTreasury(selectedCard);
                 },
                 new ChoiceContext(this), 1, 1);
         }
 
-        public override PlayResult PatronPower(Player activator, Player enemy)
+        public override ISimpleResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 

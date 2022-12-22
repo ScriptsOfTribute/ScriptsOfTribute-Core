@@ -24,7 +24,7 @@
         public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
 
         public abstract PlayResult PatronActivation(Player activator, Player enemy);
-        public abstract PlayResult PatronPower(Player activator, Player enemy);
+        public abstract ISimpleResult PatronPower(Player activator, Player enemy);
 
         public abstract PatronId PatronID { get; }
         public abstract List<CardId> GetStarterCards();

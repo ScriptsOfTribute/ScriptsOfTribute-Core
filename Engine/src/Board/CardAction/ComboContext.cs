@@ -51,17 +51,17 @@ public class ComboContext
 {
     private readonly Dictionary<PatronId, Combo> _combos = new();
 
-    public ExecutionChain PlayCard(Card card, IPlayer owner, IPlayer other, ITavern tavern)
+    public (List<BaseEffect> immediateEffects, List<BaseEffect> startOfNextTurnEffects) PlayCard(Card card)
     {
         var combo = GetCombo(card);
 
         combo.AddEffects(card.Effects);
 
-        var chain = new ExecutionChain(owner, other, tavern);
+        var allEffects = combo.GetCurrentComboEffects().ToList();
+        var immediateEffects = allEffects.Where(e => (e as Effect)?.Type != EffectType.OPP_DISCARD).ToList();
+        var startOfNextTurnEffects = allEffects.Where(e => (e as Effect)?.Type == EffectType.OPP_DISCARD).ToList();
 
-        combo.GetCurrentComboEffects().ToList().ForEach(effect => chain.Add(effect.Enact));
-
-        return chain;
+        return (immediateEffects, startOfNextTurnEffects);
     }
 
     public void Reset()

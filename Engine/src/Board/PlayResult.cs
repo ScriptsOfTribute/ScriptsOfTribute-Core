@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.CardAction;
+
+namespace TalesOfTribute;
 
 public interface ISimpleResult
 {
@@ -36,16 +38,24 @@ public class BaseChoice : PlayResult
     }
 }
 
-public class Choice<T> : BaseChoice
+public interface IReadOnlyChoice<T>
+{
+    List<T> PossibleChoices { get; }
+    int MaxChoiceAmount { get; }
+    int MinChoiceAmount { get; }
+    public ChoiceContext? Context { get; }
+}
+
+public class Choice<T> : BaseChoice, IReadOnlyChoice<T>
 {
     public List<T> PossibleChoices { get; }
     public int MaxChoiceAmount { get; } = 1;
     public int MinChoiceAmount { get; } = 0;
 
-    public delegate PlayResult ChoiceCallback(List<T> t, IPlayer current, IPlayer enemy, IPlayer tavern);
+    public delegate PlayResult ChoiceCallback(List<T> t, ComplexEffectExecutor executor);
 
     private readonly ChoiceCallback _callback;
-    public readonly ChoiceContext? Context;
+    public ChoiceContext? Context { get; }
 
     public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context) : base()
     {
@@ -71,29 +81,7 @@ public class Choice<T> : BaseChoice
         MinChoiceAmount = minChoiceAmount;
     }
 
-    public PlayResult Choose(T t, IPlayer current, IPlayer enemy, IPlayer tavern)
-    {
-        if (PossibleChoices.Count == 0)
-        {
-            // in case there is nothing to choose we should 
-            // just proceed 
-            var dummyResult = new Success();
-            HandleResult(dummyResult);
-            return dummyResult;
-        }
-
-        if (!PossibleChoices.Contains(t) || MinChoiceAmount > 1)
-        {
-            return new Failure("Invalid choice specified!");
-        }
-        var result = _callback(new List<T> { t }, current, enemy, tavern);
-
-        HandleResult(result);
-
-        return result;
-    }
-
-    public PlayResult Choose(List<T> choices, IPlayer current, IPlayer enemy, IPlayer tavern)
+    public PlayResult Choose(List<T> choices, ComplexEffectExecutor executor)
     {
         if (PossibleChoices.Count == 0)
         {
@@ -106,7 +94,7 @@ public class Choice<T> : BaseChoice
         {
             return new Failure("Invalid choices specified!");
         }
-        var result = _callback(choices, current, enemy, tavern);
+        var result = _callback(choices, executor);
 
         HandleResult(result);
 

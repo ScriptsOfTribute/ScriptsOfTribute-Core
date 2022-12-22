@@ -3,13 +3,7 @@ using TalesOfTribute.Board;
 
 namespace TalesOfTribute
 {
-    public enum BoardState
-    {
-        NORMAL,
-        CHOICE_PENDING,
-        START_OF_TURN_CHOICE_PENDING,
-        PATRON_CHOICE_PENDING,
-    }
+
 
     public class BoardManager
     {

@@ -63,7 +63,7 @@
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.ACQUIRE_TAVERN) : null;
                         return new Choice<Card>(tavern.GetAffordableCards(Amount),
-                            (choiceList, newPlayer, newEnemy, newTavern) =>
+                            (choiceList, executor) =>
                             {
                                 if (choiceList.Count == 0)
                                 {
@@ -71,9 +71,7 @@
                                 }
 
                                 var choice = choiceList.First();
-                                var card = tavern.Acquire(choice);
-                                player.HandleAcquireDuringExecutionChain(card, enemy, tavern);
-                                return new Success();
+                                return executor.AcquireTavern(choice);
                             },
                             context);
                     }
@@ -94,10 +92,9 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.REPLACE_TAVERN) : null;
                         return new Choice<Card>(
                             tavern.AvailableCards,
-                            choices =>
+                            (choices, complexEffectExecutor) =>
                             {
-                                choices.ForEach(tavern.ReplaceCard);
-                                return new Success();
+                                return complexEffectExecutor.ReplaceTavern(choices);
                             },
                             context,
                             Amount
@@ -108,10 +105,9 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.DESTROY_CARD) : null;
                         return new Choice<Card>(
                             player.Hand.Concat(player.AgentCards).ToList(),
-                            choices =>
+                            (choices, complexEffectExecutor) =>
                             {
-                                choices.ForEach(player.Destroy);
-                                return new Success();
+                                return complexEffectExecutor.DestroyCard(choices);
                             },
                             context,
                             Amount
@@ -123,37 +119,34 @@
                     break;
                 case EffectType.OPP_DISCARD:
                     {
-                        var chain = new ExecutionChain(player, enemy, tavern);
+                        var howManyToDiscard = Amount > player.Hand.Count ? player.Hand.Count : Amount;
 
-                        var howManyToDiscard = Amount > 5 ? 5 : Amount;
+                        if (howManyToDiscard == 0)
+                        {
+                            return new Success();
+                        }
 
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OPP_DISCARD) : null;
 
-                        chain.Add((_, enemy, _) => new Choice<Card>(
+                        return new Choice<Card>(
                             enemy.Hand,
-                            choices =>
+                            (choices, complexEffectExecutor) =>
                             {
-                                choices.ForEach(enemy.Discard);
-                                return new Success();
+                                return complexEffectExecutor.Discard(choices);
                             },
                             context,
                             howManyToDiscard,
                             howManyToDiscard
-                        ));
-
-                        enemy.AddStartOfTurnEffect(this);
-
-                        return new Success();
+                        );
                     }
                 case EffectType.RETURN_TOP:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.RETURN_TOP) : null;
                         return new Choice<Card>(
                             player.CooldownPile,
-                            choices =>
+                            (choices, complexEffectExecutor) =>
                             {
-                                choices.ForEach(player.Refresh);
-                                return new Success();
+                                return complexEffectExecutor.Refresh(choices);
                             },
                             context,
                             Amount
@@ -164,10 +157,9 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.TOSS) : null;
                         return new Choice<Card>(
                             player.DrawPile,
-                            choices =>
+                            (choices, complexChoiceExecutor) =>
                             {
-                                choices.ForEach(player.Toss);
-                                return new Success();
+                                return complexChoiceExecutor.Toss(choices);
                             },
                             context,
                             Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
@@ -178,14 +170,9 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.KNOCKOUT) : null;
                         return new Choice<Card>(
                             enemy.AgentCards,
-                            choices =>
+                            (choices, complexChoiceExecutor) =>
                             {
-                                var contractAgents = choices.FindAll(card => card.Type == CardType.CONTRACT_AGENT);
-                                var normalAgents = choices.FindAll(card => card.Type == CardType.AGENT);
-                                contractAgents.ForEach(enemy.Destroy);
-                                tavern.Cards.AddRange(contractAgents);
-                                normalAgents.ForEach(enemy.KnockOut);
-                                return new Success();
+                                return complexChoiceExecutor.Knockout(choices);
                             },
                             context,
                             Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
@@ -307,14 +294,9 @@
         {
             var context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OR) : null;
             return new Choice<EffectType>(new List<EffectType> { _left.Type, _right.Type },
-                choice =>
+                (choices, complexEffectExecutor) =>
                 {
-                    if (choice.First() == _left.Type)
-                    {
-                        return _left.Enact(player, enemy, tavern);
-                    }
-
-                    return _right.Enact(player, enemy, tavern);
+                    return complexEffectExecutor.CompleteEffectChoice(_left, _right, choices);
                 },
                 context,
                 1, 1); // OR choice should always result in one choice

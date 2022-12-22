@@ -30,16 +30,15 @@ namespace TalesOfTribute
             List<Card> agentsInCooldownPile = activator.CooldownPile.FindAll(card => card.Type == CardType.AGENT);
 
             return new Choice<Card>(agentsInCooldownPile,
-                choices =>
+                (choices, complexChoiceExecutor) =>
                 {
-                    activator.CooldownPile.Remove(choices.First());
-                    activator.DrawPile.Insert(0, choices.First());
-                    return new Success();
+                    var choice = choices.First();
+                    return complexChoiceExecutor.CompletePelin(choice);
                 },
                 new ChoiceContext(this), 1, 1);
         }
 
-        public override PlayResult PatronPower(Player activator, Player enemy)
+        public override ISimpleResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
             return new Success();

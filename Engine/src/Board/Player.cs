@@ -315,7 +315,7 @@
                 return PlayCardWithoutChecks(card, enemy, tavern);
             }
 
-            return ExecutionChain.Failed("Picked agent has been already activated in your turn", this, enemy, tavern);
+            throw new Exception("Given agent has already been activated!");
         }
 
         public ISimpleResult AttackAgent(Card card, IPlayer enemy, ITavern tavern)

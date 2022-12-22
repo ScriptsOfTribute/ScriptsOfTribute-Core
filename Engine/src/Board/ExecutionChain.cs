@@ -1,74 +1,66 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.CardAction;
+
+namespace TalesOfTribute;
 
 public class ExecutionChain
 {
-    public delegate void OnComplete();
+    private List<BaseEffect> _pendingEffects = new();
+    public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
+    public bool Empty => _chain.Count == 0;
+    public BaseChoice? PendingChoice { get; private set; }
+    public bool Completed => Empty && PendingChoice is null;
 
     private readonly Queue<Func<IPlayer, IPlayer, ITavern, PlayResult>> _chain = new();
     private PlayResult? _current;
-    private OnComplete? _onComplete;
 
-    private IPlayer _owner;
-    private IPlayer _enemy;
-    private ITavern _tavern;
-
-    public bool Empty => _chain.Count == 0;
-    public BaseChoice? PendingChoice { get; private set; } = null;
-
-    public ExecutionChain(IPlayer owner, IPlayer enemy, ITavern tavern)
+    public void Add(BaseEffect effect)
     {
-        _owner = owner;
-        _enemy = enemy;
-        _tavern = tavern;
+        _chain.Enqueue(effect.Enact);
+        _pendingEffects.Add(effect);
     }
 
-    public void AddCompleteCallback(OnComplete onComplete)
+    public IEnumerable<PlayResult> Consume(IPlayer owner, IPlayer enemy, ITavern tavern)
     {
-        _onComplete += onComplete;
-    }
-
-    public void Add(Func<IPlayer, IPlayer, ITavern, PlayResult> func)
-    {
-        _chain.Enqueue(func);
-    }
-
-    public IEnumerable<PlayResult> Consume()
-    {
-        if (_chain.Count == 0)
+        if (PendingChoice is not null)
         {
-            _onComplete?.Invoke();
-            yield break;
-        }
-
-        void ChoiceFinishCallback(PlayResult newResult)
-        {
-            if (newResult is not BaseChoice baseChoice) return;
-
-            PendingChoice = baseChoice;
-            baseChoice.AddChoiceFinishCallback(ChoiceFinishCallback);
+            throw new Exception("Complete pending events before consuming further!");
         }
 
         while (!Empty)
         {
             PendingChoice = null;
 
-            _current = _chain.Dequeue().Invoke(_owner, _enemy, _tavern);
+            _current = _chain.Dequeue().Invoke(owner, enemy, tavern);
+            _pendingEffects.RemoveAt(0);
             if (_current is BaseChoice c)
             {
                 PendingChoice = c;
-                c.AddChoiceFinishCallback(ChoiceFinishCallback);
             }
-
 
             yield return _current;
 
-            if (!_current.Completed)
+            if (PendingChoice is not null)
             {
                 throw new Exception("Complete pending events before consuming further!");
             }
         }
+    }
 
-        _onComplete?.Invoke();
+    public void MakeChoice<T>(List<T> choices, ComplexEffectExecutor executor)
+    {
+        if (PendingChoice is null || PendingChoice is not Choice<T> c)
+        {
+            throw new Exception("Pending choice is missing or wrong type.");
+        }
+
+        var result = c.Choose(choices, executor);
+
+        PendingChoice = result switch
+        {
+            BaseChoice baseChoice => baseChoice,
+            Failure f => throw new Exception(f.Reason),
+            _ => null
+        };
     }
 
     public void MergeWith(ExecutionChain other)
@@ -77,13 +69,5 @@ public class ExecutionChain
         {
             _chain.Enqueue(other._chain.Dequeue());
         }
-        AddCompleteCallback(() => other._onComplete?.Invoke());
-    }
-
-    public static ExecutionChain Failed(string reason, IPlayer player, IPlayer enemy, ITavern tavern)
-    {
-        var result = new ExecutionChain(player, enemy, tavern);
-        result.Add((_, _, _) => new Failure(reason));
-        return result;
     }
 }
