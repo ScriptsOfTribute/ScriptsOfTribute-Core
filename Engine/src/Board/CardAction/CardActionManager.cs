@@ -118,6 +118,7 @@ public class CardActionManager
         {
             _pendingExecutionChain.Add(e);
         });
+        _startOfNextTurnEffects.Clear();
         if (!ConsumePendingChainToChoice())
         {
             State = BoardState.START_OF_TURN_CHOICE_PENDING;

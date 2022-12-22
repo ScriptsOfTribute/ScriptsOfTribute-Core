@@ -48,7 +48,9 @@ namespace TalesOfTribute
             sb.AppendLine($"$Tavern Available Cards:\n{string.Join('\n', TavernAvailableCards.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"$Tavern Cards:\n{string.Join('\n', TavernCards.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"Current player Hand:\n{string.Join('\n', CurrentPlayer.Hand.Select(c => $"\t{c.ToString()}"))}");
+            sb.AppendLine($"Current player Agents:\n{string.Join('\n', CurrentPlayer.Agents.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"Enemy player Hand:\n{string.Join('\n', EnemyPlayer.Hand.Select(c => $"\t{c.ToString()}"))}");
+            sb.AppendLine($"Enemy player Agents:\n{string.Join('\n', EnemyPlayer.Agents.Select(c => $"\t{c.ToString()}"))}");
 
             return sb.ToString();
         }

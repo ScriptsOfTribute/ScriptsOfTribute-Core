@@ -12,4 +12,9 @@ public class SerializedAgent
         RepresentingCard = agent.RepresentingCard;
         Activated = agent.Activated;
     }
+
+    public override string ToString()
+    {
+        return $"{RepresentingCard.ToString()} CurrentHP: {CurrentHp} Activated: {Activated}";
+    }
 }

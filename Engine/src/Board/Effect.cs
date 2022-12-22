@@ -129,7 +129,7 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OPP_DISCARD) : null;
 
                         return new Choice<Card>(
-                            enemy.Hand,
+                            player.Hand,
                             (choices, complexEffectExecutor) =>
                             {
                                 return complexEffectExecutor.Discard(choices);

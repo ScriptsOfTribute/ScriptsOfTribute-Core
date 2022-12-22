@@ -193,8 +193,10 @@
             {
                 agent.MarkActivated();
             }
-
-            throw new Exception("Given agent has already been activated!");
+            else
+            {
+                throw new Exception("Given agent has already been activated!");
+            }
         }
 
         public ISimpleResult AttackAgent(Card card, IPlayer enemy, ITavern tavern)

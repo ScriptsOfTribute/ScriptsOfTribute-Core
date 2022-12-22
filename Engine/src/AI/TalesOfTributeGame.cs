@@ -53,11 +53,13 @@ public class TalesOfTributeGame
         }
         var board = _api.GetSerializer();
         var moves = _api.GetListOfPossibleMoves();
+
         var task = MoveTask(board, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
         
         if (res == task)
         {
+
             return (null, task.Result);
         }
 
@@ -123,7 +125,7 @@ public class TalesOfTributeGame
 
     private async Task<EndGameState?> HandleStartOfTurnChoices()
     {
-        if (_api.BoardState != BoardState.PATRON_CHOICE_PENDING)
+        if (_api.BoardState != BoardState.START_OF_TURN_CHOICE_PENDING)
         {
             return null;
         }
