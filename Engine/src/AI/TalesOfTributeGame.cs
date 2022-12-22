@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using TalesOfTribute.Board;
+using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.AI;
@@ -122,6 +123,11 @@ public class TalesOfTributeGame
 
     private async Task<EndGameState?> HandleStartOfTurnChoices()
     {
+        if (_api.BoardState != BoardState.PATRON_CHOICE_PENDING)
+        {
+            return null;
+        }
+        
         var startOfTurnChoices = _api.HandleStartOfTurnChoices();
 
         if (startOfTurnChoices is null) return null;

@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using TalesOfTribute.Board;
+using TalesOfTribute.Board.CardAction;
 
 namespace TalesOfTribute
 {
@@ -10,13 +11,12 @@ namespace TalesOfTribute
         public Patron[] Patrons;
         public Tavern Tavern;
         private PlayerContext _playerContext;
+        private List<Card> _contractActionsPlayed = new();
 
         public Player CurrentPlayer => _playerContext.CurrentPlayer;
         public Player EnemyPlayer => _playerContext.EnemyPlayer;
-        public BaseChoice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : CurrentPlayer.GetPendingChoice(State);
-        private BaseChoice? _pendingPatronChoice;
+        public readonly CardActionManager CardActionManager;
 
-        public BoardState State { get; private set; } = BoardState.NORMAL;
         private int PrestigeTreshold = 40;
 
         public BoardManager(PatronId[] patrons)
@@ -25,6 +25,7 @@ namespace TalesOfTribute
             // TODO: This is actually not correct, as some cards should have multiple copies.
             Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons));
             _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1), new Player(PlayerEnum.PLAYER2));
+            CardActionManager = new CardActionManager(_playerContext, Tavern);
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -32,81 +33,53 @@ namespace TalesOfTribute
             return patrons.Select(Patron.FromId).ToArray();
         }
 
-        public PlayResult PatronCall(PatronId patron)
+        public void PatronCall(PatronId patronId)
         {
-            if (State != BoardState.NORMAL)
-            {
-                throw new Exception("Complete pending choice first!");
-            }
-
             if (CurrentPlayer.PatronCalls <= 0)
             {
-                return new Failure("You cant use Patron calls anymore");
+                throw new Exception("You cant use Patron calls anymore");
             }
 
-            var result = Array.Find(Patrons, p => p.PatronID == patron).PatronActivation(CurrentPlayer, EnemyPlayer);
-            if (result is not Failure)
-                CurrentPlayer.PatronCalls--;
-
-            if (result is BaseChoice c)
-            {
-                State = BoardState.PATRON_CHOICE_PENDING;
-            
-                void ChoiceFinishCallback(PlayResult newResult)
-                {
-                    if (newResult is not BaseChoice ch) return;
-            
-                    _pendingPatronChoice = ch;
-                    ch.AddChoiceFinishCallback(ChoiceFinishCallback);
-                }
-
-                c.AddSuccessCallback(() =>
-                {
-                    State = BoardState.NORMAL;
-                    _pendingPatronChoice = null;
-                });
-                c.AddChoiceFinishCallback(ChoiceFinishCallback);
-                _pendingPatronChoice = c;
-            }
-
-            return result;
+            var patron = Array.Find(Patrons, p => p.PatronID == patronId);
+            CurrentPlayer.PatronCalls--;
+            CardActionManager.ActivatePatron(patron);
         }
 
-        public ExecutionChain PlayCard(Card card)
+        public void PlayCard(Card card)
         {
-            if (State != BoardState.NORMAL)
-            {
-                throw new Exception("Complete pending choice first!");
-            }
-
-            var result = CurrentPlayer.PlayCard(card, EnemyPlayer, Tavern);
-
-            return WrapWithStateRefresh(result);
+            CurrentPlayer.PlayCard(card);
+            CardActionManager.PlayCard(card);
         }
 
-        public ExecutionChain BuyCard(Card card)
+        public void BuyCard(Card card)
         {
-            if (State != BoardState.NORMAL)
-            {
-                throw new Exception("Complete pending choice first!");
-            }
-
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
 
-            Card boughtCard = this.Tavern.Acquire(card);
+            var boughtCard = this.Tavern.Acquire(card);
 
             CurrentPlayer.CoinsAmount -= boughtCard.Cost;
-
-            return WrapWithStateRefresh(CurrentPlayer.AcquireCard(boughtCard, EnemyPlayer, Tavern));
-        }
-
-        public ExecutionChain WrapWithStateRefresh(ExecutionChain chain)
-        {
-            State = BoardState.CHOICE_PENDING;
-            chain.AddCompleteCallback(() => State = BoardState.NORMAL);
-
-            return chain;
+            
+            switch (boughtCard.Type)
+            {
+                case CardType.CONTRACT_AGENT:
+                {
+                    var agent = Agent.FromCard(boughtCard);
+                    agent.MarkActivated();
+                    CurrentPlayer.Agents.Add(agent);
+                    CardActionManager.PlayCard(boughtCard);
+                    break;
+                }
+                case CardType.CONTRACT_ACTION:
+                {
+                    _contractActionsPlayed.Add(boughtCard);
+                    CardActionManager.PlayCard(boughtCard);
+                    break;
+                }
+                default:
+                    CurrentPlayer.CooldownPile.Add(boughtCard);
+                    break;
+            }
         }
 
         public void DrawCards()
@@ -117,24 +90,8 @@ namespace TalesOfTribute
             }
         }
 
-        public ExecutionChain? HandleStartOfTurnChoices()
-        {
-            // TODO: This state should also block all other actions, just as CHOICE_PENDING state.
-            if (State != BoardState.START_OF_TURN_CHOICE_PENDING)
-            {
-                return null;
-            }
-
-            return CurrentPlayer.GetStartOfTurnEffectsChain(EnemyPlayer, Tavern);
-        }
-
         public void EndTurn()
         {
-            if (State != BoardState.NORMAL)
-            {
-                throw new Exception("Complete pending choice first!");
-            }
-
             var agentsWithTaunt = EnemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
             foreach(var agent in agentsWithTaunt)
             {
@@ -145,13 +102,9 @@ namespace TalesOfTribute
             CurrentPlayer.CoinsAmount = 0;
             CurrentPlayer.PowerAmount = 0;
             CurrentPlayer.EndTurn();
-
-            var startOfTurnEffectsChain = EnemyPlayer.GetStartOfTurnEffectsChain(CurrentPlayer, Tavern);
-            if (startOfTurnEffectsChain != null)
-            {
-                State = BoardState.START_OF_TURN_CHOICE_PENDING;
-                startOfTurnEffectsChain.AddCompleteCallback(() => State = BoardState.NORMAL);
-            }
+            
+            Tavern.Cards.AddRange(_contractActionsPlayed.OrderBy(_ => Guid.NewGuid()));
+            _contractActionsPlayed.Clear();
 
             _playerContext.Swap();
 
@@ -161,6 +114,8 @@ namespace TalesOfTribute
             }
 
             DrawCards();
+            
+            CardActionManager.Reset(_playerContext);
         }
 
         public void SetUpGame()
@@ -239,9 +194,10 @@ namespace TalesOfTribute
             return null;
         }
 
-        public ExecutionChain ActivateAgent(Card card)
+        public void ActivateAgent(Card card)
         {
-            return WrapWithStateRefresh(CurrentPlayer.ActivateAgent(card, EnemyPlayer, Tavern));
+            CurrentPlayer.ActivateAgent(card);
+            CardActionManager.PlayCard(card);
         }
 
         public ISimpleResult AttackAgent(Card agent)

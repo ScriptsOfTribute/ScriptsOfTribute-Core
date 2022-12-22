@@ -38,20 +38,6 @@ public class CardActionManager
             throw new Exception("Complete pending choices first!");
         }
 
-        var currentPlayer = _playerContext.CurrentPlayer;
-        
-        currentPlayer.Hand.Remove(card);
-        if (card.Type == CardType.AGENT)
-        {
-            var agent = Agent.FromCard(card);
-            agent.MarkActivated();
-            currentPlayer.Agents.Add(agent);
-        }
-        else
-        {
-            currentPlayer.Played.Add(card);
-        }
-
         ImmediatePlayCard(card);
     }
 
@@ -125,7 +111,7 @@ public class CardActionManager
         }
         
         _playerContext = newPlayerContext;
-        
+
         _comboContext.Reset();
         _complexEffectExecutor = new(this, _playerContext.CurrentPlayer, _playerContext.EnemyPlayer, _tavern);
         _startOfNextTurnEffects.ForEach(e =>

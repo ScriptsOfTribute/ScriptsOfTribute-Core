@@ -1,3 +1,4 @@
+using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board;
@@ -7,7 +8,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public int TurnCount => _turnCount;
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
-    public BoardState BoardState => _boardManager.State;
+    public BoardState BoardState => _boardManager.CardActionManager.State;
     
     private readonly BoardManager _boardManager;
     private int _turnCount;
@@ -47,16 +48,6 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return new SerializedPlayer(
             playerId == CurrentPlayerId ? _boardManager.CurrentPlayer : _boardManager.EnemyPlayer
         );
-    }
-
-    public ExecutionChain? HandleStartOfTurnChoices()
-    {
-        return _boardManager.HandleStartOfTurnChoices();
-    }
-
-    public BoardState GetState()
-    {
-        return _boardManager.State;
     }
 
     // Get cards
@@ -212,7 +203,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
     }
 
-    public ExecutionChain ActivateAgent(Card agent)
+    public void ActivateAgent(Card agent)
         => _boardManager.ActivateAgent(agent);
 
     public ISimpleResult AttackAgent(Card agent)
@@ -228,9 +219,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
     /// </summary>
-    public PlayResult PatronActivation(PatronId patronId)
+    public void PatronActivation(PatronId patronId)
     {
-        return _boardManager.PatronCall(patronId);
+        _boardManager.PatronCall(patronId);
     }
 
     /// <summary>
@@ -248,35 +239,25 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    public ExecutionChain BuyCard(Card card)
+    public void BuyCard(Card card)
     {
-        return _boardManager.BuyCard(card);
-    }
-        
-    public ExecutionChain BuyCard(int uniqueId)
-    {
-        return _boardManager.BuyCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
+        _boardManager.BuyCard(card);
     }
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    public ExecutionChain PlayCard(Card card)
+    public void PlayCard(Card card)
     {
-        return _boardManager.PlayCard(card);
-    }
-        
-    public ExecutionChain PlayCard(int uniqueId)
-    {
-        return PlayCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
+        _boardManager.PlayCard(card);
     }
 
     //others
 
     public List<Move> GetListOfPossibleMoves()
     {
-        switch (_boardManager.PendingChoice)
+        switch (_boardManager.CardActionManager.PendingChoice)
         {
             case Choice<Card> cardChoice:
             {

@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute.Board;
+﻿using TalesOfTribute.Board.CardAction;
+
+namespace TalesOfTribute.Board;
 
 public interface ITalesOfTributeApi
 {
@@ -7,8 +9,6 @@ public interface ITalesOfTributeApi
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
     SerializedBoard GetSerializer();
-    ExecutionChain? HandleStartOfTurnChoices();
-    BoardState GetState();
 
     /// <summary>
     /// Get cards in hand of current player
@@ -75,14 +75,14 @@ public interface ITalesOfTributeApi
     List<Agent> GetActiveAgents(PlayerEnum playerId);
 
     List<Agent> GetActiveAgents();
-    ExecutionChain ActivateAgent(Card agent);
+    void ActivateAgent(Card agent);
     ISimpleResult AttackAgent(Card agent);
     ISimpleResult AttackAgent(int uniqueId);
 
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
     /// </summary>
-    PlayResult PatronActivation(PatronId patronId);
+    void PatronActivation(PatronId patronId);
 
     /// <summary>
     /// Return <type>PlayerEnum</type> which states which player is favored
@@ -94,13 +94,13 @@ public interface ITalesOfTributeApi
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    ExecutionChain BuyCard(Card card);
+    void BuyCard(Card card);
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    ExecutionChain PlayCard(Card card);
+    void PlayCard(Card card);
 
     List<Move> GetListOfPossibleMoves();
     bool IsMoveLegal(Move playerMove);

@@ -13,14 +13,11 @@ public interface IPlayer
     List<Agent> Agents { get; set; }
     List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
-    ExecutionChain? GetStartOfTurnEffectsChain(IPlayer enemy, ITavern tavern);
-    ExecutionChain PlayCard(Card cardId, IPlayer other, ITavern tavern);
-    void HandleAcquireDuringExecutionChain(Card card, IPlayer other, ITavern tavern);
+    void PlayCard(Card cardId);
     void HealAgent(UniqueId uniqueId, int amount);
     void Refresh(Card cardId);
     void Draw();
     void EndTurn();
-    ExecutionChain AcquireCard(Card card, IPlayer enemy, ITavern tavern, bool replacePendingExecutionChain = true);
     void Toss(Card cardId);
     void Discard(Card card);
     void KnockOut(Card cardId);
@@ -28,9 +25,7 @@ public interface IPlayer
     void Destroy(Card cardId);
     string ToString();
     List<Card> GetAllPlayersCards();
-    void AddStartOfTurnEffect(Effect effect);
-    ExecutionChain ActivateAgent(Card card, IPlayer enemy, ITavern tavern);
+    void ActivateAgent(Card card);
     ISimpleResult AttackAgent(Card agent, IPlayer enemy, ITavern tavern);
     Card GetCardByUniqueId(int uniqueId);
-    BaseChoice? GetPendingChoice(BoardState state);
 }
