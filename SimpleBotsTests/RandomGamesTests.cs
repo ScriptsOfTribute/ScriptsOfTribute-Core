@@ -16,7 +16,7 @@ public class RandomGamesTests
     [Fact]
     public void RandomGameShouldEndWithoutErrors()
     {
-        const int testAmount = 10000;
+        const int testAmount = 1000;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
