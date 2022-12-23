@@ -9,7 +9,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
-    public BaseChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice;
+    public BaseSerializedChoice? PendingChoice => BaseSerializedChoice.FromBaseChoice(_boardManager.CardActionManager.PendingChoice);
 
     private readonly BoardManager _boardManager;
     private int _turnCount;

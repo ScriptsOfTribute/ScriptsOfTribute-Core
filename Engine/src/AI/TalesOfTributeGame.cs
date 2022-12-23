@@ -56,10 +56,12 @@ public class TalesOfTributeGame
 
         var task = MoveTask(board, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
-        
+        // await File.AppendAllTextAsync("log.txt", $"Possible moves:\n {string.Join('\n', moves.Select(m => $"\t{m}"))}\n");
+
         if (res == task)
         {
-
+            // await File.AppendAllTextAsync("log.txt", $"Move selected: {task.Result}\n");
+            // await File.AppendAllTextAsync("log.txt", $"Board state: {_api.GetSerializer()}\n");
             return (null, task.Result);
         }
 
@@ -130,10 +132,10 @@ public class TalesOfTributeGame
             return null;
         }
 
-        BaseChoice? choice = null;
+        BaseSerializedChoice? choice = null;
         while ((choice = _api.PendingChoice) is not null)
         {
-            if (choice is not Choice<Card> realChoice)
+            if (choice is not SerializedChoice<Card> realChoice)
             {
                 throw new Exception(
                     "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
@@ -150,7 +152,7 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private async Task<EndGameState?> HandleStartOfTurnChoice(Choice<Card> choice)
+    private async Task<EndGameState?> HandleStartOfTurnChoice(SerializedChoice<Card> choice)
     {
         var (timeout, playersChoice) = await PlayWithTimeout();
 
@@ -170,7 +172,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
         }
 
         return null;
@@ -209,7 +211,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
         }
 
         return await ConsumePotentialPendingMoves();
@@ -223,7 +225,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
         }
 
         return await ConsumePotentialPendingMoves();
@@ -237,7 +239,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
         }
 
         return await ConsumePotentialPendingMoves();
@@ -245,7 +247,7 @@ public class TalesOfTributeGame
 
     private async Task<EndGameState?> ConsumePotentialPendingMoves()
     {
-        BaseChoice? choice = null;
+        BaseSerializedChoice? choice = null;
         try
         {
             while ((choice = _api.PendingChoice) is not null)
@@ -260,7 +262,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
         }
 
         return null;
@@ -288,11 +290,11 @@ public class TalesOfTributeGame
         return await ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleChoice(BaseChoice result)
+    private async Task<EndGameState?> HandleChoice(BaseSerializedChoice result)
     {
         switch (result)
         {
-            case Choice<Card> choice:
+            case SerializedChoice<Card> choice:
             {
                 var (timeout, move) = await PlayWithTimeout();
                 if (timeout is not null)
@@ -309,7 +311,7 @@ public class TalesOfTributeGame
                 _api.MakeChoice(c.Choices);
                 break;
             }
-            case Choice<EffectType> choice:
+            case SerializedChoice<EffectType> choice:
             {
                 var (timeout, move) = await PlayWithTimeout();
                 if (timeout is not null)

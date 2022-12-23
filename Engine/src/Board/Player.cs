@@ -74,6 +74,9 @@
 
         public void HealAgent(UniqueId uniqueId, int amount)
         {
+            // It's possible for this agent to already be gone, for example - discarded, so we need to check.
+            if (Agents.All(a => a.RepresentingCard.UniqueId != uniqueId)) return;
+
             var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == uniqueId);
             agent.Heal(amount);
         }
@@ -135,11 +138,10 @@
         public void KnockOut(Card card)
         {
             AssertCardIn(card, AgentCards);
-            var prevAgentsSize = Agents.Count;
-            Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
-            if (Agents.Count != prevAgentsSize - 1)
+            var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
+            if (removed != 1)
             {
-                throw new Exception("There is a bug in the engine - Agents.Count != prevAgentsSize - 1");
+                throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
             }
             CooldownPile.Add(card);
         }
@@ -157,16 +159,15 @@
             }
             else if (Agents.Any(agent => agent.RepresentingCard.UniqueId == card.UniqueId))
             {
-                var prevAgentsSize = Agents.Count;
-                Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
-                if (Agents.Count != prevAgentsSize - 1)
+                var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
+                if (removed != 1)
                 {
-                    throw new Exception("There is a bug in the engine - Agents.Count != prevAgentsSize - 1 when destroying card.");
+                    throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
                 }
             }
             else
             {
-                throw new Exception($"Can't destroy card {card.CommonId} - it's not in Hand or on Board!");
+                throw new Exception($"Can't destroy card {card.CommonId}({card.UniqueId}) - it's not in Hand or on Board!");
             }
         }
 

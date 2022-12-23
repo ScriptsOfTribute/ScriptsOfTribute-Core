@@ -1,4 +1,5 @@
 ﻿using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board;
 
@@ -8,7 +9,7 @@ public interface ITalesOfTributeApi
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
-    public BaseChoice? PendingChoice { get; }
+    public BaseSerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
 
     public void MakeChoice<T>(List<T> choices);

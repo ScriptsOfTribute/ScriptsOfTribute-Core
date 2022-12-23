@@ -1,4 +1,5 @@
 ﻿using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute;
 
@@ -8,7 +9,6 @@ public interface ISimpleResult
 
 public abstract class PlayResult
 {
-    public bool Completed { get; protected set; } = true;
 }
 
 public class Success : PlayResult, ISimpleResult
@@ -17,36 +17,9 @@ public class Success : PlayResult, ISimpleResult
 
 public class BaseChoice : PlayResult
 {
-    public delegate void SuccessCallback();
-    public delegate void ChoiceFinishCallback(PlayResult result);
-    protected SuccessCallback? _successCallback;
-    protected ChoiceFinishCallback? _choiceFinishCallback;
-
-    public BaseChoice()
-    {
-        Completed = false;
-    }
-
-    public void AddSuccessCallback(SuccessCallback successCallback)
-    {
-        _successCallback = successCallback;
-    }
-    
-    public void AddChoiceFinishCallback(ChoiceFinishCallback choiceFinishCallback)
-    {
-        _choiceFinishCallback = choiceFinishCallback;
-    }
 }
 
-public interface IReadOnlyChoice<T>
-{
-    List<T> PossibleChoices { get; }
-    int MaxChoiceAmount { get; }
-    int MinChoiceAmount { get; }
-    public ChoiceContext? Context { get; }
-}
-
-public class Choice<T> : BaseChoice, IReadOnlyChoice<T>
+public class Choice<T> : BaseChoice
 {
     public List<T> PossibleChoices { get; }
     public int MaxChoiceAmount { get; } = 1;
@@ -86,7 +59,6 @@ public class Choice<T> : BaseChoice, IReadOnlyChoice<T>
         if (PossibleChoices.Count == 0)
         {
             var dummyResult = new Success();
-            HandleResult(dummyResult);
             return dummyResult;
         }
         // Check if all choices are in possible choices.
@@ -96,29 +68,12 @@ public class Choice<T> : BaseChoice, IReadOnlyChoice<T>
         }
         var result = _callback(choices, executor);
 
-        HandleResult(result);
-
         return result;
     }
 
-    private void HandleResult(PlayResult result)
+    public SerializedChoice<T> Serialize()
     {
-        switch (result)
-        {
-            case Success:
-                OnSuccess();
-                break;
-            case BaseChoice choice:
-                choice.AddSuccessCallback(OnSuccess);
-                break;
-        }
-        _choiceFinishCallback?.Invoke(result);
-    }
-
-    private void OnSuccess()
-    {
-        Completed = true;
-        _successCallback?.Invoke();
+        return SerializedChoice<T>.FromChoice(this);
     }
 }
 

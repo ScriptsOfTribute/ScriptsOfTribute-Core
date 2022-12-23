@@ -12,6 +12,16 @@ public abstract class BaseSerializedChoice
     public int MaxChoices { get; }
     public int MinChoices { get; }
     public ChoiceContext Context { get; }
+    
+    public static BaseSerializedChoice? FromBaseChoice(BaseChoice? c)
+    {
+        return c switch
+        {
+            Choice<Card> ch => SerializedChoice<Card>.FromChoice(ch),
+            Choice<EffectType> ch => SerializedChoice<EffectType>.FromChoice(ch),
+            _ => null,
+        };
+    }
 }
 
 public class SerializedChoice<T> : BaseSerializedChoice
