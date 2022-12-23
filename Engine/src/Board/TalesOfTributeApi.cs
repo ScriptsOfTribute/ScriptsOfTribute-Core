@@ -17,7 +17,6 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
     {
-        // what is the use case of this??
         _boardManager = boardManager;
     }
 
@@ -191,5 +190,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public EndGameState? CheckWinner()
     {
         return _boardManager.CheckAndGetWinner();
+    }
+
+    public static ITalesOfTributeApi FromSerializedBoard(SerializedBoard board)
+    {
+        return new TalesOfTributeApi(BoardManager.FromSerializedBoard(board));
     }
 }

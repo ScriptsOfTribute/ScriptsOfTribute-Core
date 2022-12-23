@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Serializers;
+
+namespace TalesOfTribute
 {
     public enum PlayerEnum
     {
@@ -241,6 +243,28 @@
             {
                 throw new Exception("Player doesn't have card specified by unique id!");
             }
+        }
+
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile, uint patronCalls)
+        {
+            ID = id;
+            CoinsAmount = coinsAmount;
+            PrestigeAmount = prestigeAmount;
+            PowerAmount = powerAmount;
+            Hand = hand;
+            DrawPile = drawPile;
+            Played = played;
+            Agents = agents;
+            CooldownPile = cooldownPile;
+            PatronCalls = patronCalls;
+        }
+
+        public static Player FromSerializedPlayer(SerializedPlayer player)
+        {
+            return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, player.Hand.ToList(),
+                player.DrawPile.ToList(), player.Played.ToList(),
+                player.Agents.Select(Agent.FromSerializedAgent).ToList(), player.CooldownPile.ToList(),
+                player.PatronCalls);
         }
     }
 }

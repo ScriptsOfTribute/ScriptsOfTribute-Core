@@ -11,7 +11,6 @@ public class ExecutionChain
     public bool Completed => Empty && PendingChoice is null;
 
     private readonly Queue<Func<IPlayer, IPlayer, ITavern, PlayResult>> _chain = new();
-    private PlayResult? _current;
 
     public void Add(BaseEffect effect)
     {
@@ -30,14 +29,14 @@ public class ExecutionChain
         {
             PendingChoice = null;
 
-            _current = _chain.Dequeue().Invoke(owner, enemy, tavern);
+            var current = _chain.Dequeue().Invoke(owner, enemy, tavern);
             _pendingEffects.RemoveAt(0);
-            if (_current is BaseChoice c)
+            if (current is BaseChoice c)
             {
                 PendingChoice = c;
             }
 
-            yield return _current;
+            yield return current;
 
             if (PendingChoice is not null)
             {
@@ -63,11 +62,11 @@ public class ExecutionChain
         };
     }
 
-    public void MergeWith(ExecutionChain other)
+    public static ExecutionChain FromEffects(List<BaseEffect> effects, BaseChoice? pendingChoice)
     {
-        while (!other.Empty)
-        {
-            _chain.Enqueue(other._chain.Dequeue());
-        }
+        var chain = new ExecutionChain();
+        effects.ForEach(e => chain.Add(e));
+        chain.PendingChoice = pendingChoice;
+        return chain;
     }
 }

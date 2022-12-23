@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Serializers;
+
+namespace TalesOfTribute;
 
 public class Combo
 {
@@ -45,11 +47,35 @@ public class Combo
             EffectQueue[i].Clear();
         }
     }
+
+    public ComboState ToComboState()
+    {
+        return new ComboState(EffectQueue.ToArray(), ComboCounter);
+    }
+
+    private Combo(List<BaseEffect>[] effects, int comboCounter)
+    {
+        for (var i = 0; i < MAX_COMBO; i++)
+        {
+            EffectQueue[i] = effects[i].ToList();
+        }
+
+        ComboCounter = comboCounter;
+    }
+    
+    public static Combo FromComboState(ComboState state)
+    {
+        return new Combo(state.All, state.CurrentCombo);
+    }
 }
 
 public class ComboContext
 {
     private readonly Dictionary<PatronId, Combo> _combos = new();
+
+    public ComboContext()
+    {
+    }
 
     public (List<BaseEffect> immediateEffects, List<BaseEffect> startOfNextTurnEffects) PlayCard(Card card)
     {
@@ -79,5 +105,32 @@ public class ComboContext
         _combos.Add(patron, combo);
 
         return combo;
+    }
+
+    public ComboStates ToComboStates()
+    {
+        var res = new Dictionary<PatronId, ComboState>();
+        foreach (var (patronId, combo) in _combos)
+        {
+            res.Add(patronId, combo.ToComboState());
+        }
+
+        return new ComboStates(res);
+    }
+
+    private ComboContext(Dictionary<PatronId, Combo> combos)
+    {
+        _combos = combos;
+    }
+
+    public static ComboContext FromComboStates(ComboStates states)
+    {
+        Dictionary<PatronId, Combo> combos = new();
+        foreach (var (patron, state) in states.All)
+        {
+            combos.Add(patron, Combo.FromComboState(state));
+        }
+
+        return new ComboContext(combos);
     }
 }

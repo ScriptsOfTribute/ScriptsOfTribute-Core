@@ -73,7 +73,7 @@ public class Choice<T> : BaseChoice
 
     public SerializedChoice<T> Serialize()
     {
-        return SerializedChoice<T>.FromChoice(this);
+        return new SerializedChoice<T>(MaxChoiceAmount, MinChoiceAmount, Context, PossibleChoices.ToList(), (ChoiceCallback)_callback.Clone());
     }
 }
 

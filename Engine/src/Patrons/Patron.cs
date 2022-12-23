@@ -64,5 +64,17 @@
                 _ => throw new InvalidOperationException()
             };
         }
+
+        public static List<Patron> FromSerializedBoard(SerializedBoard board)
+        {
+            var result = new List<Patron>();
+            foreach (var (patronId, favor) in board.PatronStates.All)
+            {
+                var p = Patron.FromId(patronId);
+                p.FavoredPlayer = favor;
+                result.Add(p);
+            }
+            return result;
+        }
     }
 }

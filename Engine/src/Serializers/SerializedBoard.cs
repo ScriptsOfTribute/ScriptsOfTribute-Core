@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using TalesOfTribute.Board;
 using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Serializers;
 
@@ -15,14 +16,18 @@ namespace TalesOfTribute
         public readonly SerializedPlayer CurrentPlayer;
         public readonly SerializedPlayer EnemyPlayer;
         public readonly PatronStates PatronStates;
+        public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
         public readonly List<Card> TavernAvailableCards;
         public readonly List<Card> TavernCards;
         public readonly BoardState BoardState;
         public readonly BaseSerializedChoice? PendingChoice;
+        public readonly ComboStates ComboStates;
+        public readonly List<BaseEffect> UpcomingEffects;
+        public readonly List<BaseEffect> StartOfNextTurnEffects;
 
         public SerializedBoard(
             IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, BaseChoice? maybeChoice
+            BoardState state, BaseChoice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
@@ -33,10 +38,57 @@ namespace TalesOfTribute
             BoardState = state;
             PendingChoice = maybeChoice switch
             {
-                Choice<Card> cardChoice => SerializedCardChoice.FromChoice(cardChoice),
-                Choice<EffectType> effectChoice => SerializedEffectChoice.FromChoice(effectChoice),
+                Choice<Card> cardChoice => cardChoice.Serialize(),
+                Choice<EffectType> effectChoice => effectChoice.Serialize(),
                 _ => null
             };
+            ComboStates = comboContext.ToComboStates();
+            UpcomingEffects = upcomingEffects.ToList();
+            StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
+        }
+
+        public (SerializedBoard, List<Move>) ApplyState(Move move)
+        {
+            var api = TalesOfTributeApi.FromSerializedBoard(this);
+            var s = move as SimpleCardMove;
+            switch (move.Command)
+            {
+                case CommandEnum.PLAY_CARD:
+                    api.PlayCard(s!.Card);
+                    break;
+                case CommandEnum.ACTIVATE_AGENT:
+                    api.ActivateAgent(s!.Card);
+                    break;
+                case CommandEnum.ATTACK:
+                    api.AttackAgent(s!.Card);
+                    break;
+                case CommandEnum.BUY_CARD:
+                    api.BuyCard(s!.Card);
+                    break;
+                case CommandEnum.CALL_PATRON:
+                    api.PatronActivation(((SimplePatronMove)move).PatronId);
+                    break;
+                case CommandEnum.MAKE_CHOICE:
+                    switch (move)
+                    {
+                        case MakeChoiceMove<Card> cardMove:
+                            api.MakeChoice(cardMove.Choices);
+                            break;
+                        case MakeChoiceMove<EffectType> effectMove:
+                            api.MakeChoice(effectMove.Choices);
+                            break;
+                        default:
+                            throw new Exception("Invalid choice type.");
+                    }
+                    break;
+                case CommandEnum.END_TURN:
+                    api.EndTurn();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return (api.GetSerializer(), api.GetListOfPossibleMoves());
         }
 
         public override string ToString()

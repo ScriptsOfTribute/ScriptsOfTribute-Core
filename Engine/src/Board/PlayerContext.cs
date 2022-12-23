@@ -29,4 +29,26 @@ public class PlayerContext : IReadOnlyPlayerContext
     {
         (CurrentPlayerId, EnemyPlayerId) = (EnemyPlayerId, CurrentPlayerId);
     }
+
+    public static PlayerContext FromSerializedBoard(SerializedBoard serializedBoard)
+    {
+        var p1 = Player.FromSerializedPlayer(serializedBoard.CurrentPlayer);
+        var p2 = Player.FromSerializedPlayer(serializedBoard.EnemyPlayer);
+        if (p1.ID == PlayerEnum.PLAYER1)
+        {
+            return new PlayerContext(p1, p2)
+            {
+                CurrentPlayerId = serializedBoard.CurrentPlayer.PlayerID,
+                EnemyPlayerId = serializedBoard.EnemyPlayer.PlayerID,
+            };   
+        }
+        else
+        {
+            return new PlayerContext(p2, p1)
+            {
+                CurrentPlayerId = serializedBoard.CurrentPlayer.PlayerID,
+                EnemyPlayerId = serializedBoard.EnemyPlayer.PlayerID,
+            };
+        }
+    }
 }

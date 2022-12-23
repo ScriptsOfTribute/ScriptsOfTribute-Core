@@ -1,17 +1,13 @@
-﻿using System.Numerics;
-using TalesOfTribute.Board;
+﻿using TalesOfTribute.Board;
 using TalesOfTribute.Board.CardAction;
 
 namespace TalesOfTribute
 {
-
-
     public class BoardManager
     {
         public Patron[] Patrons;
         public Tavern Tavern;
         private PlayerContext _playerContext;
-        private List<Card> _contractActionsPlayed = new();
 
         public Player CurrentPlayer => _playerContext.CurrentPlayer;
         public Player EnemyPlayer => _playerContext.EnemyPlayer;
@@ -72,7 +68,7 @@ namespace TalesOfTribute
                 }
                 case CardType.CONTRACT_ACTION:
                 {
-                    _contractActionsPlayed.Add(boughtCard);
+                    Tavern.Cards.Add(boughtCard);
                     CardActionManager.PlayCard(boughtCard);
                     break;
                 }
@@ -102,9 +98,6 @@ namespace TalesOfTribute
             CurrentPlayer.CoinsAmount = 0;
             CurrentPlayer.PowerAmount = 0;
             CurrentPlayer.EndTurn();
-            
-            Tavern.Cards.AddRange(_contractActionsPlayed.OrderBy(_ => Guid.NewGuid()));
-            _contractActionsPlayed.Clear();
 
             _playerContext.Swap();
 
@@ -140,7 +133,8 @@ namespace TalesOfTribute
         
         public SerializedBoard SerializeBoard()
         {
-            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice);
+            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
+                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
@@ -203,6 +197,23 @@ namespace TalesOfTribute
         public ISimpleResult AttackAgent(Card agent)
         {
             return CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
+        }
+
+        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager)
+        {
+            Patrons = patrons;
+            Tavern = tavern;
+            _playerContext = playerContext;
+            CardActionManager = cardActionManager;
+        }
+
+        public static BoardManager FromSerializedBoard(SerializedBoard serializedBoard)
+        {
+            var patrons = Patron.FromSerializedBoard(serializedBoard);
+            var tavern = TalesOfTribute.Tavern.FromSerializedBoard(serializedBoard);
+            var playerContext = PlayerContext.FromSerializedBoard(serializedBoard);
+            var cardActionManager = Board.CardAction.CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
+            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager);
         }
     }
 }

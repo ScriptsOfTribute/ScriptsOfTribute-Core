@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute.Board.CardAction;
+﻿using TalesOfTribute.Serializers;
+
+namespace TalesOfTribute.Board.CardAction;
 
 public enum BoardState
 {
@@ -13,8 +15,8 @@ public class CardActionManager
     private IReadOnlyPlayerContext _playerContext;
     private ITavern _tavern;
     private ExecutionChain _pendingExecutionChain;
-    private ComboContext _comboContext = new();
-    private List<BaseEffect> _startOfNextTurnEffects = new();
+    public ComboContext ComboContext { get; private set; } = new();
+    public List<BaseEffect> StartOfNextTurnEffects = new();
     private ComplexEffectExecutor _complexEffectExecutor;
 
     private BaseChoice? _pendingPatronChoice;
@@ -43,8 +45,8 @@ public class CardActionManager
 
     public void ImmediatePlayCard(Card card)
     {
-        var (immediateEffects, startOfNextTurnEffects) = _comboContext.PlayCard(card);
-        _startOfNextTurnEffects.AddRange(startOfNextTurnEffects);
+        var (immediateEffects, startOfNextTurnEffects) = ComboContext.PlayCard(card);
+        StartOfNextTurnEffects.AddRange(startOfNextTurnEffects);
 
         immediateEffects.ForEach(e => _pendingExecutionChain.Add(e));
 
@@ -112,13 +114,13 @@ public class CardActionManager
         
         _playerContext = newPlayerContext;
 
-        _comboContext.Reset();
+        ComboContext.Reset();
         _complexEffectExecutor = new(this, _playerContext.CurrentPlayer, _playerContext.EnemyPlayer, _tavern);
-        _startOfNextTurnEffects.ForEach(e =>
+        StartOfNextTurnEffects.ForEach(e =>
         {
             _pendingExecutionChain.Add(e);
         });
-        _startOfNextTurnEffects.Clear();
+        StartOfNextTurnEffects.Clear();
         if (!ConsumePendingChainToChoice())
         {
             State = BoardState.START_OF_TURN_CHOICE_PENDING;
@@ -141,5 +143,43 @@ public class CardActionManager
         }
 
         return true;
+    }
+
+    public static CardActionManager FromSerializedBoard(SerializedBoard serializedBoard, PlayerContext playerContext, ITavern tavern)
+    {
+        // private ExecutionChain _pendingExecutionChain;
+        var comboContext = ComboContext.FromComboStates(serializedBoard.ComboStates);
+
+        BaseChoice? choiceForChain = null;
+        BaseChoice? patronChoice = null;
+
+        switch (serializedBoard.BoardState)
+        {
+            case BoardState.NORMAL:
+                break;
+            case BoardState.CHOICE_PENDING:
+            case BoardState.START_OF_TURN_CHOICE_PENDING:
+                choiceForChain = BaseSerializedChoice.ToChoice(serializedBoard.PendingChoice);
+                break;
+            case BoardState.PATRON_CHOICE_PENDING:
+                patronChoice = BaseSerializedChoice.ToChoice(serializedBoard.PendingChoice);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        
+        var chain = ExecutionChain.FromEffects(serializedBoard.UpcomingEffects, choiceForChain);
+        var startOfNextTurnEffects = serializedBoard.StartOfNextTurnEffects.ToList();
+
+        var result = new CardActionManager(playerContext, tavern)
+        {
+            StartOfNextTurnEffects = startOfNextTurnEffects,
+            State = serializedBoard.BoardState,
+            _pendingExecutionChain = chain,
+            _pendingPatronChoice = patronChoice,
+            ComboContext = comboContext,
+        };
+
+        return result;
     }
 }
