@@ -18,8 +18,21 @@ public class ComplexEffectExecutor
     public PlayResult AcquireTavern(Card choice)
     {
         var card = _tavern.Acquire(choice);
+
+        switch (card.Type)
+        {
+            case CardType.CONTRACT_ACTION:
+                _parent.ImmediatePlayCard(card);
+                break;
+            case CardType.CONTRACT_AGENT:
+                _currentPlayer.Agents.Add(Agent.FromCard(card));
+                _parent.ImmediatePlayCard(card);
+                break;
+            default:
+                _currentPlayer.CooldownPile.Add(card);
+                break;
+        }
         
-        _parent.ImmediatePlayCard(card);
         return new Success();
     }
 
@@ -75,7 +88,15 @@ public class ComplexEffectExecutor
 
     public PlayResult CompleteHlaalu(Card card)
     {
-        _currentPlayer.Hand.Remove(card);
+        if (_currentPlayer.Hand.Any(c => c.UniqueId == card.UniqueId))
+        {
+            _currentPlayer.Hand.Remove(card);
+        }
+        else // if not in hand, then it must be in a played pile
+        {
+            _currentPlayer.Played.Remove(card);
+        }
+        
         _currentPlayer.PrestigeAmount += card.Cost - 1;
         return new Success();
     }
