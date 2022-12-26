@@ -25,7 +25,9 @@ public class ComplexEffectExecutor
                 _parent.ImmediatePlayCard(card);
                 break;
             case CardType.CONTRACT_AGENT:
-                _currentPlayer.Agents.Add(Agent.FromCard(card));
+                var agent = Agent.FromCard(card);
+                agent.MarkActivated();
+                _currentPlayer.Agents.Add(agent);
                 _parent.ImmediatePlayCard(card);
                 break;
             default:
