@@ -31,7 +31,7 @@
         public ComplexEffect MakeUniqueCopy(UniqueId uniqueId);
     }
 
-    public class Effect : BaseEffect, ComplexEffect
+    public class Effect : BaseEffect, ComplexEffect, IChoosable
     {
         public readonly EffectType Type;
         public readonly int Amount;
@@ -63,16 +63,7 @@
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.ACQUIRE_TAVERN) : null;
                         return new Choice<Card>(tavern.GetAffordableCards(Amount),
-                            (choiceList, executor) =>
-                            {
-                                if (choiceList.Count == 0)
-                                {
-                                    return new Success();
-                                }
-
-                                var choice = choiceList.First();
-                                return executor.AcquireTavern(choice);
-                            },
+                            ChoiceFollowUp.ACQUIRE_CARDS,
                             context);
                     }
                 case EffectType.GAIN_COIN:
@@ -92,10 +83,7 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.REPLACE_TAVERN) : null;
                         return new Choice<Card>(
                             tavern.AvailableCards,
-                            (choices, complexEffectExecutor) =>
-                            {
-                                return complexEffectExecutor.ReplaceTavern(choices);
-                            },
+                            ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN,
                             context,
                             Amount
                         );
@@ -105,10 +93,7 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.DESTROY_CARD) : null;
                         return new Choice<Card>(
                             player.Hand.Concat(player.AgentCards).ToList(),
-                            (choices, complexEffectExecutor) =>
-                            {
-                                return complexEffectExecutor.DestroyCard(choices);
-                            },
+                            ChoiceFollowUp.DESTROY_CARDS,
                             context,
                             Amount
                         );
@@ -130,10 +115,7 @@
 
                         return new Choice<Card>(
                             player.Hand,
-                            (choices, complexEffectExecutor) =>
-                            {
-                                return complexEffectExecutor.Discard(choices);
-                            },
+                            ChoiceFollowUp.DISCARD_CARDS,
                             context,
                             howManyToDiscard,
                             howManyToDiscard
@@ -144,10 +126,7 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.RETURN_TOP) : null;
                         return new Choice<Card>(
                             player.CooldownPile,
-                            (choices, complexEffectExecutor) =>
-                            {
-                                return complexEffectExecutor.Refresh(choices);
-                            },
+                            ChoiceFollowUp.REFRESH_CARDS,
                             context,
                             Amount
                         );
@@ -157,10 +136,7 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.TOSS) : null;
                         return new Choice<Card>(
                             player.DrawPile,
-                            (choices, complexChoiceExecutor) =>
-                            {
-                                return complexChoiceExecutor.Toss(choices);
-                            },
+                            ChoiceFollowUp.TOSS_CARDS,
                             context,
                             Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
                         );
@@ -170,10 +146,7 @@
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.KNOCKOUT) : null;
                         return new Choice<Card>(
                             enemy.AgentCards,
-                            (choices, complexChoiceExecutor) =>
-                            {
-                                return complexChoiceExecutor.Knockout(choices);
-                            },
+                            ChoiceFollowUp.KNOCKOUT_AGENTS,
                             context,
                             Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
                         );
@@ -257,19 +230,19 @@
         }
     }
 
-    public class EffectChoice : ComplexEffect, BaseEffect
+    public class EffectOr : ComplexEffect, BaseEffect
     {
         private readonly Effect _left;
         private readonly Effect _right;
         public UniqueId UniqueId { get; } = UniqueId.Empty;
 
-        public EffectChoice(Effect left, Effect right)
+        public EffectOr(Effect left, Effect right)
         {
             _left = left;
             _right = right;
         }
 
-        public EffectChoice(Effect left, Effect right, UniqueId uniqueId)
+        public EffectOr(Effect left, Effect right, UniqueId uniqueId)
         {
             _left = left;
             _right = right;
@@ -283,7 +256,7 @@
 
         public ComplexEffect MakeUniqueCopy(UniqueId uniqueId)
         {
-            return new EffectChoice(
+            return new EffectOr(
                 _left.MakeUniqueCopy(uniqueId) as Effect ?? throw new InvalidOperationException(),
                     _right.MakeUniqueCopy(uniqueId) as Effect ?? throw new InvalidOperationException(),
                 uniqueId
@@ -293,11 +266,8 @@
         public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
             var context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.OR) : null;
-            return new Choice<EffectType>(new List<EffectType> { _left.Type, _right.Type },
-                (choices, complexEffectExecutor) =>
-                {
-                    return complexEffectExecutor.CompleteEffectChoice(_left, _right, choices);
-                },
+            return new Choice<Effect>(new List<Effect> { _left, _right },
+                ChoiceFollowUp.ENACT_CHOSEN_EFFECT,
                 context,
                 1, 1); // OR choice should always result in one choice
         }

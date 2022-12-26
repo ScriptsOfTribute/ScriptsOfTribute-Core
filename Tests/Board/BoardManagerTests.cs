@@ -44,9 +44,9 @@ public class BoardManagerTests
         foreach (var result in chain.Consume())
         {
             flag += 1;
-            Assert.True(result is Choice<EffectType>);
+            Assert.True(result is Choice<Effect>);
 
-            var choice = result as Choice<EffectType>;
+            var choice = result as Choice<Effect>;
             Assert.Contains(EffectType.GAIN_POWER, choice.PossibleChoices);
             Assert.Contains(EffectType.ACQUIRE_TAVERN, choice.PossibleChoices);
             var newResult = choice.Choose(EffectType.GAIN_POWER);

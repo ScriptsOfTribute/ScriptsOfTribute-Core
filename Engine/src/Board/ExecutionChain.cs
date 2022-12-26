@@ -45,18 +45,18 @@ public class ExecutionChain
         }
     }
 
-    public void MakeChoice<T>(List<T> choices, ComplexEffectExecutor executor)
+    public void MakeChoice<T>(List<T> choices, ComplexEffectExecutor executor) where T : IChoosable
     {
-        if (PendingChoice is null || PendingChoice is not Choice<T> c)
+        if (PendingChoice is null)
         {
             throw new Exception("Pending choice is missing or wrong type.");
         }
 
-        var result = c.Choose(choices, executor);
+        var result = executor.Enact(PendingChoice.ChoiceFollowUp, choices.Select(c => (IChoosable)c).ToList());
 
         PendingChoice = result switch
         {
-            BaseChoice baseChoice => baseChoice,
+            BaseChoice choice => choice,
             Failure f => throw new Exception(f.Reason),
             _ => null
         };

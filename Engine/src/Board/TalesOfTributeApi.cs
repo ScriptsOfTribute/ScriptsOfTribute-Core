@@ -9,7 +9,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
-    public BaseSerializedChoice? PendingChoice => BaseSerializedChoice.FromBaseChoice(_boardManager.CardActionManager.PendingChoice);
+    public BaseSerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
 
     private readonly BoardManager _boardManager;
     private int _turnCount;
@@ -43,12 +43,12 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager.SerializeBoard();
     }
 
-    public void MakeChoice<T>(List<T> choices)
+    public void MakeChoice<T>(List<T> choices) where T : IChoosable
     {
         _boardManager.CardActionManager.MakeChoice(choices);
     }
 
-    public void MakeChoice<T>(T choice)
+    public void MakeChoice<T>(T choice) where T : IChoosable
     {
         _boardManager.CardActionManager.MakeChoice(new List<T> { choice });
     }
@@ -117,7 +117,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
                 return result;
             }
-            case Choice<EffectType> effectChoice:
+            case Choice<Effect> effectChoice:
             {
                 var result = new List<Move>();
                 for (var i = effectChoice.MinChoiceAmount; i <= effectChoice.MaxChoiceAmount; i++)

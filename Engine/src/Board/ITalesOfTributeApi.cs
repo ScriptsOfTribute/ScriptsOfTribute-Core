@@ -12,8 +12,8 @@ public interface ITalesOfTributeApi
     public BaseSerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
 
-    public void MakeChoice<T>(List<T> choices);
-    public void MakeChoice<T>(T choice);
+    public void MakeChoice<T>(List<T> choices) where T: IChoosable;
+    public void MakeChoice<T>(T choice) where T: IChoosable;
 
     void ActivateAgent(Card agent);
     ISimpleResult AttackAgent(Card agent);

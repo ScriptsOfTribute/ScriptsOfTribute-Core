@@ -311,7 +311,7 @@ public class TalesOfTributeGame
                 _api.MakeChoice(c.Choices);
                 break;
             }
-            case SerializedChoice<EffectType> choice:
+            case SerializedChoice<Effect> choice:
             {
                 var (timeout, move) = await PlayWithTimeout();
                 if (timeout is not null)
@@ -319,7 +319,7 @@ public class TalesOfTributeGame
                     return timeout;
                 }
 
-                if (move is not MakeChoiceMove<EffectType> c)
+                if (move is not MakeChoiceMove<Effect> c)
                 {
                     return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
                         "Choice of Effect was required.");

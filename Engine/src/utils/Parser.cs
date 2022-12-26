@@ -53,7 +53,7 @@ namespace TalesOfTribute
             return tokens.Length switch
             {
                 2 => new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
-                5 when tokens[2] == "OR" => new EffectChoice(
+                5 when tokens[2] == "OR" => new EffectOr(
                     new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
                     new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]))),
                 5 when tokens[2] == "AND" => new EffectComposite(

@@ -15,8 +15,42 @@ public class ComplexEffectExecutor
         _tavern = tavern;
     }
 
-    public PlayResult AcquireTavern(Card choice)
+    public PlayResult Enact(ChoiceFollowUp choice, List<IChoosable> choices)
     {
+        return choice switch
+        {
+            ChoiceFollowUp.ENACT_CHOSEN_EFFECT => CompleteChoice(ToEffectList(choices)),
+            ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN => ReplaceTavern(ToCardList(choices)),
+            ChoiceFollowUp.DESTROY_CARDS => DestroyCard(ToCardList(choices)),
+            ChoiceFollowUp.DISCARD_CARDS => Discard(ToCardList(choices)),
+            ChoiceFollowUp.REFRESH_CARDS => Refresh(ToCardList(choices)),
+            ChoiceFollowUp.TOSS_CARDS => Toss(ToCardList(choices)),
+            ChoiceFollowUp.KNOCKOUT_AGENTS => Knockout(ToCardList(choices)),
+            ChoiceFollowUp.ACQUIRE_CARDS => AcquireTavern(ToCardList(choices)),
+            ChoiceFollowUp.COMPLETE_HLAALU => CompleteHlaalu(ToCardList(choices)),
+            ChoiceFollowUp.COMPLETE_PELLIN => CompletePelin(ToCardList(choices)),
+            ChoiceFollowUp.COMPLETE_PSIJIC => CompletePsijic(ToCardList(choices)),
+            ChoiceFollowUp.COMPLETE_TREASURY => CompleteTreasury(ToCardList(choices)),
+            _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, null)
+        };
+    }
+
+    private List<Effect> ToEffectList(List<IChoosable> l) => l.Select(c => (Effect)c).ToList();
+    private List<Card> ToCardList(List<IChoosable> l) => l.Select(c => (Card)c).ToList();
+
+    public PlayResult AcquireTavern(List<Card> choices)
+    {
+        if (choices.Count == 0)
+        {
+            return new Success();
+        }
+
+        if (choices.Count > 1)
+        {
+            throw new Exception("Can't acquire more than 1 card.");
+        }
+
+        var choice = choices.First();
         var card = _tavern.Acquire(choice);
 
         switch (card.Type)
@@ -78,18 +112,19 @@ public class ComplexEffectExecutor
         return new Success();
     }
 
-    public PlayResult CompleteEffectChoice(Effect left, Effect right, List<EffectType> choices)
+    public PlayResult CompleteChoice(List<Effect> choices)
     {
-        if (choices.First() == left.Type)
-        {
-            return left.Enact(_currentPlayer, _enemyPlayer, _tavern);
-        }
-
-        return right.Enact(_currentPlayer, _enemyPlayer, _tavern);
+        return choices.First().Enact(_currentPlayer, _enemyPlayer, _tavern);
     }
 
-    public PlayResult CompleteHlaalu(Card card)
+    public PlayResult CompleteHlaalu(List<Card> choices)
     {
+        if (choices.Count != 1)
+        {
+            throw new Exception("Hlaalu requires exactly 1 choice.");
+        }
+
+        var card = choices.First();
         if (_currentPlayer.Hand.Any(c => c.UniqueId == card.UniqueId))
         {
             _currentPlayer.Hand.Remove(card);
@@ -103,22 +138,40 @@ public class ComplexEffectExecutor
         return new Success();
     }
 
-    public PlayResult CompletePelin(Card choice)
+    public PlayResult CompletePelin(List<Card> choices)
     {
+        if (choices.Count != 1)
+        {
+            throw new Exception("Pelin requires exactly 1 choice.");
+        }
+
+        var choice = choices.First();
         _currentPlayer.CooldownPile.Remove(choice);
         _currentPlayer.DrawPile.Insert(0, choice);
         return new Success();
     }
 
-    public PlayResult CompletePsijic(Card choice)
+    public PlayResult CompletePsijic(List<Card> choices)
     {
+        if (choices.Count != 1)
+        {
+            throw new Exception("Psijic requires exactly 1 choice.");
+        }
+
+        var choice = choices.First();
         _enemyPlayer.Destroy(choice);
         _enemyPlayer.CooldownPile.Add(choice);
         return new Success();
     }
 
-    public PlayResult CompleteTreasury(Card choice)
+    public PlayResult CompleteTreasury(List<Card> choices)
     {
+        if (choices.Count != 1)
+        {
+            throw new Exception("Treasury requires exactly 1 choice.");
+        }
+
+        var choice = choices.First();
         if (_currentPlayer.Played.Contains(choice))
         {
             _currentPlayer.Played.Remove(choice);

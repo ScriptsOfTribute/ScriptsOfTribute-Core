@@ -31,11 +31,7 @@
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
             // We should check if there is any taunt agent
             return new Choice<Card>(enemy.AgentCards,
-                (choices, currentChoiceExecutor) =>
-                {
-                    var choice = choices.First();
-                    return currentChoiceExecutor.CompletePsijic(choice);
-                },
+                ChoiceFollowUp.COMPLETE_PSIJIC,
                 new ChoiceContext(this), 1, 1);
         }
 

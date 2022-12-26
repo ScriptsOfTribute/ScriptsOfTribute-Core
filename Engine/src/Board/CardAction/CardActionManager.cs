@@ -66,7 +66,7 @@ public class CardActionManager
         }
     }
     
-    public void MakeChoice<T>(List<T> choices)
+    public void MakeChoice<T>(List<T> choices) where T : IChoosable
     {
         if (State == BoardState.NORMAL)
         {
@@ -80,7 +80,7 @@ public class CardActionManager
                 throw new Exception("MakeChoice of wrong type called.");
             }
 
-            var result = c.Choose(choices, _complexEffectExecutor);
+            var result = _complexEffectExecutor.Enact(_pendingPatronChoice.ChoiceFollowUp, choices.Select(ch => (IChoosable)ch).ToList());
             switch (result)
             {
                 case BaseChoice bc:
@@ -159,10 +159,10 @@ public class CardActionManager
                 break;
             case BoardState.CHOICE_PENDING:
             case BoardState.START_OF_TURN_CHOICE_PENDING:
-                choiceForChain = BaseSerializedChoice.ToChoice(serializedBoard.PendingChoice);
+                choiceForChain = serializedBoard.PendingChoice!.ToChoice();
                 break;
             case BoardState.PATRON_CHOICE_PENDING:
-                patronChoice = BaseSerializedChoice.ToChoice(serializedBoard.PendingChoice);
+                patronChoice = serializedBoard.PendingChoice!.ToChoice();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

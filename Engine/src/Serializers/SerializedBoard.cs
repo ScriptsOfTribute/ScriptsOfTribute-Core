@@ -36,12 +36,7 @@ namespace TalesOfTribute
             TavernCards = tavern.Cards;
             PatronStates = new PatronStates(patrons.ToList());
             BoardState = state;
-            PendingChoice = maybeChoice switch
-            {
-                Choice<Card> cardChoice => cardChoice.Serialize(),
-                Choice<EffectType> effectChoice => effectChoice.Serialize(),
-                _ => null
-            };
+            PendingChoice = maybeChoice?.Serialize();
             ComboStates = comboContext.ToComboStates();
             UpcomingEffects = upcomingEffects.ToList();
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
@@ -74,7 +69,7 @@ namespace TalesOfTribute
                         case MakeChoiceMove<Card> cardMove:
                             api.MakeChoice(cardMove.Choices);
                             break;
-                        case MakeChoiceMove<EffectType> effectMove:
+                        case MakeChoiceMove<Effect> effectMove:
                             api.MakeChoice(effectMove.Choices);
                             break;
                         default:

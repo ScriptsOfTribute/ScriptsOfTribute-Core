@@ -2,34 +2,28 @@
 
 public abstract class BaseSerializedChoice
 {
-    protected BaseSerializedChoice(int maxChoices, int minChoices, ChoiceContext context)
+    protected BaseSerializedChoice(int maxChoices, int minChoices, ChoiceContext? context, ChoiceFollowUp choiceFollowUp)
     {
         MaxChoices = maxChoices;
         MinChoices = minChoices;
         Context = context;
+        ChoiceFollowUp = choiceFollowUp;
     }
 
     public int MaxChoices { get; }
     public int MinChoices { get; }
-    public ChoiceContext? Context { get; }
-    
-    public static BaseSerializedChoice? FromBaseChoice(BaseChoice? c)
-    {
-        return c switch
-        {
-            Choice<Card> ch => ch.Serialize(),
-            Choice<EffectType> ch => ch.Serialize(),
-            _ => null,
-        };
-    }
+    public ChoiceContext? Context { get; }   
+    public ChoiceFollowUp ChoiceFollowUp { get; }
 
-    public static BaseChoice? ToChoice(BaseSerializedChoice? c)
+    public BaseChoice ToChoice()
     {
-        return c switch
+        return this switch
         {
-            SerializedChoice<Card> ch => ch.ToChoice(),
-            SerializedChoice<EffectType> ch => ch.ToChoice(),
-            _ => null,
+            SerializedCardChoice c =>
+                new Choice<Card>(c.PossibleChoices, ChoiceFollowUp, Context, MaxChoices, MinChoices),
+            SerializedEffectChoice c =>
+                new Choice<Effect>(c.PossibleChoices, ChoiceFollowUp, Context, MaxChoices, MinChoices),
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 }
@@ -37,33 +31,25 @@ public abstract class BaseSerializedChoice
 public class SerializedChoice<T> : BaseSerializedChoice
 {
     public List<T> PossibleChoices { get; }
-    private Choice<T>.ChoiceCallback _callback;
 
-    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<T> possibleChoices, Choice<T>.ChoiceCallback callback) : base(maxChoices, minChoices, context)
+    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<T> possibleChoices, ChoiceFollowUp choiceFollowUp) : base(maxChoices, minChoices, context, choiceFollowUp)
     {
-        PossibleChoices = possibleChoices.ToList();
-        _callback = callback;
-    }
-
-    public Choice<T> ToChoice()
-    {
-        return new Choice<T>(PossibleChoices.ToList(), (Choice<T>.ChoiceCallback)_callback.Clone(), Context, MaxChoices,
-            MinChoices);
+        PossibleChoices = possibleChoices;
     }
 }
 
 public class SerializedCardChoice : SerializedChoice<Card>
 {
-    protected SerializedCardChoice(int maxChoices, int minChoices, ChoiceContext context, List<Card> possibleChoices, Choice<Card>.ChoiceCallback callback)
-        : base(maxChoices, minChoices, context, possibleChoices, callback)
+    public SerializedCardChoice(int maxChoices, int minChoices, ChoiceContext context, List<Card> possibleChoices, ChoiceFollowUp choiceFollowUp)
+        : base(maxChoices, minChoices, context, possibleChoices, choiceFollowUp)
     {
     }
 }
 
-public class SerializedEffectChoice : SerializedChoice<EffectType>
+public class SerializedEffectChoice : SerializedChoice<Effect>
 {
-    protected SerializedEffectChoice(int maxChoices, int minChoices, ChoiceContext context, List<EffectType> possibleChoices, Choice<EffectType>.ChoiceCallback callback)
-        : base(maxChoices, minChoices, context, possibleChoices, callback)
+    public SerializedEffectChoice(int maxChoices, int minChoices, ChoiceContext context, List<Effect> possibleChoices, ChoiceFollowUp choiceFollowUp)
+        : base(maxChoices, minChoices, context, possibleChoices, choiceFollowUp)
     {
     }
 }

@@ -15,35 +15,61 @@ public class Success : PlayResult, ISimpleResult
 {
 }
 
-public class BaseChoice : PlayResult
+public abstract class BaseChoice : PlayResult
 {
+    protected BaseChoice(ChoiceFollowUp choiceFollowUp)
+    {
+        ChoiceFollowUp = choiceFollowUp;
+    }
+
+    public ChoiceFollowUp ChoiceFollowUp { get; }
+
+    public BaseSerializedChoice Serialize()
+    {
+        return this switch
+        {
+            Choice<Card> c => new SerializedCardChoice(c.MaxChoiceAmount, c.MinChoiceAmount, c.Context, c.PossibleChoices, c.ChoiceFollowUp),
+            Choice<Effect> c => new SerializedEffectChoice(c.MaxChoiceAmount, c.MinChoiceAmount, c.Context, c.PossibleChoices, c.ChoiceFollowUp),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 }
 
-public class Choice<T> : BaseChoice
+public enum ChoiceFollowUp
+{
+    ENACT_CHOSEN_EFFECT,
+    REPLACE_CARDS_IN_TAVERN,
+    DESTROY_CARDS,
+    DISCARD_CARDS,
+    REFRESH_CARDS,
+    TOSS_CARDS,
+    KNOCKOUT_AGENTS,
+    ACQUIRE_CARDS,
+    COMPLETE_HLAALU,
+    COMPLETE_PELLIN,
+    COMPLETE_PSIJIC,
+    COMPLETE_TREASURY,
+}
+
+public interface IChoosable
+{
+    
+}
+
+public class Choice<T> : BaseChoice where T : IChoosable
 {
     public List<T> PossibleChoices { get; }
     public int MaxChoiceAmount { get; } = 1;
     public int MinChoiceAmount { get; } = 0;
-
-    public delegate PlayResult ChoiceCallback(List<T> t, ComplexEffectExecutor executor);
-
-    private readonly ChoiceCallback _callback;
     public ChoiceContext? Context { get; }
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context) : base()
+    public Choice(List<T> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context) : base(followUp)
     {
-        // Make sure choice of incorrect type is not created by mistake.
-        if (typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
-        {
-            throw new Exception("Choice can only be made for cards or effects!");
-        }
-
         PossibleChoices = possibleChoices;
-        _callback = callback;
         Context = context;
     }
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback, context)
+    public Choice(List<T> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
@@ -54,26 +80,9 @@ public class Choice<T> : BaseChoice
         MinChoiceAmount = minChoiceAmount;
     }
 
-    public PlayResult Choose(List<T> choices, ComplexEffectExecutor executor)
-    {
-        if (PossibleChoices.Count == 0)
-        {
-            var dummyResult = new Success();
-            return dummyResult;
-        }
-        // Check if all choices are in possible choices.
-        if (choices.Except(PossibleChoices).Any() || choices.Count > MaxChoiceAmount || choices.Count < MinChoiceAmount)
-        {
-            return new Failure("Invalid choices specified!");
-        }
-        var result = _callback(choices, executor);
-
-        return result;
-    }
-
     public SerializedChoice<T> Serialize()
     {
-        return new SerializedChoice<T>(MaxChoiceAmount, MinChoiceAmount, Context, PossibleChoices.ToList(), (ChoiceCallback)_callback.Clone());
+        return new SerializedChoice<T>(MaxChoiceAmount, MinChoiceAmount, Context, PossibleChoices, ChoiceFollowUp);
     }
 }
 

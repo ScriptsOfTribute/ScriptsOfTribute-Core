@@ -13,11 +13,7 @@
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
 
             return new Choice<Card>(usedCards,
-                (choices, complexChoiceExecutor) =>
-                {
-                    var selectedCard = choices.First();
-                    return complexChoiceExecutor.CompleteTreasury(selectedCard);
-                },
+                ChoiceFollowUp.COMPLETE_TREASURY,
                 new ChoiceContext(this), 1, 1);
         }
 

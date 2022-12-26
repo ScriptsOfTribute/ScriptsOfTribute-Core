@@ -30,11 +30,7 @@
 
             var cardsInPlay = activator.Hand.Concat(activator.Played).Where(c => c.Cost >= 1).ToList();
             return new Choice<Card>(cardsInPlay,
-                (cards, complexEffectExecutor) =>
-                {
-                    var card = cards.First();
-                    return complexEffectExecutor.CompleteHlaalu(card);
-                },
+                ChoiceFollowUp.COMPLETE_HLAALU,
                 new ChoiceContext(this), 1, 1);
         }
 

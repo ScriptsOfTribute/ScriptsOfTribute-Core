@@ -30,11 +30,7 @@ namespace TalesOfTribute
             List<Card> agentsInCooldownPile = activator.CooldownPile.FindAll(card => card.Type == CardType.AGENT);
 
             return new Choice<Card>(agentsInCooldownPile,
-                (choices, complexChoiceExecutor) =>
-                {
-                    var choice = choices.First();
-                    return complexChoiceExecutor.CompletePelin(choice);
-                },
+                ChoiceFollowUp.COMPLETE_PELLIN,
                 new ChoiceContext(this), 1, 1);
         }
 
