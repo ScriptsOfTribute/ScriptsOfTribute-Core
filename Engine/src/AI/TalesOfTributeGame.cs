@@ -56,12 +56,9 @@ public class TalesOfTributeGame
 
         var task = MoveTask(board, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
-        // await File.AppendAllTextAsync("log.txt", $"Possible moves:\n {string.Join('\n', moves.Select(m => $"\t{m}"))}\n");
 
         if (res == task)
         {
-            // await File.AppendAllTextAsync("log.txt", $"Move selected: {task.Result}\n");
-            // await File.AppendAllTextAsync("log.txt", $"Board state: {_api.GetSerializer()}\n");
             return (null, task.Result);
         }
 
@@ -193,11 +190,11 @@ public class TalesOfTributeGame
 
         return move.Command switch
         {
-            CommandEnum.PLAY_CARD => await HandlePlayCard(move as SimpleCardMove),
-            CommandEnum.ATTACK => HandleAttack(move as SimpleCardMove),
-            CommandEnum.BUY_CARD => await HandleBuyCard(move as SimpleCardMove),
-            CommandEnum.CALL_PATRON => await HandleCallPatron(move as SimplePatronMove),
-            CommandEnum.ACTIVATE_AGENT => await HandleActivateAgent(move as SimpleCardMove),
+            CommandEnum.PLAY_CARD => await HandlePlayCard((SimpleCardMove)move),
+            CommandEnum.ATTACK => HandleAttack((SimpleCardMove)move),
+            CommandEnum.BUY_CARD => await HandleBuyCard((SimpleCardMove)move),
+            CommandEnum.CALL_PATRON => await HandleCallPatron((SimplePatronMove)move),
+            CommandEnum.ACTIVATE_AGENT => await HandleActivateAgent((SimpleCardMove)move),
             CommandEnum.END_TURN => null,
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -211,7 +208,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Message: {e.Message}\nStack trace: {e.StackTrace}\nSource: {e.Source}\n{e}\n");
         }
 
         return await ConsumePotentialPendingMoves();
@@ -225,7 +222,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Message: {e.Message}\nStack trace: {e.StackTrace}\nSource: {e.Source}\n{e}\n");
         }
 
         return await ConsumePotentialPendingMoves();
@@ -239,7 +236,7 @@ public class TalesOfTributeGame
         }
         catch (Exception e)
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Message: {e.Message}\nStack trace: {e.StackTrace}\nSource: {e.Source}\n{e}\n");
         }
 
         return await ConsumePotentialPendingMoves();

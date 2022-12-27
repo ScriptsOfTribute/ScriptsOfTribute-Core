@@ -109,11 +109,6 @@ public class TalesOfTribute
 
         var r = _game!.Play().Result;
 
-        // if (r.Reason != GameEndReason.INCORRECT_MOVE)
-        // {
-        //     File.WriteAllText("log.txt", "");
-        // }
-
         return r;
     }
 }
