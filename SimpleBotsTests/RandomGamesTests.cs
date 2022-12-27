@@ -81,7 +81,7 @@ public class RandomGamesTests
         for (var i = 0; i < testAmount; i++)
         {
             var bot1 = new RandomMaximizePrestigeBot();
-            var bot2 = new RandomBot();
+            var bot2 = new DoEverythingBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var endState = game.Play();
@@ -109,10 +109,10 @@ public class RandomGamesTests
         br.Tavern.AvailableCards.Add(ritual);
         var knightCommander = GlobalCardDatabase.Instance.GetCard(CardId.KNIGHT_COMMANDER);
         br.CurrentPlayer.Hand.Add(knightCommander);
-        var knightsOfSaintPellin = GlobalCardDatabase.Instance.GetCard(CardId.KNIGHTS_OF_SAINT_PELIN);
-        br.CurrentPlayer.Hand.Add(knightsOfSaintPellin);
+        var knightsOfSaintPelin = GlobalCardDatabase.Instance.GetCard(CardId.KNIGHTS_OF_SAINT_PELIN);
+        br.CurrentPlayer.Hand.Add(knightsOfSaintPelin);
         
-        br.PlayCard(knightsOfSaintPellin);
+        br.PlayCard(knightsOfSaintPelin);
 
         br.EndTurn();
         br.EndTurn();
@@ -121,6 +121,6 @@ public class RandomGamesTests
         br.PlayCard(knightCommander);
         br.BuyCard(ritual);
         br.CardActionManager.MakeChoice(new List<Card> { knightCommander });
-        br.ActivateAgent(knightsOfSaintPellin);
+        br.ActivateAgent(knightsOfSaintPelin);
     }
 }
