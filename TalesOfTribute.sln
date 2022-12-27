@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBots", "SimpleBots\Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBotsTests", "SimpleBotsTests\SimpleBotsTests.csproj", "{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleTests", "ModuleTests\ModuleTests.csproj", "{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
