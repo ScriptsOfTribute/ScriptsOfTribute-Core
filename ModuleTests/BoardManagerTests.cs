@@ -2,7 +2,7 @@ using TalesOfTribute;
 
 namespace ModuleTests;
 
-public class UnitTest1
+public class BoardManagerTests
 {
     [Fact]
     void HealEffectShouldWorkCorrectlyWithDeadAgents()
