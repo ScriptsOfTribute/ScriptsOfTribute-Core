@@ -15,26 +15,6 @@ public class Success : PlayResult, ISimpleResult
 {
 }
 
-public abstract class BaseChoice : PlayResult
-{
-    protected BaseChoice(ChoiceFollowUp choiceFollowUp)
-    {
-        ChoiceFollowUp = choiceFollowUp;
-    }
-
-    public ChoiceFollowUp ChoiceFollowUp { get; }
-
-    public BaseSerializedChoice Serialize()
-    {
-        return this switch
-        {
-            Choice<Card> c => new SerializedCardChoice(c.MaxChoiceAmount, c.MinChoiceAmount, c.Context, c.PossibleChoices, c.ChoiceFollowUp),
-            Choice<Effect> c => new SerializedEffectChoice(c.MaxChoiceAmount, c.MinChoiceAmount, c.Context, c.PossibleChoices, c.ChoiceFollowUp),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-}
-
 public enum ChoiceFollowUp
 {
     ENACT_CHOSEN_EFFECT,
@@ -51,25 +31,76 @@ public enum ChoiceFollowUp
     COMPLETE_TREASURY,
 }
 
-public interface IChoosable
+public class Choice : PlayResult
 {
-    
-}
+    public enum DataType
+    {
+        EFFECT,
+        CARD,
+    }
 
-public class Choice<T> : BaseChoice where T : IChoosable
-{
-    public List<T> PossibleChoices { get; }
+    public List<Card> PossibleCards
+    {
+        get
+        {
+            if (Type != DataType.CARD)
+            {
+                throw new Exception("This choice does not contain Cards.");
+            }
+
+            return _possibleCards!;
+        }
+    }
+
+    public List<Effect> PossibleEffects
+    {
+        get
+        {
+            if (Type != DataType.EFFECT)
+            {
+                throw new Exception("This choice does not contain Effects.");
+            }
+
+            return _possibleEffects!;
+        }
+    }
+
     public int MaxChoiceAmount { get; } = 1;
     public int MinChoiceAmount { get; } = 0;
     public ChoiceContext? Context { get; }
+    public readonly DataType Type;
+    public readonly ChoiceFollowUp FollowUp;
+    private readonly List<Card>? _possibleCards;
+    private readonly List<Effect>? _possibleEffects;
 
-    public Choice(List<T> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context) : base(followUp)
+    public Choice(List<Effect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
     {
-        PossibleChoices = possibleChoices;
+        _possibleEffects = possibleChoices;
+        Type = DataType.EFFECT;
+        FollowUp = followUp;
         Context = context;
     }
 
-    public Choice(List<T> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
+    public Choice(List<Effect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
+    {
+        if (minChoiceAmount > possibleChoices.Count)
+        {
+            throw new Exception("Invalid choice amount specified!");
+        }
+
+        MaxChoiceAmount = maxChoiceAmount;
+        MinChoiceAmount = minChoiceAmount;
+    }
+    
+    public Choice(List<Card> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
+    {
+        _possibleCards = possibleChoices;
+        Type = DataType.CARD;
+        FollowUp = followUp;
+        Context = context;
+    }
+
+    public Choice(List<Card> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
@@ -80,9 +111,9 @@ public class Choice<T> : BaseChoice where T : IChoosable
         MinChoiceAmount = minChoiceAmount;
     }
 
-    public SerializedChoice<T> Serialize()
+    public SerializedChoice Serialize()
     {
-        return new SerializedChoice<T>(MaxChoiceAmount, MinChoiceAmount, Context, PossibleChoices, ChoiceFollowUp);
+        return new SerializedChoice(MaxChoiceAmount, MinChoiceAmount, Context, _possibleCards, _possibleEffects, FollowUp, Type);
     }
 }
 

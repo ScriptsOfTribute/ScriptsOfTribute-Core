@@ -31,7 +31,7 @@
         public ComplexEffect MakeUniqueCopy(UniqueId uniqueId);
     }
 
-    public class Effect : BaseEffect, ComplexEffect, IChoosable
+    public class Effect : BaseEffect, ComplexEffect
     {
         public readonly EffectType Type;
         public readonly int Amount;
@@ -65,7 +65,7 @@
                 case EffectType.ACQUIRE_TAVERN:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice<Card>(tavern.GetAffordableCards(Amount),
+                        return new Choice(tavern.GetAffordableCards(Amount),
                             ChoiceFollowUp.ACQUIRE_CARDS,
                             context);
                     }
@@ -84,7 +84,7 @@
                 case EffectType.REPLACE_TAVERN:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice<Card>(
+                        return new Choice(
                             tavern.AvailableCards,
                             ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN,
                             context,
@@ -94,7 +94,7 @@
                 case EffectType.DESTROY_CARD:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice<Card>(
+                        return new Choice(
                             player.Hand.Concat(player.AgentCards).ToList(),
                             ChoiceFollowUp.DESTROY_CARDS,
                             context,
@@ -116,7 +116,7 @@
 
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
 
-                        return new Choice<Card>(
+                        return new Choice(
                             player.Hand,
                             ChoiceFollowUp.DISCARD_CARDS,
                             context,
@@ -127,7 +127,7 @@
                 case EffectType.RETURN_TOP:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice<Card>(
+                        return new Choice(
                             player.CooldownPile,
                             ChoiceFollowUp.REFRESH_CARDS,
                             context,
@@ -137,7 +137,7 @@
                 case EffectType.TOSS:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice<Card>(
+                        return new Choice(
                             player.DrawPile,
                             ChoiceFollowUp.TOSS_CARDS,
                             context,
@@ -147,7 +147,7 @@
                 case EffectType.KNOCKOUT:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice<Card>(
+                        return new Choice(
                             enemy.AgentCards,
                             ChoiceFollowUp.KNOCKOUT_AGENTS,
                             context,
@@ -273,7 +273,7 @@
         public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
             var context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.EFFECT_CHOICE, Combo) : null;
-            return new Choice<Effect>(new List<Effect> { _left, _right },
+            return new Choice(new List<Effect> { _left, _right },
                 ChoiceFollowUp.ENACT_CHOSEN_EFFECT,
                 context,
                 1, 1); // OR choice should always result in one choice

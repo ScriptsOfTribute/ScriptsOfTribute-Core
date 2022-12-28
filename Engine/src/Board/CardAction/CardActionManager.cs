@@ -19,8 +19,8 @@ public class CardActionManager
     public List<BaseEffect> StartOfNextTurnEffects = new();
     private ComplexEffectExecutor _complexEffectExecutor;
 
-    private BaseChoice? _pendingPatronChoice;
-    public BaseChoice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : _pendingExecutionChain.PendingChoice;
+    private Choice? _pendingPatronChoice;
+    public Choice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : _pendingExecutionChain.PendingChoice;
     public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingExecutionChain.PendingEffects;
     public BoardState State { get; private set; } = BoardState.NORMAL;
 
@@ -59,14 +59,51 @@ public class CardActionManager
     public void ActivatePatron(Patron patron)
     {
         var result = patron.PatronActivation(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer);
-        if (result is BaseChoice c)
+        if (result is Choice c)
         {
             _pendingPatronChoice = c;
             State = BoardState.PATRON_CHOICE_PENDING;
         }
     }
+
+    private void UpdatePendingPatronChoice(PlayResult result)
+    {
+        switch (result)
+        {
+            case Choice bc:
+                _pendingPatronChoice = bc;
+                break;
+            case Failure f:
+                throw new Exception(f.Reason);
+            default:
+                State = BoardState.NORMAL;
+                break;
+        }
+    }
+
+    private void HandlePatronChoice(List<Card> choices)
+    {
+        if (_pendingPatronChoice?.Type != Choice.DataType.CARD)
+        {
+            throw new Exception("MakeChoice of wrong type called.");
+        }
+
+        var result = _complexEffectExecutor.Enact(_pendingPatronChoice.FollowUp, choices);
+        UpdatePendingPatronChoice(result);
+    }
     
-    public void MakeChoice<T>(List<T> choices) where T : IChoosable
+    private void HandlePatronChoice(Effect choice)
+    {
+        if (_pendingPatronChoice?.Type != Choice.DataType.EFFECT)
+        {
+            throw new Exception("MakeChoice of wrong type called.");
+        }
+
+        var result = _complexEffectExecutor.Enact(_pendingPatronChoice.FollowUp, choice);
+        UpdatePendingPatronChoice(result);
+    }
+    
+    public void MakeChoice(List<Card> choices)
     {
         if (State == BoardState.NORMAL)
         {
@@ -75,28 +112,32 @@ public class CardActionManager
 
         if (State == BoardState.PATRON_CHOICE_PENDING)
         {
-            if (_pendingPatronChoice is not Choice<T> c)
-            {
-                throw new Exception("MakeChoice of wrong type called.");
-            }
-
-            var result = _complexEffectExecutor.Enact(_pendingPatronChoice.ChoiceFollowUp, choices.Select(ch => (IChoosable)ch).ToList());
-            switch (result)
-            {
-                case BaseChoice bc:
-                    _pendingPatronChoice = bc;
-                    break;
-                case Failure f:
-                    throw new Exception(f.Reason);
-                default:
-                    State = BoardState.NORMAL;
-                    break;
-            }
-
+            HandlePatronChoice(choices);
             return;
         }
         
         _pendingExecutionChain.MakeChoice(choices, _complexEffectExecutor);
+
+        if (ConsumePendingChainToChoice())
+        {
+            State = BoardState.NORMAL;
+        }
+    }
+    
+    public void MakeChoice(Effect choice)
+    {
+        if (State == BoardState.NORMAL)
+        {
+            throw new Exception("There is no pending choice.");
+        }
+
+        if (State == BoardState.PATRON_CHOICE_PENDING)
+        {
+            HandlePatronChoice(choice);
+            return;
+        }
+        
+        _pendingExecutionChain.MakeChoice(choice, _complexEffectExecutor);
 
         if (ConsumePendingChainToChoice())
         {
@@ -136,7 +177,7 @@ public class CardActionManager
 
         foreach (var result in _pendingExecutionChain.Consume(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer, _tavern))
         {
-            if (result is BaseChoice)
+            if (result is Choice)
             {
                 return false;
             }
@@ -150,8 +191,8 @@ public class CardActionManager
         // private ExecutionChain _pendingExecutionChain;
         var comboContext = ComboContext.FromComboStates(serializedBoard.ComboStates);
 
-        BaseChoice? choiceForChain = null;
-        BaseChoice? patronChoice = null;
+        Choice? choiceForChain = null;
+        Choice? patronChoice = null;
 
         switch (serializedBoard.BoardState)
         {

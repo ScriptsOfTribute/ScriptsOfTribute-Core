@@ -1,55 +1,59 @@
 ﻿namespace TalesOfTribute.Serializers;
 
-public abstract class BaseSerializedChoice
+public class SerializedChoice
 {
-    protected BaseSerializedChoice(int maxChoices, int minChoices, ChoiceContext? context, ChoiceFollowUp choiceFollowUp)
+    public List<Card> PossibleCards
     {
-        MaxChoices = maxChoices;
-        MinChoices = minChoices;
-        Context = context;
-        ChoiceFollowUp = choiceFollowUp;
+        get
+        {
+            if (Type != Choice.DataType.CARD)
+            {
+                throw new Exception("This choice is not of type CARD, so it doesn't contain cards.");
+            }
+
+            return _possibleCards!;
+        }
+    }
+
+    public List<Effect> PossibleEffects
+    {
+        get
+        {
+            if (Type != Choice.DataType.EFFECT)
+            {
+                throw new Exception("This choice is not of type EFFECT, so it doesn't contain effects.");
+            }
+
+            return _possibleEffects!;
+        }
     }
 
     public int MaxChoices { get; }
     public int MinChoices { get; }
     public ChoiceContext? Context { get; }   
     public ChoiceFollowUp ChoiceFollowUp { get; }
+    public readonly Choice.DataType Type;
+    private readonly List<Card>? _possibleCards;
+    private readonly List<Effect>? _possibleEffects;
 
-    public BaseChoice ToChoice()
+    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<Card>? possibleCards, List<Effect>? possibleEffects, ChoiceFollowUp choiceFollowUp, Choice.DataType type)
     {
-        return this switch
+        MaxChoices = maxChoices;
+        MinChoices = minChoices;
+        Context = context;
+        ChoiceFollowUp = choiceFollowUp;
+        _possibleCards = possibleCards?.ToList();
+        _possibleEffects = possibleEffects?.ToList();
+        Type = type;
+    }
+
+    public Choice ToChoice()
+    {
+        return Type switch
         {
-            SerializedCardChoice c =>
-                new Choice<Card>(c.PossibleChoices, ChoiceFollowUp, Context, MaxChoices, MinChoices),
-            SerializedEffectChoice c =>
-                new Choice<Effect>(c.PossibleChoices, ChoiceFollowUp, Context, MaxChoices, MinChoices),
+            Choice.DataType.EFFECT => new Choice(PossibleEffects, ChoiceFollowUp, Context, MaxChoices, MinChoices),
+            Choice.DataType.CARD => new Choice(PossibleCards, ChoiceFollowUp, Context, MaxChoices, MinChoices),
             _ => throw new ArgumentOutOfRangeException()
         };
-    }
-}
-
-public class SerializedChoice<T> : BaseSerializedChoice
-{
-    public List<T> PossibleChoices { get; }
-
-    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<T> possibleChoices, ChoiceFollowUp choiceFollowUp) : base(maxChoices, minChoices, context, choiceFollowUp)
-    {
-        PossibleChoices = possibleChoices;
-    }
-}
-
-public class SerializedCardChoice : SerializedChoice<Card>
-{
-    public SerializedCardChoice(int maxChoices, int minChoices, ChoiceContext context, List<Card> possibleChoices, ChoiceFollowUp choiceFollowUp)
-        : base(maxChoices, minChoices, context, possibleChoices, choiceFollowUp)
-    {
-    }
-}
-
-public class SerializedEffectChoice : SerializedChoice<Effect>
-{
-    public SerializedEffectChoice(int maxChoices, int minChoices, ChoiceContext context, List<Effect> possibleChoices, ChoiceFollowUp choiceFollowUp)
-        : base(maxChoices, minChoices, context, possibleChoices, choiceFollowUp)
-    {
     }
 }

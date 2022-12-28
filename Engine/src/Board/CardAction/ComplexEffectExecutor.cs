@@ -14,29 +14,33 @@ public class ComplexEffectExecutor
         _enemyPlayer = enemyPlayer;
         _tavern = tavern;
     }
-
-    public PlayResult Enact(ChoiceFollowUp choice, List<IChoosable> choices)
+    
+    public PlayResult Enact(ChoiceFollowUp c, Effect choice)
     {
-        return choice switch
+        return c switch
         {
-            ChoiceFollowUp.ENACT_CHOSEN_EFFECT => CompleteChoice(ToEffectList(choices)),
-            ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN => ReplaceTavern(ToCardList(choices)),
-            ChoiceFollowUp.DESTROY_CARDS => DestroyCard(ToCardList(choices)),
-            ChoiceFollowUp.DISCARD_CARDS => Discard(ToCardList(choices)),
-            ChoiceFollowUp.REFRESH_CARDS => Refresh(ToCardList(choices)),
-            ChoiceFollowUp.TOSS_CARDS => Toss(ToCardList(choices)),
-            ChoiceFollowUp.KNOCKOUT_AGENTS => Knockout(ToCardList(choices)),
-            ChoiceFollowUp.ACQUIRE_CARDS => AcquireTavern(ToCardList(choices)),
-            ChoiceFollowUp.COMPLETE_HLAALU => CompleteHlaalu(ToCardList(choices)),
-            ChoiceFollowUp.COMPLETE_PELLIN => CompletePelin(ToCardList(choices)),
-            ChoiceFollowUp.COMPLETE_PSIJIC => CompletePsijic(ToCardList(choices)),
-            ChoiceFollowUp.COMPLETE_TREASURY => CompleteTreasury(ToCardList(choices)),
-            _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, null)
+            ChoiceFollowUp.ENACT_CHOSEN_EFFECT => CompleteChoice(choice),
         };
     }
 
-    private List<Effect> ToEffectList(List<IChoosable> l) => l.Select(c => (Effect)c).ToList();
-    private List<Card> ToCardList(List<IChoosable> l) => l.Select(c => (Card)c).ToList();
+    public PlayResult Enact(ChoiceFollowUp choice, List<Card> choices)
+    {
+        return choice switch
+        {
+            ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN => ReplaceTavern(choices),
+            ChoiceFollowUp.DESTROY_CARDS => DestroyCard(choices),
+            ChoiceFollowUp.DISCARD_CARDS => Discard(choices),
+            ChoiceFollowUp.REFRESH_CARDS => Refresh(choices),
+            ChoiceFollowUp.TOSS_CARDS => Toss(choices),
+            ChoiceFollowUp.KNOCKOUT_AGENTS => Knockout(choices),
+            ChoiceFollowUp.ACQUIRE_CARDS => AcquireTavern(choices),
+            ChoiceFollowUp.COMPLETE_HLAALU => CompleteHlaalu(choices),
+            ChoiceFollowUp.COMPLETE_PELLIN => CompletePelin(choices),
+            ChoiceFollowUp.COMPLETE_PSIJIC => CompletePsijic(choices),
+            ChoiceFollowUp.COMPLETE_TREASURY => CompleteTreasury(choices),
+            _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, null)
+        };
+    }
 
     public PlayResult AcquireTavern(List<Card> choices)
     {
@@ -112,9 +116,9 @@ public class ComplexEffectExecutor
         return new Success();
     }
 
-    public PlayResult CompleteChoice(List<Effect> choices)
+    public PlayResult CompleteChoice(Effect choice)
     {
-        return choices.First().Enact(_currentPlayer, _enemyPlayer, _tavern);
+        return choice.Enact(_currentPlayer, _enemyPlayer, _tavern);
     }
 
     public PlayResult CompleteHlaalu(List<Card> choices)

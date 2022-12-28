@@ -12,7 +12,7 @@
             activator.CoinsAmount -= 2;
             List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
 
-            return new Choice<Card>(usedCards,
+            return new Choice(usedCards,
                 ChoiceFollowUp.COMPLETE_TREASURY,
                 new ChoiceContext(PatronID), 1, 1);
         }

@@ -9,11 +9,11 @@ public interface ITalesOfTributeApi
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
-    public BaseSerializedChoice? PendingChoice { get; }
+    public SerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
 
-    public void MakeChoice<T>(List<T> choices) where T: IChoosable;
-    public void MakeChoice<T>(T choice) where T: IChoosable;
+    public void MakeChoice(List<Card> choices);
+    public void MakeChoice(Effect choice);
 
     void ActivateAgent(Card agent);
     ISimpleResult AttackAgent(Card agent);

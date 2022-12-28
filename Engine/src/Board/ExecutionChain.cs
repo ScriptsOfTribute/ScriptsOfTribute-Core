@@ -7,7 +7,7 @@ public class ExecutionChain
     private List<BaseEffect> _pendingEffects = new();
     public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
     public bool Empty => _chain.Count == 0;
-    public BaseChoice? PendingChoice { get; private set; }
+    public Choice? PendingChoice { get; private set; }
     public bool Completed => Empty && PendingChoice is null;
 
     private readonly Queue<Func<IPlayer, IPlayer, ITavern, PlayResult>> _chain = new();
@@ -31,7 +31,7 @@ public class ExecutionChain
 
             var current = _chain.Dequeue().Invoke(owner, enemy, tavern);
             _pendingEffects.RemoveAt(0);
-            if (current is BaseChoice c)
+            if (current is Choice c)
             {
                 PendingChoice = c;
             }
@@ -45,24 +45,41 @@ public class ExecutionChain
         }
     }
 
-    public void MakeChoice<T>(List<T> choices, ComplexEffectExecutor executor) where T : IChoosable
+    public void MakeChoice(List<Card> choices, ComplexEffectExecutor executor)
     {
-        if (PendingChoice is null)
+        if (PendingChoice?.Type != Choice.DataType.CARD)
         {
             throw new Exception("Pending choice is missing or wrong type.");
         }
 
-        var result = executor.Enact(PendingChoice.ChoiceFollowUp, choices.Select(c => (IChoosable)c).ToList());
+        var result = executor.Enact(PendingChoice.FollowUp, choices);
 
         PendingChoice = result switch
         {
-            BaseChoice choice => choice,
+            Choice choice => choice,
+            Failure f => throw new Exception(f.Reason),
+            _ => null
+        };
+    }
+    
+    public void MakeChoice(Effect choice, ComplexEffectExecutor executor)
+    {
+        if (PendingChoice?.Type != Choice.DataType.EFFECT)
+        {
+            throw new Exception("Pending choice is missing or wrong type.");
+        }
+
+        var result = executor.Enact(PendingChoice.FollowUp, choice);
+
+        PendingChoice = result switch
+        {
+            Choice c => c,
             Failure f => throw new Exception(f.Reason),
             _ => null
         };
     }
 
-    public static ExecutionChain FromEffects(List<BaseEffect> effects, BaseChoice? pendingChoice)
+    public static ExecutionChain FromEffects(List<BaseEffect> effects, Choice? pendingChoice)
     {
         var chain = new ExecutionChain();
         effects.ForEach(e => chain.Add(e));

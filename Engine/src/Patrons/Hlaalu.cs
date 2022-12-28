@@ -29,7 +29,7 @@
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
             var cardsInPlay = activator.Hand.Concat(activator.Played).Where(c => c.Cost >= 1).ToList();
-            return new Choice<Card>(cardsInPlay,
+            return new Choice(cardsInPlay,
                 ChoiceFollowUp.COMPLETE_HLAALU,
                 new ChoiceContext(PatronID), 1, 1);
         }

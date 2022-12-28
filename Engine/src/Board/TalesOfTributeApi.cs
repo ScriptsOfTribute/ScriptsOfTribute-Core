@@ -9,7 +9,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
-    public BaseSerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
+    public SerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
 
     private readonly BoardManager _boardManager;
     private int _turnCount;
@@ -43,14 +43,14 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager.SerializeBoard();
     }
 
-    public void MakeChoice<T>(List<T> choices) where T : IChoosable
+    public void MakeChoice(List<Card> choices)
     {
         _boardManager.CardActionManager.MakeChoice(choices);
     }
 
-    public void MakeChoice<T>(T choice) where T : IChoosable
+    public void MakeChoice(Effect choice)
     {
-        _boardManager.CardActionManager.MakeChoice(new List<T> { choice });
+        _boardManager.CardActionManager.MakeChoice(choice);
     }
 
     public SerializedPlayer GetPlayer(PlayerEnum playerId)
@@ -105,24 +105,25 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public List<Move> GetListOfPossibleMoves()
     {
-        switch (_boardManager.CardActionManager.PendingChoice)
+        var choice = _boardManager.CardActionManager.PendingChoice;
+        switch (choice?.Type)
         {
-            case Choice<Card> cardChoice:
+            case Choice.DataType.CARD:
             {
                 var result = new List<Move>();
-                for (var i = cardChoice.MinChoiceAmount; i <= cardChoice.MaxChoiceAmount; i++)
+                for (var i = choice.MinChoiceAmount; i <= choice.MaxChoiceAmount; i++)
                 {
-                    result.AddRange(cardChoice.PossibleChoices.GetCombinations(i).Select(Move.MakeChoice));
+                    result.AddRange(choice.PossibleCards.GetCombinations(i).Select(Move.MakeChoice));
                 }
 
                 return result;
             }
-            case Choice<Effect> effectChoice:
+            case Choice.DataType.EFFECT:
             {
                 var result = new List<Move>();
-                for (var i = effectChoice.MinChoiceAmount; i <= effectChoice.MaxChoiceAmount; i++)
+                for (var i = choice.MinChoiceAmount; i <= choice.MaxChoiceAmount; i++)
                 {
-                    result.AddRange(effectChoice.PossibleChoices.GetCombinations(i).Select(Move.MakeChoice));
+                    result.AddRange(choice.PossibleEffects.GetCombinations(i).Select(Move.MakeChoice));
                 }
 
                 return result;

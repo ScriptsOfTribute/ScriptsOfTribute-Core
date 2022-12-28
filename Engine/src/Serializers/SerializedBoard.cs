@@ -20,14 +20,14 @@ namespace TalesOfTribute
         public readonly List<Card> TavernAvailableCards;
         public readonly List<Card> TavernCards;
         public readonly BoardState BoardState;
-        public readonly BaseSerializedChoice? PendingChoice;
+        public readonly SerializedChoice? PendingChoice;
         public readonly ComboStates ComboStates;
         public readonly List<BaseEffect> UpcomingEffects;
         public readonly List<BaseEffect> StartOfNextTurnEffects;
 
         public SerializedBoard(
             IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, BaseChoice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
@@ -42,6 +42,7 @@ namespace TalesOfTribute
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
         }
 
+        // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).
         public (SerializedBoard, List<Move>) ApplyState(Move move)
         {
             var api = TalesOfTributeApi.FromSerializedBoard(this);
@@ -70,7 +71,7 @@ namespace TalesOfTribute
                             api.MakeChoice(cardMove.Choices);
                             break;
                         case MakeChoiceMove<Effect> effectMove:
-                            api.MakeChoice(effectMove.Choices);
+                            api.MakeChoice(effectMove.Choices.First());
                             break;
                         default:
                             throw new Exception("Invalid choice type.");

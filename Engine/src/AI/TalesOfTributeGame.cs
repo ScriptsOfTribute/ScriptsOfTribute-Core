@@ -129,16 +129,16 @@ public class TalesOfTributeGame
             return null;
         }
 
-        BaseSerializedChoice? choice = null;
+        SerializedChoice? choice = null;
         while ((choice = _api.PendingChoice) is not null)
         {
-            if (choice is not SerializedChoice<Card> realChoice)
+            if (choice.Type != Choice.DataType.CARD)
             {
                 throw new Exception(
                     "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
             }
                 
-            var result = await HandleStartOfTurnChoice(realChoice);
+            var result = await HandleStartOfTurnChoice();
 
             if (result is not null)
             {
@@ -149,7 +149,7 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private async Task<EndGameState?> HandleStartOfTurnChoice(SerializedChoice<Card> choice)
+    private async Task<EndGameState?> HandleStartOfTurnChoice()
     {
         var (timeout, playersChoice) = await PlayWithTimeout();
 
@@ -244,7 +244,7 @@ public class TalesOfTributeGame
 
     private async Task<EndGameState?> ConsumePotentialPendingMoves()
     {
-        BaseSerializedChoice? choice = null;
+        SerializedChoice? choice = null;
         try
         {
             while ((choice = _api.PendingChoice) is not null)
@@ -287,11 +287,11 @@ public class TalesOfTributeGame
         return await ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleChoice(BaseSerializedChoice result)
+    private async Task<EndGameState?> HandleChoice(SerializedChoice result)
     {
-        switch (result)
+        switch (result.Type)
         {
-            case SerializedChoice<Card> choice:
+            case Choice.DataType.CARD:
             {
                 var (timeout, move) = await PlayWithTimeout();
                 if (timeout is not null)
@@ -308,7 +308,7 @@ public class TalesOfTributeGame
                 _api.MakeChoice(c.Choices);
                 break;
             }
-            case SerializedChoice<Effect> choice:
+            case Choice.DataType.EFFECT:
             {
                 var (timeout, move) = await PlayWithTimeout();
                 if (timeout is not null)
@@ -321,7 +321,7 @@ public class TalesOfTributeGame
                     return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
                         "Choice of Effect was required.");
                 }
-                _api.MakeChoice(c.Choices);
+                _api.MakeChoice(c.Choices.First());
                 break;
             }
         }
