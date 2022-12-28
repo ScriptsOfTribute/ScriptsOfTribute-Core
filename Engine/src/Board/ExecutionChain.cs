@@ -6,15 +6,12 @@ public class ExecutionChain
 {
     private List<BaseEffect> _pendingEffects = new();
     public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
-    public bool Empty => _chain.Count == 0;
+    public bool Empty => _pendingEffects.Count == 0;
     public Choice? PendingChoice { get; private set; }
     public bool Completed => Empty && PendingChoice is null;
 
-    private readonly Queue<Func<IPlayer, IPlayer, ITavern, PlayResult>> _chain = new();
-
     public void Add(BaseEffect effect)
     {
-        _chain.Enqueue(effect.Enact);
         _pendingEffects.Add(effect);
     }
 
@@ -29,7 +26,7 @@ public class ExecutionChain
         {
             PendingChoice = null;
 
-            var current = _chain.Dequeue().Invoke(owner, enemy, tavern);
+            var current = _pendingEffects[0].Enact(owner, enemy, tavern);
             _pendingEffects.RemoveAt(0);
             if (current is Choice c)
             {
