@@ -16,7 +16,7 @@ public class ExecutionChainTests
         _sut = new ExecutionChain(_player1, _player2, _tavern);
 
         // First - OR choice and immediately after ACQUIRE choice
-        var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
+        var effect1 = new EffectOr(new Effect(EffectType.GAIN_POWER, 1),
             new Effect(EffectType.ACQUIRE_TAVERN, 5));
 
         _sut.Add(effect1.Decompose().First().Enact);
@@ -27,8 +27,8 @@ public class ExecutionChainTests
         var result = consume.Current;
 
         // Advance from OR choice to ACQUIRE choice.
-        Assert.True(result is Choice<EffectType>);
-        var choice = result as Choice<EffectType>;
+        Assert.True(result is Choice<Effect>);
+        var choice = result as Choice<Effect>;
         var newResult = choice.Choose(EffectType.ACQUIRE_TAVERN);
         Assert.True(newResult is Choice<Card>);
         Assert.Throws<Exception>(() => consume.MoveNext());
@@ -40,7 +40,7 @@ public class ExecutionChainTests
         _sut = new ExecutionChain(_player1, _player2, _tavern);
 
         // First - OR choice and immediately after ACQUIRE choice
-        var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
+        var effect1 = new EffectOr(new Effect(EffectType.GAIN_POWER, 1),
             new Effect(EffectType.ACQUIRE_TAVERN, 5));
 
         _sut.Add(effect1.Decompose().First().Enact);
@@ -51,8 +51,8 @@ public class ExecutionChainTests
         var result = consume.Current;
 
         // Advance from OR choice to GAIN_POWER this time, so no further choice is needed.
-        Assert.True(result is Choice<EffectType>);
-        var choice = result as Choice<EffectType>;
+        Assert.True(result is Choice<Effect>);
+        var choice = result as Choice<Effect>;
         var newResult = choice.Choose(EffectType.GAIN_POWER);
         Assert.True(newResult is Success);
         consume.MoveNext();
@@ -69,7 +69,7 @@ public class ExecutionChainTests
         _player1.DrawPile.Add(gold2);
 
         // First - OR choice and immediately TOSS choice
-        var effect1 = new EffectChoice(new Effect(EffectType.GAIN_POWER, 1),
+        var effect1 = new EffectOr(new Effect(EffectType.GAIN_POWER, 1),
             new Effect(EffectType.TOSS, 1));
 
         // Second - Gain Power
@@ -96,8 +96,8 @@ public class ExecutionChainTests
                 // Should be OR choice
                 case 0:
                     {
-                        Assert.True(result is Choice<EffectType>);
-                        var choice = result as Choice<EffectType>;
+                        Assert.True(result is Choice<Effect>);
+                        var choice = result as Choice<Effect>;
                         var newResult = choice.Choose(EffectType.TOSS);
                         Assert.True(newResult is Choice<Card>);
                         var newChoice = newResult as Choice<Card>;

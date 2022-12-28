@@ -1,3 +1,4 @@
+using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board;
@@ -7,15 +8,15 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public int TurnCount => _turnCount;
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
-    public BoardState BoardState => _boardManager.State;
-    
+    public BoardState BoardState => _boardManager.CardActionManager.State;
+    public BaseSerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
+
     private readonly BoardManager _boardManager;
     private int _turnCount;
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
     {
-        // what is the use case of this??
         _boardManager = boardManager;
     }
 
@@ -42,6 +43,16 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager.SerializeBoard();
     }
 
+    public void MakeChoice<T>(List<T> choices) where T : IChoosable
+    {
+        _boardManager.CardActionManager.MakeChoice(choices);
+    }
+
+    public void MakeChoice<T>(T choice) where T : IChoosable
+    {
+        _boardManager.CardActionManager.MakeChoice(new List<T> { choice });
+    }
+
     public SerializedPlayer GetPlayer(PlayerEnum playerId)
     {
         return new SerializedPlayer(
@@ -49,170 +60,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         );
     }
 
-    public ExecutionChain? HandleStartOfTurnChoices()
-    {
-        return _boardManager.HandleStartOfTurnChoices();
-    }
-
-    public BoardState GetState()
-    {
-        return _boardManager.State;
-    }
-
-    // Get cards
-
-    /// <summary>
-    /// Get cards in hand of current player
-    /// </summary>
-    public List<Card> GetHand()
-    {
-        return _boardManager.CurrentPlayer.Hand;
-    }
-
-    /// <summary>
-    /// Get played cards of current player
-    /// </summary>
-    public List<Card> GetPlayedCards()
-    {
-        return _boardManager.CurrentPlayer.Played;
-    }
-
-    /// <summary>
-    /// Get draw pile of current player
-    /// </summary>
-    public List<Card> GetDrawPile()
-    {
-        return _boardManager.CurrentPlayer.DrawPile;
-    }
-
-    /// <summary>
-    /// Get cooldown pile of current player
-    /// </summary>
-    public List<Card> GetCooldownPile()
-    {
-        return _boardManager.CurrentPlayer.CooldownPile;
-    }
-
-    /// <summary>
-    /// Get played cards of <c>playerId player</c>
-    /// </summary>
-    /// <param name="playerId">ID of player</param>
-    public List<Card> GetPlayedCards(PlayerEnum playerId)
-    {
-        if (playerId == _boardManager.CurrentPlayer.ID)
-        {
-            return _boardManager.CurrentPlayer.Played;
-        }
-        else
-        {
-            return _boardManager.EnemyPlayer.Played;
-        }
-    }
-
-    /// <summary>
-    /// Get cooldown pile of <c>playerId player</c>
-    /// </summary>
-    /// <param name="playerId">ID of player</param>
-    public List<Card> GetCooldownPile(PlayerEnum playerId)
-    {
-        if (playerId == _boardManager.CurrentPlayer.ID)
-        {
-            return _boardManager.CurrentPlayer.CooldownPile;
-        }
-        else
-        {
-            return _boardManager.EnemyPlayer.CooldownPile;
-        }
-    }
-
-    /// <summary>
-    /// Get drawpile of <c>playerId player</c>
-    /// </summary>
-    /// <param name="playerId">ID of player</param>
-    public List<Card> GetDrawPile(PlayerEnum playerId)
-    {
-        if (playerId == _boardManager.CurrentPlayer.ID)
-        {
-            return _boardManager.CurrentPlayer.DrawPile;
-        }
-        else
-        {
-            return _boardManager.EnemyPlayer.DrawPile;
-        }
-    }
-
-    // Tavern
-
-    /// <summary>
-    /// Get currently available cards from tavern
-    /// </summary>
-    public List<Card> GetTavern()
-    {
-        return _boardManager.GetAvailableTavernCards();
-    }
-
-    /// <summary>
-    /// Get cards from tavern that player with playerId can buy
-    /// </summary>
-    public List<Card> GetAffordableCardsInTavern(PlayerEnum playerId)
-    {
-        if (playerId == _boardManager.CurrentPlayer.ID)
-        {
-            return _boardManager.GetAffordableCards(_boardManager.CurrentPlayer.CoinsAmount);
-        }
-        else
-        {
-            return _boardManager.GetAffordableCards(_boardManager.EnemyPlayer.CoinsAmount);
-        }
-    }
-
-    // Agents related
-
-    /// <summary>
-    /// Get list of agents currently on board for player with playerId
-    /// </summary>
-    public List<Agent> GetAgents(PlayerEnum playerId)
-    {
-        if (playerId == _boardManager.CurrentPlayer.ID)
-        {
-            return _boardManager.CurrentPlayer.Agents;
-        }
-        else
-        {
-            return _boardManager.EnemyPlayer.Agents;
-        }
-    }
-
-    /// <summary>
-    /// Get list of agents currently on board for current player
-    /// </summary>
-    public List<Agent> GetAgents()
-    {
-        return _boardManager.CurrentPlayer.Agents;
-    }
-
-    /// <summary>
-    /// Get list of agents currently on board for player with playerId
-    /// that are activated
-    /// </summary>
-    public List<Agent> GetActiveAgents(PlayerEnum playerId)
-    {
-        if (playerId == _boardManager.CurrentPlayer.ID)
-        {
-            return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
-        }
-        else
-        {
-            return _boardManager.EnemyPlayer.Agents.FindAll(agent => !agent.Activated);
-        }
-    }
-
-    public List<Agent> GetActiveAgents()
-    {
-        return _boardManager.CurrentPlayer.Agents.FindAll(agent => !agent.Activated);
-    }
-
-    public ExecutionChain ActivateAgent(Card agent)
+    public void ActivateAgent(Card agent)
         => _boardManager.ActivateAgent(agent);
 
     public ISimpleResult AttackAgent(Card agent)
@@ -228,18 +76,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
     /// </summary>
-    public PlayResult PatronActivation(PatronId patronId)
+    public void PatronActivation(PatronId patronId)
     {
-        return _boardManager.PatronCall(patronId);
-    }
-
-    /// <summary>
-    /// Return <type>PlayerEnum</type> which states which player is favored
-    /// by Patron with patronId
-    /// </summary>
-    public PlayerEnum GetLevelOfFavoritism(PatronId patronId)
-    {
-        return _boardManager.GetPatronFavorism(patronId);
+        _boardManager.PatronCall(patronId);
     }
 
     // cards related
@@ -248,35 +87,25 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    public ExecutionChain BuyCard(Card card)
+    public void BuyCard(Card card)
     {
-        return _boardManager.BuyCard(card);
-    }
-        
-    public ExecutionChain BuyCard(int uniqueId)
-    {
-        return _boardManager.BuyCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
+        _boardManager.BuyCard(card);
     }
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    public ExecutionChain PlayCard(Card card)
+    public void PlayCard(Card card)
     {
-        return _boardManager.PlayCard(card);
-    }
-        
-    public ExecutionChain PlayCard(int uniqueId)
-    {
-        return PlayCard(_boardManager.CurrentPlayer.GetCardByUniqueId(uniqueId));
+        _boardManager.PlayCard(card);
     }
 
     //others
 
     public List<Move> GetListOfPossibleMoves()
     {
-        switch (_boardManager.PendingChoice)
+        switch (_boardManager.CardActionManager.PendingChoice)
         {
             case Choice<Card> cardChoice:
             {
@@ -288,7 +117,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
                 return result;
             }
-            case Choice<EffectType> effectChoice:
+            case Choice<Effect> effectChoice:
             {
                 var result = new List<Move>();
                 for (var i = effectChoice.MinChoiceAmount; i <= effectChoice.MaxChoiceAmount; i++)
@@ -361,5 +190,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public EndGameState? CheckWinner()
     {
         return _boardManager.CheckAndGetWinner();
+    }
+
+    public static ITalesOfTributeApi FromSerializedBoard(SerializedBoard board)
+    {
+        return new TalesOfTributeApi(BoardManager.FromSerializedBoard(board));
     }
 }

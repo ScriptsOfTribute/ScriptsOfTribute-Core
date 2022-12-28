@@ -31,16 +31,11 @@
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
             // We should check if there is any taunt agent
             return new Choice<Card>(enemy.AgentCards,
-                choices =>
-                {
-                    enemy.Destroy(choices.First());
-                    enemy.CooldownPile.Add(choices.First());
-                    return new Success();
-                },
+                ChoiceFollowUp.COMPLETE_PSIJIC,
                 new ChoiceContext(this), 1, 1);
         }
 
-        public override PlayResult PatronPower(Player activator, Player enemy)
+        public override ISimpleResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 

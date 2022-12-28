@@ -55,9 +55,9 @@ namespace TalesOfTribute
             return new MakeChoiceMove<Card>(CommandEnum.MAKE_CHOICE, cards);
         }
         
-        public static Move MakeChoice(List<EffectType> effects)
+        public static Move MakeChoice(List<Effect> effects)
         {
-            return new MakeChoiceMove<EffectType>(CommandEnum.MAKE_CHOICE, effects);
+            return new MakeChoiceMove<Effect>(CommandEnum.MAKE_CHOICE, effects);
         }
 
         public override bool Equals(object obj)

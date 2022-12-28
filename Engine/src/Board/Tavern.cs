@@ -59,5 +59,17 @@
             AvailableCards.Remove(toReplace);
             AvailableCards.Add(newCard);
         }
+
+        private Tavern(List<Card> cards, List<Card> availableCards)
+        {
+            Cards = cards;
+            AvailableCards = availableCards;
+            _rnd = new Random();
+        }
+
+        public static Tavern FromSerializedBoard(SerializedBoard serializedBoard)
+        {
+            return new Tavern(serializedBoard.TavernCards.ToList(), serializedBoard.TavernAvailableCards.ToList());
+        }
     }
 }

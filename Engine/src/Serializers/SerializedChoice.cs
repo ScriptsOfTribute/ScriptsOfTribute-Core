@@ -2,43 +2,54 @@
 
 public abstract class BaseSerializedChoice
 {
-    protected BaseSerializedChoice(int maxChoices, int minChoices, ChoiceContext context)
+    protected BaseSerializedChoice(int maxChoices, int minChoices, ChoiceContext? context, ChoiceFollowUp choiceFollowUp)
     {
         MaxChoices = maxChoices;
         MinChoices = minChoices;
         Context = context;
+        ChoiceFollowUp = choiceFollowUp;
     }
 
     public int MaxChoices { get; }
     public int MinChoices { get; }
-    public ChoiceContext Context { get; }
+    public ChoiceContext? Context { get; }   
+    public ChoiceFollowUp ChoiceFollowUp { get; }
+
+    public BaseChoice ToChoice()
+    {
+        return this switch
+        {
+            SerializedCardChoice c =>
+                new Choice<Card>(c.PossibleChoices, ChoiceFollowUp, Context, MaxChoices, MinChoices),
+            SerializedEffectChoice c =>
+                new Choice<Effect>(c.PossibleChoices, ChoiceFollowUp, Context, MaxChoices, MinChoices),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 }
 
 public class SerializedChoice<T> : BaseSerializedChoice
 {
     public List<T> PossibleChoices { get; }
 
-    protected SerializedChoice(Choice<T> choice) : base(choice.MaxChoiceAmount, choice.MinChoiceAmount, choice.Context)
+    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<T> possibleChoices, ChoiceFollowUp choiceFollowUp) : base(maxChoices, minChoices, context, choiceFollowUp)
     {
-        PossibleChoices = new List<T>(choice.PossibleChoices);
-    }
-
-    public static SerializedChoice<T> FromChoice(Choice<T> choice)
-    {
-        return new SerializedChoice<T>(choice);
+        PossibleChoices = possibleChoices;
     }
 }
 
 public class SerializedCardChoice : SerializedChoice<Card>
 {
-    protected SerializedCardChoice(Choice<Card> choice) : base(choice)
+    public SerializedCardChoice(int maxChoices, int minChoices, ChoiceContext context, List<Card> possibleChoices, ChoiceFollowUp choiceFollowUp)
+        : base(maxChoices, minChoices, context, possibleChoices, choiceFollowUp)
     {
     }
 }
 
-public class SerializedEffectChoice : SerializedChoice<EffectType>
+public class SerializedEffectChoice : SerializedChoice<Effect>
 {
-    protected SerializedEffectChoice(Choice<EffectType> choice) : base(choice)
+    public SerializedEffectChoice(int maxChoices, int minChoices, ChoiceContext context, List<Effect> possibleChoices, ChoiceFollowUp choiceFollowUp)
+        : base(maxChoices, minChoices, context, possibleChoices, choiceFollowUp)
     {
     }
 }

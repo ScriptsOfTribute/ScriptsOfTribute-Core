@@ -9,7 +9,7 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowIncorrectChoice()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW },
             _ => new Success(), new ChoiceContext(_patron.Object));
 
         var result = sut.Choose(EffectType.HEAL);
@@ -19,7 +19,7 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowTooManyChoices()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
             _ => new Success(), new ChoiceContext(_patron.Object), 1);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
@@ -29,7 +29,7 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowIncorrectChoices()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
             _ => new Success(), new ChoiceContext(_patron.Object), 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.DESTROY_CARD });
@@ -39,7 +39,7 @@ public class PlayResultTests
     [Fact]
     void ShouldPassCorrectSingleChoice()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW },
             _ => new Success(), new ChoiceContext(_patron.Object));
 
         var result = sut.Choose(EffectType.DRAW);
@@ -49,7 +49,7 @@ public class PlayResultTests
     [Fact]
     void ShouldPassCorrectMultipleChoice()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
             _ => new Success(), new ChoiceContext(_patron.Object), 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL, EffectType.TOSS });
@@ -59,7 +59,7 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowTooFewChoices()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
             _ => new Success(), new ChoiceContext(_patron.Object), 2, 2);
 
         var result = sut.Choose(new List<EffectType> { EffectType.HEAL });
@@ -69,7 +69,7 @@ public class PlayResultTests
     [Fact]
     void ShouldNotAllowTooFewChoicesOverload()
     {
-        var sut = new Choice<EffectType>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
+        var sut = new Choice<Effect>(new List<EffectType> { EffectType.DRAW, EffectType.HEAL, EffectType.TOSS },
             _ => new Success(), new ChoiceContext(_patron.Object), 2, 2);
 
         var result = sut.Choose(EffectType.HEAL);

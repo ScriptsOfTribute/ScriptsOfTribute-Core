@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Serializers;
+
+namespace TalesOfTribute;
 
 public class Agent : IChoiceSource
 {
@@ -39,5 +41,14 @@ public class Agent : IChoiceSource
     public void Refresh()
     {
         Activated = false;
+    }
+
+    public static Agent FromSerializedAgent(SerializedAgent agent)
+    {
+        return new Agent(agent.RepresentingCard)
+        {
+            CurrentHp = agent.CurrentHp,
+            Activated = agent.Activated,
+        };
     }
 }

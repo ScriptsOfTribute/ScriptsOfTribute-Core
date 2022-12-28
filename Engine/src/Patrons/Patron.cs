@@ -24,7 +24,7 @@
         public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
 
         public abstract PlayResult PatronActivation(Player activator, Player enemy);
-        public abstract PlayResult PatronPower(Player activator, Player enemy);
+        public abstract ISimpleResult PatronPower(Player activator, Player enemy);
 
         public abstract PatronId PatronID { get; }
         public abstract List<CardId> GetStarterCards();
@@ -63,6 +63,18 @@
                 "Treasury" => PatronId.TREASURY,
                 _ => throw new InvalidOperationException()
             };
+        }
+
+        public static List<Patron> FromSerializedBoard(SerializedBoard board)
+        {
+            var result = new List<Patron>();
+            foreach (var (patronId, favor) in board.PatronStates.All)
+            {
+                var p = Patron.FromId(patronId);
+                p.FavoredPlayer = favor;
+                result.Add(p);
+            }
+            return result;
         }
     }
 }

@@ -107,6 +107,8 @@ public class TalesOfTribute
 
         _game = new TalesOfTributeGame(_players, new TalesOfTributeApi(patrons!));
 
-        return _game!.Play().Result;
+        var r = _game!.Play().Result;
+
+        return r;
     }
 }

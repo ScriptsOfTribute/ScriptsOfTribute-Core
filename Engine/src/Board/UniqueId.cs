@@ -40,4 +40,9 @@ public readonly struct UniqueId
 
         return new UniqueId(id);
     }
+
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
 }

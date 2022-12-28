@@ -1,4 +1,7 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Serializers;
+
+namespace TalesOfTribute;
 
 public interface ISimpleResult
 {
@@ -6,61 +9,67 @@ public interface ISimpleResult
 
 public abstract class PlayResult
 {
-    public bool Completed { get; protected set; } = true;
 }
 
 public class Success : PlayResult, ISimpleResult
 {
 }
 
-public class BaseChoice : PlayResult
+public abstract class BaseChoice : PlayResult
 {
-    public delegate void SuccessCallback();
-    public delegate void ChoiceFinishCallback(PlayResult result);
-    protected SuccessCallback? _successCallback;
-    protected ChoiceFinishCallback? _choiceFinishCallback;
-
-    public BaseChoice()
+    protected BaseChoice(ChoiceFollowUp choiceFollowUp)
     {
-        Completed = false;
+        ChoiceFollowUp = choiceFollowUp;
     }
 
-    public void AddSuccessCallback(SuccessCallback successCallback)
+    public ChoiceFollowUp ChoiceFollowUp { get; }
+
+    public BaseSerializedChoice Serialize()
     {
-        _successCallback = successCallback;
-    }
-    
-    public void AddChoiceFinishCallback(ChoiceFinishCallback choiceFinishCallback)
-    {
-        _choiceFinishCallback = choiceFinishCallback;
+        return this switch
+        {
+            Choice<Card> c => new SerializedCardChoice(c.MaxChoiceAmount, c.MinChoiceAmount, c.Context, c.PossibleChoices, c.ChoiceFollowUp),
+            Choice<Effect> c => new SerializedEffectChoice(c.MaxChoiceAmount, c.MinChoiceAmount, c.Context, c.PossibleChoices, c.ChoiceFollowUp),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }
 
-public class Choice<T> : BaseChoice
+public enum ChoiceFollowUp
+{
+    ENACT_CHOSEN_EFFECT,
+    REPLACE_CARDS_IN_TAVERN,
+    DESTROY_CARDS,
+    DISCARD_CARDS,
+    REFRESH_CARDS,
+    TOSS_CARDS,
+    KNOCKOUT_AGENTS,
+    ACQUIRE_CARDS,
+    COMPLETE_HLAALU,
+    COMPLETE_PELLIN,
+    COMPLETE_PSIJIC,
+    COMPLETE_TREASURY,
+}
+
+public interface IChoosable
+{
+    
+}
+
+public class Choice<T> : BaseChoice where T : IChoosable
 {
     public List<T> PossibleChoices { get; }
     public int MaxChoiceAmount { get; } = 1;
     public int MinChoiceAmount { get; } = 0;
+    public ChoiceContext? Context { get; }
 
-    public delegate PlayResult ChoiceCallback(List<T> t);
-
-    private readonly ChoiceCallback _callback;
-    public readonly ChoiceContext? Context;
-
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context) : base()
+    public Choice(List<T> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context) : base(followUp)
     {
-        // Make sure choice of incorrect type is not created by mistake.
-        if (typeof(T) != typeof(EffectType) && typeof(T) != typeof(Card))
-        {
-            throw new Exception("Choice can only be made for cards or effects!");
-        }
-
         PossibleChoices = possibleChoices;
-        _callback = callback;
         Context = context;
     }
 
-    public Choice(List<T> possibleChoices, ChoiceCallback callback, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, callback, context)
+    public Choice(List<T> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
@@ -71,66 +80,9 @@ public class Choice<T> : BaseChoice
         MinChoiceAmount = minChoiceAmount;
     }
 
-    public PlayResult Choose(T t)
+    public SerializedChoice<T> Serialize()
     {
-        if (PossibleChoices.Count == 0)
-        {
-            // in case there is nothing to choose we should 
-            // just proceed 
-            var dummyResult = new Success();
-            HandleResult(dummyResult);
-            return dummyResult;
-        }
-
-        if (!PossibleChoices.Contains(t) || MinChoiceAmount > 1)
-        {
-            return new Failure("Invalid choice specified!");
-        }
-        var result = _callback(new List<T> { t });
-
-        HandleResult(result);
-
-        return result;
-    }
-
-    public PlayResult Choose(List<T> choices)
-    {
-        if (PossibleChoices.Count == 0)
-        {
-            var dummyResult = new Success();
-            HandleResult(dummyResult);
-            return dummyResult;
-        }
-        // Check if all choices are in possible choices.
-        if (choices.Except(PossibleChoices).Any() || choices.Count > MaxChoiceAmount || choices.Count < MinChoiceAmount)
-        {
-            return new Failure("Invalid choices specified!");
-        }
-        var result = _callback(choices);
-
-        HandleResult(result);
-
-        return result;
-    }
-
-    private void HandleResult(PlayResult result)
-    {
-        switch (result)
-        {
-            case Success:
-                OnSuccess();
-                break;
-            case BaseChoice choice:
-                choice.AddSuccessCallback(OnSuccess);
-                break;
-        }
-        _choiceFinishCallback?.Invoke(result);
-    }
-
-    private void OnSuccess()
-    {
-        Completed = true;
-        _successCallback?.Invoke();
+        return new SerializedChoice<T>(MaxChoiceAmount, MinChoiceAmount, Context, PossibleChoices, ChoiceFollowUp);
     }
 }
 

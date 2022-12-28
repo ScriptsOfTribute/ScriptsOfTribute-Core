@@ -43,7 +43,7 @@
             return new Success();
         }
 
-        public override PlayResult PatronPower(Player activator, Player enemy)
+        public override ISimpleResult PatronPower(Player activator, Player enemy)
         {
             // No benefits
 

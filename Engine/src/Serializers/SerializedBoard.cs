@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using TalesOfTribute.Board;
+using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute
@@ -14,14 +16,18 @@ namespace TalesOfTribute
         public readonly SerializedPlayer CurrentPlayer;
         public readonly SerializedPlayer EnemyPlayer;
         public readonly PatronStates PatronStates;
+        public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
         public readonly List<Card> TavernAvailableCards;
         public readonly List<Card> TavernCards;
         public readonly BoardState BoardState;
         public readonly BaseSerializedChoice? PendingChoice;
+        public readonly ComboStates ComboStates;
+        public readonly List<BaseEffect> UpcomingEffects;
+        public readonly List<BaseEffect> StartOfNextTurnEffects;
 
         public SerializedBoard(
             IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, BaseChoice? maybeChoice
+            BoardState state, BaseChoice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
@@ -30,12 +36,54 @@ namespace TalesOfTribute
             TavernCards = tavern.Cards;
             PatronStates = new PatronStates(patrons.ToList());
             BoardState = state;
-            PendingChoice = maybeChoice switch
+            PendingChoice = maybeChoice?.Serialize();
+            ComboStates = comboContext.ToComboStates();
+            UpcomingEffects = upcomingEffects.ToList();
+            StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
+        }
+
+        public (SerializedBoard, List<Move>) ApplyState(Move move)
+        {
+            var api = TalesOfTributeApi.FromSerializedBoard(this);
+            var s = move as SimpleCardMove;
+            switch (move.Command)
             {
-                Choice<Card> cardChoice => SerializedCardChoice.FromChoice(cardChoice),
-                Choice<EffectType> effectChoice => SerializedEffectChoice.FromChoice(effectChoice),
-                _ => null
-            };
+                case CommandEnum.PLAY_CARD:
+                    api.PlayCard(s!.Card);
+                    break;
+                case CommandEnum.ACTIVATE_AGENT:
+                    api.ActivateAgent(s!.Card);
+                    break;
+                case CommandEnum.ATTACK:
+                    api.AttackAgent(s!.Card);
+                    break;
+                case CommandEnum.BUY_CARD:
+                    api.BuyCard(s!.Card);
+                    break;
+                case CommandEnum.CALL_PATRON:
+                    api.PatronActivation(((SimplePatronMove)move).PatronId);
+                    break;
+                case CommandEnum.MAKE_CHOICE:
+                    switch (move)
+                    {
+                        case MakeChoiceMove<Card> cardMove:
+                            api.MakeChoice(cardMove.Choices);
+                            break;
+                        case MakeChoiceMove<Effect> effectMove:
+                            api.MakeChoice(effectMove.Choices);
+                            break;
+                        default:
+                            throw new Exception("Invalid choice type.");
+                    }
+                    break;
+                case CommandEnum.END_TURN:
+                    api.EndTurn();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return (api.GetSerializer(), api.GetListOfPossibleMoves());
         }
 
         public override string ToString()
@@ -47,7 +95,9 @@ namespace TalesOfTribute
             sb.AppendLine($"$Tavern Available Cards:\n{string.Join('\n', TavernAvailableCards.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"$Tavern Cards:\n{string.Join('\n', TavernCards.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"Current player Hand:\n{string.Join('\n', CurrentPlayer.Hand.Select(c => $"\t{c.ToString()}"))}");
+            sb.AppendLine($"Current player Agents:\n{string.Join('\n', CurrentPlayer.Agents.Select(c => $"\t{c.ToString()}"))}");
             sb.AppendLine($"Enemy player Hand:\n{string.Join('\n', EnemyPlayer.Hand.Select(c => $"\t{c.ToString()}"))}");
+            sb.AppendLine($"Enemy player Agents:\n{string.Join('\n', EnemyPlayer.Agents.Select(c => $"\t{c.ToString()}"))}");
 
             return sb.ToString();
         }
