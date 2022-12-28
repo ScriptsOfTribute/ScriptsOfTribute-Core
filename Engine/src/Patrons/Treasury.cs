@@ -14,7 +14,7 @@
 
             return new Choice<Card>(usedCards,
                 ChoiceFollowUp.COMPLETE_TREASURY,
-                new ChoiceContext(this), 1, 1);
+                new ChoiceContext(PatronID), 1, 1);
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

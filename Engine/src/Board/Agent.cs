@@ -2,7 +2,7 @@
 
 namespace TalesOfTribute;
 
-public class Agent : IChoiceSource
+public class Agent
 {
     public int CurrentHp { get; private set; }
     public Card RepresentingCard { get; }

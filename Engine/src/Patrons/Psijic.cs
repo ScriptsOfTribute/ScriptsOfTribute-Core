@@ -32,7 +32,7 @@
             // We should check if there is any taunt agent
             return new Choice<Card>(enemy.AgentCards,
                 ChoiceFollowUp.COMPLETE_PSIJIC,
-                new ChoiceContext(this), 1, 1);
+                new ChoiceContext(PatronID), 1, 1);
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

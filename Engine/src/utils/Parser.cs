@@ -31,18 +31,18 @@ namespace TalesOfTribute
             CardId? family = card["Family"]?.ToObject<CardId?>();
 
             var activation = card["Activation"]?.ToObject<string>();
-            effects[0] = ParseEffect(activation);
+            effects[0] = ParseEffect(activation, 1);
             var combo = card["Combo 2"]?.ToObject<string>();
-            effects[1] = ParseEffect(combo);
+            effects[1] = ParseEffect(combo, 2);
             combo = card["Combo 3"]?.ToObject<string>();
-            effects[2] = ParseEffect(combo);
+            effects[2] = ParseEffect(combo, 3);
             combo = card["Combo 4"]?.ToObject<string>();
-            effects[3] = ParseEffect(combo);
+            effects[3] = ParseEffect(combo, 4);
 
             return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt);
         }
 
-        private ComplexEffect? ParseEffect(string? effectToParse)
+        private ComplexEffect? ParseEffect(string? effectToParse, int combo)
         {
 
             if (effectToParse == null)
@@ -52,13 +52,13 @@ namespace TalesOfTribute
 
             return tokens.Length switch
             {
-                2 => new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
+                2 => new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1]), combo),
                 5 when tokens[2] == "OR" => new EffectOr(
-                    new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
-                    new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]))),
+                    new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1]), combo),
+                    new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]), combo), combo),
                 5 when tokens[2] == "AND" => new EffectComposite(
-                    new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1])),
-                    new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]))),
+                    new Effect(Effect.MapEffectType(tokens[0]), Int32.Parse(tokens[1]), combo),
+                    new Effect(Effect.MapEffectType(tokens[3]), Int32.Parse(tokens[4]), combo)),
                 _ => throw new Exception(InvalidJsonMessage)
             };
         }

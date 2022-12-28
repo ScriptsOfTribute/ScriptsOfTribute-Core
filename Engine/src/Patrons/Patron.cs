@@ -12,7 +12,7 @@
         RED_EAGLE = 7,
         TREASURY = 8,
     }
-    public abstract class Patron : IChoiceSource
+    public abstract class Patron
     {
         /*
          * PatronActivation - used on activation, check if player can acitvate that and do action related to one-time activation

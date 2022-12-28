@@ -10,7 +10,7 @@
         CURSE
     }
 
-    public class Card : IChoiceSource, IChoosable
+    public class Card : IChoosable
     {
         public readonly string Name;
         public readonly PatronId Deck;
