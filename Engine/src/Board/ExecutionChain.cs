@@ -50,7 +50,7 @@ public class ExecutionChain
             throw new Exception("Pending choice is missing or wrong type.");
         }
 
-        var (result, actions) = executor.Enact(PendingChoice.FollowUp, choices);
+        var (result, actions) = executor.Enact(PendingChoice, choices);
 
         PendingChoice = result switch
         {
@@ -69,7 +69,7 @@ public class ExecutionChain
             throw new Exception("Pending choice is missing or wrong type.");
         }
 
-        var (result, actions) = executor.Enact(PendingChoice.FollowUp, choice);
+        var (result, actions) = executor.Enact(PendingChoice, choice);
 
         PendingChoice = result switch
         {

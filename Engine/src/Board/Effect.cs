@@ -210,7 +210,7 @@ namespace TalesOfTribute
                     return (new Success(), new List<CompletedAction>
                     {
                         new(CompletedActionType.HEAL_AGENT,
-                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), healAmount)
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), healAmount, GlobalCardDatabase.Instance.GetExistingCard(UniqueId))
                     });
             }
 

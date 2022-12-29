@@ -25,6 +25,7 @@ public enum CompletedActionType
     ADD_PATRON_CALLS,
     ADD_BOARDING_PARTY,
     ADD_BEWILDERMENT_TO_OPPONENT,
+    ADD_WRIT_OF_COIN,
     HEAL_AGENT,
     END_TURN,
 }
@@ -32,8 +33,9 @@ public enum CompletedActionType
 public class CompletedAction
 {
     public CompletedActionType Type;
-    public Card? Card;
-    public PatronId? Patron;
+    public Card? SourceCard;
+    public Card? TargetCard;
+    public PatronId? SourcePatron;
     public readonly int Combo = 1;
     public readonly int Amount = 1;
 
@@ -42,30 +44,60 @@ public class CompletedAction
         Type = type;
     }
 
-    public CompletedAction(CompletedActionType type, Card card, int amount)
+    public CompletedAction(CompletedActionType type, Card sourceCard, int amount)
     {
         Type = type;
-        Card = card;
+        SourceCard = sourceCard;
+        Amount = amount;
+    }
+
+    public CompletedAction(CompletedActionType type, Card? sourceCard, int amount, Card targetCard)
+    {
+        Type = type;
+        SourceCard = sourceCard;
+        Amount = amount;
+        TargetCard = targetCard;
+    }
+    
+    public CompletedAction(CompletedActionType type, Card sourceCard, Card targetCard)
+    {
+        Type = type;
+        SourceCard = sourceCard;
+        TargetCard = targetCard;
+    }
+    
+    public CompletedAction(CompletedActionType type, PatronId sourcePatron, Card targetCard)
+    {
+        Type = type;
+        SourcePatron = sourcePatron;
+        TargetCard = targetCard;
+    }
+    
+    public CompletedAction(CompletedActionType type, PatronId sourcePatron, int amount)
+    {
+        Type = type;
+        SourcePatron = sourcePatron;
         Amount = amount;
     }
     
-    public CompletedAction(CompletedActionType type, PatronId patron, int amount)
+    public CompletedAction(CompletedActionType type, PatronId sourcePatron, int amount, Card targetCard)
     {
         Type = type;
-        Patron = patron;
+        SourcePatron = sourcePatron;
         Amount = amount;
+        TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, Card card)
+    public CompletedAction(CompletedActionType type, Card targetCard)
     {
         Type = type;
-        Card = card;
+        TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, PatronId patronId)
+    public CompletedAction(CompletedActionType type, PatronId sourcePatronId)
     {
         Type = type;
-        Patron = patronId;
+        SourcePatron = sourcePatronId;
     }
 
     public override string ToString()
@@ -75,73 +107,76 @@ public class CompletedAction
         switch (Type)
         {
             case CompletedActionType.BUY_CARD:
-                sb.Append($"Buy Card: {Card}");
+                sb.Append($"Buy Card - Source: {SourceCard} Target: {TargetCard}");
                 break;
             case CompletedActionType.ACQUIRE_CARD:
-                sb.Append($"Acquire Card: {Card}");
+                sb.Append($"Acquire Card - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.PLAY_CARD:
-                sb.Append($"Play Card: {Card}");
+                sb.Append($"Play Card - {TargetCard}");
                 break;
             case CompletedActionType.ACTIVATE_AGENT:
-                sb.Append($"Activate Agent: {Card}");
+                sb.Append($"Activate Agent - {TargetCard}");
                 break;
             case CompletedActionType.ACTIVATE_PATRON:
-                sb.Append($"Activate Patron: {Patron}");
+                sb.Append($"Activate Patron - {SourcePatron}");
                 break;
             case CompletedActionType.ATTACK_AGENT:
-                sb.Append($"Attack Agent: {Card} for {Amount}");
+                sb.Append($"Attack Agent - {TargetCard} for {Amount}");
                 break;
             case CompletedActionType.AGENT_DEATH:
-                sb.Append($"Agent Death: {Card}");
+                sb.Append($"Agent Death - {TargetCard}");
                 break;
             case CompletedActionType.GAIN_COIN:
-                sb.Append($"Gain Coin - Amount: {Amount} Source: {Card}{Patron}");
+                sb.Append($"Gain Coin - Amount: {Amount} Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.GAIN_POWER:
-                sb.Append($"Gain Power - Amount: {Amount} Source: {Card}{Patron}");
+                sb.Append($"Gain Power - Amount: {Amount} Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.GAIN_PRESTIGE:
-                sb.Append($"Gain Prestige - Amount: {Amount} Source: {Card}{Patron}");
+                sb.Append($"Gain Prestige - Amount: {Amount} Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.OPP_LOSE_PRESTIGE:
-                sb.Append($"Opp Lose Prestige - Amount: {Amount} Source: {Card}{Patron}");
+                sb.Append($"Opp Lose Prestige - Amount: {Amount} Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.REPLACE_TAVERN:
-                sb.Append($"Opp Lose Prestige - {Card}");
+                sb.Append($"Replace Tavern - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.DESTROY_CARD:
-                sb.Append($"Destroy Card - {Card}");
+                sb.Append($"Destroy Card - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.DRAW:
-                sb.Append($"Draw - {Amount}");
+                sb.Append($"Draw - Amount: {Amount} Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.DISCARD:
-                sb.Append($"Discard - {Card}");
+                sb.Append($"Discard - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.REFRESH:
-                sb.Append($"Refresh - {Card}");
+                sb.Append($"Refresh - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.TOSS:
-                sb.Append($"Toss - {Card}");
+                sb.Append($"Toss - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.KNOCKOUT:
-                sb.Append($"Knockout - {Card}");
+                sb.Append($"Knockout - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.ADD_BOARDING_PARTY:
-                sb.Append($"Add Boarding Party");
+                sb.Append($"Add Boarding Party - Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
-                sb.Append($"Add Bewilderment To Opponent");
+                sb.Append($"Add Bewilderment To Opponent - Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.HEAL_AGENT:
-                sb.Append($"Heal Agent: Amount {Amount} Agent {Card}");
+                sb.Append($"Heal Agent: Amount: {Amount} Agent: {TargetCard} Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.END_TURN:
                 sb.Append("End Turn");
                 break;
             case CompletedActionType.ADD_PATRON_CALLS:
-                sb.Append($"Increment patron call amount by {Amount}");
+                sb.Append($"Increment patron calls - Amount: {Amount} Source: {SourceCard}{SourcePatron}");
+                break;
+            case CompletedActionType.ADD_WRIT_OF_COIN:
+                sb.Append($"Add Writ Of Coin - Source {SourceCard}{SourcePatron}");
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

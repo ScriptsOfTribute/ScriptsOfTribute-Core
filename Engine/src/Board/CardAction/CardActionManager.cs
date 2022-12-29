@@ -96,7 +96,7 @@ public class CardActionManager
             throw new Exception("MakeChoice of wrong type called.");
         }
 
-        var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice.FollowUp, choices);
+        var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice, choices);
         CompletedActions.AddRange(actions);
         UpdatePendingPatronChoice(result);
     }
@@ -108,7 +108,7 @@ public class CardActionManager
             throw new Exception("MakeChoice of wrong type called.");
         }
 
-        var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice.FollowUp, choice);
+        var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice, choice);
         CompletedActions.AddRange(actions);
         UpdatePendingPatronChoice(result);
     }
