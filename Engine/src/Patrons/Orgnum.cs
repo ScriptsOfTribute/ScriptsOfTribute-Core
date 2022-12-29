@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public class Orgnum : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -18,29 +20,49 @@
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Coin to activate Orgnum");
+                return (new Failure("Not enough Coin to activate Orgnum"), new List<CompletedAction>());
             }
 
             activator.CoinsAmount -= 3;
 
-            int ownerCardsAmount = activator.GetAllPlayersCards().Count;
+            var ownerCardsAmount = activator.GetAllPlayersCards().Count;
 
+            int powerGained;
             if (FavoredPlayer == activator.ID) // Favored
             {
-                activator.PowerAmount += ownerCardsAmount / 4;
+                powerGained = ownerCardsAmount / 4;
+                activator.PowerAmount += powerGained;
                 activator.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
             }
             else if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED) // Neutral
-                activator.PowerAmount += ownerCardsAmount / 6;
+            {
+                powerGained = ownerCardsAmount / 6;
+                activator.PowerAmount += powerGained;
+            }
             else // Unfavored
-                activator.PowerAmount += 2;
+            {
+                powerGained = 2;
+                activator.PowerAmount += powerGained;
+            }
+            
+            var actionList = new List<CompletedAction>
+            {
+                new(CompletedActionType.GAIN_COIN, PatronID, -3),
+                new(CompletedActionType.GAIN_POWER, PatronID, powerGained),
+
+            };
+
+            if (FavoredPlayer == activator.ID)
+            {
+                actionList.Add(new CompletedAction(CompletedActionType.ADD_BOARDING_PARTY, PatronID, 1));
+            }
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Success();
+            return (new Success(), actionList);
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

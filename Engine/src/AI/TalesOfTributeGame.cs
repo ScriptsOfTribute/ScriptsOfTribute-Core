@@ -65,7 +65,7 @@ public class TalesOfTributeGame
         return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);
     }
     
-    public async Task<EndGameState> Play()
+    public async Task<(EndGameState, SerializedBoard)> Play()
     {
         EndGameState? endGameState;
         while ((endGameState = _api.CheckWinner()) is null)
@@ -83,7 +83,7 @@ public class TalesOfTributeGame
 
                 if (timeout is not null)
                 {
-                    return timeout;
+                    return EndGame(timeout);
                 }
 
                 if (move is null)
@@ -101,7 +101,7 @@ public class TalesOfTributeGame
             endGameState = HandleEndTurn();
             if (endGameState is not null)
             {
-                return endGameState;
+                return EndGame(endGameState);
             }
 
             _api.EndTurn();
@@ -329,11 +329,11 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private EndGameState EndGame(EndGameState state)
+    private (EndGameState, SerializedBoard) EndGame(EndGameState state)
     {
         CurrentPlayer.GameEnd(state);
         EnemyPlayer.GameEnd(state);
         EndGameState = state;
-        return state;
+        return (state, _api.GetSerializer());
     }
 }

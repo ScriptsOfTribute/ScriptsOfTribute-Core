@@ -24,10 +24,11 @@ namespace TalesOfTribute
         public readonly ComboStates ComboStates;
         public readonly List<BaseEffect> UpcomingEffects;
         public readonly List<BaseEffect> StartOfNextTurnEffects;
+        public readonly List<CompletedAction> CompletedActions;
 
         public SerializedBoard(
             IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
@@ -40,6 +41,7 @@ namespace TalesOfTribute
             ComboStates = comboContext.ToComboStates();
             UpcomingEffects = upcomingEffects.ToList();
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
+            CompletedActions = completedActions;
         }
 
         // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).

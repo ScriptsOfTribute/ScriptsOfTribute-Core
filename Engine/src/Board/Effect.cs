@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public enum EffectType
     {
@@ -21,7 +23,7 @@
 
     public interface BaseEffect
     {
-        public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern);
+        public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern);
     }
 
     public interface ComplexEffect
@@ -53,114 +55,146 @@
             UniqueId = uniqueId;
         }
 
-        public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
+        public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
             ChoiceContext? context;
             switch (Type)
             {
                 case EffectType.GAIN_POWER:
                     player.PowerAmount += Amount;
-                    break;
+                    return (new Success(),
+                        new List<CompletedAction>
+                        {
+                            new(CompletedActionType.GAIN_POWER,
+                                GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                        });
 
                 case EffectType.ACQUIRE_TAVERN:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice(tavern.GetAffordableCards(Amount),
-                            ChoiceFollowUp.ACQUIRE_CARDS,
-                            context);
+                        return (new Choice(tavern.GetAffordableCards(Amount),
+                                ChoiceFollowUp.ACQUIRE_CARDS,
+                                context),
+                            new List<CompletedAction>());
                     }
                 case EffectType.GAIN_COIN:
                     player.CoinsAmount += Amount;
-                    break;
+                    return (new Success(),
+                        new List<CompletedAction>
+                        {
+                            new(CompletedActionType.GAIN_COIN,
+                                GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                        });
                 case EffectType.GAIN_PRESTIGE:
                     player.PrestigeAmount += Amount;
-                    break;
+                    return (new Success(), new List<CompletedAction>
+                    {
+                        new(CompletedActionType.GAIN_PRESTIGE,
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                    });
                 case EffectType.OPP_LOSE_PRESTIGE:
                     if (enemy.PrestigeAmount - Amount >= 0)
                         enemy.PrestigeAmount -= Amount;
                     else
                         enemy.PrestigeAmount = 0;
-                    break;
+                    return (new Success(), new List<CompletedAction>
+                    {
+                        new(CompletedActionType.OPP_LOSE_PRESTIGE,
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                    });
                 case EffectType.REPLACE_TAVERN:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice(
+                        return (new Choice(
                             tavern.AvailableCards,
                             ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN,
                             context,
                             Amount
-                        );
+                        ), new List<CompletedAction>());
                     }
                 case EffectType.DESTROY_CARD:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice(
+                        return (new Choice(
                             player.Hand.Concat(player.AgentCards).ToList(),
                             ChoiceFollowUp.DESTROY_CARDS,
                             context,
                             Amount
-                        );
+                        ), new List<CompletedAction>());
                     }
                 case EffectType.DRAW:
                     for (var i = 0; i < Amount; i++)
                         player.Draw();
-                    break;
+                    return (new Success(), new List<CompletedAction>
+                    {
+                        new(CompletedActionType.DRAW,
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                    });
                 case EffectType.OPP_DISCARD:
                     {
                         var howManyToDiscard = Amount > player.Hand.Count ? player.Hand.Count : Amount;
 
                         if (howManyToDiscard == 0)
                         {
-                            return new Success();
+                            return (new Success(), new List<CompletedAction>());
                         }
 
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
 
-                        return new Choice(
+                        return (new Choice(
                             player.Hand,
                             ChoiceFollowUp.DISCARD_CARDS,
                             context,
                             howManyToDiscard,
                             howManyToDiscard
-                        );
+                        ), new List<CompletedAction>());
                     }
                 case EffectType.RETURN_TOP:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice(
+                        return (new Choice(
                             player.CooldownPile,
                             ChoiceFollowUp.REFRESH_CARDS,
                             context,
                             Amount
-                        );
+                        ), new List<CompletedAction>());
                     }
                 case EffectType.TOSS:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice(
+                        return (new Choice(
                             player.DrawPile,
                             ChoiceFollowUp.TOSS_CARDS,
                             context,
                             Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
-                        );
+                        ), new List<CompletedAction>());
                     }
                 case EffectType.KNOCKOUT:
                     {
                         context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.CARD_EFFECT, Combo) : null;
-                        return new Choice(
+                        return (new Choice(
                             enemy.AgentCards,
                             ChoiceFollowUp.KNOCKOUT_AGENTS,
                             context,
+                            Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount,
                             Amount > enemy.AgentCards.Count ? enemy.AgentCards.Count : Amount
-                        );
+                        ), new List<CompletedAction>());
                     }
                 case EffectType.PATRON_CALL:
                     player.PatronCalls += (uint)Amount;
-                    break;
+                    return (new Success(), new List<CompletedAction>
+                    {
+                        new(CompletedActionType.ADD_PATRON_CALLS,
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                    });
                 case EffectType.CREATE_BOARDINGPARTY:
                     for (var i = 0; i < Amount; i++)
                         player.AddToCooldownPile(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
-                    break;
+                    return (new Success(), new List<CompletedAction>
+                    {
+                        new(CompletedActionType.ADD_BOARDING_PARTY,
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                    });
                 case EffectType.HEAL:
                     if (UniqueId == UniqueId.Empty)
                     {
@@ -168,12 +202,14 @@
                     }
 
                     player.HealAgent(UniqueId, Amount);
-                    break;
-                default:
-                    throw new Exception("Not implemented yet!");
+                    return (new Success(), new List<CompletedAction>
+                    {
+                        new(CompletedActionType.HEAL_AGENT,
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                    });
             }
 
-            return new Success();
+            throw new Exception($"Unknown effect - {Type}.");
         }
 
         public override string ToString()
@@ -270,13 +306,14 @@
                 );
         }
 
-        public PlayResult Enact(IPlayer player, IPlayer enemy, ITavern tavern)
+        public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern)
         {
             var context = this.UniqueId != UniqueId.Empty ? new ChoiceContext(this.UniqueId, ChoiceType.EFFECT_CHOICE, Combo) : null;
-            return new Choice(new List<Effect> { _left, _right },
-                ChoiceFollowUp.ENACT_CHOSEN_EFFECT,
-                context,
-                1, 1); // OR choice should always result in one choice
+            return (new Choice(new List<Effect> { _left, _right },
+                    ChoiceFollowUp.ENACT_CHOSEN_EFFECT,
+                    context,
+                    1, 1), // OR choice should always result in one choice
+                new List<CompletedAction>());
         }
 
         public override string ToString()

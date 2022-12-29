@@ -25,7 +25,7 @@ public class DoEverythingBotTests
             var bot2 = new SimpleBots.RandomBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var endState = game.Play();
+            var (endState, _) = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
@@ -51,7 +51,7 @@ public class DoEverythingBotTests
             var bot2 = new SimpleBots.DoEverythingBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var endState = game.Play();
+            var (endState, _) = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);

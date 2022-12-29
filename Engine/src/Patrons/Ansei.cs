@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public class Ansei : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Neutral & Unfavored
@@ -11,7 +13,7 @@
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Power to activate Ansei");
+                return (new Failure("Not enough Power to activate Ansei"), new List<CompletedAction>());
             }
 
             activator.PowerAmount -= 2;
@@ -19,7 +21,11 @@
 
             FavoredPlayer = activator.ID;
 
-            return new Success();
+            return (new Success(), new List<CompletedAction>
+            {
+                new(CompletedActionType.GAIN_POWER, PatronID, -2),
+                new(CompletedActionType.GAIN_COIN, PatronID, 1),
+            });
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public class Psijic : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -20,7 +22,7 @@
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Coin or enemy has no agents, can't activate Psijic");
+                return (new Failure("Not enough Coin or enemy has no agents, can't activate Psijic"), new List<CompletedAction>());
             }
 
             activator.CoinsAmount -= 4;
@@ -30,9 +32,13 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
             // We should check if there is any taunt agent
-            return new Choice(enemy.AgentCards,
+            return (new Choice(enemy.AgentCards,
                 ChoiceFollowUp.COMPLETE_PSIJIC,
-                new ChoiceContext(PatronID), 1, 1);
+                new ChoiceContext(PatronID), 1, 1),
+                    new List<CompletedAction>
+                    {
+                        new(CompletedActionType.GAIN_COIN, PatronID, -4),
+                    });
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

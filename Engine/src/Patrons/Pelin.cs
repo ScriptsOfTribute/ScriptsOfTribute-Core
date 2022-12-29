@@ -1,8 +1,10 @@
+using TalesOfTribute.Board;
+
 namespace TalesOfTribute
 {
     public class Pelin : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -17,7 +19,7 @@ namespace TalesOfTribute
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Power to activate Pelin");
+                return (new Failure("Not enough Power to activate Pelin"), new List<CompletedAction>());
             }
 
             activator.PowerAmount -= 2;
@@ -27,11 +29,15 @@ namespace TalesOfTribute
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            List<Card> agentsInCooldownPile = activator.CooldownPile.FindAll(card => card.Type == CardType.AGENT);
+            var agentsInCooldownPile = activator.CooldownPile.FindAll(card => card.Type == CardType.AGENT);
 
-            return new Choice(agentsInCooldownPile,
-                ChoiceFollowUp.COMPLETE_PELLIN,
-                new ChoiceContext(PatronID), 1, 1);
+            return (new Choice(agentsInCooldownPile,
+                    ChoiceFollowUp.COMPLETE_PELLIN,
+                    new ChoiceContext(PatronID), 1, 1),
+                new List<CompletedAction>
+                {
+                    new(CompletedActionType.GAIN_POWER, PatronID, -2)
+                });
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

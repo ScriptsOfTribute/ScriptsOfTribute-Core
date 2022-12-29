@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public class Hlaalu : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -20,7 +22,7 @@
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Player has no card with cost >= 1, can't activate Hlaalu");
+                return (new Failure("Player has no card with cost >= 1, can't activate Hlaalu"), new List<CompletedAction>());
             }
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
@@ -29,9 +31,9 @@
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
             var cardsInPlay = activator.Hand.Concat(activator.Played).Where(c => c.Cost >= 1).ToList();
-            return new Choice(cardsInPlay,
+            return (new Choice(cardsInPlay,
                 ChoiceFollowUp.COMPLETE_HLAALU,
-                new ChoiceContext(PatronID), 1, 1);
+                new ChoiceContext(PatronID), 1, 1), new List<CompletedAction>());
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)
