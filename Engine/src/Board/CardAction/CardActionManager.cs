@@ -199,10 +199,8 @@ public class CardActionManager
         return true;
     }
 
-    // TODO: Fill CompletedActions here.
     public static CardActionManager FromSerializedBoard(SerializedBoard serializedBoard, PlayerContext playerContext, ITavern tavern)
     {
-        // private ExecutionChain _pendingExecutionChain;
         var comboContext = ComboContext.FromComboStates(serializedBoard.ComboStates);
 
         Choice? choiceForChain = null;
@@ -233,6 +231,7 @@ public class CardActionManager
             _pendingExecutionChain = chain,
             _pendingPatronChoice = patronChoice,
             ComboContext = comboContext,
+            CompletedActions = serializedBoard.CompletedActions,
         };
 
         return result;
