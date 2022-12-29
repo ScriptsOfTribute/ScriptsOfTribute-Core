@@ -89,11 +89,9 @@ public class CompletedAction
             case CompletedActionType.ACTIVATE_PATRON:
                 sb.Append($"Activate Patron: {Patron}");
                 break;
-            // TODO: Add amount.
             case CompletedActionType.ATTACK_AGENT:
-                sb.Append($"Attack Agent: {Card}");
+                sb.Append($"Attack Agent: {Card} for {Amount}");
                 break;
-            // TODO: Implement this.
             case CompletedActionType.AGENT_DEATH:
                 sb.Append($"Agent Death: {Card}");
                 break;
@@ -142,10 +140,13 @@ public class CompletedAction
             case CompletedActionType.END_TURN:
                 sb.Append("End Turn");
                 break;
+            case CompletedActionType.ADD_PATRON_CALLS:
+                sb.Append($"Increment patron call amount by {Amount}");
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        
+
         return sb.ToString();
     }
 }

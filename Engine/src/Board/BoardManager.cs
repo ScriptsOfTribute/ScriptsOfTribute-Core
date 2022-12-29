@@ -201,8 +201,14 @@ namespace TalesOfTribute
 
         public ISimpleResult AttackAgent(Card agent)
         {
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, agent));
-            return CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
+            var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, agent, attackAmount));
+            if (!CurrentPlayer.AgentCards.Contains(agent))
+            {
+                CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.AGENT_DEATH, agent));
+            }
+
+            return new Success();
         }
 
         private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager)

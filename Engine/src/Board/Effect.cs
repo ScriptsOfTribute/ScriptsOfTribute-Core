@@ -201,11 +201,16 @@ namespace TalesOfTribute
                         throw new Exception("This shouldn't happen - there is a bug in the engine!");
                     }
 
-                    player.HealAgent(UniqueId, Amount);
+                    var healAmount = player.HealAgent(UniqueId, Amount);
+                    if (healAmount < 0)
+                    {
+                        return (new Success(), new List<CompletedAction>());
+                    }
+
                     return (new Success(), new List<CompletedAction>
                     {
                         new(CompletedActionType.HEAL_AGENT,
-                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), Amount)
+                            GlobalCardDatabase.Instance.GetExistingCard(UniqueId), healAmount)
                     });
             }
 
