@@ -14,7 +14,7 @@ public class ComplexEffectExecutor
         _enemyPlayer = enemyPlayer;
         _tavern = tavern;
     }
-    
+
     public (PlayResult, IEnumerable<CompletedAction>) Enact(Choice c, Effect choice)
     {
         return c.FollowUp switch
@@ -149,10 +149,10 @@ public class ComplexEffectExecutor
 
         var prestigeGainAmount = card.Cost - 1;
         _currentPlayer.PrestigeAmount += prestigeGainAmount;
-        
+
         _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, PatronId.HLAALU, card));
         _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.GAIN_PRESTIGE, PatronId.HLAALU, prestigeGainAmount));
-        
+
         return new Success();
     }
 
@@ -181,9 +181,9 @@ public class ComplexEffectExecutor
 
         var choice = choices.First();
         _enemyPlayer.KnockOut(choice);
-        
+
         _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, PatronId.PSIJIC, choice));
-        
+
         return new Success();
     }
 
