@@ -74,11 +74,7 @@ public class ComplexEffectExecutor
                 _currentPlayer.CooldownPile.Add(card);
                 break;
         }
-        
-        // TODO: Like this, these will be added in wrong order to Completed Actions History...
-        // That is a problem, we need to stagger this.
-        // Maybe _parent.AddToHistory(...), that would be nicer than to manage all this.
-        
+
         return new Success();
     }
 
@@ -129,7 +125,6 @@ public class ComplexEffectExecutor
         return new Success();
     }
 
-    // TODO: Add source cards.
     public (PlayResult, IEnumerable<CompletedAction>) CompleteChoice(Effect choice)
     {
         return choice.Enact(_currentPlayer, _enemyPlayer, _tavern);
