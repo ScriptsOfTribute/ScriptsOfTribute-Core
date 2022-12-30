@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public enum PatronId
     {
@@ -23,7 +25,7 @@
          */
         public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
 
-        public abstract PlayResult PatronActivation(Player activator, Player enemy);
+        public abstract (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy);
         public abstract ISimpleResult PatronPower(Player activator, Player enemy);
 
         public abstract PatronId PatronID { get; }

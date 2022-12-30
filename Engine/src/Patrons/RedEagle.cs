@@ -1,8 +1,10 @@
+using TalesOfTribute.Board;
+
 namespace TalesOfTribute
 {
     public class RedEagle : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -17,7 +19,7 @@ namespace TalesOfTribute
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Power to activate Red Eagle");
+                return (new Failure("Not enough Power to activate Red Eagle"), new List<CompletedAction>());
             }
 
             activator.PowerAmount -= 2;
@@ -28,7 +30,12 @@ namespace TalesOfTribute
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Success();
+            return (new Success(),
+                    new List<CompletedAction>
+                    {
+                        new(CompletedActionType.GAIN_POWER, PatronID, -2),
+                        new(CompletedActionType.DRAW, PatronID, 1),
+                    });
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

@@ -23,6 +23,7 @@ public class CardActionManager
     public Choice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : _pendingExecutionChain.PendingChoice;
     public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingExecutionChain.PendingEffects;
     public BoardState State { get; private set; } = BoardState.NORMAL;
+    public List<CompletedAction> CompletedActions = new();
 
     public CardActionManager(IReadOnlyPlayerContext playerContext, ITavern tavern)
     {
@@ -43,6 +44,11 @@ public class CardActionManager
         ImmediatePlayCard(card);
     }
 
+    public void AddToCompletedActionsList(CompletedAction action)
+    {
+        CompletedActions.Add(action);
+    }
+
     public void ImmediatePlayCard(Card card)
     {
         var (immediateEffects, startOfNextTurnEffects) = ComboContext.PlayCard(card);
@@ -58,7 +64,9 @@ public class CardActionManager
 
     public void ActivatePatron(Patron patron)
     {
-        var result = patron.PatronActivation(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer);
+        CompletedActions.Add(new CompletedAction(CompletedActionType.ACTIVATE_PATRON, patron.PatronID));
+        var (result, actions) = patron.PatronActivation(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer);
+        CompletedActions.AddRange(actions);
         if (result is Choice c)
         {
             _pendingPatronChoice = c;
@@ -88,7 +96,8 @@ public class CardActionManager
             throw new Exception("MakeChoice of wrong type called.");
         }
 
-        var result = _complexEffectExecutor.Enact(_pendingPatronChoice.FollowUp, choices);
+        var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice, choices);
+        CompletedActions.AddRange(actions);
         UpdatePendingPatronChoice(result);
     }
     
@@ -99,7 +108,8 @@ public class CardActionManager
             throw new Exception("MakeChoice of wrong type called.");
         }
 
-        var result = _complexEffectExecutor.Enact(_pendingPatronChoice.FollowUp, choice);
+        var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice, choice);
+        CompletedActions.AddRange(actions);
         UpdatePendingPatronChoice(result);
     }
     
@@ -116,7 +126,8 @@ public class CardActionManager
             return;
         }
         
-        _pendingExecutionChain.MakeChoice(choices, _complexEffectExecutor);
+        var actions = _pendingExecutionChain.MakeChoice(choices, _complexEffectExecutor);
+        CompletedActions.AddRange(actions);
 
         if (ConsumePendingChainToChoice())
         {
@@ -137,7 +148,8 @@ public class CardActionManager
             return;
         }
         
-        _pendingExecutionChain.MakeChoice(choice, _complexEffectExecutor);
+        var actions = _pendingExecutionChain.MakeChoice(choice, _complexEffectExecutor);
+        CompletedActions.AddRange(actions);
 
         if (ConsumePendingChainToChoice())
         {
@@ -175,8 +187,9 @@ public class CardActionManager
             return false;
         }
 
-        foreach (var result in _pendingExecutionChain.Consume(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer, _tavern))
+        foreach (var (result, actions) in _pendingExecutionChain.Consume(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer, _tavern))
         {
+            CompletedActions.AddRange(actions);
             if (result is Choice)
             {
                 return false;
@@ -188,7 +201,6 @@ public class CardActionManager
 
     public static CardActionManager FromSerializedBoard(SerializedBoard serializedBoard, PlayerContext playerContext, ITavern tavern)
     {
-        // private ExecutionChain _pendingExecutionChain;
         var comboContext = ComboContext.FromComboStates(serializedBoard.ComboStates);
 
         Choice? choiceForChain = null;
@@ -219,6 +231,7 @@ public class CardActionManager
             _pendingExecutionChain = chain,
             _pendingPatronChoice = patronChoice,
             ComboContext = comboContext,
+            CompletedActions = serializedBoard.CompletedActions,
         };
 
         return result;

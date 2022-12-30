@@ -43,6 +43,7 @@ namespace TalesOfTribute
 
         public void PlayCard(Card card)
         {
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
             CardActionManager.PlayCard(card);
         }
@@ -51,6 +52,8 @@ namespace TalesOfTribute
         {
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
+            
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.BUY_CARD, card));
 
             var boughtCard = this.Tavern.Acquire(card);
 
@@ -88,6 +91,7 @@ namespace TalesOfTribute
 
         public void EndTurn()
         {
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.END_TURN));
             var agentsWithTaunt = EnemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
             foreach(var agent in agentsWithTaunt)
             {
@@ -134,7 +138,7 @@ namespace TalesOfTribute
         public SerializedBoard SerializeBoard()
         {
             return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
-                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects);
+                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
@@ -190,13 +194,21 @@ namespace TalesOfTribute
 
         public void ActivateAgent(Card card)
         {
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ACTIVATE_AGENT, card));
             CurrentPlayer.ActivateAgent(card);
             CardActionManager.PlayCard(card);
         }
 
         public ISimpleResult AttackAgent(Card agent)
         {
-            return CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
+            var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
+            if (!CurrentPlayer.AgentCards.Contains(agent))
+            {
+                CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.AGENT_DEATH, agent));
+            }
+
+            return new Success();
         }
 
         private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager)

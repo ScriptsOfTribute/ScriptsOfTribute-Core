@@ -74,13 +74,14 @@ namespace TalesOfTribute
             DrawPile = starterCards.OrderBy(x => Guid.NewGuid()).ToList();
         }
 
-        public void HealAgent(UniqueId uniqueId, int amount)
+        public int HealAgent(UniqueId uniqueId, int amount)
         {
             // It's possible for this agent to already be gone, for example - discarded, so we need to check.
-            if (Agents.All(a => a.RepresentingCard.UniqueId != uniqueId)) return;
+            if (Agents.All(a => a.RepresentingCard.UniqueId != uniqueId)) return -1;
 
             var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == uniqueId);
             agent.Heal(amount);
+            return amount;
         }
 
         public void Discard(Card card)
@@ -202,11 +203,11 @@ namespace TalesOfTribute
             }
         }
 
-        public ISimpleResult AttackAgent(Card card, IPlayer enemy, ITavern tavern)
+        public int AttackAgent(Card card, IPlayer enemy, ITavern tavern)
         {
             if (!enemy.AgentCards.Contains(card))
             {
-                return new Failure("Agent you are trying to attack doesn't exist!");
+                throw new Exception("Agent you are trying to attack doesn't exist!");
             }
 
             var agent = enemy.Agents.First(agent => agent.RepresentingCard == card);
@@ -222,7 +223,7 @@ namespace TalesOfTribute
                     tavern.Cards.Add(card);
             }
 
-            return new Success();
+            return attackValue;
         }
 
         private void AssertCardIn(Card card, List<Card> list)

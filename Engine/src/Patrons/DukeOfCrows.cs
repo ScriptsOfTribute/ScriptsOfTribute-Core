@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public class DukeOfCrows : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Neutral:
@@ -14,10 +16,12 @@
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Coin to activate or player is already favored by Duke of Crows ");
+                return (new Failure("Not enough Coin to activate or player is already favored by Duke of Crows "), new List<CompletedAction>());
             }
 
-            activator.PowerAmount += activator.CoinsAmount - 1;
+            var powerToGain = activator.CoinsAmount - 1;
+            activator.PowerAmount += powerToGain;
+            var oldCoinsAmount = activator.CoinsAmount;
             activator.CoinsAmount = 0;
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
@@ -25,7 +29,11 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Success();
+            return (new Success(), new List<CompletedAction>
+            {
+                new(CompletedActionType.GAIN_POWER, PatronID, powerToGain),
+                new(CompletedActionType.GAIN_COIN, PatronID, -oldCoinsAmount),
+            });
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

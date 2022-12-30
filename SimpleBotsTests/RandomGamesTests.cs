@@ -17,16 +17,16 @@ public class RandomGamesTests
     [Fact]
     public void RandomGameShouldEndWithoutErrors()
     {
-        const int testAmount = 1000;
+        const int testAmount = 1;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new SimpleBots.RandomBot();
-            var bot2 = new SimpleBots.RandomBot();
+            var bot1 = new RandomBot();
+            var bot2 = new RandomBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var endState = game.Play();
+            var (endState, endBoardState) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
             {
@@ -36,7 +36,9 @@ public class RandomGamesTests
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
-            
+
+            _testOutputHelper.WriteLine(string.Join('\n', endBoardState.CompletedActions.Select(a => a.ToString())));
+
             GlobalCardDatabase.Instance.Clear();
         }
 
@@ -55,7 +57,7 @@ public class RandomGamesTests
             var bot2 = new RandomBotWithRandomStateExploring();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var endState = game.Play();
+            var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
             {
@@ -84,7 +86,7 @@ public class RandomGamesTests
             var bot2 = new DoEverythingBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var endState = game.Play();
+            var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
             {

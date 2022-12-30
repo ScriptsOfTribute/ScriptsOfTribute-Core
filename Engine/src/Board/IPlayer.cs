@@ -14,7 +14,7 @@ public interface IPlayer
     List<Card> AgentCards { get; }
     List<Card> CooldownPile { get; set; }
     void PlayCard(Card cardId);
-    void HealAgent(UniqueId uniqueId, int amount);
+    int HealAgent(UniqueId uniqueId, int amount);
     void Refresh(Card cardId);
     void Draw();
     void EndTurn();
@@ -26,6 +26,6 @@ public interface IPlayer
     string ToString();
     List<Card> GetAllPlayersCards();
     void ActivateAgent(Card card);
-    ISimpleResult AttackAgent(Card agent, IPlayer enemy, ITavern tavern);
+    int AttackAgent(Card agent, IPlayer enemy, ITavern tavern);
     Card GetCardByUniqueId(int uniqueId);
 }

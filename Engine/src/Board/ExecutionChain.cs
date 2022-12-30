@@ -1,4 +1,5 @@
-﻿using TalesOfTribute.Board.CardAction;
+﻿using TalesOfTribute.Board;
+using TalesOfTribute.Board.CardAction;
 
 namespace TalesOfTribute;
 
@@ -6,19 +7,16 @@ public class ExecutionChain
 {
     private List<BaseEffect> _pendingEffects = new();
     public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
-    public bool Empty => _chain.Count == 0;
+    public bool Empty => _pendingEffects.Count == 0;
     public Choice? PendingChoice { get; private set; }
     public bool Completed => Empty && PendingChoice is null;
 
-    private readonly Queue<Func<IPlayer, IPlayer, ITavern, PlayResult>> _chain = new();
-
     public void Add(BaseEffect effect)
     {
-        _chain.Enqueue(effect.Enact);
         _pendingEffects.Add(effect);
     }
 
-    public IEnumerable<PlayResult> Consume(IPlayer owner, IPlayer enemy, ITavern tavern)
+    public IEnumerable<(PlayResult, IEnumerable<CompletedAction>)> Consume(IPlayer owner, IPlayer enemy, ITavern tavern)
     {
         if (PendingChoice is not null)
         {
@@ -29,14 +27,14 @@ public class ExecutionChain
         {
             PendingChoice = null;
 
-            var current = _chain.Dequeue().Invoke(owner, enemy, tavern);
+            var (current, completed) = _pendingEffects[0].Enact(owner, enemy, tavern);
             _pendingEffects.RemoveAt(0);
             if (current is Choice c)
             {
                 PendingChoice = c;
             }
 
-            yield return current;
+            yield return (current, completed);
 
             if (PendingChoice is not null)
             {
@@ -45,14 +43,14 @@ public class ExecutionChain
         }
     }
 
-    public void MakeChoice(List<Card> choices, ComplexEffectExecutor executor)
+    public IEnumerable<CompletedAction> MakeChoice(List<Card> choices, ComplexEffectExecutor executor)
     {
         if (PendingChoice?.Type != Choice.DataType.CARD)
         {
             throw new Exception("Pending choice is missing or wrong type.");
         }
 
-        var result = executor.Enact(PendingChoice.FollowUp, choices);
+        var (result, actions) = executor.Enact(PendingChoice, choices);
 
         PendingChoice = result switch
         {
@@ -60,16 +58,18 @@ public class ExecutionChain
             Failure f => throw new Exception(f.Reason),
             _ => null
         };
+
+        return actions;
     }
     
-    public void MakeChoice(Effect choice, ComplexEffectExecutor executor)
+    public IEnumerable<CompletedAction> MakeChoice(Effect choice, ComplexEffectExecutor executor)
     {
         if (PendingChoice?.Type != Choice.DataType.EFFECT)
         {
             throw new Exception("Pending choice is missing or wrong type.");
         }
 
-        var result = executor.Enact(PendingChoice.FollowUp, choice);
+        var (result, actions) = executor.Enact(PendingChoice, choice);
 
         PendingChoice = result switch
         {
@@ -77,6 +77,8 @@ public class ExecutionChain
             Failure f => throw new Exception(f.Reason),
             _ => null
         };
+
+        return actions;
     }
 
     public static ExecutionChain FromEffects(List<BaseEffect> effects, Choice? pendingChoice)

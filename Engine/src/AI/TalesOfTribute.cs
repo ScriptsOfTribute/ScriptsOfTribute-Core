@@ -94,7 +94,7 @@ public class TalesOfTribute
         return null;
     }
 
-    public EndGameState Play()
+    public (EndGameState, SerializedBoard?) Play()
     {
         var (endGameState, patrons) = PatronSelection().Result;
 
@@ -102,7 +102,7 @@ public class TalesOfTribute
         {
             _players[0].GameEnd(endGameState);
             _players[1].GameEnd(endGameState);
-            return endGameState;
+            return (endGameState, null);
         }
 
         _game = new TalesOfTributeGame(_players, new TalesOfTributeApi(patrons!));

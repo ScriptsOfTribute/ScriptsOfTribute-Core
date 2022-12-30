@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board;
+
+namespace TalesOfTribute
 {
     public class Rajhin : Patron
     {
-        public override PlayResult PatronActivation(Player activator, Player enemy)
+        public override (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy)
         {
             /*
              * Favored:
@@ -20,7 +22,7 @@
 
             if (!CanPatronBeActivated(activator, enemy))
             {
-                return new Failure("Not enough Coin to activate Rajhin");
+                return (new Failure("Not enough Coin to activate Rajhin"), new List<CompletedAction>());
             }
 
             enemy.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.BEWILDERMENT));
@@ -32,7 +34,12 @@
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            return new Success();
+            return (new Success(),
+                    new List<CompletedAction>
+                    {
+                        new(CompletedActionType.GAIN_COIN, PatronID, -3),
+                        new(CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT, PatronID, 1),
+                    });
         }
 
         public override ISimpleResult PatronPower(Player activator, Player enemy)

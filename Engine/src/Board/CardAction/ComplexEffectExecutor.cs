@@ -14,35 +14,35 @@ public class ComplexEffectExecutor
         _enemyPlayer = enemyPlayer;
         _tavern = tavern;
     }
-    
-    public PlayResult Enact(ChoiceFollowUp c, Effect choice)
+
+    public (PlayResult, IEnumerable<CompletedAction>) Enact(Choice c, Effect choice)
     {
-        return c switch
+        return c.FollowUp switch
         {
             ChoiceFollowUp.ENACT_CHOSEN_EFFECT => CompleteChoice(choice),
         };
     }
 
-    public PlayResult Enact(ChoiceFollowUp choice, List<Card> choices)
+    public (PlayResult, IEnumerable<CompletedAction>) Enact(Choice choice, List<Card> choices)
     {
-        return choice switch
+        return choice.FollowUp switch
         {
-            ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN => ReplaceTavern(choices),
-            ChoiceFollowUp.DESTROY_CARDS => DestroyCard(choices),
-            ChoiceFollowUp.DISCARD_CARDS => Discard(choices),
-            ChoiceFollowUp.REFRESH_CARDS => Refresh(choices),
-            ChoiceFollowUp.TOSS_CARDS => Toss(choices),
-            ChoiceFollowUp.KNOCKOUT_AGENTS => Knockout(choices),
-            ChoiceFollowUp.ACQUIRE_CARDS => AcquireTavern(choices),
-            ChoiceFollowUp.COMPLETE_HLAALU => CompleteHlaalu(choices),
-            ChoiceFollowUp.COMPLETE_PELLIN => CompletePelin(choices),
-            ChoiceFollowUp.COMPLETE_PSIJIC => CompletePsijic(choices),
-            ChoiceFollowUp.COMPLETE_TREASURY => CompleteTreasury(choices),
+            ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN => (ReplaceTavern(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.DESTROY_CARDS => (DestroyCard(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.DISCARD_CARDS => (Discard(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.REFRESH_CARDS => (Refresh(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.TOSS_CARDS => (Toss(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.KNOCKOUT_AGENTS => (Knockout(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.ACQUIRE_CARDS => (AcquireTavern(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.COMPLETE_HLAALU => (CompleteHlaalu(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.COMPLETE_PELLIN => (CompletePelin(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.COMPLETE_PSIJIC => (CompletePsijic(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.COMPLETE_TREASURY => (CompleteTreasury(choice, choices), new List<CompletedAction>()),
             _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, null)
         };
     }
 
-    public PlayResult AcquireTavern(List<Card> choices)
+    public PlayResult AcquireTavern(Choice c, List<Card> choices)
     {
         if (choices.Count == 0)
         {
@@ -56,6 +56,8 @@ public class ComplexEffectExecutor
 
         var choice = choices.First();
         var card = _tavern.Acquire(choice);
+
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ACQUIRE_CARD, c.Context!.CardSource!, card));
 
         switch (card.Type)
         {
@@ -72,56 +74,63 @@ public class ComplexEffectExecutor
                 _currentPlayer.CooldownPile.Add(card);
                 break;
         }
-        
+
         return new Success();
     }
 
-    public PlayResult ReplaceTavern(List<Card> choices)
+    public PlayResult ReplaceTavern(Choice choice, List<Card> choices)
     {
         choices.ForEach(_tavern.ReplaceCard);
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.REPLACE_TAVERN, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
-    public PlayResult DestroyCard(List<Card> choices)
+    public PlayResult DestroyCard(Choice choice, List<Card> choices)
     {
         choices.ForEach(_currentPlayer.Destroy);
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
-    public PlayResult Discard(List<Card> choices)
+    public PlayResult Discard(Choice choice, List<Card> choices)
     {
         choices.ForEach(_currentPlayer.Discard);
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DISCARD, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
-    public PlayResult Refresh(List<Card> choices)
+    public PlayResult Refresh(Choice choice, List<Card> choices)
     {
         choices.ForEach(_currentPlayer.Refresh);
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.REFRESH, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
-    public PlayResult Toss(List<Card> choices)
+    public PlayResult Toss(Choice choice, List<Card> choices)
     {
         choices.ForEach(_currentPlayer.Toss);
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.TOSS, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
-    public PlayResult Knockout(List<Card> choices)
+    public PlayResult Knockout(Choice choice, List<Card> choices)
     {
         var contractAgents = choices.FindAll(card => card.Type == CardType.CONTRACT_AGENT);
         var normalAgents = choices.FindAll(card => card.Type == CardType.AGENT);
         contractAgents.ForEach(_enemyPlayer.Destroy);
         _tavern.Cards.AddRange(contractAgents);
         normalAgents.ForEach(_enemyPlayer.KnockOut);
+        contractAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
+        normalAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
-    public PlayResult CompleteChoice(Effect choice)
+    public (PlayResult, IEnumerable<CompletedAction>) CompleteChoice(Effect choice)
     {
         return choice.Enact(_currentPlayer, _enemyPlayer, _tavern);
     }
 
-    public PlayResult CompleteHlaalu(List<Card> choices)
+    public PlayResult CompleteHlaalu(Choice sourceChoice, List<Card> choices)
     {
         if (choices.Count != 1)
         {
@@ -137,12 +146,17 @@ public class ComplexEffectExecutor
         {
             _currentPlayer.Played.Remove(card);
         }
-        
-        _currentPlayer.PrestigeAmount += card.Cost - 1;
+
+        var prestigeGainAmount = card.Cost - 1;
+        _currentPlayer.PrestigeAmount += prestigeGainAmount;
+
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, PatronId.HLAALU, card));
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.GAIN_PRESTIGE, PatronId.HLAALU, prestigeGainAmount));
+
         return new Success();
     }
 
-    public PlayResult CompletePelin(List<Card> choices)
+    public PlayResult CompletePelin(Choice sourceChoice, List<Card> choices)
     {
         if (choices.Count != 1)
         {
@@ -152,10 +166,13 @@ public class ComplexEffectExecutor
         var choice = choices.First();
         _currentPlayer.CooldownPile.Remove(choice);
         _currentPlayer.DrawPile.Insert(0, choice);
+
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.REFRESH, PatronId.PELIN, choice));
+
         return new Success();
     }
 
-    public PlayResult CompletePsijic(List<Card> choices)
+    public PlayResult CompletePsijic(Choice sourceChoice, List<Card> choices)
     {
         if (choices.Count != 1)
         {
@@ -163,12 +180,14 @@ public class ComplexEffectExecutor
         }
 
         var choice = choices.First();
-        _enemyPlayer.Destroy(choice);
-        _enemyPlayer.CooldownPile.Add(choice);
+        _enemyPlayer.KnockOut(choice);
+
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, PatronId.PSIJIC, choice));
+
         return new Success();
     }
 
-    public PlayResult CompleteTreasury(List<Card> choices)
+    public PlayResult CompleteTreasury(Choice _, List<Card> choices)
     {
         if (choices.Count != 1)
         {
@@ -176,6 +195,8 @@ public class ComplexEffectExecutor
         }
 
         var choice = choices.First();
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, PatronId.TREASURY, choice));
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ADD_WRIT_OF_COIN, PatronId.TREASURY, 1));
         if (_currentPlayer.Played.Contains(choice))
         {
             _currentPlayer.Played.Remove(choice);
