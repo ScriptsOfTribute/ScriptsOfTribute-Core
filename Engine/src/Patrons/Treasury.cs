@@ -12,10 +12,10 @@ namespace TalesOfTribute
             }
 
             activator.CoinsAmount -= 2;
-            List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
+            var inPlayCards = activator.Played.Concat(activator.Hand).ToList();
 
-            return (new Choice(usedCards,
-                ChoiceFollowUp.COMPLETE_TREASURY,
+            return (new Choice(inPlayCards,
+                    ChoiceFollowUp.COMPLETE_TREASURY,
                 new ChoiceContext(PatronID), 1, 1),
                     new List<CompletedAction>
                     {
@@ -47,8 +47,8 @@ namespace TalesOfTribute
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            List<Card> usedCards = activator.Played.Concat(activator.CooldownPile).ToList();
-            return activator.CoinsAmount >= 2 && usedCards.Any();
+            List<Card> inPlayCards = activator.Played.Concat(activator.Hand).ToList();
+            return activator.CoinsAmount >= 2 && inPlayCards.Any();
         }
     }
 }

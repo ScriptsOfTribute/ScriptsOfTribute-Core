@@ -197,4 +197,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     {
         return new TalesOfTributeApi(BoardManager.FromSerializedBoard(board));
     }
+
+    public bool CanPatronBeActivated(PatronId patronId)
+    {
+        return _boardManager
+            .Patrons.First(p => p.PatronID == patronId)
+            .CanPatronBeActivated(_boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
+    }
 }

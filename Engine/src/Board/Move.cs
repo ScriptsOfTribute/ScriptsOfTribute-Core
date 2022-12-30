@@ -77,7 +77,7 @@ namespace TalesOfTribute
 
         public override string ToString()
         {
-            return $"Move: {Command}";
+            return $"{Command}";
         }
     }
 
@@ -110,7 +110,7 @@ namespace TalesOfTribute
 
         public override string ToString()
         {
-            return $"Simple card move: {Command} {Card.CommonId}";
+            return $"{Command} {Card.CommonId}";
         }
     }
     
@@ -143,7 +143,7 @@ namespace TalesOfTribute
 
         public override string ToString()
         {
-            return $"Simple Patron Move: {PatronId}";
+            return $"PATRON {PatronId}";
         }
     }
 
@@ -183,7 +183,7 @@ namespace TalesOfTribute
 
         public override string ToString()
         {
-            return $"Make choice move: {string.Join(' ', Choices.Select(c => c?.ToString()))}";
+            return $"CHOICE {string.Join(' ', Choices.Select(c => c?.ToString()))}";
         }
     }
 }
