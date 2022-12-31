@@ -620,7 +620,7 @@
     "Name":"Way of the Sword",
     "Deck":"Ansei",
     "Cost":0,
-    "Type":"Action",
+    "Type":"Starter",
     "HP":-1,
     "Activation":"Power 1 OR Coin 1",
     "Combo 2":null,
