@@ -223,6 +223,12 @@ public class CardActionManager
         
         var chain = ExecutionChain.FromEffects(serializedBoard.UpcomingEffects, choiceForChain);
         var startOfNextTurnEffects = serializedBoard.StartOfNextTurnEffects.ToList();
+        var copyCompletedActions = new List<CompletedAction>();
+
+        foreach(var action in serializedBoard.CompletedActions)
+        {
+            copyCompletedActions.Add(action);
+        }
 
         var result = new CardActionManager(playerContext, tavern)
         {
@@ -231,7 +237,7 @@ public class CardActionManager
             _pendingExecutionChain = chain,
             _pendingPatronChoice = patronChoice,
             ComboContext = comboContext,
-            CompletedActions = serializedBoard.CompletedActions,
+            CompletedActions = copyCompletedActions,
         };
 
         return result;

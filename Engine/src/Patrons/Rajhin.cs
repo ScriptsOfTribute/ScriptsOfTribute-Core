@@ -24,8 +24,8 @@ namespace TalesOfTribute
             {
                 return (new Failure("Not enough Coin to activate Rajhin"), new List<CompletedAction>());
             }
-
-            enemy.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.BEWILDERMENT));
+            var bewilderment = GlobalCardDatabase.Instance.GetCard(CardId.BEWILDERMENT);
+            enemy.CooldownPile.Add(bewilderment);
 
             activator.CoinsAmount -= 3;
 
@@ -38,7 +38,7 @@ namespace TalesOfTribute
                     new List<CompletedAction>
                     {
                         new(CompletedActionType.GAIN_COIN, PatronID, -3),
-                        new(CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT, PatronID, 1),
+                        new(CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT, PatronID, 1, bewilderment),
                     });
         }
 
