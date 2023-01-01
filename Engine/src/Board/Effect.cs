@@ -235,7 +235,7 @@ namespace TalesOfTribute
                 EffectType.KNOCKOUT => $"Knockout {Amount} enemy agents",
                 EffectType.PATRON_CALL => $"Get {Amount} patron calls",
                 EffectType.CREATE_BOARDINGPARTY => $"Create {Amount} Maormer Boarding Patry cards and place it in CD pile",
-                EffectType.HEAL => $"Heal selected agent by {Amount}",
+                EffectType.HEAL => $"Heal this agent by {Amount}",
                 _ => ""
             };
         }
