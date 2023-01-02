@@ -107,7 +107,7 @@ public class CompletedAction
         switch (Type)
         {
             case CompletedActionType.BUY_CARD:
-                sb.Append($"Buy Card - Source: {SourceCard} Target: {TargetCard}");
+                sb.Append($"Buy Card - {TargetCard}");
                 break;
             case CompletedActionType.ACQUIRE_CARD:
                 sb.Append($"Acquire Card - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");

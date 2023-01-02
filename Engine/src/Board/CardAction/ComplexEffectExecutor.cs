@@ -194,18 +194,19 @@ public class ComplexEffectExecutor
             throw new Exception("Treasury requires exactly 1 choice.");
         }
 
+        var writOfCoin = GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN);
         var choice = choices.First();
         _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, PatronId.TREASURY, choice));
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ADD_WRIT_OF_COIN, PatronId.TREASURY, 1));
+        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ADD_WRIT_OF_COIN, PatronId.TREASURY, 1, writOfCoin));
         if (_currentPlayer.Played.Contains(choice))
         {
             _currentPlayer.Played.Remove(choice);
-            _currentPlayer.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
+            _currentPlayer.CooldownPile.Add(writOfCoin);
         }
         else
         {
-            _currentPlayer.CooldownPile.Remove(choice);
-            _currentPlayer.DrawPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN));
+            _currentPlayer.Hand.Remove(choice);
+            _currentPlayer.CooldownPile.Add(writOfCoin);
         }
         return new Success();
     }

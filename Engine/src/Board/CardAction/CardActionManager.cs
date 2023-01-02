@@ -231,7 +231,7 @@ public class CardActionManager
             _pendingExecutionChain = chain,
             _pendingPatronChoice = patronChoice,
             ComboContext = comboContext,
-            CompletedActions = serializedBoard.CompletedActions,
+            CompletedActions = serializedBoard.CompletedActions.ToList(),
         };
 
         return result;

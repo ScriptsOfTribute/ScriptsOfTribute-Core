@@ -41,7 +41,7 @@ namespace TalesOfTribute
             ComboStates = comboContext.ToComboStates();
             UpcomingEffects = upcomingEffects.ToList();
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
-            CompletedActions = completedActions;
+            CompletedActions = completedActions.ToList();
         }
 
         // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).
