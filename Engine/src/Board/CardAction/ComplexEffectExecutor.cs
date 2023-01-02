@@ -201,12 +201,12 @@ public class ComplexEffectExecutor
         if (_currentPlayer.Played.Contains(choice))
         {
             _currentPlayer.Played.Remove(choice);
-            _currentPlayer.DrawPile.Add(writOfCoin);
+            _currentPlayer.CooldownPile.Add(writOfCoin);
         }
         else
         {
-            _currentPlayer.CooldownPile.Remove(choice);
-            _currentPlayer.DrawPile.Add(writOfCoin);
+            _currentPlayer.Hand.Remove(choice);
+            _currentPlayer.CooldownPile.Add(writOfCoin);
         }
         return new Success();
     }
