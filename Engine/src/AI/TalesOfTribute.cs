@@ -13,6 +13,8 @@ public class TalesOfTribute
     {
         _players[0] = player1;
         _players[1] = player2;
+        player1.Id = PlayerEnum.PLAYER1;
+        player2.Id = PlayerEnum.PLAYER2;
     }
 
     private async Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
