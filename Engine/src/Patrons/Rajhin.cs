@@ -42,11 +42,9 @@ namespace TalesOfTribute
                     });
         }
 
-        public override ISimpleResult PatronPower(Player activator, Player enemy)
+        public override void PatronPower(Player activator, Player enemy)
         {
             // No benefits
-
-            return new Success();
         }
 
         public override List<CardId> GetStarterCards()

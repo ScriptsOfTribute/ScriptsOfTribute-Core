@@ -16,8 +16,7 @@ public interface ITalesOfTributeApi
     public void MakeChoice(Effect choice);
 
     void ActivateAgent(Card agent);
-    ISimpleResult AttackAgent(Card agent);
-    ISimpleResult AttackAgent(int uniqueId);
+    void AttackAgent(Card agent);
 
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron

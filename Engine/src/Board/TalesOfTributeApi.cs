@@ -63,13 +63,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public void ActivateAgent(Card agent)
         => _boardManager.ActivateAgent(agent);
 
-    public ISimpleResult AttackAgent(Card agent)
+    public void AttackAgent(Card agent)
         => _boardManager.AttackAgent(agent);
-
-    public ISimpleResult AttackAgent(int uniqueId)
-    {
-        return _boardManager.AttackAgent(_boardManager.EnemyPlayer.GetCardByUniqueId(uniqueId));
-    }
 
     // Patron related
 

@@ -267,10 +267,7 @@ public class TalesOfTributeGame
 
     private EndGameState? HandleAttack(SimpleCardMove move)
     {
-        if (_api.AttackAgent(move.Card) is Failure f)
-        {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, f.Reason);
-        }
+        _api.AttackAgent(move.Card);
 
         return null;
     }

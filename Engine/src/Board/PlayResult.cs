@@ -3,15 +3,11 @@ using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute;
 
-public interface ISimpleResult
-{
-}
-
 public abstract class PlayResult
 {
 }
 
-public class Success : PlayResult, ISimpleResult
+public class Success : PlayResult
 {
 }
 
@@ -119,7 +115,7 @@ public class Choice : PlayResult
 
 // Failure should only be returned on user input error.
 // If error is not a consequence of a decision, an exception should be thrown.
-public class Failure : PlayResult, ISimpleResult
+public class Failure : PlayResult
 {
     public string Reason { get; }
 

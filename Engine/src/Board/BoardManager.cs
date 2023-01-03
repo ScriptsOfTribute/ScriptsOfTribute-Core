@@ -199,7 +199,7 @@ namespace TalesOfTribute
             CardActionManager.PlayCard(card);
         }
 
-        public ISimpleResult AttackAgent(Card agent)
+        public void AttackAgent(Card agent)
         {
             var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
@@ -207,8 +207,6 @@ namespace TalesOfTribute
             {
                 CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.AGENT_DEATH, agent));
             }
-
-            return new Success();
         }
 
         private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager)

@@ -37,7 +37,7 @@ public class RandomMaximizePrestigeBot : AI
                 else
                 {
                     prestigeToMove.Add(val, new List<Move> { move });
-                }   
+                }
             }
         }
 
