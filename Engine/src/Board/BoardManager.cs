@@ -135,9 +135,9 @@ namespace TalesOfTribute
             DrawCards();
         }
         
-        public SerializedBoard SerializeBoard()
+        public SerializedBoard SerializeBoard(EndGameState? endGameState)
         {
-            return new SerializedBoard(CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
+            return new SerializedBoard(endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
                 CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions);
         }
 

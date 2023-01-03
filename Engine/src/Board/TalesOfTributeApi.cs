@@ -41,7 +41,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     // Serialization
     public SerializedBoard GetSerializer()
     {
-        return _boardManager.SerializeBoard();
+        return _boardManager.SerializeBoard(_endGameState);
     }
 
     public EndGameState? MakeChoice(List<Card> choices)
