@@ -12,32 +12,32 @@ public interface ITalesOfTributeApi
     public SerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
 
-    public void MakeChoice(List<Card> choices);
-    public void MakeChoice(Effect choice);
+    public EndGameState? MakeChoice(List<Card> choices);
+    public EndGameState? MakeChoice(Effect choice);
 
-    void ActivateAgent(Card agent);
-    void AttackAgent(Card agent);
+    EndGameState? ActivateAgent(Card agent);
+    EndGameState? AttackAgent(Card agent);
 
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
     /// </summary>
-    void PatronActivation(PatronId patronId);
+    EndGameState? PatronActivation(PatronId patronId);
 
     /// <summary>
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    void BuyCard(Card card);
+    EndGameState? BuyCard(Card card);
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    void PlayCard(Card card);
+    EndGameState? PlayCard(Card card);
 
     List<Move> GetListOfPossibleMoves();
     bool IsMoveLegal(Move playerMove);
-    void EndTurn();
+    EndGameState? EndTurn();
 
     /// <summary>
     /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>

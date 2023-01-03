@@ -43,15 +43,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager.SerializeBoard();
     }
 
-    public void MakeChoice(List<Card> choices)
-    {
-        _boardManager.CardActionManager.MakeChoice(choices);
-    }
+    public EndGameState? MakeChoice(List<Card> choices)
+        => Try(() => _boardManager.CardActionManager.MakeChoice(choices));
 
-    public void MakeChoice(Effect choice)
-    {
-        _boardManager.CardActionManager.MakeChoice(choice);
-    }
+    public EndGameState? MakeChoice(Effect choice)
+        => Try(() => _boardManager.CardActionManager.MakeChoice(choice));
 
     public SerializedPlayer GetPlayer(PlayerEnum playerId)
     {
@@ -60,40 +56,48 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         );
     }
 
-    public void ActivateAgent(Card agent)
-        => _boardManager.ActivateAgent(agent);
+    public EndGameState? ActivateAgent(Card agent)
+        => Try(() => _boardManager.ActivateAgent(agent));
 
-    public void AttackAgent(Card agent)
-        => _boardManager.AttackAgent(agent);
+    public EndGameState? AttackAgent(Card agent)
+        => Try(() => _boardManager.AttackAgent(agent));
 
     // Patron related
 
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
     /// </summary>
-    public void PatronActivation(PatronId patronId)
-    {
-        _boardManager.PatronCall(patronId);
-    }
+    public EndGameState? PatronActivation(PatronId patronId) => Try(() => _boardManager.PatronCall(patronId));
 
-    // cards related
+        // cards related
 
     /// <summary>
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    public void BuyCard(Card card)
-    {
-        _boardManager.BuyCard(card);
-    }
+    public EndGameState? BuyCard(Card card)
+        => Try(() => _boardManager.BuyCard(card));
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    public void PlayCard(Card card)
+    public EndGameState? PlayCard(Card card)
+        => Try(() => _boardManager.PlayCard(card));
+
+    public EndGameState? Try(Action f)
     {
-        _boardManager.PlayCard(card);
+        try
+        {
+            f();
+        }
+        // TODO: Add engine specific exception.
+        catch (Exception e)
+        {
+            return new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+        }
+
+        return null;
     }
 
     //others
@@ -173,10 +177,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     // lack of general method that parse Move and does stuff
 
-    public void EndTurn()
+    public EndGameState? EndTurn()
     {
         _turnCount++;
         _boardManager.EndTurn();
+        return CheckWinner();
     }
 
     /// <summary>

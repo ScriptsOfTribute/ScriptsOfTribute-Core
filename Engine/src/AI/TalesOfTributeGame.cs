@@ -67,8 +67,8 @@ public class TalesOfTributeGame
     
     public async Task<(EndGameState, SerializedBoard)> Play()
     {
-        EndGameState? endGameState;
-        while ((endGameState = _api.CheckWinner()) is null)
+        EndGameState? endGameState = null;
+        do
         {
             var startOfTurnResult = await HandleStartOfTurnChoices();
             if (startOfTurnResult is not null)
@@ -103,9 +103,7 @@ public class TalesOfTributeGame
             {
                 return EndGame(endGameState);
             }
-
-            _api.EndTurn();
-        }
+        } while ((endGameState = _api.EndTurn()) is null);
 
         return EndGame(endGameState);
     }
@@ -163,16 +161,7 @@ public class TalesOfTributeGame
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Start of turn choice for now is always DESTROY, so should be of type Card.");
         }
 
-        try
-        {
-            _api.MakeChoice(makeChoiceMove.Choices);
-        }
-        catch (Exception e)
-        {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"{e.Message}\n{e.StackTrace}\n\n{e.Source}\n\n\n\n\n\n\n\n{e.ToString()}\n");
-        }
-
-        return null;
+        return _api.MakeChoice(makeChoiceMove.Choices);
     }
 
     private async Task<EndGameState?> HandleFreeMove(Move move)
@@ -202,44 +191,17 @@ public class TalesOfTributeGame
 
     private async Task<EndGameState?> HandleActivateAgent(SimpleCardMove move)
     {
-        try
-        {
-            _api.ActivateAgent(move.Card);
-        }
-        catch (Exception e)
-        {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Message: {e.Message}\nStack trace: {e.StackTrace}\nSource: {e.Source}\n{e}\n");
-        }
-
-        return await ConsumePotentialPendingMoves();
+        return _api.ActivateAgent(move.Card) ?? await ConsumePotentialPendingMoves();
     }
-    
+
     private async Task<EndGameState?> HandlePlayCard(SimpleCardMove move)
     {
-        try
-        {
-            _api.PlayCard(move.Card);
-        }
-        catch (Exception e)
-        {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Message: {e.Message}\nStack trace: {e.StackTrace}\nSource: {e.Source}\n{e}\n");
-        }
-
-        return await ConsumePotentialPendingMoves();
+        return _api.PlayCard(move.Card) ?? await ConsumePotentialPendingMoves();
     }
-    
+
     private async Task<EndGameState?> HandleBuyCard(SimpleCardMove move)
     {
-        try
-        {
-            _api.BuyCard(move.Card);
-        }
-        catch (Exception e)
-        {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Message: {e.Message}\nStack trace: {e.StackTrace}\nSource: {e.Source}\n{e}\n");
-        }
-
-        return await ConsumePotentialPendingMoves();
+        return _api.BuyCard(move.Card) ?? await ConsumePotentialPendingMoves();
     }
 
     private async Task<EndGameState?> ConsumePotentialPendingMoves()
@@ -266,11 +228,7 @@ public class TalesOfTributeGame
     }
 
     private EndGameState? HandleAttack(SimpleCardMove move)
-    {
-        _api.AttackAgent(move.Card);
-
-        return null;
-    }
+        => _api.AttackAgent(move.Card);
 
     private async Task<EndGameState?> HandleCallPatron(SimplePatronMove move)
     {
@@ -279,9 +237,7 @@ public class TalesOfTributeGame
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Invalid patron selected.");
         }
 
-        _api.PatronActivation(move.PatronId);
-
-        return await ConsumePotentialPendingMoves();
+        return _api.PatronActivation(move.PatronId) ?? await ConsumePotentialPendingMoves();
     }
 
     private async Task<EndGameState?> HandleChoice(SerializedChoice result)
@@ -301,8 +257,13 @@ public class TalesOfTributeGame
                     return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
                         "Choice of Card was required.");
                 }
-                
-                _api.MakeChoice(c.Choices);
+
+                var potentialEndState = _api.MakeChoice(c.Choices);
+                if (potentialEndState is not null)
+                {
+                    return potentialEndState;
+                }
+
                 break;
             }
             case Choice.DataType.EFFECT:
@@ -318,7 +279,12 @@ public class TalesOfTributeGame
                     return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
                         "Choice of Effect was required.");
                 }
-                _api.MakeChoice(c.Choices.First());
+                var potentialEndState = _api.MakeChoice(c.Choices.First());
+                if (potentialEndState is not null)
+                {
+                    return potentialEndState;
+                }
+
                 break;
             }
         }
