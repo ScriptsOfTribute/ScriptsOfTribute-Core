@@ -10,6 +10,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
     public SerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
+    private EndGameState? _endGameState = null;
 
     private readonly BoardManager _boardManager;
     private int _turnCount;
@@ -87,6 +88,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public EndGameState? Try(Action f)
     {
+        if (_endGameState is not null)
+        {
+            return _endGameState;
+        }
+
         try
         {
             f();
@@ -94,7 +100,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         // TODO: Add engine specific exception.
         catch (Exception e)
         {
-            return new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            _endGameState = new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return _endGameState;
         }
 
         return null;
@@ -104,6 +111,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public List<Move> GetListOfPossibleMoves()
     {
+        if (_endGameState is not null)
+        {
+            return new List<Move>();
+        }
+
         var choice = _boardManager.CardActionManager.PendingChoice;
         switch (choice?.Type)
         {
@@ -190,7 +202,13 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// </summary>
     public EndGameState? CheckWinner()
     {
-        return _boardManager.CheckAndGetWinner();
+        if (_endGameState is not null)
+        {
+            return _endGameState;
+        }
+
+        _endGameState = _boardManager.CheckAndGetWinner();
+        return _endGameState;
     }
 
     public static ITalesOfTributeApi FromSerializedBoard(SerializedBoard board)
