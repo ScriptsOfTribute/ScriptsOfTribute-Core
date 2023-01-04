@@ -16,6 +16,7 @@ public class TalesOfTributeGame
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
     private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
+    private List<Move> _moveHistory = new();
 
     public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api)
     {
@@ -59,7 +60,9 @@ public class TalesOfTributeGame
 
         if (res == task)
         {
-            return (null, task.Result);
+            var result = task.Result;
+            _moveHistory.Add(result);
+            return (null, result);
         }
 
         return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);
@@ -168,7 +171,7 @@ public class TalesOfTributeGame
     {
         if (!_api.IsMoveLegal(move))
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Illegal move.");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Illegal move - {move}.\nShould be one of:\n{string.Join('\n', _api.GetListOfPossibleMoves().Select(m => m.ToString()))}\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}");
         }
 
         // This should probably be handled above (this move is not in legal moves), but you can never be to careful...

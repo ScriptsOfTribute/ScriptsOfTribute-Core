@@ -17,7 +17,7 @@ public class RandomGamesTests
     [Fact]
     public void RandomGameShouldEndWithoutErrors()
     {
-        const int testAmount = 1;
+        const int testAmount = 500;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
@@ -94,6 +94,7 @@ public class RandomGamesTests
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
             

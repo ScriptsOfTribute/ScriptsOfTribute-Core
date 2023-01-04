@@ -48,6 +48,11 @@ namespace TalesOfTribute
             _rnd = rnd.Detach();
         }
 
+        public SerializedPlayer GetPlayer(PlayerEnum id)
+        {
+            return CurrentPlayer.PlayerID == id ? CurrentPlayer : EnemyPlayer;
+        }
+
         // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).
         public (SerializedBoard, List<Move>) ApplyState(Move move)
         {
