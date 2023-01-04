@@ -22,8 +22,9 @@ namespace TalesOfTribute
         public List<Card> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
         public List<Card> CooldownPile { get; set; }
         public uint PatronCalls { get; set; }
+        private readonly SeededRandom _rnd;
 
-        public Player(PlayerEnum iD)
+        public Player(PlayerEnum iD, SeededRandom rnd)
         {
             CoinsAmount = 0;
             PrestigeAmount = 0;
@@ -35,22 +36,7 @@ namespace TalesOfTribute
             CooldownPile = new List<Card>();
             ID = iD;
             PatronCalls = 1;
-        }
-
-        public Player(
-            PlayerEnum iD, int coinsAmount, int prestigeAmount, int powerAmount,
-            List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile
-        )
-        {
-            CoinsAmount = coinsAmount;
-            PrestigeAmount = prestigeAmount;
-            PowerAmount = powerAmount;
-            Hand = hand;
-            DrawPile = new List<Card>(drawPile);
-            Played = played;
-            Agents = agents;
-            CooldownPile = cooldownPile;
-            ID = iD;
+            _rnd = rnd;
         }
 
         public void PlayCard(Card card)
@@ -71,7 +57,7 @@ namespace TalesOfTribute
 
         public void InitDrawPile(List<Card> starterCards)
         {
-            DrawPile = starterCards.OrderBy(x => Guid.NewGuid()).ToList();
+            DrawPile = starterCards.OrderBy(_ => _rnd.Next()).ToList();
         }
 
         public int HealAgent(UniqueId uniqueId, int amount)
@@ -116,7 +102,7 @@ namespace TalesOfTribute
 
         private void RefreshDrawPile()
         {
-            var mixedCards = CooldownPile.OrderBy(x => Guid.NewGuid()).ToList();
+            var mixedCards = CooldownPile.OrderBy(_ => _rnd.Next()).ToList();
             DrawPile.AddRange(mixedCards);
             CooldownPile.Clear();
         }
@@ -246,7 +232,7 @@ namespace TalesOfTribute
             }
         }
 
-        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile, uint patronCalls)
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile, uint patronCalls, SeededRandom rnd)
         {
             ID = id;
             CoinsAmount = coinsAmount;
@@ -258,14 +244,15 @@ namespace TalesOfTribute
             Agents = agents;
             CooldownPile = cooldownPile;
             PatronCalls = patronCalls;
+            _rnd = rnd;
         }
 
-        public static Player FromSerializedPlayer(SerializedPlayer player)
+        public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd)
         {
             return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, player.Hand.ToList(),
                 player.DrawPile.ToList(), player.Played.ToList(),
                 player.Agents.Select(Agent.FromSerializedAgent).ToList(), player.CooldownPile.ToList(),
-                player.PatronCalls);
+                player.PatronCalls, rnd);
         }
     }
 }

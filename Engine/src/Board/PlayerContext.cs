@@ -30,10 +30,10 @@ public class PlayerContext : IReadOnlyPlayerContext
         (CurrentPlayerId, EnemyPlayerId) = (EnemyPlayerId, CurrentPlayerId);
     }
 
-    public static PlayerContext FromSerializedBoard(SerializedBoard serializedBoard)
+    public static PlayerContext FromSerializedBoard(SerializedBoard serializedBoard, SeededRandom rnd)
     {
-        var p1 = Player.FromSerializedPlayer(serializedBoard.CurrentPlayer);
-        var p2 = Player.FromSerializedPlayer(serializedBoard.EnemyPlayer);
+        var p1 = Player.FromSerializedPlayer(serializedBoard.CurrentPlayer, rnd);
+        var p2 = Player.FromSerializedPlayer(serializedBoard.EnemyPlayer, rnd);
         if (p1.ID == PlayerEnum.PLAYER1)
         {
             return new PlayerContext(p1, p2)

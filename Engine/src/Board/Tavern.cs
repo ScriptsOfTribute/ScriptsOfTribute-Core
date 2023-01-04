@@ -4,18 +4,16 @@
     {
         public List<Card> Cards { get; set; }
         public List<Card> AvailableCards { get; set; }
-        private Random _rnd;
 
-        public Tavern(List<Card> cards)
+        public Tavern(List<Card> cards, SeededRandom rnd)
         {
             AvailableCards = new List<Card>(5);
-            _rnd = new Random();
-            Cards = cards.OrderBy(x => _rnd.Next(0, cards.Count)).ToList();
+            Cards = cards.OrderBy(x => rnd.Next()).ToList();
         }
 
-        public void DrawCards()
+        public void DrawCards(SeededRandom rnd)
         {
-            this.Cards = this.Cards.OrderBy(x => this._rnd.Next(0, Cards.Count)).ToList();
+            this.Cards = this.Cards.OrderBy(x => rnd.Next()).ToList();
 
             for (int i = 0; i < this.AvailableCards.Capacity; i++)
             {
@@ -64,7 +62,6 @@
         {
             Cards = cards;
             AvailableCards = availableCards;
-            _rnd = new Random();
         }
 
         public static Tavern FromSerializedBoard(SerializedBoard serializedBoard)
