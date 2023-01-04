@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute
 {
@@ -25,7 +26,7 @@ namespace TalesOfTribute
             int cost = card["Cost"]?.ToObject<int>() ?? throw new Exception(InvalidJsonMessage);
             CardType type = ParseCardType(card["Type"]?.ToObject<string>() ?? throw new Exception(InvalidJsonMessage));
             int hp = card["HP"]?.ToObject<int>() ?? throw new Exception(InvalidJsonMessage);
-            ComplexEffect?[] effects = new ComplexEffect?[4];
+            var effects = new ComplexEffect?[4];
             bool taunt = card["Taunt"]?.ToObject<bool>() ?? false;
 
             CardId? family = card["Family"]?.ToObject<CardId?>();

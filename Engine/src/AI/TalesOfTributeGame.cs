@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using TalesOfTribute.Board;
 using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.AI;
@@ -159,7 +160,7 @@ public class TalesOfTributeGame
             return timeout;
         }
 
-        if (playersChoice is not MakeChoiceMove<Card> makeChoiceMove)
+        if (playersChoice is not MakeChoiceMove<UniqueCard> makeChoiceMove)
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Start of turn choice for now is always DESTROY, so should be of type Card.");
         }
@@ -255,7 +256,7 @@ public class TalesOfTributeGame
                     return timeout;
                 }
 
-                if (move is not MakeChoiceMove<Card> c)
+                if (move is not MakeChoiceMove<UniqueCard> c)
                 {
                     return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
                         "Choice of Card was required.");
@@ -277,7 +278,7 @@ public class TalesOfTributeGame
                     return timeout;
                 }
 
-                if (move is not MakeChoiceMove<Effect> c)
+                if (move is not MakeChoiceMove<UniqueEffect> c)
                 {
                     return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE,
                         "Choice of Effect was required.");

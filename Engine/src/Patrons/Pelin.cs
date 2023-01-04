@@ -1,4 +1,5 @@
 using TalesOfTribute.Board;
+using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute
 {

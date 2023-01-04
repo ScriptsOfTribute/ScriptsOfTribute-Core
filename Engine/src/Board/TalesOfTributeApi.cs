@@ -1,4 +1,5 @@
 using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board;
@@ -44,10 +45,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager.SerializeBoard(_endGameState);
     }
 
-    public EndGameState? MakeChoice(List<Card> choices)
+    public EndGameState? MakeChoice(List<UniqueCard> choices)
         => Try(() => _boardManager.CardActionManager.MakeChoice(choices));
 
-    public EndGameState? MakeChoice(Effect choice)
+    public EndGameState? MakeChoice(UniqueEffect choice)
         => Try(() => _boardManager.CardActionManager.MakeChoice(choice));
 
     public SerializedPlayer GetPlayer(PlayerEnum playerId)
@@ -57,10 +58,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         );
     }
 
-    public EndGameState? ActivateAgent(Card agent)
+    public EndGameState? ActivateAgent(UniqueCard agent)
         => Try(() => _boardManager.ActivateAgent(agent));
 
-    public EndGameState? AttackAgent(Card agent)
+    public EndGameState? AttackAgent(UniqueCard agent)
         => Try(() => _boardManager.AttackAgent(agent));
 
     // Patron related
@@ -76,14 +77,14 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    public EndGameState? BuyCard(Card card)
+    public EndGameState? BuyCard(UniqueCard card)
         => Try(() => _boardManager.BuyCard(card));
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    public EndGameState? PlayCard(Card card)
+    public EndGameState? PlayCard(UniqueCard card)
         => Try(() => _boardManager.PlayCard(card));
 
     public EndGameState? Try(Action f)

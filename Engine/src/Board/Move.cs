@@ -1,3 +1,5 @@
+using TalesOfTribute.Board.Cards;
+
 namespace TalesOfTribute
 {
     public enum CommandEnum
@@ -20,22 +22,22 @@ namespace TalesOfTribute
             Command = command;
         }
 
-        public static Move PlayCard(Card card)
+        public static Move PlayCard(UniqueCard card)
         {
             return new SimpleCardMove(CommandEnum.PLAY_CARD, card);
         }
         
-        public static Move ActivateAgent(Card card)
+        public static Move ActivateAgent(UniqueCard card)
         {
             return new SimpleCardMove(CommandEnum.ACTIVATE_AGENT, card);
         }
         
-        public static Move Attack(Card card)
+        public static Move Attack(UniqueCard card)
         {
             return new SimpleCardMove(CommandEnum.ATTACK, card);
         }
         
-        public static Move BuyCard(Card card)
+        public static Move BuyCard(UniqueCard card)
         {
             return new SimpleCardMove(CommandEnum.BUY_CARD, card);
         }
@@ -50,14 +52,14 @@ namespace TalesOfTribute
             return new SimplePatronMove(CommandEnum.CALL_PATRON, patronId);
         }
         
-        public static Move MakeChoice(List<Card> cards)
+        public static Move MakeChoice(List<UniqueCard> cards)
         {
-            return new MakeChoiceMove<Card>(CommandEnum.MAKE_CHOICE, cards);
+            return new MakeChoiceMove<UniqueCard>(CommandEnum.MAKE_CHOICE, cards);
         }
         
-        public static Move MakeChoice(List<Effect> effects)
+        public static Move MakeChoice(List<UniqueEffect> effects)
         {
-            return new MakeChoiceMove<Effect>(CommandEnum.MAKE_CHOICE, effects);
+            return new MakeChoiceMove<UniqueEffect>(CommandEnum.MAKE_CHOICE, effects);
         }
 
         public override bool Equals(object obj)
@@ -83,9 +85,9 @@ namespace TalesOfTribute
 
     public class SimpleCardMove : Move
     {
-        public readonly Card Card;
+        public readonly UniqueCard Card;
 
-        internal SimpleCardMove(CommandEnum command, Card card) : base(command)
+        internal SimpleCardMove(CommandEnum command, UniqueCard card) : base(command)
         {
             Card = card;
         }

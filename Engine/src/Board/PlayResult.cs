@@ -1,4 +1,5 @@
 ﻿using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute;
@@ -35,7 +36,7 @@ public class Choice : PlayResult
         CARD,
     }
 
-    public List<Card> PossibleCards
+    public List<UniqueCard> PossibleCards
     {
         get
         {
@@ -48,7 +49,7 @@ public class Choice : PlayResult
         }
     }
 
-    public List<Effect> PossibleEffects
+    public List<UniqueEffect> PossibleEffects
     {
         get
         {
@@ -66,10 +67,10 @@ public class Choice : PlayResult
     public ChoiceContext? Context { get; }
     public readonly DataType Type;
     public readonly ChoiceFollowUp FollowUp;
-    private readonly List<Card>? _possibleCards;
-    private readonly List<Effect>? _possibleEffects;
+    private readonly List<UniqueCard>? _possibleCards;
+    private readonly List<UniqueEffect>? _possibleEffects;
 
-    public Choice(List<Effect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
+    public Choice(List<UniqueEffect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
     {
         _possibleEffects = possibleChoices;
         Type = DataType.EFFECT;
@@ -77,7 +78,7 @@ public class Choice : PlayResult
         Context = context;
     }
 
-    public Choice(List<Effect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
+    public Choice(List<UniqueEffect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
@@ -88,7 +89,7 @@ public class Choice : PlayResult
         MinChoiceAmount = minChoiceAmount;
     }
     
-    public Choice(List<Card> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
+    public Choice(List<UniqueCard> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
     {
         _possibleCards = possibleChoices;
         Type = DataType.CARD;
@@ -96,7 +97,7 @@ public class Choice : PlayResult
         Context = context;
     }
 
-    public Choice(List<Card> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
+    public Choice(List<UniqueCard> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {

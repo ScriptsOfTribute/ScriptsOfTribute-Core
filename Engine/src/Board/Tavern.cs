@@ -1,13 +1,15 @@
-﻿namespace TalesOfTribute
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute
 {
     public class Tavern : ITavern
     {
-        public List<Card> Cards { get; set; }
-        public List<Card> AvailableCards { get; set; }
+        public List<UniqueCard> Cards { get; set; }
+        public List<UniqueCard> AvailableCards { get; set; }
 
-        public Tavern(List<Card> cards, SeededRandom rnd)
+        public Tavern(List<UniqueCard> cards, SeededRandom rnd)
         {
-            AvailableCards = new List<Card>(5);
+            AvailableCards = new List<UniqueCard>(5);
             Cards = cards.OrderBy(x => rnd.Next()).ToList();
         }
 
@@ -28,10 +30,10 @@
             {
                 this.Cards.Add(this.AvailableCards[i]);
             }
-            AvailableCards = new List<Card>(5);
+            AvailableCards = new List<UniqueCard>(5);
         }
 
-        public Card Acquire(Card card)
+        public UniqueCard Acquire(UniqueCard card)
         {
             if (!AvailableCards.Contains(card))
             {
@@ -44,21 +46,21 @@
             return card;
         }
 
-        public List<Card> GetAffordableCards(int coin)
+        public List<UniqueCard> GetAffordableCards(int coin)
         {
             return this.AvailableCards.Where(card => card.Cost <= coin).ToList();
         }
 
-        public void ReplaceCard(Card toReplace)
+        public void ReplaceCard(UniqueCard toReplace)
         {
-            Card newCard = Cards.First();
+            UniqueCard newCard = Cards.First();
             Cards.Remove(newCard);
             Cards.Add(toReplace);
             AvailableCards.Remove(toReplace);
             AvailableCards.Add(newCard);
         }
 
-        private Tavern(List<Card> cards, List<Card> availableCards)
+        private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards)
         {
             Cards = cards;
             AvailableCards = availableCards;

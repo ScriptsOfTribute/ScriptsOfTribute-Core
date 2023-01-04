@@ -1,12 +1,14 @@
-﻿namespace TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute.Serializers;
 
 public class SerializedPlayer
 {
     public readonly PlayerEnum PlayerID;
-    public readonly List<Card> Hand;
-    public readonly List<Card> DrawPile;
-    public readonly List<Card> CooldownPile;
-    public readonly List<Card> Played;
+    public readonly List<UniqueCard> Hand;
+    public readonly List<UniqueCard> DrawPile;
+    public readonly List<UniqueCard> CooldownPile;
+    public readonly List<UniqueCard> Played;
     public readonly List<SerializedAgent> Agents;
     public readonly int Power;
     public readonly uint PatronCalls;

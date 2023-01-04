@@ -1,4 +1,5 @@
 ﻿using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board;
@@ -12,11 +13,11 @@ public interface ITalesOfTributeApi
     public SerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
 
-    public EndGameState? MakeChoice(List<Card> choices);
-    public EndGameState? MakeChoice(Effect choice);
+    public EndGameState? MakeChoice(List<UniqueCard> choices);
+    public EndGameState? MakeChoice(UniqueEffect choice);
 
-    EndGameState? ActivateAgent(Card agent);
-    EndGameState? AttackAgent(Card agent);
+    EndGameState? ActivateAgent(UniqueCard agent);
+    EndGameState? AttackAgent(UniqueCard agent);
 
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
@@ -27,13 +28,13 @@ public interface ITalesOfTributeApi
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    EndGameState? BuyCard(Card card);
+    EndGameState? BuyCard(UniqueCard card);
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    EndGameState? PlayCard(Card card);
+    EndGameState? PlayCard(UniqueCard card);
 
     List<Move> GetListOfPossibleMoves();
     bool IsMoveLegal(Move playerMove);

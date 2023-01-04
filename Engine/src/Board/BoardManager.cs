@@ -1,5 +1,6 @@
 ﻿using TalesOfTribute.Board;
 using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute
 {
@@ -42,14 +43,14 @@ namespace TalesOfTribute
             CardActionManager.ActivatePatron(patron);
         }
 
-        public void PlayCard(Card card)
+        public void PlayCard(UniqueCard card)
         {
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
             CardActionManager.PlayCard(card);
         }
 
-        public void BuyCard(Card card)
+        public void BuyCard(UniqueCard card)
         {
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
@@ -121,7 +122,7 @@ namespace TalesOfTribute
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
             Tavern.DrawCards(_rnd);
 
-            List<Card> starterDecks = new List<Card>();
+            List<UniqueCard> starterDecks = new List<UniqueCard>();
 
             foreach (var patron in this.Patrons)
             {
@@ -147,12 +148,12 @@ namespace TalesOfTribute
             return Array.Find(Patrons, p => p.PatronID == patron).FavoredPlayer;
         }
 
-        public List<Card> GetAvailableTavernCards()
+        public List<UniqueCard> GetAvailableTavernCards()
         {
             return this.Tavern.AvailableCards;
         }
 
-        public List<Card> GetAffordableCards(int coinAmount)
+        public List<UniqueCard> GetAffordableCards(int coinAmount)
         {
             return this.Tavern.GetAffordableCards(coinAmount);
         }
@@ -193,14 +194,14 @@ namespace TalesOfTribute
             return null;
         }
 
-        public void ActivateAgent(Card card)
+        public void ActivateAgent(UniqueCard card)
         {
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ACTIVATE_AGENT, card));
             CurrentPlayer.ActivateAgent(card);
             CardActionManager.PlayCard(card);
         }
 
-        public void AttackAgent(Card agent)
+        public void AttackAgent(UniqueCard agent)
         {
             var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));

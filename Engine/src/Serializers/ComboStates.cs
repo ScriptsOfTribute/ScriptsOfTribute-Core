@@ -1,12 +1,14 @@
-﻿namespace TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute.Serializers;
 
 public class ComboState
 {
     // TODO: Make this readonly.
-    public List<BaseEffect>[] All { get; } = new List<BaseEffect>[Combo.MAX_COMBO];
+    public List<UniqueBaseEffect>[] All { get; } = new List<UniqueBaseEffect>[Combo.MAX_COMBO];
     public readonly int CurrentCombo;
 
-    public ComboState(List<BaseEffect>[] combos, int currentCombo)
+    public ComboState(List<UniqueBaseEffect>[] combos, int currentCombo)
     {
         All = combos;
         CurrentCombo = currentCombo;

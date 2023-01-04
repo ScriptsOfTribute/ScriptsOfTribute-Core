@@ -1,44 +1,32 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute;
 
 public class CardDatabase
 {
     private List<Card> _allCards;
-    private List<Card> _allCardsInPlay;
-    public List<Card> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
-    public List<Card> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
+    public List<UniqueCard> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
+    public List<UniqueCard> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
 
     public CardDatabase(IEnumerable<Card> cards)
     {
-        var cardsEnumerable = cards as Card[] ?? cards.ToArray();
+        var cardsEnumerable = cards as UniqueCard[] ?? cards.ToArray();
         _allCards = cardsEnumerable.ToList();
-        _allCardsInPlay = new List<Card>();
     }
 
-    public Card GetCard(CardId cardId)
+    public UniqueCard GetCard(CardId cardId)
     {
-        Card card = _allCards.First(card => card.CommonId == cardId).CreateUniqueCopy();
-        _allCardsInPlay.Add(card);
+        UniqueCard card = _allCards.First(card => card.CommonId == cardId).CreateUniqueCopy();
         return card;
     }
 
-    public Card GetExistingCard(UniqueId id)
+    public List<UniqueCard> GetCardsByPatron(PatronId[] patrons)
     {
-        return _allCardsInPlay.First(card => card.UniqueId == id);
-    }
-
-    public void Clear()
-    {
-        _allCardsInPlay.Clear();
-    }
-
-    public List<Card> GetCardsByPatron(PatronId[] patrons)
-    {
-        List<Card> cardsFromDeck = (
+        List<UniqueCard> cardsFromDeck = (
             from card in AllCardsWithoutUpgrades
             where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
             select card.CreateUniqueCopy()
         ).ToList();
-        _allCardsInPlay.AddRange(cardsFromDeck);
         return cardsFromDeck;
     }
 
