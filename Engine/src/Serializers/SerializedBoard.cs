@@ -26,6 +26,7 @@ namespace TalesOfTribute
         public readonly List<BaseEffect> StartOfNextTurnEffects;
         public readonly List<CompletedAction> CompletedActions;
         public readonly EndGameState? GameEndState;
+        // TODO: Improve SeededRandom after discussion.
         public readonly SeededRandom _rnd;
 
         public SerializedBoard(
