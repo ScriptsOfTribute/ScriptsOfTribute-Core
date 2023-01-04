@@ -64,13 +64,13 @@ public class Choice : PlayResult
 
     public int MaxChoiceAmount { get; } = 1;
     public int MinChoiceAmount { get; } = 0;
-    public ChoiceContext? Context { get; }
+    public ChoiceContext Context { get; }
     public readonly DataType Type;
     public readonly ChoiceFollowUp FollowUp;
     private readonly List<UniqueCard>? _possibleCards;
     private readonly List<UniqueEffect>? _possibleEffects;
 
-    public Choice(List<UniqueEffect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
+    public Choice(List<UniqueEffect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext context)
     {
         _possibleEffects = possibleChoices;
         Type = DataType.EFFECT;
@@ -78,7 +78,7 @@ public class Choice : PlayResult
         Context = context;
     }
 
-    public Choice(List<UniqueEffect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
+    public Choice(List<UniqueEffect> possibleChoices, ChoiceFollowUp followUp, ChoiceContext context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
@@ -89,7 +89,7 @@ public class Choice : PlayResult
         MinChoiceAmount = minChoiceAmount;
     }
     
-    public Choice(List<UniqueCard> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context)
+    public Choice(List<UniqueCard> possibleChoices, ChoiceFollowUp followUp, ChoiceContext context)
     {
         _possibleCards = possibleChoices;
         Type = DataType.CARD;
@@ -97,7 +97,7 @@ public class Choice : PlayResult
         Context = context;
     }
 
-    public Choice(List<UniqueCard> possibleChoices, ChoiceFollowUp followUp, ChoiceContext? context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
+    public Choice(List<UniqueCard> possibleChoices, ChoiceFollowUp followUp, ChoiceContext context, int maxChoiceAmount, int minChoiceAmount = 0) : this(possibleChoices, followUp, context)
     {
         if (minChoiceAmount > possibleChoices.Count)
         {

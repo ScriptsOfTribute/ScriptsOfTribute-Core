@@ -40,7 +40,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
 
     public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern)
     {
-        ChoiceContext? context;
+        ChoiceContext context;
         switch (Type)
         {
             case EffectType.GAIN_POWER:

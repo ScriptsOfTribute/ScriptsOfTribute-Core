@@ -32,7 +32,7 @@ public class SerializedChoice
 
     public int MaxChoices { get; }
     public int MinChoices { get; }
-    public ChoiceContext? Context { get; }   
+    public ChoiceContext Context { get; }   
     public ChoiceFollowUp ChoiceFollowUp { get; }
     public readonly Choice.DataType Type;
     private readonly List<UniqueCard>? _possibleCards;
