@@ -1,4 +1,5 @@
 ﻿using TalesOfTribute.Board;
+using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute
 {
@@ -23,11 +24,9 @@ namespace TalesOfTribute
                     });
         }
 
-        public override ISimpleResult PatronPower(Player activator, Player enemy)
+        public override void PatronPower(Player activator, Player enemy)
         {
             // No benefits
-
-            return new Success();
         }
 
         public override List<CardId> GetStarterCards()
@@ -47,7 +46,7 @@ namespace TalesOfTribute
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            List<Card> inPlayCards = activator.Played.Concat(activator.Hand).ToList();
+            List<UniqueCard> inPlayCards = activator.Played.Concat(activator.Hand).ToList();
             return activator.CoinsAmount >= 2 && inPlayCards.Any();
         }
     }

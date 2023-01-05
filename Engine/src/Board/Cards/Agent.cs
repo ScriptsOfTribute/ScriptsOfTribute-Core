@@ -1,14 +1,15 @@
-﻿using TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute;
 
 public class Agent
 {
     public int CurrentHp { get; private set; }
-    public Card RepresentingCard { get; }
+    public UniqueCard RepresentingCard { get; }
     public bool Activated { get; private set; } = false;
 
-    public Agent(Card representingCard)
+    public Agent(UniqueCard representingCard)
     {
         RepresentingCard = representingCard;
         CurrentHp = RepresentingCard.HP;
@@ -33,7 +34,7 @@ public class Agent
         }
     }
 
-    public static Agent FromCard(Card card)
+    public static Agent FromCard(UniqueCard card)
     {
         return new Agent(card);
     }

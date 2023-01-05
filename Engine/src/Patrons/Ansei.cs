@@ -28,14 +28,12 @@ namespace TalesOfTribute
             });
         }
 
-        public override ISimpleResult PatronPower(Player activator, Player enemy)
+        public override void PatronPower(Player activator, Player enemy)
         {
             // Gain 1 Coin at the start of your turn
 
             if (FavoredPlayer == activator.ID)
                 activator.CoinsAmount += 1;
-
-            return new Success();
         }
 
         public override List<CardId> GetStarterCards()

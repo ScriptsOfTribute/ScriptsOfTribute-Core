@@ -31,8 +31,6 @@ public class DoEverythingBotTests
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
-            
-            GlobalCardDatabase.Instance.Clear();
         }
         
         // Winrate for DoEverythingBot is expected to be >99%
@@ -57,8 +55,6 @@ public class DoEverythingBotTests
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
-            
-            GlobalCardDatabase.Instance.Clear();
         }
 
         // Winrate is expected to be around 55-45

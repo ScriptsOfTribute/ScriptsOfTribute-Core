@@ -1,12 +1,14 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute;
 
 public interface ITavern
 {
-    List<Card> Cards { get; set; }
-    List<Card> AvailableCards { get; set; }
-    void DrawCards();
+    List<UniqueCard> Cards { get; set; }
+    List<UniqueCard> AvailableCards { get; set; }
+    void DrawCards(SeededRandom rnd);
     void ShuffleBack();
-    Card Acquire(Card card);
-    List<Card> GetAffordableCards(int coin);
-    void ReplaceCard(Card card);
+    UniqueCard Acquire(UniqueCard card);
+    List<UniqueCard> GetAffordableCards(int coin);
+    void ReplaceCard(UniqueCard card);
 }

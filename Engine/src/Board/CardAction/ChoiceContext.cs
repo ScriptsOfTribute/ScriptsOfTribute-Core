@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute;
 
 public enum ChoiceType
 {
@@ -13,11 +15,11 @@ public class ChoiceContext
     // In case of EFFECT_CHOICE, CardSource and Combo are not null
     // In case of CARD_EFFECT, CardSource, Combo and Effect are not null
     public readonly PatronId? PatronSource;
-    public readonly Card? CardSource;
+    public readonly UniqueCard? CardSource;
     public readonly ChoiceType ChoiceType;
     public readonly int Combo = 1;
 
-    public Effect? Effect
+    public UniqueEffect? Effect
     {
         get
         {
@@ -26,7 +28,7 @@ public class ChoiceContext
                 return null;
             }
 
-            return CardSource!.Effects[Combo] as Effect;
+            return CardSource!.Effects[Combo] as UniqueEffect;
         }
     }
 
@@ -36,9 +38,9 @@ public class ChoiceContext
         ChoiceType = ChoiceType.PATRON_ACTIVATION;
     }
 
-    public ChoiceContext(UniqueId cardId, ChoiceType type, int combo)
+    public ChoiceContext(UniqueCard card, ChoiceType type, int combo)
     {
-        CardSource = GlobalCardDatabase.Instance.GetExistingCard(cardId);
+        CardSource = card;
         ChoiceType = type;
         Combo = combo;
     }

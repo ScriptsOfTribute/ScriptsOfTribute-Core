@@ -1,4 +1,6 @@
-﻿namespace TalesOfTribute;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute;
 
 public interface IPlayer
 {
@@ -7,25 +9,25 @@ public interface IPlayer
     int PrestigeAmount { get; set; }
     int PowerAmount { get; set; }
     public uint PatronCalls { get; set; }
-    List<Card> Hand { get; set; }
-    List<Card> DrawPile { get; set; }
-    List<Card> Played { get; set; }
+    List<UniqueCard> Hand { get; set; }
+    List<UniqueCard> DrawPile { get; set; }
+    List<UniqueCard> Played { get; set; }
     List<Agent> Agents { get; set; }
-    List<Card> AgentCards { get; }
-    List<Card> CooldownPile { get; set; }
-    void PlayCard(Card cardId);
-    int HealAgent(UniqueId uniqueId, int amount);
-    void Refresh(Card cardId);
+    List<UniqueCard> AgentCards { get; }
+    List<UniqueCard> CooldownPile { get; set; }
+    void PlayCard(UniqueCard cardId);
+    int HealAgent(UniqueCard card, int amount);
+    void Refresh(UniqueCard cardId);
     void Draw();
     void EndTurn();
-    void Toss(Card cardId);
-    void Discard(Card card);
-    void KnockOut(Card cardId);
-    void AddToCooldownPile(Card card);
-    void Destroy(Card cardId);
+    void Toss(UniqueCard cardId);
+    void Discard(UniqueCard card);
+    void KnockOut(UniqueCard cardId);
+    void AddToCooldownPile(UniqueCard card);
+    void Destroy(UniqueCard cardId);
     string ToString();
-    List<Card> GetAllPlayersCards();
-    void ActivateAgent(Card card);
-    int AttackAgent(Card agent, IPlayer enemy, ITavern tavern);
-    Card GetCardByUniqueId(int uniqueId);
+    List<UniqueCard> GetAllPlayersCards();
+    void ActivateAgent(UniqueCard card);
+    int AttackAgent(UniqueCard agent, IPlayer enemy, ITavern tavern);
+    UniqueCard GetCardByUniqueId(int uniqueId);
 }

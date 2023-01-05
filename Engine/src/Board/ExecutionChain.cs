@@ -1,17 +1,18 @@
 ﻿using TalesOfTribute.Board;
 using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute;
 
 public class ExecutionChain
 {
-    private List<BaseEffect> _pendingEffects = new();
-    public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
+    private List<UniqueBaseEffect> _pendingEffects = new();
+    public IReadOnlyCollection<UniqueBaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
     public bool Empty => _pendingEffects.Count == 0;
     public Choice? PendingChoice { get; private set; }
     public bool Completed => Empty && PendingChoice is null;
 
-    public void Add(BaseEffect effect)
+    public void Add(UniqueBaseEffect effect)
     {
         _pendingEffects.Add(effect);
     }
@@ -43,7 +44,7 @@ public class ExecutionChain
         }
     }
 
-    public IEnumerable<CompletedAction> MakeChoice(List<Card> choices, ComplexEffectExecutor executor)
+    public IEnumerable<CompletedAction> MakeChoice(List<UniqueCard> choices, ComplexEffectExecutor executor)
     {
         if (PendingChoice?.Type != Choice.DataType.CARD)
         {
@@ -62,7 +63,7 @@ public class ExecutionChain
         return actions;
     }
     
-    public IEnumerable<CompletedAction> MakeChoice(Effect choice, ComplexEffectExecutor executor)
+    public IEnumerable<CompletedAction> MakeChoice(UniqueEffect choice, ComplexEffectExecutor executor)
     {
         if (PendingChoice?.Type != Choice.DataType.EFFECT)
         {
@@ -81,7 +82,7 @@ public class ExecutionChain
         return actions;
     }
 
-    public static ExecutionChain FromEffects(List<BaseEffect> effects, Choice? pendingChoice)
+    public static ExecutionChain FromEffects(List<UniqueBaseEffect> effects, Choice? pendingChoice)
     {
         var chain = new ExecutionChain();
         effects.ForEach(e => chain.Add(e));

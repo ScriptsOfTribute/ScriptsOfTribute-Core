@@ -1,4 +1,5 @@
-﻿using TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute
 {
@@ -15,45 +16,31 @@ namespace TalesOfTribute
         public int CoinsAmount { get; set; }
         public int PrestigeAmount { get; set; }
         public int PowerAmount { get; set; }
-        public List<Card> Hand { get; set; }
-        public List<Card> DrawPile { get; set; }
-        public List<Card> Played { get; set; }
+        public List<UniqueCard> Hand { get; set; }
+        public List<UniqueCard> DrawPile { get; set; }
+        public List<UniqueCard> Played { get; set; }
         public List<Agent> Agents { get; set; }
-        public List<Card> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
-        public List<Card> CooldownPile { get; set; }
+        public List<UniqueCard> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
+        public List<UniqueCard> CooldownPile { get; set; }
         public uint PatronCalls { get; set; }
+        private readonly SeededRandom _rnd;
 
-        public Player(PlayerEnum iD)
+        public Player(PlayerEnum iD, SeededRandom rnd)
         {
             CoinsAmount = 0;
             PrestigeAmount = 0;
             PowerAmount = 0;
-            Hand = new List<Card>();
-            DrawPile = new List<Card>();
-            Played = new List<Card>();
+            Hand = new List<UniqueCard>();
+            DrawPile = new List<UniqueCard>();
+            Played = new List<UniqueCard>();
             Agents = new List<Agent>();
-            CooldownPile = new List<Card>();
+            CooldownPile = new List<UniqueCard>();
             ID = iD;
             PatronCalls = 1;
+            _rnd = rnd;
         }
 
-        public Player(
-            PlayerEnum iD, int coinsAmount, int prestigeAmount, int powerAmount,
-            List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile
-        )
-        {
-            CoinsAmount = coinsAmount;
-            PrestigeAmount = prestigeAmount;
-            PowerAmount = powerAmount;
-            Hand = hand;
-            DrawPile = new List<Card>(drawPile);
-            Played = played;
-            Agents = agents;
-            CooldownPile = cooldownPile;
-            ID = iD;
-        }
-
-        public void PlayCard(Card card)
+        public void PlayCard(UniqueCard card)
         {
             AssertCardIn(card, Hand);
             Hand.Remove(card);
@@ -69,29 +56,29 @@ namespace TalesOfTribute
             }
         }
 
-        public void InitDrawPile(List<Card> starterCards)
+        public void InitDrawPile(List<UniqueCard> starterCards)
         {
-            DrawPile = starterCards.OrderBy(x => Guid.NewGuid()).ToList();
+            DrawPile = starterCards.OrderBy(_ => _rnd.Next()).ToList();
         }
 
-        public int HealAgent(UniqueId uniqueId, int amount)
+        public int HealAgent(UniqueCard card, int amount)
         {
             // It's possible for this agent to already be gone, for example - discarded, so we need to check.
-            if (Agents.All(a => a.RepresentingCard.UniqueId != uniqueId)) return -1;
+            if (Agents.All(a => a.RepresentingCard != card)) return -1;
 
-            var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == uniqueId);
+            var agent = Agents.First(agent => agent.RepresentingCard == card);
             agent.Heal(amount);
             return amount;
         }
 
-        public void Discard(Card card)
+        public void Discard(UniqueCard card)
         {
             AssertCardIn(card, Hand);
             Hand.Remove(card);
             CooldownPile.Add(card);
         }
 
-        public void Refresh(Card card)
+        public void Refresh(UniqueCard card)
         {
             AssertCardIn(card, CooldownPile);
             DrawPile.Insert(0, card);
@@ -116,7 +103,7 @@ namespace TalesOfTribute
 
         private void RefreshDrawPile()
         {
-            var mixedCards = CooldownPile.OrderBy(x => Guid.NewGuid()).ToList();
+            var mixedCards = CooldownPile.OrderBy(_ => _rnd.Next()).ToList();
             DrawPile.AddRange(mixedCards);
             CooldownPile.Clear();
         }
@@ -125,20 +112,20 @@ namespace TalesOfTribute
         {
             CooldownPile.AddRange(this.Hand);
             CooldownPile.AddRange(this.Played);
-            Played = new List<Card>();
-            Hand = new List<Card>();
+            Played = new List<UniqueCard>();
+            Hand = new List<UniqueCard>();
             PatronCalls = 1;
             Agents.ForEach(agent => agent.Refresh());
         }
 
-        public void Toss(Card card)
+        public void Toss(UniqueCard card)
         {
             AssertCardIn(card, DrawPile);
             DrawPile.Remove(card);
             CooldownPile.Add(card);
         }
 
-        public void KnockOut(Card card)
+        public void KnockOut(UniqueCard card)
         {
             AssertCardIn(card, AgentCards);
             var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
@@ -149,12 +136,12 @@ namespace TalesOfTribute
             CooldownPile.Add(card);
         }
 
-        public void AddToCooldownPile(Card card)
+        public void AddToCooldownPile(UniqueCard card)
         {
             CooldownPile.Add(card);
         }
 
-        public void Destroy(Card card)
+        public void Destroy(UniqueCard card)
         {
             if (Hand.Contains(card))
             {
@@ -179,16 +166,16 @@ namespace TalesOfTribute
             return $"Player: ({this.CoinsAmount}, {this.PrestigeAmount}, {this.PowerAmount})";
         }
 
-        public List<Card> GetAllPlayersCards()
+        public List<UniqueCard> GetAllPlayersCards()
         {
-            List<Card> cards = this.Hand.Concat(this.DrawPile)
+            List<UniqueCard> cards = this.Hand.Concat(this.DrawPile)
                 .Concat(Played)
                 .Concat(AgentCards)
                 .Concat(CooldownPile).ToList();
             return cards;
         }
 
-        public void ActivateAgent(Card card)
+        public void ActivateAgent(UniqueCard card)
         {
             AssertCardIn(card, AgentCards);
             var agent = Agents.First(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
@@ -203,7 +190,7 @@ namespace TalesOfTribute
             }
         }
 
-        public int AttackAgent(Card card, IPlayer enemy, ITavern tavern)
+        public int AttackAgent(UniqueCard card, IPlayer enemy, ITavern tavern)
         {
             if (!enemy.AgentCards.Contains(card))
             {
@@ -226,7 +213,7 @@ namespace TalesOfTribute
             return attackValue;
         }
 
-        private void AssertCardIn(Card card, List<Card> list)
+        private void AssertCardIn(UniqueCard card, List<UniqueCard> list)
         {
             if (!list.Contains(card))
             {
@@ -234,7 +221,7 @@ namespace TalesOfTribute
             }
         }
 
-        public Card GetCardByUniqueId(int uniqueId)
+        public UniqueCard GetCardByUniqueId(int uniqueId)
         {
             try
             {
@@ -246,7 +233,7 @@ namespace TalesOfTribute
             }
         }
 
-        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<Card> hand, List<Card> drawPile, List<Card> played, List<Agent> agents, List<Card> cooldownPile, uint patronCalls)
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rnd)
         {
             ID = id;
             CoinsAmount = coinsAmount;
@@ -258,14 +245,15 @@ namespace TalesOfTribute
             Agents = agents;
             CooldownPile = cooldownPile;
             PatronCalls = patronCalls;
+            _rnd = rnd;
         }
 
-        public static Player FromSerializedPlayer(SerializedPlayer player)
+        public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd)
         {
             return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, player.Hand.ToList(),
                 player.DrawPile.ToList(), player.Played.ToList(),
                 player.Agents.Select(Agent.FromSerializedAgent).ToList(), player.CooldownPile.ToList(),
-                player.PatronCalls);
+                player.PatronCalls, rnd);
         }
     }
 }

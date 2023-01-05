@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using TalesOfTribute.Board;
 using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute
@@ -17,18 +18,21 @@ namespace TalesOfTribute
         public readonly SerializedPlayer EnemyPlayer;
         public readonly PatronStates PatronStates;
         public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
-        public readonly List<Card> TavernAvailableCards;
-        public readonly List<Card> TavernCards;
+        public readonly List<UniqueCard> TavernAvailableCards;
+        public readonly List<UniqueCard> TavernCards;
         public readonly BoardState BoardState;
         public readonly SerializedChoice? PendingChoice;
         public readonly ComboStates ComboStates;
-        public readonly List<BaseEffect> UpcomingEffects;
-        public readonly List<BaseEffect> StartOfNextTurnEffects;
+        public readonly List<UniqueBaseEffect> UpcomingEffects;
+        public readonly List<UniqueBaseEffect> StartOfNextTurnEffects;
         public readonly List<CompletedAction> CompletedActions;
+        public readonly EndGameState? GameEndState;
+        // TODO: Improve SeededRandom after discussion.
+        public readonly SeededRandom _rnd;
 
         public SerializedBoard(
-            IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<BaseEffect> upcomingEffects, IEnumerable<BaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
+            SeededRandom rnd, EndGameState? endGameState, Player? currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
         )
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
@@ -42,6 +46,13 @@ namespace TalesOfTribute
             UpcomingEffects = upcomingEffects.ToList();
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
             CompletedActions = completedActions.ToList();
+            GameEndState = endGameState;
+            _rnd = rnd.Detach();
+        }
+
+        public SerializedPlayer GetPlayer(PlayerEnum id)
+        {
+            return CurrentPlayer.PlayerID == id ? CurrentPlayer : EnemyPlayer;
         }
 
         // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).
@@ -69,10 +80,10 @@ namespace TalesOfTribute
                 case CommandEnum.MAKE_CHOICE:
                     switch (move)
                     {
-                        case MakeChoiceMove<Card> cardMove:
+                        case MakeChoiceMove<UniqueCard> cardMove:
                             api.MakeChoice(cardMove.Choices);
                             break;
-                        case MakeChoiceMove<Effect> effectMove:
+                        case MakeChoiceMove<UniqueEffect> effectMove:
                             api.MakeChoice(effectMove.Choices.First());
                             break;
                         default:

@@ -26,7 +26,7 @@ namespace TalesOfTribute
         public PlayerEnum FavoredPlayer { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
 
         public abstract (PlayResult, IEnumerable<CompletedAction>) PatronActivation(Player activator, Player enemy);
-        public abstract ISimpleResult PatronPower(Player activator, Player enemy);
+        public abstract void PatronPower(Player activator, Player enemy);
 
         public abstract PatronId PatronID { get; }
         public abstract List<CardId> GetStarterCards();

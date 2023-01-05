@@ -22,6 +22,11 @@ public class RandomMaximizePrestigeBot : AI
         foreach (var move in movesToCheck)
         {
             var (newState, newPossibleMoves) = serializedBoard.ApplyState(move);
+            if (newState.GameEndState?.Winner == Id)
+            {
+                return move;
+            }
+
             var newMovesToCheck = newPossibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
             if (newMovesToCheck.Count == 0)
                 continue;
@@ -29,6 +34,11 @@ public class RandomMaximizePrestigeBot : AI
             foreach (var newMove in newMovesToCheck)
             {
                 var (newestState, _) = newState.ApplyState(newMove);
+                if (newestState.GameEndState?.Winner == Id)
+                {
+                    return newMove;
+                }
+
                 var val = newestState.CurrentPlayer.Prestige + newestState.CurrentPlayer.Power;
                 if (prestigeToMove.ContainsKey(val))
                 {
@@ -37,7 +47,7 @@ public class RandomMaximizePrestigeBot : AI
                 else
                 {
                     prestigeToMove.Add(val, new List<Move> { move });
-                }   
+                }
             }
         }
 

@@ -1,9 +1,11 @@
-﻿namespace TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute.Serializers;
 
 public class SerializedAgent
 {
     public readonly int CurrentHp;
-    public readonly Card RepresentingCard;
+    public readonly UniqueCard RepresentingCard;
     public readonly bool Activated;
 
     public SerializedAgent(Agent agent)

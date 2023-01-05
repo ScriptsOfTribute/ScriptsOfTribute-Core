@@ -1,8 +1,10 @@
-﻿namespace TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+
+namespace TalesOfTribute.Serializers;
 
 public class SerializedChoice
 {
-    public List<Card> PossibleCards
+    public List<UniqueCard> PossibleCards
     {
         get
         {
@@ -15,7 +17,7 @@ public class SerializedChoice
         }
     }
 
-    public List<Effect> PossibleEffects
+    public List<UniqueEffect> PossibleEffects
     {
         get
         {
@@ -30,13 +32,13 @@ public class SerializedChoice
 
     public int MaxChoices { get; }
     public int MinChoices { get; }
-    public ChoiceContext? Context { get; }   
+    public ChoiceContext Context { get; }   
     public ChoiceFollowUp ChoiceFollowUp { get; }
     public readonly Choice.DataType Type;
-    private readonly List<Card>? _possibleCards;
-    private readonly List<Effect>? _possibleEffects;
+    private readonly List<UniqueCard>? _possibleCards;
+    private readonly List<UniqueEffect>? _possibleEffects;
 
-    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<Card>? possibleCards, List<Effect>? possibleEffects, ChoiceFollowUp choiceFollowUp, Choice.DataType type)
+    public SerializedChoice(int maxChoices, int minChoices, ChoiceContext context, List<UniqueCard>? possibleCards, List<UniqueEffect>? possibleEffects, ChoiceFollowUp choiceFollowUp, Choice.DataType type)
     {
         MaxChoices = maxChoices;
         MinChoices = minChoices;

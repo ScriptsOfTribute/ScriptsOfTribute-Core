@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute.Board;
 
@@ -33,8 +34,8 @@ public enum CompletedActionType
 public class CompletedAction
 {
     public CompletedActionType Type;
-    public Card? SourceCard;
-    public Card? TargetCard;
+    public UniqueCard? SourceCard;
+    public UniqueCard? TargetCard;
     public PatronId? SourcePatron;
     public readonly int Combo = 1;
     public readonly int Amount = 1;
@@ -44,14 +45,14 @@ public class CompletedAction
         Type = type;
     }
 
-    public CompletedAction(CompletedActionType type, Card sourceCard, int amount)
+    public CompletedAction(CompletedActionType type, UniqueCard sourceCard, int amount)
     {
         Type = type;
         SourceCard = sourceCard;
         Amount = amount;
     }
 
-    public CompletedAction(CompletedActionType type, Card? sourceCard, int amount, Card targetCard)
+    public CompletedAction(CompletedActionType type, UniqueCard? sourceCard, int amount, UniqueCard targetCard)
     {
         Type = type;
         SourceCard = sourceCard;
@@ -59,14 +60,14 @@ public class CompletedAction
         TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, Card sourceCard, Card targetCard)
+    public CompletedAction(CompletedActionType type, UniqueCard sourceCard, UniqueCard targetCard)
     {
         Type = type;
         SourceCard = sourceCard;
         TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, PatronId sourcePatron, Card targetCard)
+    public CompletedAction(CompletedActionType type, PatronId sourcePatron, UniqueCard targetCard)
     {
         Type = type;
         SourcePatron = sourcePatron;
@@ -80,7 +81,7 @@ public class CompletedAction
         Amount = amount;
     }
     
-    public CompletedAction(CompletedActionType type, PatronId sourcePatron, int amount, Card targetCard)
+    public CompletedAction(CompletedActionType type, PatronId sourcePatron, int amount, UniqueCard targetCard)
     {
         Type = type;
         SourcePatron = sourcePatron;
@@ -88,7 +89,7 @@ public class CompletedAction
         TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, Card targetCard)
+    public CompletedAction(CompletedActionType type, UniqueCard targetCard)
     {
         Type = type;
         TargetCard = targetCard;

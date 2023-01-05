@@ -1,18 +1,19 @@
-﻿using TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute;
 
 public class Combo
 {
     public static int MAX_COMBO = 4;
-    public List<BaseEffect>[] EffectQueue { get; } = new List<BaseEffect>[MAX_COMBO];
+    public List<UniqueBaseEffect>[] EffectQueue { get; } = new List<UniqueBaseEffect>[MAX_COMBO];
     public int ComboCounter { get; private set; } = 0;
 
     public Combo()
     {
         for (var i = 0; i < MAX_COMBO; i++)
         {
-            EffectQueue[i] = new List<BaseEffect>();
+            EffectQueue[i] = new List<UniqueBaseEffect>();
         }
     }
 
@@ -22,7 +23,7 @@ public class Combo
         ComboCounter = ComboCounter > MAX_COMBO ? MAX_COMBO : ComboCounter;
     }
 
-    public void AddEffects(ComplexEffect?[] effects)
+    public void AddEffects(UniqueComplexEffect?[] effects)
     {
         for (var i = 0; i < effects.Length; i++)
         {
@@ -36,7 +37,7 @@ public class Combo
         IncrementCombo();
     }
 
-    public IEnumerable<BaseEffect> GetCurrentComboEffects()
+    public IEnumerable<UniqueBaseEffect> GetCurrentComboEffects()
     {
         for (var i = 0; i < ComboCounter; i++)
         {
@@ -53,7 +54,7 @@ public class Combo
         return new ComboState(EffectQueue.ToArray(), ComboCounter);
     }
 
-    private Combo(List<BaseEffect>[] effects, int comboCounter)
+    private Combo(List<UniqueBaseEffect>[] effects, int comboCounter)
     {
         for (var i = 0; i < MAX_COMBO; i++)
         {
@@ -77,15 +78,15 @@ public class ComboContext
     {
     }
 
-    public (List<BaseEffect> immediateEffects, List<BaseEffect> startOfNextTurnEffects) PlayCard(Card card)
+    public (List<UniqueBaseEffect> immediateEffects, List<UniqueBaseEffect> startOfNextTurnEffects) PlayCard(UniqueCard card)
     {
         var combo = GetCombo(card);
 
         combo.AddEffects(card.Effects);
 
         var allEffects = combo.GetCurrentComboEffects().ToList();
-        var immediateEffects = allEffects.Where(e => (e as Effect)?.Type != EffectType.OPP_DISCARD).ToList();
-        var startOfNextTurnEffects = allEffects.Where(e => (e as Effect)?.Type == EffectType.OPP_DISCARD).ToList();
+        var immediateEffects = allEffects.Where(e => (e as UniqueEffect)?.Type != EffectType.OPP_DISCARD).ToList();
+        var startOfNextTurnEffects = allEffects.Where(e => (e as UniqueEffect)?.Type == EffectType.OPP_DISCARD).ToList();
 
         return (immediateEffects, startOfNextTurnEffects);
     }
@@ -95,7 +96,7 @@ public class ComboContext
         _combos.Clear();
     }
 
-    private Combo GetCombo(Card card)
+    private Combo GetCombo(UniqueCard card)
     {
         var patron = card.Deck;
 

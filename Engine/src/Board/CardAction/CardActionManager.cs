@@ -1,4 +1,5 @@
-﻿using TalesOfTribute.Serializers;
+﻿using TalesOfTribute.Board.Cards;
+using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board.CardAction;
 
@@ -16,12 +17,12 @@ public class CardActionManager
     private ITavern _tavern;
     private ExecutionChain _pendingExecutionChain;
     public ComboContext ComboContext { get; private set; } = new();
-    public List<BaseEffect> StartOfNextTurnEffects = new();
+    public List<UniqueBaseEffect> StartOfNextTurnEffects = new();
     private ComplexEffectExecutor _complexEffectExecutor;
 
     private Choice? _pendingPatronChoice;
     public Choice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : _pendingExecutionChain.PendingChoice;
-    public IReadOnlyCollection<BaseEffect> PendingEffects => _pendingExecutionChain.PendingEffects;
+    public IReadOnlyCollection<UniqueBaseEffect> PendingEffects => _pendingExecutionChain.PendingEffects;
     public BoardState State { get; private set; } = BoardState.NORMAL;
     public List<CompletedAction> CompletedActions = new();
 
@@ -34,7 +35,7 @@ public class CardActionManager
             new ComplexEffectExecutor(this, _playerContext.CurrentPlayer, _playerContext.EnemyPlayer, _tavern);
     }
 
-    public void PlayCard(Card card)
+    public void PlayCard(UniqueCard card)
     {
         if (State != BoardState.NORMAL)
         {
@@ -49,7 +50,7 @@ public class CardActionManager
         CompletedActions.Add(action);
     }
 
-    public void ImmediatePlayCard(Card card)
+    public void ImmediatePlayCard(UniqueCard card)
     {
         var (immediateEffects, startOfNextTurnEffects) = ComboContext.PlayCard(card);
         StartOfNextTurnEffects.AddRange(startOfNextTurnEffects);
@@ -89,7 +90,7 @@ public class CardActionManager
         }
     }
 
-    private void HandlePatronChoice(List<Card> choices)
+    private void HandlePatronChoice(List<UniqueCard> choices)
     {
         if (_pendingPatronChoice?.Type != Choice.DataType.CARD)
         {
@@ -101,7 +102,7 @@ public class CardActionManager
         UpdatePendingPatronChoice(result);
     }
     
-    private void HandlePatronChoice(Effect choice)
+    private void HandlePatronChoice(UniqueEffect choice)
     {
         if (_pendingPatronChoice?.Type != Choice.DataType.EFFECT)
         {
@@ -113,7 +114,7 @@ public class CardActionManager
         UpdatePendingPatronChoice(result);
     }
     
-    public void MakeChoice(List<Card> choices)
+    public void MakeChoice(List<UniqueCard> choices)
     {
         if (State == BoardState.NORMAL)
         {
@@ -135,7 +136,7 @@ public class CardActionManager
         }
     }
     
-    public void MakeChoice(Effect choice)
+    public void MakeChoice(UniqueEffect choice)
     {
         if (State == BoardState.NORMAL)
         {

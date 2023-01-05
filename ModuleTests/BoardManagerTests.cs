@@ -1,4 +1,5 @@
 using TalesOfTribute;
+using TalesOfTribute.Board.Cards;
 
 namespace ModuleTests;
 
@@ -23,7 +24,7 @@ public class BoardManagerTests
         br.CurrentPlayer.CoinsAmount = 1000;
         br.PlayCard(knightCommander);
         br.BuyCard(ritual);
-        br.CardActionManager.MakeChoice(new List<Card> { knightCommander });
+        br.CardActionManager.MakeChoice(new List<UniqueCard> { knightCommander });
         br.ActivateAgent(knightsOfSaintPelin);
     }
 }

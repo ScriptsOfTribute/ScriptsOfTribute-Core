@@ -17,7 +17,7 @@ public class RandomGamesTests
     [Fact]
     public void RandomGameShouldEndWithoutErrors()
     {
-        const int testAmount = 1;
+        const int testAmount = 500;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
@@ -38,8 +38,6 @@ public class RandomGamesTests
             counter.Add(endState);
 
             _testOutputHelper.WriteLine(string.Join('\n', endBoardState.CompletedActions.Select(a => a.ToString())));
-
-            GlobalCardDatabase.Instance.Clear();
         }
 
         _testOutputHelper.WriteLine(counter.ToString());
@@ -67,8 +65,6 @@ public class RandomGamesTests
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
-            
-            GlobalCardDatabase.Instance.Clear();
         }
 
         _testOutputHelper.WriteLine(counter.ToString());
@@ -94,10 +90,9 @@ public class RandomGamesTests
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
-            
-            GlobalCardDatabase.Instance.Clear();
         }
 
         _testOutputHelper.WriteLine(counter.ToString());

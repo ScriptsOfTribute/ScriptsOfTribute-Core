@@ -1,4 +1,5 @@
 using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.Board;
@@ -10,6 +11,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
     public SerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
+    private EndGameState? _endGameState = null;
 
     private readonly BoardManager _boardManager;
     private int _turnCount;
@@ -40,18 +42,14 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     // Serialization
     public SerializedBoard GetSerializer()
     {
-        return _boardManager.SerializeBoard();
+        return _boardManager.SerializeBoard(_endGameState);
     }
 
-    public void MakeChoice(List<Card> choices)
-    {
-        _boardManager.CardActionManager.MakeChoice(choices);
-    }
+    public EndGameState? MakeChoice(List<UniqueCard> choices)
+        => Try(() => _boardManager.CardActionManager.MakeChoice(choices));
 
-    public void MakeChoice(Effect choice)
-    {
-        _boardManager.CardActionManager.MakeChoice(choice);
-    }
+    public EndGameState? MakeChoice(UniqueEffect choice)
+        => Try(() => _boardManager.CardActionManager.MakeChoice(choice));
 
     public SerializedPlayer GetPlayer(PlayerEnum playerId)
     {
@@ -60,51 +58,65 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         );
     }
 
-    public void ActivateAgent(Card agent)
-        => _boardManager.ActivateAgent(agent);
+    public EndGameState? ActivateAgent(UniqueCard agent)
+        => Try(() => _boardManager.ActivateAgent(agent));
 
-    public ISimpleResult AttackAgent(Card agent)
-        => _boardManager.AttackAgent(agent);
-
-    public ISimpleResult AttackAgent(int uniqueId)
-    {
-        return _boardManager.AttackAgent(_boardManager.EnemyPlayer.GetCardByUniqueId(uniqueId));
-    }
+    public EndGameState? AttackAgent(UniqueCard agent)
+        => Try(() => _boardManager.AttackAgent(agent));
 
     // Patron related
 
     /// <summary>
     /// Activate Patron with patronId. Only CurrentPlayer can activate patron
     /// </summary>
-    public void PatronActivation(PatronId patronId)
-    {
-        _boardManager.PatronCall(patronId);
-    }
+    public EndGameState? PatronActivation(PatronId patronId) => Try(() => _boardManager.PatronCall(patronId));
 
-    // cards related
+        // cards related
 
     /// <summary>
     /// Buys card <c>card</c> in tavern for CurrentPlayer.
     /// Checks if CurrentPlayer has enough Coin and if no choice is pending.
     /// </summary>
-    public void BuyCard(Card card)
-    {
-        _boardManager.BuyCard(card);
-    }
+    public EndGameState? BuyCard(UniqueCard card)
+        => Try(() => _boardManager.BuyCard(card));
 
     /// <summary>
     /// Plays card <c>card</c> from hand for CurrentPlayer
     /// Checks if CurrentPlayer has this card in hand and if no choice is pending.
     /// </summary>
-    public void PlayCard(Card card)
+    public EndGameState? PlayCard(UniqueCard card)
+        => Try(() => _boardManager.PlayCard(card));
+
+    private EndGameState? Try(Action f)
     {
-        _boardManager.PlayCard(card);
+        if (_endGameState is not null)
+        {
+            return _endGameState;
+        }
+
+        try
+        {
+            f();
+        }
+        // TODO: Add engine specific exception.
+        catch (Exception e)
+        {
+            _endGameState = new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return _endGameState;
+        }
+
+        return null;
     }
 
     //others
 
     public List<Move> GetListOfPossibleMoves()
     {
+        if (_endGameState is not null)
+        {
+            return new List<Move>();
+        }
+
         var choice = _boardManager.CardActionManager.PendingChoice;
         switch (choice?.Type)
         {
@@ -178,10 +190,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     // lack of general method that parse Move and does stuff
 
-    public void EndTurn()
+    public EndGameState? EndTurn()
     {
         _turnCount++;
         _boardManager.EndTurn();
+        return CheckWinner();
     }
 
     /// <summary>
@@ -190,7 +203,13 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// </summary>
     public EndGameState? CheckWinner()
     {
-        return _boardManager.CheckAndGetWinner();
+        if (_endGameState is not null)
+        {
+            return _endGameState;
+        }
+
+        _endGameState = _boardManager.CheckAndGetWinner();
+        return _endGameState;
     }
 
     public static ITalesOfTributeApi FromSerializedBoard(SerializedBoard board)
