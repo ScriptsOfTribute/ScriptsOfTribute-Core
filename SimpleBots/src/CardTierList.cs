@@ -24,9 +24,8 @@ public class CardTier{
         Tier = tier;
     }
 }
-
 public class CardTierList{
-    public CardTier[] CardTierArray = [
+    private static CardTier[] CardTierArray = {
         new CardTier("Currency Exchange", PatronId.HLAALU, TierEnum.S),
         new CardTier("Luxury Exports", PatronId.HLAALU, TierEnum.S),
         new CardTier("Oathman", PatronId.HLAALU, TierEnum.A),
@@ -37,6 +36,7 @@ public class CardTierList{
         new CardTier("House Marketplace", PatronId.HLAALU, TierEnum.B),
         new CardTier("Hireling", PatronId.HLAALU, TierEnum.C),
         new CardTier("Hostile Takeover", PatronId.HLAALU, TierEnum.C),
+        new CardTier("Kwama Egg Mine", PatronId.HLAALU, TierEnum.C),
         new CardTier("Customs Seizure", PatronId.HLAALU, TierEnum.D),
         new CardTier("Goods Shipment", PatronId.HLAALU, TierEnum.D),
         new CardTier("Midnight Raid", PatronId.RED_EAGLE, TierEnum.S),
@@ -139,5 +139,9 @@ public class CardTierList{
         new CardTier("Ragpicker", PatronId.TREASURY, TierEnum.B),
         new CardTier("Tithe", PatronId.TREASURY, TierEnum.B),
         new CardTier("Writ of Coin", PatronId.TREASURY, TierEnum.B)
-    ];
+    };
+
+    public static TierEnum GetCardTier(string cardName){
+        return Array.Find(CardTierArray, x => x.Name == cardName).Tier;
+    }
 }
