@@ -87,7 +87,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public EndGameState? PlayCard(UniqueCard card)
         => Try(() => _boardManager.PlayCard(card));
 
-    public EndGameState? Try(Action f)
+    private EndGameState? Try(Action f)
     {
         if (_endGameState is not null)
         {
