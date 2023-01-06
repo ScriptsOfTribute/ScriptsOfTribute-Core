@@ -205,7 +205,7 @@ namespace TalesOfTribute
         {
             var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
-            if (!CurrentPlayer.AgentCards.Contains(agent))
+            if (!EnemyPlayer.AgentCards.Contains(agent))
             {
                 CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.AGENT_DEATH, agent));
             }

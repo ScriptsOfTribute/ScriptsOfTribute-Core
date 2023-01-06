@@ -1,4 +1,5 @@
 using TalesOfTribute;
+using TalesOfTribute.Board;
 using TalesOfTribute.Board.Cards;
 
 namespace ModuleTests;
@@ -26,5 +27,18 @@ public class BoardManagerTests
         br.BuyCard(ritual);
         br.CardActionManager.MakeChoice(new List<UniqueCard> { knightCommander });
         br.ActivateAgent(knightsOfSaintPelin);
+    }
+
+    [Fact]
+    void AttackOnAgentWithoutDeath()
+    {
+        var br = new BoardManager(new[] { PatronId.DUKE_OF_CROWS, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU });
+        var agent = Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.BLACKFEATHER_KNIGHT)); // 3hp agent
+        br.EnemyPlayer.Agents.Add(agent);
+        Assert.Contains(agent, br.EnemyPlayer.Agents);
+        br.CurrentPlayer.PowerAmount = 1;
+        br.AttackAgent(agent.RepresentingCard);
+        Assert.Contains(agent, br.EnemyPlayer.Agents);
+        Assert.DoesNotContain(CompletedActionType.AGENT_DEATH, br.CardActionManager.CompletedActions.Select(a => a.Type).ToList());
     }
 }
