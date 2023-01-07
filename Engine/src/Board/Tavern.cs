@@ -54,10 +54,11 @@ namespace TalesOfTribute
         public void ReplaceCard(UniqueCard toReplace)
         {
             UniqueCard newCard = Cards.First();
+            int idx = AvailableCards.IndexOf(toReplace);
             Cards.Remove(newCard);
             Cards.Add(toReplace);
             AvailableCards.Remove(toReplace);
-            AvailableCards.Add(newCard);
+            AvailableCards.Insert(idx, newCard);
         }
 
         private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards)
