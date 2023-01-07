@@ -99,7 +99,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             {
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
                 return (new Choice(
-                    player.Hand.Concat(player.AgentCards).ToList(),
+                    player.Hand.Concat(player.AgentCards).Concat(player.Played).ToList(),
                     ChoiceFollowUp.DESTROY_CARDS,
                     context,
                     Amount
