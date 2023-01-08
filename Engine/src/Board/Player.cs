@@ -104,6 +104,14 @@ namespace TalesOfTribute
             }
         }
 
+        public void PrepareToss(int amount)
+        {
+            if (DrawPile.Count < amount)
+            {
+                ShuffleCooldownPileIntoDrawPile();
+            }
+        }
+
         // TODO: Check in game how that exactly should work (shuffle in on top? shuffle in to bottom?)
         // Merge them together and shuffle everything?
         private void ShuffleCooldownPileIntoDrawPile()

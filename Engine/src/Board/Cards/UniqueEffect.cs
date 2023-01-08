@@ -143,6 +143,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             }
             case EffectType.TOSS:
             {
+                player.PrepareToss(Amount);
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
                 return (new Choice(
                     player.DrawPile,
