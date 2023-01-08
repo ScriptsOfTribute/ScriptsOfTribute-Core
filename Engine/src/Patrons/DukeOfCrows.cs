@@ -31,8 +31,8 @@ namespace TalesOfTribute
 
             return (new Success(), new List<CompletedAction>
             {
-                new(CompletedActionType.GAIN_POWER, PatronID, powerToGain),
-                new(CompletedActionType.GAIN_COIN, PatronID, -oldCoinsAmount),
+                new(activator.ID, CompletedActionType.GAIN_POWER, PatronID, powerToGain),
+                new(activator.ID, CompletedActionType.GAIN_COIN, PatronID, -oldCoinsAmount),
             });
         }
 

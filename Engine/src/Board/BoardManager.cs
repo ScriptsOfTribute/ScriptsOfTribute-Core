@@ -41,12 +41,12 @@ namespace TalesOfTribute
 
             var patron = Array.Find(Patrons, p => p.PatronID == patronId);
             CurrentPlayer.PatronCalls--;
-            CardActionManager.ActivatePatron(patron);
+            CardActionManager.ActivatePatron(CurrentPlayer.ID, patron);
         }
 
         public void PlayCard(UniqueCard card)
         {
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.PLAY_CARD, card));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
             CardActionManager.PlayCard(card);
         }
@@ -56,7 +56,7 @@ namespace TalesOfTribute
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
             
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.BUY_CARD, card));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.BUY_CARD, card));
 
             var boughtCard = this.Tavern.Acquire(card);
 
@@ -188,7 +188,7 @@ namespace TalesOfTribute
 
         public void ActivateAgent(UniqueCard card)
         {
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ACTIVATE_AGENT, card));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.ACTIVATE_AGENT, card));
             CurrentPlayer.ActivateAgent(card);
             CardActionManager.PlayCard(card);
         }
@@ -196,10 +196,10 @@ namespace TalesOfTribute
         public void AttackAgent(UniqueCard agent)
         {
             var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
             if (!EnemyPlayer.AgentCards.Contains(agent))
             {
-                CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.AGENT_DEATH, agent));
+                CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.AGENT_DEATH, agent));
             }
         }
 

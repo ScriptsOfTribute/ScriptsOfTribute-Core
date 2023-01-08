@@ -48,7 +48,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 return (new Success(),
                     new List<CompletedAction>
                     {
-                        new(CompletedActionType.GAIN_POWER,
+                        new(player.ID, CompletedActionType.GAIN_POWER,
                             ParentCard, Amount)
                     });
 
@@ -65,14 +65,14 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 return (new Success(),
                     new List<CompletedAction>
                     {
-                        new(CompletedActionType.GAIN_COIN,
+                        new(player.ID, CompletedActionType.GAIN_COIN,
                             ParentCard, Amount)
                     });
             case EffectType.GAIN_PRESTIGE:
                 player.PrestigeAmount += Amount;
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(CompletedActionType.GAIN_PRESTIGE,
+                    new(player.ID, CompletedActionType.GAIN_PRESTIGE,
                         ParentCard, Amount)
                 });
             case EffectType.OPP_LOSE_PRESTIGE:
@@ -82,7 +82,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                     enemy.PrestigeAmount = 0;
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(CompletedActionType.OPP_LOSE_PRESTIGE,
+                    new(player.ID, CompletedActionType.OPP_LOSE_PRESTIGE,
                         ParentCard, Amount)
                 });
             case EffectType.REPLACE_TAVERN:
@@ -109,7 +109,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 player.Draw(Amount);
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(CompletedActionType.DRAW,
+                    new(player.ID, CompletedActionType.DRAW,
                         ParentCard, Amount)
                 });
             case EffectType.OPP_DISCARD:
@@ -167,7 +167,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 player.PatronCalls += (uint)Amount;
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(CompletedActionType.ADD_PATRON_CALLS,
+                    new(player.ID, CompletedActionType.ADD_PATRON_CALLS,
                         ParentCard, Amount)
                 });
             case EffectType.CREATE_BOARDINGPARTY:
@@ -175,7 +175,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                     player.AddToCooldownPile(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(CompletedActionType.ADD_BOARDING_PARTY,
+                    new(player.ID, CompletedActionType.ADD_BOARDING_PARTY,
                         ParentCard, Amount)
                 });
             case EffectType.HEAL:
@@ -187,7 +187,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
 
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(CompletedActionType.HEAL_AGENT,
+                    new(player.ID, CompletedActionType.HEAL_AGENT,
                         ParentCard, healAmount, ParentCard)
                 });
         }

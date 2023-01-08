@@ -59,7 +59,7 @@ public class ComplexEffectExecutor
         var choice = choices.First();
         var card = _tavern.Acquire(choice);
 
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ACQUIRE_CARD, c.Context!.CardSource!, card));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.ACQUIRE_CARD, c.Context!.CardSource!, card));
 
         switch (card.Type)
         {
@@ -83,35 +83,35 @@ public class ComplexEffectExecutor
     public PlayResult ReplaceTavern(Choice choice, List<UniqueCard> choices)
     {
         choices.ForEach(_tavern.ReplaceCard);
-        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.REPLACE_TAVERN, choice.Context!.CardSource!, c)));
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.REPLACE_TAVERN, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
     public PlayResult DestroyCard(Choice choice, List<UniqueCard> choices)
     {
         choices.ForEach(_currentPlayer.Destroy);
-        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, choice.Context!.CardSource!, c)));
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.DESTROY_CARD, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
     public PlayResult Discard(Choice choice, List<UniqueCard> choices)
     {
         choices.ForEach(_currentPlayer.Discard);
-        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DISCARD, choice.Context!.CardSource!, c)));
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.DISCARD, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
     public PlayResult Refresh(Choice choice, List<UniqueCard> choices)
     {
         choices.ForEach(_currentPlayer.Refresh);
-        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.REFRESH, choice.Context!.CardSource!, c)));
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.REFRESH, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
     public PlayResult Toss(Choice choice, List<UniqueCard> choices)
     {
         choices.ForEach(_currentPlayer.Toss);
-        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.TOSS, choice.Context!.CardSource!, c)));
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.TOSS, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
@@ -122,8 +122,8 @@ public class ComplexEffectExecutor
         contractAgents.ForEach(_enemyPlayer.Destroy);
         _tavern.Cards.AddRange(contractAgents);
         normalAgents.ForEach(_enemyPlayer.KnockOut);
-        contractAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
-        normalAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
+        contractAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
+        normalAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
         return new Success();
     }
 
@@ -152,8 +152,8 @@ public class ComplexEffectExecutor
         var prestigeGainAmount = card.Cost - 1;
         _currentPlayer.PrestigeAmount += prestigeGainAmount;
 
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, PatronId.HLAALU, card));
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.GAIN_PRESTIGE, PatronId.HLAALU, prestigeGainAmount));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.DESTROY_CARD, PatronId.HLAALU, card));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.GAIN_PRESTIGE, PatronId.HLAALU, prestigeGainAmount));
 
         return new Success();
     }
@@ -169,7 +169,7 @@ public class ComplexEffectExecutor
         _currentPlayer.CooldownPile.Remove(choice);
         _currentPlayer.DrawPile.Insert(0, choice);
 
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.REFRESH, PatronId.PELIN, choice));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.REFRESH, PatronId.PELIN, choice));
 
         return new Success();
     }
@@ -184,7 +184,7 @@ public class ComplexEffectExecutor
         var choice = choices.First();
         _enemyPlayer.KnockOut(choice);
 
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.KNOCKOUT, PatronId.PSIJIC, choice));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.KNOCKOUT, PatronId.PSIJIC, choice));
 
         return new Success();
     }
@@ -198,8 +198,8 @@ public class ComplexEffectExecutor
 
         var writOfCoin = GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN);
         var choice = choices.First();
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.DESTROY_CARD, PatronId.TREASURY, choice));
-        _parent.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ADD_WRIT_OF_COIN, PatronId.TREASURY, 1, writOfCoin));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.DESTROY_CARD, PatronId.TREASURY, choice));
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.ADD_WRIT_OF_COIN, PatronId.TREASURY, 1, writOfCoin));
         if (_currentPlayer.Played.Contains(choice))
         {
             _currentPlayer.Played.Remove(choice);

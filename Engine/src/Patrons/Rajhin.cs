@@ -37,8 +37,8 @@ namespace TalesOfTribute
             return (new Success(),
                     new List<CompletedAction>
                     {
-                        new(CompletedActionType.GAIN_COIN, PatronID, -3),
-                        new(CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT, PatronID, 1, bewilderment),
+                        new(activator.ID, CompletedActionType.GAIN_COIN, PatronID, -3),
+                        new(activator.ID, CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT, PatronID, 1, bewilderment),
                     });
         }
 
