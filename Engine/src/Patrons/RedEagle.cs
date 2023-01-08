@@ -23,7 +23,7 @@ namespace TalesOfTribute
             }
 
             activator.PowerAmount -= 2;
-            activator.Draw();
+            activator.Draw(1);
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;

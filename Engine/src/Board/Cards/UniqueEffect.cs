@@ -106,8 +106,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 ), new List<CompletedAction>());
             }
             case EffectType.DRAW:
-                for (var i = 0; i < Amount; i++)
-                    player.Draw();
+                player.Draw(Amount);
                 return (new Success(), new List<CompletedAction>
                 {
                     new(CompletedActionType.DRAW,

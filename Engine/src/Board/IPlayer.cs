@@ -18,7 +18,7 @@ public interface IPlayer
     void PlayCard(UniqueCard cardId);
     int HealAgent(UniqueCard card, int amount);
     void Refresh(UniqueCard cardId);
-    void Draw();
+    void Draw(int amount);
     void EndTurn();
     void Toss(UniqueCard cardId);
     void Discard(UniqueCard card);

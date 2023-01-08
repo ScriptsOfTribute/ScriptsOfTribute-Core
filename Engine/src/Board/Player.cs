@@ -85,35 +85,44 @@ namespace TalesOfTribute
             CooldownPile.Remove(card);
         }
 
-        public void Draw()
+        public void Draw(int amount)
         {
-            if (DrawPile.Count == 0)
+            if (DrawPile.Count < amount)
             {
-                RefreshDrawPile();
+                ShuffleCooldownPileIntoDrawPile();
             }
 
-            if (DrawPile.Count == 0)
+            for (var i = 0; i < amount; i++)
             {
-                return;
-            }
+                if (DrawPile.Count == 0)
+                {
+                    return;
+                }
 
-            Hand.Add(DrawPile.First());
-            DrawPile.RemoveAt(0);
+                Hand.Add(DrawPile.First());
+                DrawPile.RemoveAt(0);
+            }
         }
 
-        private void RefreshDrawPile()
+        // TODO: Check in game how that exactly should work (shuffle in on top? shuffle in to bottom?)
+        // Merge them together and shuffle everything?
+        private void ShuffleCooldownPileIntoDrawPile()
         {
-            var mixedCards = CooldownPile.OrderBy(_ => _rnd.Next()).ToList();
-            DrawPile.AddRange(mixedCards);
+            var newDrawPile = CooldownPile.OrderBy(_ => _rnd.Next()).ToList();
+            newDrawPile.AddRange(DrawPile);
+            DrawPile = newDrawPile;
             CooldownPile.Clear();
         }
 
         public void EndTurn()
         {
-            CooldownPile.AddRange(this.Hand);
-            CooldownPile.AddRange(this.Played);
-            Played = new List<UniqueCard>();
-            Hand = new List<UniqueCard>();
+            CooldownPile.AddRange(Hand);
+            CooldownPile.AddRange(Played);
+            Played.Clear();
+            Hand.Clear();
+
+            Draw(5);
+
             PatronCalls = 1;
             Agents.ForEach(agent => agent.Refresh());
         }

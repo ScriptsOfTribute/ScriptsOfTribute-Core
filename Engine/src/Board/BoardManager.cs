@@ -83,14 +83,6 @@ namespace TalesOfTribute
             }
         }
 
-        public void DrawCards()
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                CurrentPlayer.Draw();
-            }
-        }
-
         public void EndTurn()
         {
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.END_TURN));
@@ -112,8 +104,6 @@ namespace TalesOfTribute
                 patron.PatronPower(CurrentPlayer, EnemyPlayer);
             }
 
-            DrawCards();
-            
             CardActionManager.Reset(_playerContext);
         }
 
@@ -133,8 +123,6 @@ namespace TalesOfTribute
 
             CurrentPlayer.InitDrawPile(starterDecks);
             EnemyPlayer.InitDrawPile(starterDecks);
-
-            DrawCards();
         }
         
         public SerializedBoard SerializeBoard(EndGameState? endGameState)
