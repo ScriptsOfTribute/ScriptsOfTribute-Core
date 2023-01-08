@@ -9,7 +9,7 @@ public class BoardManagerTests
     [Fact]
     void HealEffectShouldWorkCorrectlyWithDeadAgents()
     {
-        var br = new BoardManager(new[] { PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU });
+        var br = new BoardManager(new[] { PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU }, 123);
         var ritual = GlobalCardDatabase.Instance.GetCard(CardId.BRIARHEART_RITUAL);
         br.Tavern.AvailableCards.Add(ritual);
         var knightCommander = GlobalCardDatabase.Instance.GetCard(CardId.KNIGHT_COMMANDER);
@@ -32,7 +32,7 @@ public class BoardManagerTests
     [Fact]
     void AttackOnAgentWithoutDeath()
     {
-        var br = new BoardManager(new[] { PatronId.DUKE_OF_CROWS, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU });
+        var br = new BoardManager(new[] { PatronId.DUKE_OF_CROWS, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU }, 123);
         var agent = Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.BLACKFEATHER_KNIGHT)); // 3hp agent
         br.EnemyPlayer.Agents.Add(agent);
         Assert.Contains(agent, br.EnemyPlayer.Agents);

@@ -8,7 +8,9 @@ public class TalesOfTribute
     private AI[] _players = new AI[2];
 
     private TalesOfTributeGame? _game;
-    
+
+    public ulong Seed = (ulong)Environment.TickCount;
+
     public TalesOfTribute(AI player1, AI player2)
     {
         _players[0] = player1;
@@ -107,7 +109,7 @@ public class TalesOfTribute
             return (endGameState, null);
         }
 
-        _game = new TalesOfTributeGame(_players, new TalesOfTributeApi(patrons!));
+        _game = new TalesOfTributeGame(_players, new TalesOfTributeApi(patrons!, Seed));
 
         var r = _game!.Play().Result;
 

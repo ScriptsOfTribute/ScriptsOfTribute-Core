@@ -13,17 +13,18 @@ namespace TalesOfTribute
         public Player CurrentPlayer => _playerContext.CurrentPlayer;
         public Player EnemyPlayer => _playerContext.EnemyPlayer;
         public readonly CardActionManager CardActionManager;
-        private readonly SeededRandom _rnd = new();
+        private readonly SeededRandom _rng = new();
 
         private int PrestigeTreshold = 40;
 
-        public BoardManager(PatronId[] patrons)
+        public BoardManager(PatronId[] patrons, ulong seed)
         {
             this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
-            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons), _rnd);
-            _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rnd), new Player(PlayerEnum.PLAYER2, _rnd));
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons), _rng);
+            _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rng), new Player(PlayerEnum.PLAYER2, _rng));
             CardActionManager = new CardActionManager(_playerContext, Tavern);
+            _rng = new SeededRandom(seed);
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -110,7 +111,7 @@ namespace TalesOfTribute
         public void SetUpGame()
         {
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
-            Tavern.DrawCards(_rnd);
+            Tavern.DrawCards(_rng);
 
             List<UniqueCard> starterDecks = new List<UniqueCard>();
 
@@ -130,7 +131,7 @@ namespace TalesOfTribute
         
         public SerializedBoard SerializeBoard(EndGameState? endGameState)
         {
-            return new SerializedBoard(_rnd, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
+            return new SerializedBoard(_rng, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
                 CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions);
         }
 
@@ -202,13 +203,13 @@ namespace TalesOfTribute
             }
         }
 
-        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager, SeededRandom rnd)
+        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager, SeededRandom rng)
         {
             Patrons = patrons;
             Tavern = tavern;
             _playerContext = playerContext;
             CardActionManager = cardActionManager;
-            _rnd = rnd;
+            _rng = rng;
         }
 
         public static BoardManager FromSerializedBoard(SerializedBoard serializedBoard)

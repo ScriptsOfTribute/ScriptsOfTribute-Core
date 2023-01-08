@@ -26,7 +26,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// Initialize board with selected patrons. patrons argument should contain PatronId.TREASURY
     /// but it handles situation when user doesn't put it.
     /// </summary>
-    public TalesOfTributeApi(PatronId[] patrons)
+    public TalesOfTributeApi(PatronId[] patrons, ulong seed)
     {
         if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
         {
@@ -35,7 +35,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
             tempList.Add(PatronId.TREASURY);
             patrons = tempList.ToArray();
         }
-        _boardManager = new BoardManager(patrons);
+        _boardManager = new BoardManager(patrons, seed);
         _boardManager.SetUpGame();
     }
 
