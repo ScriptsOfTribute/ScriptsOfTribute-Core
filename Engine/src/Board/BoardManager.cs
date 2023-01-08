@@ -215,10 +215,10 @@ namespace TalesOfTribute
         {
             var patrons = Patron.FromSerializedBoard(serializedBoard);
             var tavern = Tavern.FromSerializedBoard(serializedBoard);
-            var rnd = serializedBoard._rnd.Detach();
-            var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rnd);
+            var rng = new SeededRandom(serializedBoard.Seed);
+            var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rng);
             var cardActionManager = CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
-            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rnd);
+            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng);
         }
     }
 }

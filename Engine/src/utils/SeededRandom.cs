@@ -1,60 +1,21 @@
-﻿using System.Runtime.Serialization.Formatters.Binary;
-
-namespace TalesOfTribute;
-
-public class MyRandom : Random
-{
-    private int _seed;
-    private int _invocationCount = 0;
-
-    public MyRandom(int seed) : base(seed)
-    {
-        _seed = seed;
-    }
-
-    public override int Next()
-    {
-        _invocationCount++;
-        return base.Next();
-    }
-
-    public MyRandom DeepClone()
-    {
-        var res = new MyRandom(_seed);
-        for (var i = 0; i < _invocationCount; i++)
-        {
-            res.Next();
-        }
-
-        return res;
-    }
-}
+﻿namespace TalesOfTribute;
 
 public class SeededRandom
 {
-    private readonly MyRandom _internalRandom;
-    public readonly int Seed;
+    public ulong Seed { get; private set; }
 
-    public SeededRandom(int seed)
+    public SeededRandom(ulong seed)
     {
         Seed = seed;
-        _internalRandom = new MyRandom(Seed);
     }
 
-    public SeededRandom() : this(Environment.TickCount)
+    public SeededRandom() : this((ulong)Environment.TickCount)
     {
     }
 
-    public int Next() => _internalRandom.Next();
-
-    private SeededRandom(MyRandom random, int seed)
+    public int Next()
     {
-        _internalRandom = random;
-        Seed = seed;
-    }
-
-    public SeededRandom Detach()
-    {
-        return new SeededRandom(_internalRandom.DeepClone(), Seed);
+        Seed = (0x5DEECE66DUL * Seed + 0xBUL) & ((1UL << 48) - 1);
+        return (int)(((Seed >> 16) * (int.MaxValue - 1)) >> 32);        
     }
 }

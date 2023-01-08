@@ -27,11 +27,10 @@ namespace TalesOfTribute
         public readonly List<UniqueBaseEffect> StartOfNextTurnEffects;
         public readonly List<CompletedAction> CompletedActions;
         public readonly EndGameState? GameEndState;
-        // TODO: Improve SeededRandom after discussion.
-        public readonly SeededRandom _rnd;
+        public readonly ulong Seed;
 
         public SerializedBoard(
-            SeededRandom rnd, EndGameState? endGameState, Player? currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
+            SeededRandom rng, EndGameState? endGameState, Player? currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
             BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
         )
         {
@@ -47,7 +46,7 @@ namespace TalesOfTribute
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
             CompletedActions = completedActions.ToList();
             GameEndState = endGameState;
-            _rnd = rnd.Detach();
+            Seed = rng.Seed;
         }
 
         public SerializedPlayer GetPlayer(PlayerEnum id)
