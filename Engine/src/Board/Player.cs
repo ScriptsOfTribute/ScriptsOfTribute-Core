@@ -185,6 +185,10 @@ namespace TalesOfTribute
             {
                 Hand.Remove(card);
             }
+            else if (Played.Contains(card))
+            {
+                Played.Remove(card);
+            }
             else if (Agents.Any(agent => agent.RepresentingCard.UniqueId == card.UniqueId))
             {
                 var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
