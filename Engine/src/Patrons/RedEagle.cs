@@ -23,6 +23,7 @@ namespace TalesOfTribute
             }
 
             activator.PowerAmount -= 2;
+            // TODO: Consider adding drawn cards here? It's probably a good idea, but Tossed cards are added like this.
             activator.Draw(1);
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)

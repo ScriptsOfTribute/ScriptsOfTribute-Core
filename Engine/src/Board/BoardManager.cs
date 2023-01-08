@@ -14,6 +14,7 @@ namespace TalesOfTribute
         public Player EnemyPlayer => _playerContext.EnemyPlayer;
         public readonly CardActionManager CardActionManager;
         private readonly SeededRandom _rng = new();
+        private readonly bool _simulationMode = false;
 
         private int PrestigeTreshold = 40;
 
@@ -46,6 +47,11 @@ namespace TalesOfTribute
 
         public void PlayCard(UniqueCard card)
         {
+            if (card.CommonId == CardId.UNKNOWN)
+            {
+                throw new Exception("Can't play unknown cards.");
+            }
+
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
             CardActionManager.PlayCard(card);
@@ -53,6 +59,11 @@ namespace TalesOfTribute
 
         public void BuyCard(UniqueCard card)
         {
+            if (card.CommonId == CardId.UNKNOWN)
+            {
+                throw new Exception("Can't buy unknown cards.");
+            }
+
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
             
@@ -111,7 +122,7 @@ namespace TalesOfTribute
         public void SetUpGame()
         {
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
-            Tavern.DrawCards(_rng);
+            Tavern.SetUp(_rng);
 
             List<UniqueCard> starterDecks = new List<UniqueCard>();
 
@@ -210,6 +221,7 @@ namespace TalesOfTribute
             _playerContext = playerContext;
             CardActionManager = cardActionManager;
             _rng = rng;
+            _simulationMode = true;
         }
 
         public static BoardManager FromSerializedBoard(SerializedBoard serializedBoard)

@@ -12,6 +12,10 @@ public class CardDatabase
     {
         var cardsEnumerable = cards as UniqueCard[] ?? cards.ToArray();
         _allCards = cardsEnumerable.ToList();
+        if (!_allCards.Select(c => c.CommonId).Contains(CardId.UNKNOWN))
+        {
+            _allCards.Add(new Card("Unknown", PatronId.TREASURY, CardId.UNKNOWN, 0, CardType.ACTION, -1, new ComplexEffect? []{ null, null, null, null }, 0, null, false));
+        }
     }
 
     public UniqueCard GetCard(CardId cardId)

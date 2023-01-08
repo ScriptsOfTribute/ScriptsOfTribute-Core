@@ -23,9 +23,10 @@ namespace TalesOfTribute
         public List<UniqueCard> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
         public List<UniqueCard> CooldownPile { get; set; }
         public uint PatronCalls { get; set; }
-        private readonly SeededRandom _rnd;
+        private readonly SeededRandom _rng;
+        private readonly bool _simulationMode = false;
 
-        public Player(PlayerEnum iD, SeededRandom rnd)
+        public Player(PlayerEnum iD, SeededRandom rng)
         {
             CoinsAmount = 0;
             PrestigeAmount = 0;
@@ -37,12 +38,16 @@ namespace TalesOfTribute
             CooldownPile = new List<UniqueCard>();
             ID = iD;
             PatronCalls = 1;
-            _rnd = rnd;
+            _rng = rng;
         }
 
         public void PlayCard(UniqueCard card)
         {
             AssertCardIn(card, Hand);
+            if (card.CommonId == CardId.UNKNOWN)
+            {
+                throw new Exception("You can't play unknown cards.");
+            }
             Hand.Remove(card);
             if (card.Type == CardType.AGENT)
             {
@@ -58,7 +63,7 @@ namespace TalesOfTribute
 
         public void InitDrawPile(List<UniqueCard> starterCards)
         {
-            DrawPile = starterCards.OrderBy(_ => _rnd.Next()).ToList();
+            DrawPile = starterCards.OrderBy(_ => _rng.Next()).ToList();
         }
 
         public int HealAgent(UniqueCard card, int amount)
@@ -99,24 +104,40 @@ namespace TalesOfTribute
                     return;
                 }
 
-                Hand.Add(DrawPile.First());
+                if (_simulationMode && DrawPile.First().CommonId != CardId.UNKNOWN)
+                {
+                    Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
+                }
+                else
+                {
+                    Hand.Add(DrawPile.First());
+                }
                 DrawPile.RemoveAt(0);
             }
         }
 
-        public void PrepareToss(int amount)
+        public List<UniqueCard> PrepareToss(int amount)
         {
             if (DrawPile.Count < amount)
             {
                 ShuffleCooldownPileIntoDrawPile();
             }
+
+            if (!_simulationMode)
+            {
+                return DrawPile.Take(amount).ToList();
+            }
+
+            return DrawPile
+                .Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN))
+                .Take(amount).ToList();
         }
 
         // TODO: Check in game how that exactly should work (shuffle in on top? shuffle in to bottom?)
         // Merge them together and shuffle everything?
         private void ShuffleCooldownPileIntoDrawPile()
         {
-            var newDrawPile = CooldownPile.OrderBy(_ => _rnd.Next()).ToList();
+            var newDrawPile = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
             newDrawPile.AddRange(DrawPile);
             DrawPile = newDrawPile;
             CooldownPile.Clear();
@@ -238,19 +259,7 @@ namespace TalesOfTribute
             }
         }
 
-        public UniqueCard GetCardByUniqueId(int uniqueId)
-        {
-            try
-            {
-                return GetAllPlayersCards().First(card => (int)card.UniqueId == uniqueId);
-            }
-            catch (InvalidOperationException e)
-            {
-                throw new Exception("Player doesn't have card specified by unique id!");
-            }
-        }
-
-        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rnd)
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rng)
         {
             ID = id;
             CoinsAmount = coinsAmount;
@@ -262,7 +271,8 @@ namespace TalesOfTribute
             Agents = agents;
             CooldownPile = cooldownPile;
             PatronCalls = patronCalls;
-            _rnd = rnd;
+            _rng = rng;
+            _simulationMode = true;
         }
 
         public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd)

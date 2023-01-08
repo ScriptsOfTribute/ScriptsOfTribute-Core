@@ -143,13 +143,13 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             }
             case EffectType.TOSS:
             {
-                player.PrepareToss(Amount);
+                var tossableCards = player.PrepareToss(Amount);
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
                 return (new Choice(
-                    player.DrawPile,
+                    tossableCards,
                     ChoiceFollowUp.TOSS_CARDS,
                     context,
-                    Amount > player.DrawPile.Count ? player.DrawPile.Count : Amount
+                    tossableCards.Count
                 ), new List<CompletedAction>());
             }
             case EffectType.KNOCKOUT:

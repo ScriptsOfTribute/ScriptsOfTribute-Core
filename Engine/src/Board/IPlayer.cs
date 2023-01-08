@@ -19,7 +19,7 @@ public interface IPlayer
     int HealAgent(UniqueCard card, int amount);
     void Refresh(UniqueCard cardId);
     void Draw(int amount);
-    void PrepareToss(int amount);
+    List<UniqueCard> PrepareToss(int amount);
     void EndTurn();
     void Toss(UniqueCard cardId);
     void Discard(UniqueCard card);
@@ -30,5 +30,4 @@ public interface IPlayer
     List<UniqueCard> GetAllPlayersCards();
     void ActivateAgent(UniqueCard card);
     int AttackAgent(UniqueCard agent, IPlayer enemy, ITavern tavern);
-    UniqueCard GetCardByUniqueId(int uniqueId);
 }

@@ -115,4 +115,5 @@ public enum CardId
     RAGPICKER = 110,
     TITHE = 111,
     WRIT_OF_COIN = 112,
+    UNKNOWN = 500,
 }
