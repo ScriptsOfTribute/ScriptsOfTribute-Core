@@ -123,6 +123,9 @@ namespace TalesOfTribute
 
             CurrentPlayer.InitDrawPile(starterDecks);
             EnemyPlayer.InitDrawPile(starterDecks);
+
+            CurrentPlayer.Draw(5);
+            EnemyPlayer.Draw(5);
         }
         
         public SerializedBoard SerializeBoard(EndGameState? endGameState)
