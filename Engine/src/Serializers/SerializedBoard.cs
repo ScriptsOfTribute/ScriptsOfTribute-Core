@@ -30,7 +30,7 @@ namespace TalesOfTribute
         public readonly ulong Seed;
 
         public SerializedBoard(
-            SeededRandom rng, EndGameState? endGameState, Player? currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
+            SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
             BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
         )
         {
