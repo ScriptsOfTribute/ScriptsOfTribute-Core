@@ -17,6 +17,7 @@ public class ChoiceContext
     public readonly PatronId? PatronSource;
     public readonly UniqueCard? CardSource;
     public readonly ChoiceType ChoiceType;
+    // TODO: Fix this as it doesn't work correctly (now always highest combo is here even if this ChoiceContext is for activation effect)
     public readonly int Combo = 1;
 
     public UniqueEffect? Effect
