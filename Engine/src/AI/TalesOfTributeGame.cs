@@ -172,7 +172,7 @@ public class TalesOfTributeGame
     {
         if (!_api.IsMoveLegal(move))
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Illegal move - {move}.\nShould be one of:\n{string.Join('\n', _api.GetListOfPossibleMoves().Select(m => m.ToString()))}\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Illegal move - {move}.\nShould be one of:\n{string.Join('\n', _api.GetListOfPossibleMoves().Select(m => m.ToString()))}");
         }
 
         // This should probably be handled above (this move is not in legal moves), but you can never be to careful...
@@ -298,6 +298,8 @@ public class TalesOfTributeGame
 
     private (EndGameState, SerializedBoard) EndGame(EndGameState state)
     {
+        state.AdditionalContext +=
+            $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
         CurrentPlayer.GameEnd(state);
         EnemyPlayer.GameEnd(state);
         EndGameState = state;
