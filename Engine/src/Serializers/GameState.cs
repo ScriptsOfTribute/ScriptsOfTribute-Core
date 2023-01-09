@@ -47,8 +47,8 @@ public class GameState
     public GameState(SerializedBoard board, SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, bool endOfTurnHappened = false)
     {
         _board = board;
-        CurrentPlayer = new FairSerializedPlayer(board.CurrentPlayer);
-        EnemyPlayer = new FairSerializedEnemyPlayer(board.EnemyPlayer);
+        CurrentPlayer = new FairSerializedPlayer(currentPlayer);
+        EnemyPlayer = new FairSerializedEnemyPlayer(enemyPlayer);
         _endOfTurnHappened = endOfTurnHappened;
     }
 
