@@ -36,7 +36,7 @@ public class UnknownCardTests
     }
     
     [Fact]
-    void SimulatingDrawFromTavernShouldInsertUnknownCardThatIsUnavailableToPlayButCanBeDiscarded()
+    void SimulatingDrawShouldInsertUnknownCardThatIsUnavailableToPlayButCanBeDiscarded()
     {
         var drawpile = new List<UniqueCard>
         {
