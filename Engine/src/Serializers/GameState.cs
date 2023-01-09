@@ -4,7 +4,7 @@ using TalesOfTribute.Board.Cards;
 
 namespace TalesOfTribute.Serializers;
 
-public class FairSerializedBoard
+public class GameState
 {
     public PatronStates PatronStates => _board.PatronStates;
     public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
@@ -40,11 +40,11 @@ public class FairSerializedBoard
     private readonly SerializedBoard _board;
     private readonly bool _endOfTurnHappened = false;
 
-    public FairSerializedBoard(SerializedBoard board) : this(board, board.CurrentPlayer, board.EnemyPlayer)
+    public GameState(SerializedBoard board) : this(board, board.CurrentPlayer, board.EnemyPlayer)
     {
     }
 
-    public FairSerializedBoard(SerializedBoard board, SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, bool endOfTurnHappened = false)
+    public GameState(SerializedBoard board, SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, bool endOfTurnHappened = false)
     {
         _board = board;
         CurrentPlayer = new FairSerializedPlayer(board.CurrentPlayer);
@@ -52,7 +52,7 @@ public class FairSerializedBoard
         _endOfTurnHappened = endOfTurnHappened;
     }
 
-    public (FairSerializedBoard, List<Move>) ApplyState(Move move)
+    public (GameState, List<Move>) ApplyState(Move move)
     {
         if (_endOfTurnHappened)
         {
@@ -64,10 +64,10 @@ public class FairSerializedBoard
 
         if (move.Command == CommandEnum.END_TURN)
         {
-            return (new FairSerializedBoard(newBoard, _board.EnemyPlayer, _board.CurrentPlayer, true),
+            return (new GameState(newBoard, _board.EnemyPlayer, _board.CurrentPlayer, true),
                 new List<Move>());
         }
 
-        return (new FairSerializedBoard(newBoard), newMoves);
+        return (new GameState(newBoard), newMoves);
     }
 }
