@@ -1,6 +1,7 @@
 ﻿using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
+using TalesOfTribute.Serializers;
 
 namespace SimpleBots;
 
@@ -13,7 +14,7 @@ public class MoveTimeoutBot : AI
         return availablePatrons[0];
     }
 
-    public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState serializedBoard, List<Move> possibleMoves)
     {
         Task.Delay(TimeSpan.FromSeconds(4)).Wait();
         return possibleMoves[0];

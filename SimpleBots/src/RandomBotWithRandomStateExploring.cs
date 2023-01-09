@@ -2,6 +2,7 @@
 using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
+using TalesOfTribute.Serializers;
 
 namespace SimpleBotsTests;
 
@@ -10,7 +11,7 @@ public class RandomBotWithRandomStateExploring : AI
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom();
 
-    public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState serializedBoard, List<Move> possibleMoves)
     {
         for (int i = 0; i < 3; i++)
         {
