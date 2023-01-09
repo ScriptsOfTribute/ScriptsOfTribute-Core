@@ -24,7 +24,7 @@ public interface IPlayer
     void EndTurn();
     void Toss(UniqueCard cardId);
     void Discard(UniqueCard card);
-    void KnockOut(UniqueCard cardId);
+    void KnockOut(UniqueCard cardId, ITavern tavern);
     void AddToCooldownPile(UniqueCard card);
     void Destroy(UniqueCard cardId);
     string ToString();

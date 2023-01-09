@@ -182,7 +182,7 @@ public class ComplexEffectExecutor
         }
 
         var choice = choices.First();
-        _enemyPlayer.KnockOut(choice);
+        _enemyPlayer.KnockOut(choice, _tavern);
 
         _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.KNOCKOUT, PatronId.PSIJIC, choice));
 

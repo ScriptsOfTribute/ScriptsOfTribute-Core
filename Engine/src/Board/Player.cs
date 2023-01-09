@@ -185,7 +185,7 @@ namespace TalesOfTribute
             }
         }
 
-        public void KnockOut(UniqueCard card)
+        public void KnockOut(UniqueCard card, ITavern tavern)
         {
             AssertCardIn(card, AgentCards);
             var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
@@ -193,7 +193,15 @@ namespace TalesOfTribute
             {
                 throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
             }
-            CooldownPile.Add(card);
+
+            if (card.Type == CardType.AGENT)
+            {
+                CooldownPile.Add(card);
+            }
+            else if (card.Type == CardType.CONTRACT_AGENT)
+            {
+                tavern.Cards.Add(card);
+            }
         }
 
         public void AddToCooldownPile(UniqueCard card)
