@@ -9,6 +9,7 @@ public interface IPlayer
     int PrestigeAmount { get; set; }
     int PowerAmount { get; set; }
     public uint PatronCalls { get; set; }
+    public int KnownUpcomingDrawsAmount { get; }
     List<UniqueCard> Hand { get; set; }
     List<UniqueCard> DrawPile { get; set; }
     List<UniqueCard> Played { get; set; }

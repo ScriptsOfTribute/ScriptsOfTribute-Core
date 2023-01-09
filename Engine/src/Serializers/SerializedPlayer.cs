@@ -9,6 +9,7 @@ public class SerializedPlayer
     public readonly List<UniqueCard> DrawPile;
     public readonly List<UniqueCard> CooldownPile;
     public readonly List<UniqueCard> Played;
+    public readonly List<UniqueCard> KnownUpcomingDraws;
     public readonly List<SerializedAgent> Agents;
     public readonly int Power;
     public readonly uint PatronCalls;
@@ -27,6 +28,7 @@ public class SerializedPlayer
         PatronCalls = patronCalls;
         Coins = coins;
         Prestige = prestige;
+        KnownUpcomingDraws = new List<UniqueCard>();
     }
 
     public SerializedPlayer(IPlayer player)
@@ -41,5 +43,6 @@ public class SerializedPlayer
         PatronCalls = player.PatronCalls;
         Coins = player.CoinsAmount;
         Prestige = player.PrestigeAmount;
+        KnownUpcomingDraws = DrawPile.Take(player.KnownUpcomingDrawsAmount).ToList();
     }
 }
