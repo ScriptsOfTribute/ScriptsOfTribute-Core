@@ -121,7 +121,7 @@ public class ComplexEffectExecutor
         var normalAgents = choices.FindAll(card => card.Type == CardType.AGENT);
         contractAgents.ForEach(_enemyPlayer.Destroy);
         _tavern.Cards.AddRange(contractAgents);
-        normalAgents.ForEach(_enemyPlayer.KnockOut);
+        normalAgents.ForEach(a => _enemyPlayer.KnockOut(a, _tavern));
         contractAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
         normalAgents.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.KNOCKOUT, choice.Context!.CardSource!, c)));
         return new Success();
