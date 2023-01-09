@@ -22,6 +22,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         _boardManager = boardManager;
     }
 
+    public TalesOfTributeApi(PatronId[] patrons) : this(patrons, (ulong)Environment.TickCount)
+    {
+    }
+
     /// <summary>
     /// Initialize board with selected patrons. patrons argument should contain PatronId.TREASURY
     /// but it handles situation when user doesn't put it.
