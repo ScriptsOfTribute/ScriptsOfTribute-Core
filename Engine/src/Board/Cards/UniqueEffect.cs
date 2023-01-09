@@ -133,12 +133,14 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             }
             case EffectType.RETURN_TOP:
             {
+                var amount = player.CooldownPile.Count < Amount ? player.CooldownPile.Count : Amount;
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
                 return (new Choice(
                     player.CooldownPile,
                     ChoiceFollowUp.REFRESH_CARDS,
                     context,
-                    Amount
+                    amount,
+                    amount
                 ), new List<CompletedAction>());
             }
             case EffectType.TOSS:
