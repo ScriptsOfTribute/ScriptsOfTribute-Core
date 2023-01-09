@@ -15,6 +15,19 @@ public class SerializedPlayer
     public readonly int Coins;
     public readonly int Prestige;
 
+    public SerializedPlayer(PlayerEnum playerId, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> cooldownPile, List<UniqueCard> played, List<SerializedAgent> agents, int power, uint patronCalls, int coins, int prestige)
+    {
+        PlayerID = playerId;
+        Hand = hand;
+        DrawPile = drawPile;
+        CooldownPile = cooldownPile;
+        Played = played;
+        Agents = agents;
+        Power = power;
+        PatronCalls = patronCalls;
+        Coins = coins;
+        Prestige = prestige;
+    }
 
     public SerializedPlayer(IPlayer player)
     {

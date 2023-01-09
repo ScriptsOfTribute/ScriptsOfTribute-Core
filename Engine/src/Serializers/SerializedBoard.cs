@@ -29,10 +29,23 @@ namespace TalesOfTribute
         public readonly EndGameState? GameEndState;
         public readonly ulong Seed;
 
+        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong seed)
+        {
+            CurrentPlayer = currentPlayer;
+            EnemyPlayer = enemyPlayer;
+            PatronStates = patronStates;
+            TavernAvailableCards = tavernAvailableCards.ToList();
+            TavernCards = tavernCards.ToList();
+            Seed = seed;
+            ComboStates = new ComboStates(new Dictionary<PatronId, ComboState>());
+            UpcomingEffects = new List<UniqueBaseEffect>();
+            StartOfNextTurnEffects = new List<UniqueBaseEffect>();
+            CompletedActions = new List<CompletedAction>();
+        }
+
         public SerializedBoard(
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
-        )
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions)
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
