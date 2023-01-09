@@ -2,11 +2,19 @@
 
 public class SeededRandom
 {
-    public ulong Seed { get; private set; }
+    public ulong InitialSeed { get; private set; }
+    public ulong CurrentSeed { get; private set; }
 
-    public SeededRandom(ulong seed)
+    public SeededRandom(ulong initialSeed)
     {
-        Seed = seed;
+        InitialSeed = initialSeed;
+        CurrentSeed = initialSeed;
+    }
+
+    public SeededRandom(ulong initialSeed, ulong currentSeed)
+    {
+        InitialSeed = initialSeed;
+        CurrentSeed = currentSeed;
     }
 
     public SeededRandom() : this((ulong)Environment.TickCount)
@@ -15,7 +23,7 @@ public class SeededRandom
 
     public int Next()
     {
-        Seed = (0x5DEECE66DUL * Seed + 0xBUL) & ((1UL << 48) - 1);
-        return (int)(((Seed >> 16) * (int.MaxValue - 1)) >> 32);        
+        CurrentSeed = (0x5DEECE66DUL * CurrentSeed + 0xBUL) & ((1UL << 48) - 1);
+        return (int)(((CurrentSeed >> 16) * (int.MaxValue - 1)) >> 32);        
     }
 }

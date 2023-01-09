@@ -11,7 +11,8 @@ public class GameState
     public List<UniqueCard> TavernCards => _board.TavernCards;
     public BoardState BoardState => _board.BoardState;
     public ComboStates ComboStates => _board.ComboStates;
-    public ulong Seed => _board.Seed;
+    public ulong CurrentSeed => _board.CurrentSeed;
+    public ulong InitialSeed => _board.InitialSeed;
     public List<UniqueBaseEffect> UpcomingEffects => _board.UpcomingEffects;
     public List<UniqueBaseEffect> StartOfNextTurnEffects => _board.StartOfNextTurnEffects;
     public EndGameState? GameEndState => _board.GameEndState;

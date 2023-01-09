@@ -228,7 +228,7 @@ namespace TalesOfTribute
         {
             var patrons = Patron.FromSerializedBoard(serializedBoard);
             var tavern = Tavern.FromSerializedBoard(serializedBoard);
-            var rng = new SeededRandom(serializedBoard.Seed);
+            var rng = new SeededRandom(serializedBoard.InitialSeed, serializedBoard.CurrentSeed);
             var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rng);
             var cardActionManager = CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
             return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng);

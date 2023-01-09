@@ -27,20 +27,23 @@ namespace TalesOfTribute
         public readonly List<UniqueBaseEffect> StartOfNextTurnEffects;
         public readonly List<CompletedAction> CompletedActions;
         public readonly EndGameState? GameEndState;
-        public readonly ulong Seed;
+        public readonly ulong InitialSeed;
+        public readonly ulong CurrentSeed;
 
-        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong seed)
+        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed)
         {
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
             PatronStates = patronStates;
             TavernAvailableCards = tavernAvailableCards.ToList();
             TavernCards = tavernCards.ToList();
-            Seed = seed;
+            CurrentSeed = currentSeed;
             ComboStates = new ComboStates(new Dictionary<PatronId, ComboState>());
             UpcomingEffects = new List<UniqueBaseEffect>();
             StartOfNextTurnEffects = new List<UniqueBaseEffect>();
             CompletedActions = new List<CompletedAction>();
+            InitialSeed = currentSeed;
+            CurrentSeed = currentSeed;
         }
 
         public SerializedBoard(
@@ -59,7 +62,8 @@ namespace TalesOfTribute
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
             CompletedActions = completedActions.ToList();
             GameEndState = endGameState;
-            Seed = rng.Seed;
+            CurrentSeed = rng.CurrentSeed;
+            InitialSeed = rng.InitialSeed;
         }
 
         public SerializedPlayer GetPlayer(PlayerEnum id)
