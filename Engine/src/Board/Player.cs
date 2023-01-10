@@ -300,7 +300,7 @@ namespace TalesOfTribute
             }
         }
 
-        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rng, int knownUpcomingDrawsAmount)
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rng, int knownUpcomingDrawsAmount, bool cheats)
         {
             ID = id;
             CoinsAmount = coinsAmount;
@@ -313,16 +313,16 @@ namespace TalesOfTribute
             CooldownPile = cooldownPile;
             PatronCalls = patronCalls;
             _rng = rng;
-            _simulationMode = true;
+            _simulationMode = !cheats;
             KnownUpcomingDrawsAmount = knownUpcomingDrawsAmount;
         }
 
-        public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd)
+        public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd, bool cheats)
         {
             return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, player.Hand.ToList(),
                 player.DrawPile.ToList(), player.Played.ToList(),
                 player.Agents.Select(Agent.FromSerializedAgent).ToList(), player.CooldownPile.ToList(),
-                player.PatronCalls, rnd, player.KnownUpcomingDraws.Count);
+                player.PatronCalls, rnd, player.KnownUpcomingDraws.Count, cheats);
         }
     }
 }

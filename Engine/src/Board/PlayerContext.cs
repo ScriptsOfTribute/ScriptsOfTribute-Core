@@ -32,8 +32,8 @@ public class PlayerContext : IReadOnlyPlayerContext
 
     public static PlayerContext FromSerializedBoard(SerializedBoard serializedBoard, SeededRandom rnd)
     {
-        var p1 = Player.FromSerializedPlayer(serializedBoard.CurrentPlayer, rnd);
-        var p2 = Player.FromSerializedPlayer(serializedBoard.EnemyPlayer, rnd);
+        var p1 = Player.FromSerializedPlayer(serializedBoard.CurrentPlayer, rnd, serializedBoard.Cheats);
+        var p2 = Player.FromSerializedPlayer(serializedBoard.EnemyPlayer, rnd, serializedBoard.Cheats);
         if (p1.ID == PlayerEnum.PLAYER1)
         {
             return new PlayerContext(p1, p2)

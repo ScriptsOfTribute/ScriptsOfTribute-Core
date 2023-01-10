@@ -29,8 +29,9 @@ namespace TalesOfTribute
         public readonly EndGameState? GameEndState;
         public readonly ulong InitialSeed;
         public readonly ulong CurrentSeed;
+        public readonly bool Cheats = false;
 
-        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed)
+        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
         {
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
@@ -44,11 +45,12 @@ namespace TalesOfTribute
             CompletedActions = new List<CompletedAction>();
             InitialSeed = currentSeed;
             CurrentSeed = currentSeed;
+            Cheats = cheats;
         }
 
         public SerializedBoard(
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions)
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
@@ -64,6 +66,7 @@ namespace TalesOfTribute
             GameEndState = endGameState;
             CurrentSeed = rng.CurrentSeed;
             InitialSeed = rng.InitialSeed;
+            Cheats = cheats;
         }
 
         public SerializedPlayer GetPlayer(PlayerEnum id)

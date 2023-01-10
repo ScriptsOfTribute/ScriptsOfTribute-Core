@@ -15,6 +15,7 @@ namespace TalesOfTribute
         public readonly CardActionManager CardActionManager;
         private readonly SeededRandom _rng = new();
         private readonly bool _simulationMode = false;
+        private readonly bool _cheats = false;
 
         private int PrestigeTreshold = 40;
 
@@ -143,7 +144,7 @@ namespace TalesOfTribute
         public SerializedBoard SerializeBoard(EndGameState? endGameState)
         {
             return new SerializedBoard(_rng, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
-                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions);
+                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions, _cheats);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
@@ -214,14 +215,15 @@ namespace TalesOfTribute
             }
         }
 
-        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager, SeededRandom rng)
+        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager, SeededRandom rng, bool cheats)
         {
             Patrons = patrons;
             Tavern = tavern;
             _playerContext = playerContext;
             CardActionManager = cardActionManager;
             _rng = rng;
-            _simulationMode = true;
+            _simulationMode = !cheats;
+            _cheats = cheats;
         }
 
         public static BoardManager FromSerializedBoard(SerializedBoard serializedBoard)
@@ -231,7 +233,7 @@ namespace TalesOfTribute
             var rng = new SeededRandom(serializedBoard.InitialSeed, serializedBoard.CurrentSeed);
             var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rng);
             var cardActionManager = CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
-            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng);
+            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng, serializedBoard.Cheats);
         }
     }
 }

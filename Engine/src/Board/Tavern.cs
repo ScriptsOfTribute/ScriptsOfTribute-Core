@@ -60,16 +60,16 @@ namespace TalesOfTribute
             AvailableCards.Insert(idx, newCard);
         }
 
-        private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards)
+        private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards, bool cheats)
         {
             Cards = cards;
             AvailableCards = availableCards;
-            _simulationState = true;
+            _simulationState = !cheats;
         }
 
         public static Tavern FromSerializedBoard(SerializedBoard serializedBoard)
         {
-            return new Tavern(serializedBoard.TavernCards.ToList(), serializedBoard.TavernAvailableCards.ToList());
+            return new Tavern(serializedBoard.TavernCards.ToList(), serializedBoard.TavernAvailableCards.ToList(), serializedBoard.Cheats);
         }
     }
 }
