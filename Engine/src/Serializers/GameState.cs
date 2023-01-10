@@ -28,7 +28,7 @@ public class GameState
     // Completed actions are problematic, because they show what enemy player did on his turn, so may reveal
     // what cards he has.
     // TODO: Figure out what to do and probably hide some.
-    public readonly List<CompletedAction> CompletedActions = new();
+    public List<CompletedAction> CompletedActions => _board.CompletedActions;
 
     // Bot should know what cards are left in tavern, but not the exact order.
     private List<UniqueCard>? _tavernCards;
