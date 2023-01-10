@@ -99,6 +99,11 @@ namespace TalesOfTribute
                 ShuffleCooldownPileIntoDrawPile();
             }
 
+            if (_simulationMode)
+            {
+                ReplaceDrawPileWithUnknownCards();
+            }
+
             for (var i = 0; i < amount; i++)
             {
                 if (DrawPile.Count == 0)
@@ -106,14 +111,7 @@ namespace TalesOfTribute
                     return;
                 }
 
-                if (_simulationMode && DrawPile.First().CommonId != CardId.UNKNOWN && KnownUpcomingDrawsAmount == 0)
-                {
-                    Hand.Add(GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
-                }
-                else
-                {
-                    Hand.Add(DrawPile.First());
-                }
+                Hand.Add(DrawPile.First());
                 DrawPile.RemoveAt(0);
                 KnownUpcomingDrawsAmount -= 1;
                 if (KnownUpcomingDrawsAmount < 0)
@@ -132,16 +130,25 @@ namespace TalesOfTribute
 
             if (!_simulationMode)
             {
-                return DrawPile.Take(amount).ToList();
+                var result = DrawPile.Take(amount).ToList();
+                KnownUpcomingDrawsAmount = KnownUpcomingDrawsAmount > result.Count ? KnownUpcomingDrawsAmount : result.Count;
+                return result;
             }
 
-            var result = DrawPile
+            ReplaceDrawPileWithUnknownCards();
+
+            return DrawPile
                 .Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN))
                 .Take(amount).ToList();
+        }
 
-            KnownUpcomingDrawsAmount = KnownUpcomingDrawsAmount > result.Count ? KnownUpcomingDrawsAmount : result.Count;
-
-            return result;
+        // In simulation - replace not-revealed cards with Unknown.
+        private void ReplaceDrawPileWithUnknownCards()
+        {
+            var knownCards = DrawPile.Take(KnownUpcomingDrawsAmount).ToList();
+            var unknownCards = DrawPile.Skip(KnownUpcomingDrawsAmount).Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
+            knownCards.AddRange(unknownCards);
+            DrawPile = knownCards;
         }
 
         // TODO: Check in game how that exactly should work (shuffle in on top? shuffle in to bottom?)
