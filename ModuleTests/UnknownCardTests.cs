@@ -77,7 +77,7 @@ public class UnknownCardTests
     }
 
     [Fact]
-    void SimulatingDrawAfterRefreshAndTossShouldNotReturnUnknownCard()
+    void SimulatingDrawAfterRefreshShouldNotReturnUnknownCard()
     {
         // Refresh 2 (put 2 cards from Cooldown on top of Draw)
         var helShiraHerald = GlobalCardDatabase.Instance.GetCard(CardId.HEL_SHIRA_HERALD);
@@ -103,16 +103,12 @@ public class UnknownCardTests
         var harvestSeason1 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var harvestSeason2 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var harvestSeason3 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
-        var harvestSeason4 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
-        var harvestSeason5 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var hand = new List<UniqueCard>
         {
             helShiraHerald,
             harvestSeason1,
             harvestSeason2,
             harvestSeason3,
-            harvestSeason4,
-            harvestSeason5,
         };
 
         var currentPlayer = new SerializedPlayer(PlayerEnum.PLAYER1, hand, drawPile,
@@ -131,21 +127,13 @@ public class UnknownCardTests
 
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3));
         Assert.Contains(CardId.UNKNOWN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
-
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(scryingGlobe1));
-        (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { gold1 }));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason4));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason5));
-        Assert.Contains(CardId.GOLD, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
-        Assert.DoesNotContain(CardId.WRIT_OF_COIN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
-        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.UNKNOWN));
     }
-    
+
     [Fact]
-    void TossAfterRefreshShouldNotAllowToSeeTooManyCards()
+    void TossAfterRefreshShouldAllowToSeeRefreshedCardAndNotReplaceIt()
     {
-        // Refresh 2 (put 2 cards from Cooldown on top of Draw)
-        var helShiraHerald = GlobalCardDatabase.Instance.GetCard(CardId.HEL_SHIRA_HERALD);
+        // Refresh 1 (put 1 card from Cooldown on top of Draw)
+        var noShiraPoet = GlobalCardDatabase.Instance.GetCard(CardId.NO_SHIRA_POET);
 
         var drawPile = new List<UniqueCard>
         {
@@ -154,24 +142,20 @@ public class UnknownCardTests
 
 
         var gold1 = GlobalCardDatabase.Instance.GetCard(CardId.GOLD);
-        var gold2 = GlobalCardDatabase.Instance.GetCard(CardId.GOLD);
         var cooldownPile = new List<UniqueCard>
         {
             gold1,
-            gold2,
         };
 
         var harvestSeason1 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var harvestSeason2 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
-        var harvestSeason3 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         // Toss 2
         var scryingGlobe1 = GlobalCardDatabase.Instance.GetCard(CardId.SCRYING_GLOBE);
         var hand = new List<UniqueCard>
         {
-            helShiraHerald,
+            noShiraPoet,
             harvestSeason1,
             harvestSeason2,
-            harvestSeason3,
             scryingGlobe1,
         };
 
@@ -183,14 +167,13 @@ public class UnknownCardTests
         var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
-        var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(helShiraHerald));
-        (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { gold1, gold2 }));
+        var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(noShiraPoet));
+        (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { gold1 }));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(scryingGlobe1));
         (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard>()));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason1));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason2));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3));
-        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
+        Assert.Equal(1, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
         Assert.Contains(CardId.UNKNOWN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
         Assert.DoesNotContain(CardId.WRIT_OF_COIN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
     }
@@ -198,8 +181,8 @@ public class UnknownCardTests
     [Fact]
     void RefreshAfterTossShouldAllowToSeeAdditionalCards()
     {
-        // Refresh 2 (put 2 cards from Cooldown on top of Draw)
-        var helShiraHerald = GlobalCardDatabase.Instance.GetCard(CardId.HEL_SHIRA_HERALD);
+        // Refresh 1 (put 1 card from Cooldown on top of Draw)
+        var noShiraPoet = GlobalCardDatabase.Instance.GetCard(CardId.NO_SHIRA_POET);
 
         var drawPile = new List<UniqueCard>
         {
@@ -210,28 +193,24 @@ public class UnknownCardTests
 
 
         var gold1 = GlobalCardDatabase.Instance.GetCard(CardId.GOLD);
-        var gold2 = GlobalCardDatabase.Instance.GetCard(CardId.GOLD);
         var cooldownPile = new List<UniqueCard>
         {
             gold1,
-            gold2,
         };
 
         var harvestSeason1 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var harvestSeason2 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var harvestSeason3 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         var harvestSeason4 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
-        var harvestSeason5 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
         // Toss 2
         var scryingGlobe1 = GlobalCardDatabase.Instance.GetCard(CardId.SCRYING_GLOBE);
         var hand = new List<UniqueCard>
         {
-            helShiraHerald,
+            noShiraPoet,
             harvestSeason1,
             harvestSeason2,
             harvestSeason3,
             harvestSeason4,
-            harvestSeason5,
             scryingGlobe1,
         };
 
@@ -245,17 +224,14 @@ public class UnknownCardTests
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(scryingGlobe1));
         (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard>()));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(helShiraHerald));
-        (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { gold1, gold2 }));
+        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(noShiraPoet));
+        (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { gold1 }));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason1));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason2));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason4));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason5));
-        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
-        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.PROPHESY));
-        Assert.Contains(CardId.UNKNOWN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
-        Assert.DoesNotContain(CardId.WRIT_OF_COIN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
+        Assert.Equal(1, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
+        Assert.Equal(3, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.UNKNOWN));
     }
 
     // TODO: If we change Cycling behavior after testing, this test will likely break.
@@ -314,8 +290,83 @@ public class UnknownCardTests
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason2));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason4));
-        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.WRIT_OF_COIN));
+        Assert.Equal(3, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.UNKNOWN));
         Assert.Equal(1, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
-        Assert.Contains(CardId.UNKNOWN, newState.CurrentPlayer.Hand.Select(c => c.CommonId));
+    }
+
+    [Fact]
+    void DrawingInSimulationModeShouldTurnDrawPileIntoUnknownsThatCanBeProperlyInteractedWith()
+    {
+        var harvestSeason1 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var harvestSeason2 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var harvestSeason3 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var harvestSeason4 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var scryingGlobe1 = GlobalCardDatabase.Instance.GetCard(CardId.SCRYING_GLOBE);
+        var drawPile = new List<UniqueCard>
+        {
+            harvestSeason2,
+            harvestSeason3,
+            harvestSeason4,
+        };
+
+        var hand = new List<UniqueCard>
+        {
+            harvestSeason1,
+            scryingGlobe1,
+        };
+
+        var currentPlayer = new SerializedPlayer(PlayerEnum.PLAYER1, hand, drawPile,
+            new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
+        var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
+            new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
+
+        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+            new List<UniqueCard>(), new List<UniqueCard>(), 123);
+
+        var (newBoard, _) = board.ApplyState(Move.PlayCard(harvestSeason1));
+
+        Assert.Contains(CardId.UNKNOWN, newBoard.CurrentPlayer.Hand.Select(c => c.CommonId));
+        Assert.All(newBoard.CurrentPlayer.DrawPile, c => Assert.Equal(CardId.UNKNOWN, c.CommonId));
+
+        var someUnknown = newBoard.CurrentPlayer.DrawPile[0];
+
+        (newBoard, _) = newBoard.ApplyState(Move.PlayCard(scryingGlobe1));
+        (newBoard, _) = newBoard.ApplyState(Move.MakeChoice(new List<UniqueCard> { someUnknown }));
+        Assert.Equal(someUnknown, newBoard.CurrentPlayer.CooldownPile[0]);
+    }
+
+    [Fact]
+    void TossingInSimulationModeShouldTurnDrawPileIntoUnknowns()
+    {
+        var harvestSeason1 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var harvestSeason2 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var harvestSeason3 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var harvestSeason4 = GlobalCardDatabase.Instance.GetCard(CardId.HARVEST_SEASON);
+        var drawPile = new List<UniqueCard>
+        {
+            harvestSeason1,
+            harvestSeason2,
+            harvestSeason3,
+            harvestSeason4,
+        };
+
+        var scryingGlobe1 = GlobalCardDatabase.Instance.GetCard(CardId.SCRYING_GLOBE);
+        var hand = new List<UniqueCard>
+        {
+            scryingGlobe1,
+        };
+
+        var currentPlayer = new SerializedPlayer(PlayerEnum.PLAYER1, hand, drawPile,
+            new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
+        var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
+            new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
+
+        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+            new List<UniqueCard>(), new List<UniqueCard>(), 123);
+
+        var (newBoard, _) = board.ApplyState(Move.PlayCard(scryingGlobe1));
+        (newBoard, _) = newBoard.ApplyState(Move.MakeChoice(new List<UniqueCard>()));
+
+        Assert.All(newBoard.CurrentPlayer.DrawPile, c => Assert.Equal(CardId.UNKNOWN, c.CommonId));
     }
 }
