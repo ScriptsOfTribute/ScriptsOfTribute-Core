@@ -8,7 +8,7 @@ public class GameState
 {
     public PatronStates PatronStates => _board.PatronStates;
     public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
-    public List<UniqueCard> TavernCards => _board.TavernCards;
+    public List<UniqueCard> TavernAvailableCards => _board.TavernAvailableCards;
     public BoardState BoardState => _board.BoardState;
     public ComboStates ComboStates => _board.ComboStates;
     public ulong CurrentSeed => _board.CurrentSeed;
@@ -31,9 +31,9 @@ public class GameState
     public readonly List<CompletedAction> CompletedActions = new();
 
     // Bot should know what cards are left in tavern, but not the exact order.
-    private List<UniqueCard>? _tavernAvailableCards;
-    public List<UniqueCard> TavernAvailableCards =>
-        _tavernAvailableCards ??= _board.TavernAvailableCards.OrderBy(c => c.CommonId).ToList();
+    private List<UniqueCard>? _tavernCards;
+    public List<UniqueCard> TavernCards =>
+        _tavernCards ??= _board.TavernCards.OrderBy(c => c.CommonId).ToList();
     // What if there are choices for DESTROY for enemy player? We shouldn't reveal that, so return null
     // if turns changed.
     public SerializedChoice? PendingChoice => _endOfTurnHappened ? null : _board.PendingChoice;

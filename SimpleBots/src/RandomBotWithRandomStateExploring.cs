@@ -11,12 +11,12 @@ public class RandomBotWithRandomStateExploring : AI
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom();
 
-    public override Move Play(GameState serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
         for (int i = 0; i < 3; i++)
         {
-            var (newState1, newMoves1) = serializedBoard.ApplyState(possibleMoves.PickRandom());
-            var (newState2, newMoves2) = serializedBoard.ApplyState(possibleMoves.PickRandom());
+            var (newState1, newMoves1) = gameState.ApplyState(possibleMoves.PickRandom());
+            var (newState2, newMoves2) = gameState.ApplyState(possibleMoves.PickRandom());
             
             if (newMoves2.Count > 0)
                 (newState2, newMoves2) = newState2.ApplyState(newMoves2.PickRandom());

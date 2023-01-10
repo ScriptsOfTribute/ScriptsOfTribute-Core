@@ -62,9 +62,9 @@ namespace TalesOfTribute
             return new MakeChoiceMove<UniqueCard>(CommandEnum.MAKE_CHOICE, cards);
         }
 
-        public static Move MakeChoice(UniqueEffect card)
+        public static Move MakeChoice(UniqueEffect effect)
         {
-            return new MakeChoiceMove<UniqueEffect>(CommandEnum.MAKE_CHOICE, new List<UniqueEffect> { card });
+            return new MakeChoiceMove<UniqueEffect>(CommandEnum.MAKE_CHOICE, new List<UniqueEffect> { effect });
         }
 
         public static Move MakeChoice(List<UniqueEffect> effects)

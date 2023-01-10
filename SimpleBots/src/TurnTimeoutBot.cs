@@ -15,7 +15,7 @@ public class TurnTimeoutBot : AI
         return availablePatrons[0];
     }
 
-    public override Move Play(GameState serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
         Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
         return possibleMoves[0];

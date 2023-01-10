@@ -7,7 +7,6 @@ public class FairSerializedEnemyPlayer
     public PlayerEnum PlayerID => _player.PlayerID;
     public List<SerializedAgent> Agents => _player.Agents;
     public int Power => _player.Power;
-    public uint PatronCalls => _player.PatronCalls;
     public int Coins => _player.Coins;
     public int Prestige => _player.Prestige;
 

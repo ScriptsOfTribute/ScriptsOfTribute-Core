@@ -15,7 +15,7 @@ public class PatronSelectionTimeoutBot : AI
         return availablePatrons[0];
     }
 
-    public override Move Play(GameState serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
         throw new NotImplementedException();
     }
