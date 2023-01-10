@@ -10,7 +10,9 @@ public class FairSerializedEnemyPlayer
     public int Coins => _player.Coins;
     public int Prestige => _player.Prestige;
 
-    // TODO: Should we be able to see enemy's Played and Cooldown piles? What about draw?
+    private List<UniqueCard>? _handAndDraw;
+    public List<UniqueCard> HandAndDraw => _handAndDraw ??= _player.DrawPile.Concat(_player.Hand).OrderBy(c => c.CommonId).ToList();
+
     public List<UniqueCard> Played => _player.Played;
     public List<UniqueCard> CooldownPile => _player.CooldownPile;
 
