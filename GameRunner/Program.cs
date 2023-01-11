@@ -95,8 +95,8 @@ mainCommand.SetHandler((runs, bot1Type, bot2Type) =>
     var granularWatch = new Stopwatch();
     for (var i = 0; i < runs; i++)
     {
-        var bot1 = (AI?)Activator.CreateInstance(bot1Type!);
-        var bot2 = (AI?)Activator.CreateInstance(bot2Type!);
+        var bot1 = (AI?)Activator.CreateInstance(bot1Type);
+        var bot2 = (AI?)Activator.CreateInstance(bot2Type);
 
         granularWatch.Reset();
         granularWatch.Start();
