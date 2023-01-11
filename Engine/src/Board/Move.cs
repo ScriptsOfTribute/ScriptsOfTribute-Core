@@ -51,12 +51,22 @@ namespace TalesOfTribute
         {
             return new SimplePatronMove(CommandEnum.CALL_PATRON, patronId);
         }
-        
+
+        public static Move MakeChoice(UniqueCard card)
+        {
+            return new MakeChoiceMove<UniqueCard>(CommandEnum.MAKE_CHOICE, new List<UniqueCard> { card });
+        }
+
         public static Move MakeChoice(List<UniqueCard> cards)
         {
             return new MakeChoiceMove<UniqueCard>(CommandEnum.MAKE_CHOICE, cards);
         }
-        
+
+        public static Move MakeChoice(UniqueEffect effect)
+        {
+            return new MakeChoiceMove<UniqueEffect>(CommandEnum.MAKE_CHOICE, new List<UniqueEffect> { effect });
+        }
+
         public static Move MakeChoice(List<UniqueEffect> effects)
         {
             return new MakeChoiceMove<UniqueEffect>(CommandEnum.MAKE_CHOICE, effects);

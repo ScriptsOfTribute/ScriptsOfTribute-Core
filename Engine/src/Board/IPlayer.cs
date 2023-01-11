@@ -9,6 +9,7 @@ public interface IPlayer
     int PrestigeAmount { get; set; }
     int PowerAmount { get; set; }
     public uint PatronCalls { get; set; }
+    public int KnownUpcomingDrawsAmount { get; }
     List<UniqueCard> Hand { get; set; }
     List<UniqueCard> DrawPile { get; set; }
     List<UniqueCard> Played { get; set; }
@@ -18,16 +19,16 @@ public interface IPlayer
     void PlayCard(UniqueCard cardId);
     int HealAgent(UniqueCard card, int amount);
     void Refresh(UniqueCard cardId);
-    void Draw();
+    void Draw(int amount);
+    List<UniqueCard> PrepareToss(int amount);
     void EndTurn();
     void Toss(UniqueCard cardId);
     void Discard(UniqueCard card);
-    void KnockOut(UniqueCard cardId);
+    void KnockOut(UniqueCard cardId, ITavern tavern);
     void AddToCooldownPile(UniqueCard card);
     void Destroy(UniqueCard cardId);
     string ToString();
     List<UniqueCard> GetAllPlayersCards();
     void ActivateAgent(UniqueCard card);
     int AttackAgent(UniqueCard agent, IPlayer enemy, ITavern tavern);
-    UniqueCard GetCardByUniqueId(int uniqueId);
 }

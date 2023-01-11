@@ -22,11 +22,15 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         _boardManager = boardManager;
     }
 
+    public TalesOfTributeApi(PatronId[] patrons) : this(patrons, (ulong)Environment.TickCount)
+    {
+    }
+
     /// <summary>
     /// Initialize board with selected patrons. patrons argument should contain PatronId.TREASURY
     /// but it handles situation when user doesn't put it.
     /// </summary>
-    public TalesOfTributeApi(PatronId[] patrons)
+    public TalesOfTributeApi(PatronId[] patrons, ulong seed)
     {
         if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
         {
@@ -35,7 +39,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
             tempList.Add(PatronId.TREASURY);
             patrons = tempList.ToArray();
         }
-        _boardManager = new BoardManager(patrons);
+        _boardManager = new BoardManager(patrons, seed);
         _boardManager.SetUpGame();
     }
 
@@ -146,6 +150,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         var enemyPlayer = _boardManager.EnemyPlayer;
         var possibleMoves = currentPlayer
             .Hand
+            .Where(c => c.CommonId != CardId.UNKNOWN)
             .Select(Move.PlayCard)
             .Concat(from agent in currentPlayer.Agents
                 where !agent.Activated

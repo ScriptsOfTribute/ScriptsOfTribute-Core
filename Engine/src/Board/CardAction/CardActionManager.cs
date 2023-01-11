@@ -63,9 +63,9 @@ public class CardActionManager
         }
     }
 
-    public void ActivatePatron(Patron patron)
+    public void ActivatePatron(PlayerEnum player, Patron patron)
     {
-        CompletedActions.Add(new CompletedAction(CompletedActionType.ACTIVATE_PATRON, patron.PatronID));
+        CompletedActions.Add(new CompletedAction(player, CompletedActionType.ACTIVATE_PATRON, patron.PatronID));
         var (result, actions) = patron.PatronActivation(_playerContext.CurrentPlayer, _playerContext.EnemyPlayer);
         CompletedActions.AddRange(actions);
         if (result is Choice c)

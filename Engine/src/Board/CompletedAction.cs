@@ -33,10 +33,11 @@ public enum CompletedActionType
 
 public class CompletedAction
 {
-    public CompletedActionType Type;
-    public UniqueCard? SourceCard;
-    public UniqueCard? TargetCard;
-    public PatronId? SourcePatron;
+    public readonly PlayerEnum Player;
+    public readonly CompletedActionType Type;
+    public readonly UniqueCard? SourceCard;
+    public readonly UniqueCard? TargetCard;
+    public readonly PatronId? SourcePatron;
     public readonly int Combo = 1;
     public readonly int Amount = 1;
 
@@ -45,58 +46,66 @@ public class CompletedAction
         Type = type;
     }
 
-    public CompletedAction(CompletedActionType type, UniqueCard sourceCard, int amount)
+    public CompletedAction(PlayerEnum player, CompletedActionType type, UniqueCard sourceCard, int amount)
     {
+        Player = player;
         Type = type;
         SourceCard = sourceCard;
         Amount = amount;
     }
 
-    public CompletedAction(CompletedActionType type, UniqueCard? sourceCard, int amount, UniqueCard targetCard)
+    public CompletedAction(PlayerEnum player, CompletedActionType type, UniqueCard? sourceCard, int amount, UniqueCard targetCard)
     {
+        Player = player;
         Type = type;
         SourceCard = sourceCard;
         Amount = amount;
         TargetCard = targetCard;
     }
-    
-    public CompletedAction(CompletedActionType type, UniqueCard sourceCard, UniqueCard targetCard)
+
+    public CompletedAction(PlayerEnum player, CompletedActionType type, UniqueCard sourceCard, UniqueCard targetCard)
     {
+        Player = player;
         Type = type;
         SourceCard = sourceCard;
         TargetCard = targetCard;
     }
-    
-    public CompletedAction(CompletedActionType type, PatronId sourcePatron, UniqueCard targetCard)
+
+    public CompletedAction(PlayerEnum player, CompletedActionType type, PatronId sourcePatron, UniqueCard targetCard)
     {
+        Player = player;
         Type = type;
         SourcePatron = sourcePatron;
         TargetCard = targetCard;
     }
-    
-    public CompletedAction(CompletedActionType type, PatronId sourcePatron, int amount)
+
+    public CompletedAction(PlayerEnum player, CompletedActionType type, PatronId sourcePatron, int amount)
     {
-        Type = type;
-        SourcePatron = sourcePatron;
-        Amount = amount;
-    }
-    
-    public CompletedAction(CompletedActionType type, PatronId sourcePatron, int amount, UniqueCard targetCard)
-    {
+        Player = player;
         Type = type;
         SourcePatron = sourcePatron;
         Amount = amount;
+    }
+    
+    public CompletedAction(PlayerEnum player, CompletedActionType type, PatronId sourcePatron, int amount, UniqueCard targetCard)
+    {
+        Player = player;
+        Type = type;
+        SourcePatron = sourcePatron;
+        Amount = amount;
         TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, UniqueCard targetCard)
+    public CompletedAction(PlayerEnum player, CompletedActionType type, UniqueCard targetCard)
     {
+        Player = player;
         Type = type;
         TargetCard = targetCard;
     }
     
-    public CompletedAction(CompletedActionType type, PatronId sourcePatronId)
+    public CompletedAction(PlayerEnum player, CompletedActionType type, PatronId sourcePatronId)
     {
+        Player = player;
         Type = type;
         SourcePatron = sourcePatronId;
     }

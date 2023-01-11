@@ -1,6 +1,7 @@
 ﻿using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
+using TalesOfTribute.Serializers;
 
 namespace SimpleBots;
 
@@ -14,7 +15,7 @@ public class PatronSelectionTimeoutBot : AI
         return availablePatrons[0];
     }
 
-    public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
         throw new NotImplementedException();
     }

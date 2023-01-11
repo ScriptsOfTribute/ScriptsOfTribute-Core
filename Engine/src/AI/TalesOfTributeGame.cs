@@ -26,13 +26,13 @@ public class TalesOfTributeGame
         _players[1] = players[1];
     }
 
-    private async Task<Move> MoveTask(SerializedBoard board, List<Move> moves)
+    private async Task<Move> MoveTask(GameState state, List<Move> moves)
     {
         return await Task.Run(() =>
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var result = CurrentPlayer.Play(board, moves);
+            var result = CurrentPlayer.Play(state, moves);
             stopwatch.Stop();
             _currentTurnTimeElapsed += stopwatch.Elapsed;
             return result;
@@ -54,9 +54,10 @@ public class TalesOfTributeGame
             timeoutType = GameEndReason.TURN_TIMEOUT;
         }
         var board = _api.GetSerializer();
+        var state = new GameState(board);
         var moves = _api.GetListOfPossibleMoves();
 
-        var task = MoveTask(board, moves);
+        var task = MoveTask(state, moves);
         var res = await Task.WhenAny(task, Task.Delay(timeout));
 
         if (res == task)
@@ -172,7 +173,7 @@ public class TalesOfTributeGame
     {
         if (!_api.IsMoveLegal(move))
         {
-            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Illegal move - {move}.\nShould be one of:\n{string.Join('\n', _api.GetListOfPossibleMoves().Select(m => m.ToString()))}\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}");
+            return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, $"Illegal move - {move}.\nShould be one of:\n{string.Join('\n', _api.GetListOfPossibleMoves().Select(m => m.ToString()))}");
         }
 
         // This should probably be handled above (this move is not in legal moves), but you can never be to careful...
@@ -298,6 +299,8 @@ public class TalesOfTributeGame
 
     private (EndGameState, SerializedBoard) EndGame(EndGameState state)
     {
+        state.AdditionalContext +=
+            $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
         CurrentPlayer.GameEnd(state);
         EnemyPlayer.GameEnd(state);
         EndGameState = state;
