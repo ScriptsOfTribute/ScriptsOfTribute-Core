@@ -1,6 +1,7 @@
 ﻿
 using System.CommandLine;
 using System.CommandLine.Parsing;
+using System.Diagnostics;
 using System.Reflection;
 using SimpleBotsTests;
 using TalesOfTribute.AI;
@@ -89,16 +90,28 @@ mainCommand.SetHandler((runs, bot1Type, bot2Type) =>
 
     var counter = new GameEndStatsCounter();
 
+    var timeMeasurements = new long[runs];
+    
+    var granularWatch = new Stopwatch();
     for (var i = 0; i < runs; i++)
     {
         var bot1 = (AI?)Activator.CreateInstance(bot1Type!);
         var bot2 = (AI?)Activator.CreateInstance(bot2Type!);
+
+        granularWatch.Reset();
+        granularWatch.Start();
         var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
         var (endReason, _) = game.Play();
+        granularWatch.Stop();
+
+        var gameTimeTaken = granularWatch.ElapsedMilliseconds;
+        timeMeasurements[i] = gameTimeTaken;
 
         counter.Add(endReason);
     }
 
+    Console.WriteLine($"Total time taken: {timeMeasurements.Sum()}ms");
+    Console.WriteLine($"Average time per game: {timeMeasurements.Average()}ms");
     Console.WriteLine(counter.ToString());
 }, noOfRunsOption, bot1NameArgument, bot2NameArgument);
 
