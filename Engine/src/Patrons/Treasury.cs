@@ -20,7 +20,7 @@ namespace TalesOfTribute
                 new ChoiceContext(PatronID), 1, 1),
                     new List<CompletedAction>
                     {
-                        new(CompletedActionType.GAIN_COIN, PatronID, -2),
+                        new(activator.ID, CompletedActionType.GAIN_COIN, PatronID, -2),
                     });
         }
 

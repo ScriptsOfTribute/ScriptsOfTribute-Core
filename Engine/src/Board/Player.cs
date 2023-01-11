@@ -23,9 +23,11 @@ namespace TalesOfTribute
         public List<UniqueCard> AgentCards => Agents.Select(agent => agent.RepresentingCard).ToList();
         public List<UniqueCard> CooldownPile { get; set; }
         public uint PatronCalls { get; set; }
-        private readonly SeededRandom _rnd;
+        public int KnownUpcomingDrawsAmount { get; private set; } = 0;
+        private readonly SeededRandom _rng;
+        private readonly bool _simulationMode = false;
 
-        public Player(PlayerEnum iD, SeededRandom rnd)
+        public Player(PlayerEnum iD, SeededRandom rng)
         {
             CoinsAmount = 0;
             PrestigeAmount = 0;
@@ -37,12 +39,16 @@ namespace TalesOfTribute
             CooldownPile = new List<UniqueCard>();
             ID = iD;
             PatronCalls = 1;
-            _rnd = rnd;
+            _rng = rng;
         }
 
         public void PlayCard(UniqueCard card)
         {
             AssertCardIn(card, Hand);
+            if (card.CommonId == CardId.UNKNOWN)
+            {
+                throw new Exception("You can't play unknown cards.");
+            }
             Hand.Remove(card);
             if (card.Type == CardType.AGENT)
             {
@@ -58,7 +64,7 @@ namespace TalesOfTribute
 
         public void InitDrawPile(List<UniqueCard> starterCards)
         {
-            DrawPile = starterCards.OrderBy(_ => _rnd.Next()).ToList();
+            DrawPile = starterCards.OrderBy(_ => _rng.Next()).ToList();
         }
 
         public int HealAgent(UniqueCard card, int amount)
@@ -83,37 +89,93 @@ namespace TalesOfTribute
             AssertCardIn(card, CooldownPile);
             DrawPile.Insert(0, card);
             CooldownPile.Remove(card);
+            KnownUpcomingDrawsAmount += 1;
         }
 
-        public void Draw()
+        public void Draw(int amount)
         {
-            if (DrawPile.Count == 0)
+            if (DrawPile.Count < amount)
             {
-                RefreshDrawPile();
+                ShuffleCooldownPileIntoDrawPile();
             }
 
-            if (DrawPile.Count == 0)
+            if (_simulationMode)
             {
-                return;
+                ReplaceDrawPileWithUnknownCards();
             }
 
-            Hand.Add(DrawPile.First());
-            DrawPile.RemoveAt(0);
+            for (var i = 0; i < amount; i++)
+            {
+                if (DrawPile.Count == 0)
+                {
+                    return;
+                }
+
+                Hand.Add(DrawPile.First());
+                DrawPile.RemoveAt(0);
+                KnownUpcomingDrawsAmount -= 1;
+                if (KnownUpcomingDrawsAmount < 0)
+                {
+                    KnownUpcomingDrawsAmount = 0;
+                }
+            }
         }
 
-        private void RefreshDrawPile()
+        public List<UniqueCard> PrepareToss(int amount)
         {
-            var mixedCards = CooldownPile.OrderBy(_ => _rnd.Next()).ToList();
-            DrawPile.AddRange(mixedCards);
+            if (DrawPile.Count < amount)
+            {
+                ShuffleCooldownPileIntoDrawPile();
+            }
+
+            if (!_simulationMode)
+            {
+                var result = DrawPile.Take(amount).ToList();
+                KnownUpcomingDrawsAmount = KnownUpcomingDrawsAmount > result.Count ? KnownUpcomingDrawsAmount : result.Count;
+                return result;
+            }
+
+            ReplaceDrawPileWithUnknownCards();
+
+            return DrawPile
+                .Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN))
+                .Take(amount).ToList();
+        }
+
+        // In simulation - replace not-revealed cards with Unknown.
+        private void ReplaceDrawPileWithUnknownCards()
+        {
+            var knownCards = DrawPile.Take(KnownUpcomingDrawsAmount).ToList();
+            var unknownCards = DrawPile.Skip(KnownUpcomingDrawsAmount).Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
+            knownCards.AddRange(unknownCards);
+            DrawPile = knownCards;
+        }
+
+        // TODO: Check in game how that exactly should work (shuffle in on top? shuffle in to bottom?)
+        // Merge them together and shuffle everything?
+        // For now, DrawPile stays on bottom. This is probably not what happens, but I chose to implement this for now.
+        // In case this is what happens, well that may be a bit problematic, because in theory then we can remember
+        // order of cards at the bottom, so we would need to somehow mark them to be revealed (not unknown)
+        // when drawn by a bot if we deem it necessary.
+        private void ShuffleCooldownPileIntoDrawPile()
+        {
+            var newDrawPile = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
+            newDrawPile.AddRange(DrawPile);
+            DrawPile = newDrawPile;
             CooldownPile.Clear();
+            // TODO: Adjust known cards after testing in game (TODO above).
+            KnownUpcomingDrawsAmount = 0;
         }
 
         public void EndTurn()
         {
-            CooldownPile.AddRange(this.Hand);
-            CooldownPile.AddRange(this.Played);
-            Played = new List<UniqueCard>();
-            Hand = new List<UniqueCard>();
+            CooldownPile.AddRange(Hand);
+            CooldownPile.AddRange(Played);
+            Played.Clear();
+            Hand.Clear();
+
+            Draw(5);
+
             PatronCalls = 1;
             Agents.ForEach(agent => agent.Refresh());
         }
@@ -123,9 +185,14 @@ namespace TalesOfTribute
             AssertCardIn(card, DrawPile);
             DrawPile.Remove(card);
             CooldownPile.Add(card);
+            KnownUpcomingDrawsAmount -= 1;
+            if (KnownUpcomingDrawsAmount < 0)
+            {
+                KnownUpcomingDrawsAmount = 0;
+            }
         }
 
-        public void KnockOut(UniqueCard card)
+        public void KnockOut(UniqueCard card, ITavern tavern)
         {
             AssertCardIn(card, AgentCards);
             var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
@@ -133,8 +200,14 @@ namespace TalesOfTribute
             {
                 throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
             }
-            if (card.Type == CardType.AGENT){
+
+            if (card.Type == CardType.AGENT)
+            {
                 CooldownPile.Add(card);
+            }
+            else if (card.Type == CardType.CONTRACT_AGENT)
+            {
+                tavern.Cards.Add(card);
             }
         }
 
@@ -148,6 +221,10 @@ namespace TalesOfTribute
             if (Hand.Contains(card))
             {
                 Hand.Remove(card);
+            }
+            else if (Played.Contains(card))
+            {
+                Played.Remove(card);
             }
             else if (Agents.Any(agent => agent.RepresentingCard.UniqueId == card.UniqueId))
             {
@@ -223,19 +300,7 @@ namespace TalesOfTribute
             }
         }
 
-        public UniqueCard GetCardByUniqueId(int uniqueId)
-        {
-            try
-            {
-                return GetAllPlayersCards().First(card => (int)card.UniqueId == uniqueId);
-            }
-            catch (InvalidOperationException e)
-            {
-                throw new Exception("Player doesn't have card specified by unique id!");
-            }
-        }
-
-        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rnd)
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rng, int knownUpcomingDrawsAmount, bool cheats)
         {
             ID = id;
             CoinsAmount = coinsAmount;
@@ -247,15 +312,17 @@ namespace TalesOfTribute
             Agents = agents;
             CooldownPile = cooldownPile;
             PatronCalls = patronCalls;
-            _rnd = rnd;
+            _rng = rng;
+            _simulationMode = !cheats;
+            KnownUpcomingDrawsAmount = knownUpcomingDrawsAmount;
         }
 
-        public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd)
+        public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd, bool cheats)
         {
             return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, player.Hand.ToList(),
                 player.DrawPile.ToList(), player.Played.ToList(),
                 player.Agents.Select(Agent.FromSerializedAgent).ToList(), player.CooldownPile.ToList(),
-                player.PatronCalls, rnd);
+                player.PatronCalls, rnd, player.KnownUpcomingDraws.Count, cheats);
         }
     }
 }

@@ -23,7 +23,8 @@ namespace TalesOfTribute
             }
 
             activator.PowerAmount -= 2;
-            activator.Draw();
+            // TODO: Consider adding drawn cards here? It's probably a good idea, but Tossed cards are added like this.
+            activator.Draw(1);
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
                 FavoredPlayer = activator.ID;
@@ -33,8 +34,8 @@ namespace TalesOfTribute
             return (new Success(),
                     new List<CompletedAction>
                     {
-                        new(CompletedActionType.GAIN_POWER, PatronID, -2),
-                        new(CompletedActionType.DRAW, PatronID, 1),
+                        new(activator.ID, CompletedActionType.GAIN_POWER, PatronID, -2),
+                        new(activator.ID, CompletedActionType.DRAW, PatronID, 1),
                     });
         }
 

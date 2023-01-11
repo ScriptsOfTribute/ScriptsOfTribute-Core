@@ -28,7 +28,7 @@ public class ChoiceContext
                 return null;
             }
 
-            return CardSource!.Effects[Combo] as UniqueEffect;
+            return CardSource!.Effects[Combo - 1] as UniqueEffect;
         }
     }
 

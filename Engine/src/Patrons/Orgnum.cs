@@ -47,14 +47,14 @@ namespace TalesOfTribute
             
             var actionList = new List<CompletedAction>
             {
-                new(CompletedActionType.GAIN_COIN, PatronID, -3),
-                new(CompletedActionType.GAIN_POWER, PatronID, powerGained),
+                new(activator.ID, CompletedActionType.GAIN_COIN, PatronID, -3),
+                new(activator.ID, CompletedActionType.GAIN_POWER, PatronID, powerGained),
 
             };
 
             if (FavoredPlayer == activator.ID)
             {
-                actionList.Add(new CompletedAction(CompletedActionType.ADD_BOARDING_PARTY, PatronID, 1));
+                actionList.Add(new CompletedAction(activator.ID, CompletedActionType.ADD_BOARDING_PARTY, PatronID, 1));
             }
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)

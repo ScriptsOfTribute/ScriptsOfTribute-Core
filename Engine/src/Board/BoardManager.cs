@@ -13,17 +13,20 @@ namespace TalesOfTribute
         public Player CurrentPlayer => _playerContext.CurrentPlayer;
         public Player EnemyPlayer => _playerContext.EnemyPlayer;
         public readonly CardActionManager CardActionManager;
-        private readonly SeededRandom _rnd = new();
+        private readonly SeededRandom _rng = new();
+        private readonly bool _simulationMode = false;
+        private readonly bool _cheats = false;
 
         private int PrestigeTreshold = 40;
 
-        public BoardManager(PatronId[] patrons)
+        public BoardManager(PatronId[] patrons, ulong seed)
         {
             this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
-            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons), _rnd);
-            _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rnd), new Player(PlayerEnum.PLAYER2, _rnd));
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons), _rng);
+            _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rng), new Player(PlayerEnum.PLAYER2, _rng));
             CardActionManager = new CardActionManager(_playerContext, Tavern);
+            _rng = new SeededRandom(seed);
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -40,22 +43,32 @@ namespace TalesOfTribute
 
             var patron = Array.Find(Patrons, p => p.PatronID == patronId);
             CurrentPlayer.PatronCalls--;
-            CardActionManager.ActivatePatron(patron);
+            CardActionManager.ActivatePatron(CurrentPlayer.ID, patron);
         }
 
         public void PlayCard(UniqueCard card)
         {
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.PLAY_CARD, card));
+            if (card.CommonId == CardId.UNKNOWN)
+            {
+                throw new Exception("Can't play unknown cards.");
+            }
+
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
             CardActionManager.PlayCard(card);
         }
 
         public void BuyCard(UniqueCard card)
         {
+            if (card.CommonId == CardId.UNKNOWN)
+            {
+                throw new Exception("Can't buy unknown cards.");
+            }
+
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new Exception($"You dont have enough coin to buy {card}");
             
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.BUY_CARD, card));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.BUY_CARD, card));
 
             var boughtCard = this.Tavern.Acquire(card);
 
@@ -83,14 +96,6 @@ namespace TalesOfTribute
             }
         }
 
-        public void DrawCards()
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                CurrentPlayer.Draw();
-            }
-        }
-
         public void EndTurn()
         {
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.END_TURN));
@@ -112,15 +117,13 @@ namespace TalesOfTribute
                 patron.PatronPower(CurrentPlayer, EnemyPlayer);
             }
 
-            DrawCards();
-            
             CardActionManager.Reset(_playerContext);
         }
 
         public void SetUpGame()
         {
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
-            Tavern.DrawCards(_rnd);
+            Tavern.SetUp(_rng);
 
             List<UniqueCard> starterDecks = new List<UniqueCard>();
 
@@ -134,13 +137,14 @@ namespace TalesOfTribute
             CurrentPlayer.InitDrawPile(starterDecks);
             EnemyPlayer.InitDrawPile(starterDecks);
 
-            DrawCards();
+            CurrentPlayer.Draw(5);
+            EnemyPlayer.Draw(5);
         }
         
         public SerializedBoard SerializeBoard(EndGameState? endGameState)
         {
-            return new SerializedBoard(_rnd, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
-                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions);
+            return new SerializedBoard(_rng, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
+                CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions, _cheats);
         }
 
         public PlayerEnum GetPatronFavorism(PatronId patron)
@@ -196,7 +200,7 @@ namespace TalesOfTribute
 
         public void ActivateAgent(UniqueCard card)
         {
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ACTIVATE_AGENT, card));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.ACTIVATE_AGENT, card));
             CurrentPlayer.ActivateAgent(card);
             CardActionManager.PlayCard(card);
         }
@@ -204,30 +208,32 @@ namespace TalesOfTribute
         public void AttackAgent(UniqueCard agent)
         {
             var attackAmount = CurrentPlayer.AttackAgent(agent, EnemyPlayer, Tavern);
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.ATTACK_AGENT, null, attackAmount, agent));
             if (!EnemyPlayer.AgentCards.Contains(agent))
             {
-                CardActionManager.AddToCompletedActionsList(new CompletedAction(CompletedActionType.AGENT_DEATH, agent));
+                CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.AGENT_DEATH, agent));
             }
         }
 
-        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager, SeededRandom rnd)
+        private BoardManager(Patron[] patrons, Tavern tavern, PlayerContext playerContext, CardActionManager cardActionManager, SeededRandom rng, bool cheats)
         {
             Patrons = patrons;
             Tavern = tavern;
             _playerContext = playerContext;
             CardActionManager = cardActionManager;
-            _rnd = rnd;
+            _rng = rng;
+            _simulationMode = !cheats;
+            _cheats = cheats;
         }
 
         public static BoardManager FromSerializedBoard(SerializedBoard serializedBoard)
         {
             var patrons = Patron.FromSerializedBoard(serializedBoard);
             var tavern = Tavern.FromSerializedBoard(serializedBoard);
-            var rnd = serializedBoard._rnd.Detach();
-            var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rnd);
+            var rng = new SeededRandom(serializedBoard.InitialSeed, serializedBoard.CurrentSeed);
+            var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rng);
             var cardActionManager = CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
-            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rnd);
+            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng, serializedBoard.Cheats);
         }
     }
 }

@@ -27,13 +27,30 @@ namespace TalesOfTribute
         public readonly List<UniqueBaseEffect> StartOfNextTurnEffects;
         public readonly List<CompletedAction> CompletedActions;
         public readonly EndGameState? GameEndState;
-        // TODO: Improve SeededRandom after discussion.
-        public readonly SeededRandom _rnd;
+        public readonly ulong InitialSeed;
+        public readonly ulong CurrentSeed;
+        public readonly bool Cheats = false;
+
+        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
+        {
+            CurrentPlayer = currentPlayer;
+            EnemyPlayer = enemyPlayer;
+            PatronStates = patronStates;
+            TavernAvailableCards = tavernAvailableCards.ToList();
+            TavernCards = tavernCards.ToList();
+            CurrentSeed = currentSeed;
+            ComboStates = new ComboStates(new Dictionary<PatronId, ComboState>());
+            UpcomingEffects = new List<UniqueBaseEffect>();
+            StartOfNextTurnEffects = new List<UniqueBaseEffect>();
+            CompletedActions = new List<CompletedAction>();
+            InitialSeed = currentSeed;
+            CurrentSeed = currentSeed;
+            Cheats = cheats;
+        }
 
         public SerializedBoard(
-            SeededRandom rnd, EndGameState? endGameState, Player? currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions
-        )
+            SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
@@ -47,7 +64,9 @@ namespace TalesOfTribute
             StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
             CompletedActions = completedActions.ToList();
             GameEndState = endGameState;
-            _rnd = rnd.Detach();
+            CurrentSeed = rng.CurrentSeed;
+            InitialSeed = rng.InitialSeed;
+            Cheats = cheats;
         }
 
         public SerializedPlayer GetPlayer(PlayerEnum id)
