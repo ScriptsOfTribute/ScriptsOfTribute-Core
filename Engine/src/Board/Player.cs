@@ -47,7 +47,11 @@ namespace TalesOfTribute
             AssertCardIn(card, Hand);
             if (card.CommonId == CardId.UNKNOWN)
             {
+<<<<<<< HEAD
                 throw new EngineException("You can't play unknown cards.");
+=======
+                throw new Exception("You can't play unknown cards.");
+>>>>>>> Implement Fair Game - reduce information available to bots so they don't cheat (#46)
             }
             Hand.Remove(card);
             if (card.Type == CardType.AGENT)
