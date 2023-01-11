@@ -2,6 +2,7 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Reflection;
+using SimpleBotsTests;
 using TalesOfTribute.AI;
 
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -54,7 +55,7 @@ Type? FindBot(string name, out string? errorMessage)
     return cachedBot;
 }
 
-AI? ParseBotArg(ArgumentResult arg)
+Type? ParseBotArg(ArgumentResult arg)
 {
     if (arg.Tokens.Count != 1)
     {
@@ -69,11 +70,11 @@ AI? ParseBotArg(ArgumentResult arg)
         return null;
     }
 
-    return (AI)Activator.CreateInstance(botType!);
+    return botType!;
 }
 
-var bot1NameArgument = new Argument<AI?>(name: "bot1Name", description: "Name of the first bot.", parse: ParseBotArg);
-var bot2NameArgument = new Argument<AI?>(name: "bot2Name", description: "Name of the second bot.", parse: ParseBotArg);
+var bot1NameArgument = new Argument<Type?>(name: "bot1Name", description: "Name of the first bot.", parse: ParseBotArg);
+var bot2NameArgument = new Argument<Type?>(name: "bot2Name", description: "Name of the second bot.", parse: ParseBotArg);
 
 var mainCommand = new RootCommand("A game runner for bots.")
 {
@@ -82,14 +83,23 @@ var mainCommand = new RootCommand("A game runner for bots.")
     bot2NameArgument
 };
 
-mainCommand.SetHandler((runs, bot1Name, bot2Name) =>
+mainCommand.SetHandler((runs, bot1Type, bot2Type) =>
 {
-    Console.WriteLine($"Runs: {runs}, bot1name: {bot1Name}, bot2name: {bot2Name}");
+    Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}");
 
-    var game = new TalesOfTribute.AI.TalesOfTribute(bot1Name, bot2Name);
-    var (endReason, endState) = game.Play();
+    var counter = new GameEndStatsCounter();
 
-    Console.WriteLine($"Game ended: {endReason.Reason}");
+    for (var i = 0; i < runs; i++)
+    {
+        var bot1 = (AI?)Activator.CreateInstance(bot1Type!);
+        var bot2 = (AI?)Activator.CreateInstance(bot2Type!);
+        var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+        var (endReason, _) = game.Play();
+
+        counter.Add(endReason);
+    }
+
+    Console.WriteLine(counter.ToString());
 }, noOfRunsOption, bot1NameArgument, bot2NameArgument);
 
 return mainCommand.Invoke(args);
