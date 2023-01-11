@@ -92,4 +92,4 @@ mainCommand.SetHandler((runs, bot1Name, bot2Name) =>
     Console.WriteLine($"Game ended: {endReason.Reason}");
 }, noOfRunsOption, bot1NameArgument, bot2NameArgument);
 
-mainCommand.Invoke(args);
+return mainCommand.Invoke(args);
