@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBotsTests", "SimpleBo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleTests", "ModuleTests\ModuleTests.csproj", "{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameRunner", "GameRunner\GameRunner.csproj", "{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
