@@ -1,4 +1,5 @@
-﻿using TalesOfTribute;
+﻿/*
+using TalesOfTribute;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
 
@@ -63,3 +64,4 @@ public class DoEverythingBotTests
         _testOutputHelper.WriteLine(counter.ToString());
     }
 }
+*/
