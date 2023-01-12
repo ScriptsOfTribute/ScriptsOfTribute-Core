@@ -106,7 +106,7 @@ namespace TalesOfTribute
                             api.MakeChoice(effectMove.Choices.First());
                             break;
                         default:
-                            throw new Exception("Invalid choice type.");
+                            throw new EngineException("Invalid choice type.");
                     }
                     break;
                 case CommandEnum.END_TURN:

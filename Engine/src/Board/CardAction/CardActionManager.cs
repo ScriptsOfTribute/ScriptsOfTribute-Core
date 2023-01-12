@@ -39,7 +39,7 @@ public class CardActionManager
     {
         if (State != BoardState.NORMAL)
         {
-            throw new Exception("Complete pending choices first!");
+            throw new EngineException("Complete pending choices first!");
         }
 
         ImmediatePlayCard(card);
@@ -83,7 +83,7 @@ public class CardActionManager
                 _pendingPatronChoice = bc;
                 break;
             case Failure f:
-                throw new Exception(f.Reason);
+                throw new EngineException(f.Reason);
             default:
                 State = BoardState.NORMAL;
                 break;
@@ -94,7 +94,7 @@ public class CardActionManager
     {
         if (_pendingPatronChoice?.Type != Choice.DataType.CARD)
         {
-            throw new Exception("MakeChoice of wrong type called.");
+            throw new EngineException("MakeChoice of wrong type called.");
         }
 
         var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice, choices);
@@ -106,7 +106,7 @@ public class CardActionManager
     {
         if (_pendingPatronChoice?.Type != Choice.DataType.EFFECT)
         {
-            throw new Exception("MakeChoice of wrong type called.");
+            throw new EngineException("MakeChoice of wrong type called.");
         }
 
         var (result, actions) = _complexEffectExecutor.Enact(_pendingPatronChoice, choice);
@@ -118,7 +118,7 @@ public class CardActionManager
     {
         if (State == BoardState.NORMAL)
         {
-            throw new Exception("There is no pending choice.");
+            throw new EngineException("There is no pending choice.");
         }
 
         if (State == BoardState.PATRON_CHOICE_PENDING)
@@ -140,7 +140,7 @@ public class CardActionManager
     {
         if (State == BoardState.NORMAL)
         {
-            throw new Exception("There is no pending choice.");
+            throw new EngineException("There is no pending choice.");
         }
 
         if (State == BoardState.PATRON_CHOICE_PENDING)
@@ -163,7 +163,7 @@ public class CardActionManager
     {
         if (State != BoardState.NORMAL || !_pendingExecutionChain.Completed)
         {
-            throw new Exception("Something went wrong in the engine - not all choices are completed");
+            throw new EngineException("Something went wrong in the engine - not all choices are completed");
         }
         
         _playerContext = newPlayerContext;

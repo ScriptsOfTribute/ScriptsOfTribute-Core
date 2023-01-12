@@ -93,7 +93,7 @@ public class TalesOfTributeGame
 
                 if (move is null)
                 {
-                    throw new Exception("This shouldn't happen - there is a bug in the engine!");
+                    throw new EngineException("This shouldn't happen - there is a bug in the engine!");
                 }
 
                 var result = await HandleFreeMove(move);
@@ -137,7 +137,7 @@ public class TalesOfTributeGame
         {
             if (choice.Type != Choice.DataType.CARD)
             {
-                throw new Exception(
+                throw new EngineException(
                     "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
             }
                 

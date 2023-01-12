@@ -57,7 +57,7 @@ public class GameState
     {
         if (_endOfTurnHappened)
         {
-            throw new Exception("You can't simulate any more moves as you've ended your turn.");
+            throw new EngineException("You can't simulate any more moves as you've ended your turn.");
         }
         // This means bot wants to see what happens after end of this turn.
         // This means CurrentPlayer would be the bots' enemy, so he should have severely limited visibility.

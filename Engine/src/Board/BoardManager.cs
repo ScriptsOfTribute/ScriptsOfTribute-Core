@@ -38,7 +38,7 @@ namespace TalesOfTribute
         {
             if (CurrentPlayer.PatronCalls <= 0)
             {
-                throw new Exception("You cant use Patron calls anymore");
+                throw new EngineException("You cant use Patron calls anymore");
             }
 
             var patron = Array.Find(Patrons, p => p.PatronID == patronId);
@@ -50,7 +50,7 @@ namespace TalesOfTribute
         {
             if (card.CommonId == CardId.UNKNOWN)
             {
-                throw new Exception("Can't play unknown cards.");
+                throw new EngineException("Can't play unknown cards.");
             }
 
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
@@ -62,11 +62,11 @@ namespace TalesOfTribute
         {
             if (card.CommonId == CardId.UNKNOWN)
             {
-                throw new Exception("Can't buy unknown cards.");
+                throw new EngineException("Can't buy unknown cards.");
             }
 
             if (card.Cost > CurrentPlayer.CoinsAmount)
-                throw new Exception($"You dont have enough coin to buy {card}");
+                throw new EngineException($"You dont have enough coin to buy {card}");
             
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.BUY_CARD, card));
 

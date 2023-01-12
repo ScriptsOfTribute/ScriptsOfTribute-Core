@@ -47,7 +47,7 @@ namespace TalesOfTribute
             AssertCardIn(card, Hand);
             if (card.CommonId == CardId.UNKNOWN)
             {
-                throw new Exception("You can't play unknown cards.");
+                throw new EngineException("You can't play unknown cards.");
             }
             Hand.Remove(card);
             if (card.Type == CardType.AGENT)
@@ -198,7 +198,7 @@ namespace TalesOfTribute
             var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
             if (removed != 1)
             {
-                throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
+                throw new EngineException($"1 agent should have been removed, actually removed: {removed}.");
             }
 
             if (card.Type == CardType.AGENT)
@@ -231,12 +231,12 @@ namespace TalesOfTribute
                 var removed = Agents.RemoveAll(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
                 if (removed != 1)
                 {
-                    throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
+                    throw new EngineException($"1 agent should have been removed, actually removed: {removed}.");
                 }
             }
             else
             {
-                throw new Exception($"Can't destroy card {card.CommonId}({card.UniqueId}) - it's not in Hand or on Board!");
+                throw new EngineException($"Can't destroy card {card.CommonId}({card.UniqueId}) - it's not in Hand or on Board!");
             }
         }
 
@@ -265,7 +265,7 @@ namespace TalesOfTribute
             }
             else
             {
-                throw new Exception("Given agent has already been activated!");
+                throw new EngineException("Given agent has already been activated!");
             }
         }
 
@@ -273,7 +273,7 @@ namespace TalesOfTribute
         {
             if (!enemy.AgentCards.Contains(card))
             {
-                throw new Exception("Agent you are trying to attack doesn't exist!");
+                throw new EngineException("Agent you are trying to attack doesn't exist!");
             }
 
             var agent = enemy.Agents.First(agent => agent.RepresentingCard == card);
@@ -296,7 +296,7 @@ namespace TalesOfTribute
         {
             if (!list.Contains(card))
             {
-                throw new Exception("Wrong card chosen!");
+                throw new EngineException("Wrong card chosen!");
             }
         }
 

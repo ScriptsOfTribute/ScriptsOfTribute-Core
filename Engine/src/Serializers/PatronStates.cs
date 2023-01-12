@@ -14,7 +14,7 @@ public class PatronStates
     {
         if (!All.TryGetValue(patron, out var result))
         {
-            throw new Exception($"Patron {patron.ToString()} is not in the game.");
+            throw new EngineException($"Patron {patron.ToString()} is not in the game.");
         }
 
         return result;

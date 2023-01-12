@@ -29,7 +29,7 @@ namespace TalesOfTribute
         {
             if (!AvailableCards.Contains(card))
             {
-                throw new Exception($"Card {card.CommonId} is not available!");
+                throw new EngineException($"Card {card.CommonId} is not available!");
             }
             int idx = AvailableCards.FindIndex(x => x.UniqueId == card.UniqueId);
             AvailableCards.RemoveAt(idx);
