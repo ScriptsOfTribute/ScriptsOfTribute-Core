@@ -28,7 +28,7 @@ public class CardDatabase
     {
         List<UniqueCard> cardsFromDeck = (
             from card in AllCardsWithoutUpgrades
-            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
+            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE && card.CommonId != CardId.UNKNOWN
             select card.CreateUniqueCopy()
         ).ToList();
         return cardsFromDeck;
