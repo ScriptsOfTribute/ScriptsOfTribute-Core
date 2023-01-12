@@ -65,6 +65,7 @@ public class ComplexEffectExecutor
         {
             case CardType.CONTRACT_ACTION:
                 _parent.ImmediatePlayCard(card);
+                _tavern.Cards.Add(card);
                 break;
             case CardType.CONTRACT_AGENT:
                 var agent = Agent.FromCard(card);
