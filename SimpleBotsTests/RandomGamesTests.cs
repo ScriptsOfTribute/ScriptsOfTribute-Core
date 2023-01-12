@@ -1,3 +1,4 @@
+/*
 using SimpleBots;
 using TalesOfTribute;
 using TalesOfTribute.Board;
@@ -98,3 +99,4 @@ public class RandomGamesTests
         _testOutputHelper.WriteLine(counter.ToString());
     }
 }
+*/

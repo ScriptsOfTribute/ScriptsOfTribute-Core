@@ -23,16 +23,39 @@ public class RandomHeuristicBot : AI
     const int potentialComboValue = 20;
     const int cardValue = 10;
     const int penaltyForHighTierInTavern = 40;
+    const int numberOfDrawsValue = 35;
     private List<Move> selectedTurnPlayout = new List<Move>();
     private bool newGenarate = true;
     private StringBuilder log = new StringBuilder();
+    private string patrons;
+    private string patronLogPath = "patrons.txt";
+    private string logPath = "log.txt";
     private int totalNumberOfSimulationInGame = 0;
     private int totalNumberOfSimulationInTurn = 0;
+    private bool startOfGame = true;
+    private PlayerEnum myID;
+    private Apriori apriori = new Apriori();
+    private int support = 4;
+    private double confidence = 0.3;
 
-    public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+    private int CountNumberOfDrawsInTurn(List<CompletedAction> startOfTurnCompletedActions, List<CompletedAction> completedActions){
+        int numberOfLastActions = completedActions.Count - startOfTurnCompletedActions.Count;
+        List<CompletedAction> lastCompltedActions = completedActions.TakeLast(numberOfLastActions).ToList();
+        int counter = 0;
+        foreach (CompletedAction action in lastCompltedActions){
+            if (action.Type == CompletedActionType.DRAW){
+                counter += 1;
+            }
+        }
+        return counter;
+    }
 
-    private int BoardStateHeuristicValueEndTurn(SerializedBoard serializedBoard){
+    public override PatronId SelectPatron(List<PatronId> availablePatrons, int round){
+        PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
+        return selectedPatron ?? availablePatrons.PickRandom();
+    }
+
+    private int BoardStateHeuristicValueEndTurn(SerializedBoard serializedBoard, List<CompletedAction> startOfturnCompletedActions){
         int finalValue = 0;
         foreach (KeyValuePair<PatronId, PlayerEnum> entry in serializedBoard.PatronStates.All) {
             if (entry.Value == serializedBoard.CurrentPlayer.PlayerID) {
@@ -81,6 +104,8 @@ public class RandomHeuristicBot : AI
         foreach(Card card in serializedBoard.TavernCards){
             finalValue -= penaltyForHighTierInTavern * (int)CardTierList.GetCardTier(card.Name);
         }
+
+        finalValue += CountNumberOfDrawsInTurn(startOfturnCompletedActions, serializedBoard.CompletedActions) * numberOfDrawsValue;
         return finalValue;
     }
 
@@ -109,25 +134,13 @@ public class RandomHeuristicBot : AI
         s.Start();
         while (s.Elapsed < TimeSpan.FromSeconds(0.5)){
             (List<Move> generatedPlayout, SerializedBoard endTurnBoard)= GenerateRandomTurnMoves(serializedBoard, possibleMoves);
-            heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard);
+            heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard, serializedBoard.CompletedActions);
             if (highestHeuristicValue < heuristicValue){
                 bestPlayout = generatedPlayout;
                 highestHeuristicValue = heuristicValue;
             }
             howManySimulation +=1;
         }
-        /*
-        int k = SimpleBots.Extensions.RandomK(1, 20);
-        for (int i = 0; i < k; i++)
-        {
-            (List<Move> generatedPlayout, SerializedBoard endTurnBoard)= GenerateRandomTurnMoves(serializedBoard, possibleMoves);
-            heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard);
-            if (highestHeuristicValue < heuristicValue){
-                bestPlayout = generatedPlayout;
-                highestHeuristicValue = heuristicValue;
-            }
-        }
-        */
         log.Append(howManySimulation.ToString()+ System.Environment.NewLine);
         totalNumberOfSimulationInGame += howManySimulation;
         totalNumberOfSimulationInTurn += howManySimulation;
@@ -136,6 +149,11 @@ public class RandomHeuristicBot : AI
 
     public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
     {
+        if (startOfGame){
+            myID = serializedBoard.CurrentPlayer.PlayerID;
+            patrons = string.Join(",", serializedBoard.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
+            startOfGame = false;
+        }
         if (newGenarate){
             selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(serializedBoard, possibleMoves);
             newGenarate = false;
@@ -164,8 +182,11 @@ public class RandomHeuristicBot : AI
 
     public override void GameEnd(EndGameState state)
     {
+        if (state.Winner == myID){
+            File.AppendAllText(patronLogPath, patrons + System.Environment.NewLine);
+        }
         log.Append("Total number of simulation in game: " + totalNumberOfSimulationInGame.ToString()+ System.Environment.NewLine);
-        File.AppendAllText("log.txt", log.ToString());
+        File.AppendAllText(logPath, log.ToString());
         log.Clear();
     }
 }

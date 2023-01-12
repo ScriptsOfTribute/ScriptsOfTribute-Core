@@ -133,7 +133,9 @@ namespace TalesOfTribute
             {
                 throw new Exception($"1 agent should have been removed, actually removed: {removed}.");
             }
-            CooldownPile.Add(card);
+            if (card.Type == CardType.AGENT){
+                CooldownPile.Add(card);
+            }
         }
 
         public void AddToCooldownPile(UniqueCard card)
