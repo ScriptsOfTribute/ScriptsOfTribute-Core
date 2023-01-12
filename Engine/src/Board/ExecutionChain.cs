@@ -21,7 +21,7 @@ public class ExecutionChain
     {
         if (PendingChoice is not null)
         {
-            throw new Exception("Complete pending events before consuming further!");
+            throw new EngineException("Complete pending events before consuming further!");
         }
 
         while (!Empty)
@@ -39,7 +39,7 @@ public class ExecutionChain
 
             if (PendingChoice is not null)
             {
-                throw new Exception("Complete pending events before consuming further!");
+                throw new EngineException("Complete pending events before consuming further!");
             }
         }
     }
@@ -48,7 +48,7 @@ public class ExecutionChain
     {
         if (PendingChoice?.Type != Choice.DataType.CARD)
         {
-            throw new Exception("Pending choice is missing or wrong type.");
+            throw new EngineException("Pending choice is missing or wrong type.");
         }
 
         var (result, actions) = executor.Enact(PendingChoice, choices);
@@ -56,7 +56,7 @@ public class ExecutionChain
         PendingChoice = result switch
         {
             Choice choice => choice,
-            Failure f => throw new Exception(f.Reason),
+            Failure f => throw new EngineException(f.Reason),
             _ => null
         };
 
@@ -67,7 +67,7 @@ public class ExecutionChain
     {
         if (PendingChoice?.Type != Choice.DataType.EFFECT)
         {
-            throw new Exception("Pending choice is missing or wrong type.");
+            throw new EngineException("Pending choice is missing or wrong type.");
         }
 
         var (result, actions) = executor.Enact(PendingChoice, choice);
@@ -75,7 +75,7 @@ public class ExecutionChain
         PendingChoice = result switch
         {
             Choice c => c,
-            Failure f => throw new Exception(f.Reason),
+            Failure f => throw new EngineException(f.Reason),
             _ => null
         };
 

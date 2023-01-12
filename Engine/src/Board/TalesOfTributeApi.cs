@@ -103,9 +103,14 @@ public class TalesOfTributeApi : ITalesOfTributeApi
             f();
         }
         // TODO: Add engine specific exception.
-        catch (Exception e)
+        catch (EngineException e)
         {
             _endGameState = new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
+            return _endGameState;
+        }
+        catch (Exception e)
+        {
+            _endGameState = new EndGameState(EnemyPlayerId, GameEndReason.INTERNAL_ERROR, $"MESSAGE:\n{e.Message}\n\nSTACKTRACE:\n{e.StackTrace}\n\nSOURCE:{e.Source}\n");
             return _endGameState;
         }
 

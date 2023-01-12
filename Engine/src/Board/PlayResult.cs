@@ -42,7 +42,7 @@ public class Choice : PlayResult
         {
             if (Type != DataType.CARD)
             {
-                throw new Exception("This choice does not contain Cards.");
+                throw new EngineException("This choice does not contain Cards.");
             }
 
             return _possibleCards!;
@@ -55,7 +55,7 @@ public class Choice : PlayResult
         {
             if (Type != DataType.EFFECT)
             {
-                throw new Exception("This choice does not contain Effects.");
+                throw new EngineException("This choice does not contain Effects.");
             }
 
             return _possibleEffects!;
@@ -82,7 +82,7 @@ public class Choice : PlayResult
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
-            throw new Exception("Invalid choice amount specified!");
+            throw new EngineException("Invalid choice amount specified!");
         }
 
         MaxChoiceAmount = maxChoiceAmount;
@@ -101,7 +101,7 @@ public class Choice : PlayResult
     {
         if (minChoiceAmount > possibleChoices.Count)
         {
-            throw new Exception("Invalid choice amount specified!");
+            throw new EngineException("Invalid choice amount specified!");
         }
 
         MaxChoiceAmount = maxChoiceAmount;

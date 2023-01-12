@@ -194,7 +194,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 });
         }
 
-        throw new Exception($"Unknown effect - {Type}.");
+        throw new EngineException($"Unknown effect - {Type}.");
     }
 
     public override string ToString()
@@ -244,7 +244,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             "Patron" => EffectType.PATRON_CALL,
             "Create" => EffectType.CREATE_BOARDINGPARTY,
             "Heal" => EffectType.HEAL,
-            _ => throw new Exception("Invalid effect type.")
+            _ => throw new EngineException("Invalid effect type.")
         };
     }
 }

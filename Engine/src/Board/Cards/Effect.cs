@@ -65,7 +65,7 @@ public class Effect : ComplexEffect
             "Patron" => EffectType.PATRON_CALL,
             "Create" => EffectType.CREATE_BOARDINGPARTY,
             "Heal" => EffectType.HEAL,
-            _ => throw new Exception("Invalid effect type.")
+            _ => throw new EngineException("Invalid effect type.")
         };
     }
 }

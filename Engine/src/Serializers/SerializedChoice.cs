@@ -10,7 +10,7 @@ public class SerializedChoice
         {
             if (Type != Choice.DataType.CARD)
             {
-                throw new Exception("This choice is not of type CARD, so it doesn't contain cards.");
+                throw new EngineException("This choice is not of type CARD, so it doesn't contain cards.");
             }
 
             return _possibleCards!;
@@ -23,7 +23,7 @@ public class SerializedChoice
         {
             if (Type != Choice.DataType.EFFECT)
             {
-                throw new Exception("This choice is not of type EFFECT, so it doesn't contain effects.");
+                throw new EngineException("This choice is not of type EFFECT, so it doesn't contain effects.");
             }
 
             return _possibleEffects!;

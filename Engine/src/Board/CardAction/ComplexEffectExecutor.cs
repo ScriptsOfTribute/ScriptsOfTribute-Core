@@ -53,7 +53,7 @@ public class ComplexEffectExecutor
 
         if (choices.Count > 1)
         {
-            throw new Exception("Can't acquire more than 1 card.");
+            throw new EngineException("Can't acquire more than 1 card.");
         }
 
         var choice = choices.First();
@@ -65,6 +65,7 @@ public class ComplexEffectExecutor
         {
             case CardType.CONTRACT_ACTION:
                 _parent.ImmediatePlayCard(card);
+                _tavern.Cards.Add(card);
                 break;
             case CardType.CONTRACT_AGENT:
                 var agent = Agent.FromCard(card);
@@ -136,7 +137,7 @@ public class ComplexEffectExecutor
     {
         if (choices.Count != 1)
         {
-            throw new Exception("Hlaalu requires exactly 1 choice.");
+            throw new EngineException("Hlaalu requires exactly 1 choice.");
         }
 
         var card = choices.First();
@@ -162,7 +163,7 @@ public class ComplexEffectExecutor
     {
         if (choices.Count != 1)
         {
-            throw new Exception("Pelin requires exactly 1 choice.");
+            throw new EngineException("Pelin requires exactly 1 choice.");
         }
 
         var choice = choices.First();
@@ -178,7 +179,7 @@ public class ComplexEffectExecutor
     {
         if (choices.Count != 1)
         {
-            throw new Exception("Psijic requires exactly 1 choice.");
+            throw new EngineException("Psijic requires exactly 1 choice.");
         }
 
         var choice = choices.First();
@@ -193,7 +194,7 @@ public class ComplexEffectExecutor
     {
         if (choices.Count != 1)
         {
-            throw new Exception("Treasury requires exactly 1 choice.");
+            throw new EngineException("Treasury requires exactly 1 choice.");
         }
 
         var writOfCoin = GlobalCardDatabase.Instance.GetCard(CardId.WRIT_OF_COIN);
