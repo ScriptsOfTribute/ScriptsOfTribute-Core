@@ -9,7 +9,8 @@ using TalesOfTribute.AI;
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
 var aiType = typeof(AI);
-List<Type> allBots = currentDirectory.GetFiles("*.dll").Select(f => f.FullName)
+var allDlls = currentDirectory.GetFiles("*.dll").ToList();
+List<Type> allBots = allDlls.Select(f => f.FullName)
     .Select(Assembly.LoadFile)
     .SelectMany(a => a.GetTypes())
     .Where(t => aiType.IsAssignableFrom(t) && !t.IsInterface)
@@ -42,7 +43,8 @@ Type? FindBot(string name, out string? errorMessage)
 
     if (botCount == 0)
     {
-        errorMessage = $"Bot {name} not found in any DLLs.";
+        errorMessage = $"Bot {name} not found in any DLLs. List of bots found:\n";
+        errorMessage += string.Join('\n', allBots.Select(b => b.FullName));
         return null;
     }
 
