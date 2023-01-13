@@ -21,6 +21,12 @@ var noOfRunsOption = new Option<int>(
     getDefaultValue: () => 1);
 noOfRunsOption.AddAlias("-n");
 
+var threadsOption = new Option<int>(
+    name: "--threads",
+    description: "Number of CPU threads to use.",
+    getDefaultValue: () => 1);
+threadsOption.AddAlias("-t");
+
 Type? cachedBot = null;
 
 Type? FindBot(string name, out string? errorMessage)
@@ -80,40 +86,57 @@ var bot2NameArgument = new Argument<Type?>(name: "bot2Name", description: "Name 
 var mainCommand = new RootCommand("A game runner for bots.")
 {
     noOfRunsOption,
+    threadsOption,
     bot1NameArgument,
     bot2NameArgument
 };
 
-mainCommand.SetHandler((runs, bot1Type, bot2Type) =>
+int returnValue = 0;
+mainCommand.SetHandler((runs, threads, bot1Type, bot2Type) =>
 {
-    Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}:\n");
-
-    var counter = new GameEndStatsCounter();
-
-    var timeMeasurements = new long[runs];
-
-    var granularWatch = new Stopwatch();
-    for (var i = 0; i < runs; i++)
+    if (threads < 1)
     {
-        var bot1 = (AI?)Activator.CreateInstance(bot1Type);
-        var bot2 = (AI?)Activator.CreateInstance(bot2Type);
-
-        granularWatch.Reset();
-        granularWatch.Start();
-        var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
-        var (endReason, _) = game.Play();
-        granularWatch.Stop();
-
-        var gameTimeTaken = granularWatch.ElapsedMilliseconds;
-        timeMeasurements[i] = gameTimeTaken;
-
-        counter.Add(endReason);
+        Console.Error.WriteLine("Can't use less than 0 threads.");
+        returnValue = -1;
     }
 
-    Console.WriteLine($"Total time taken: {timeMeasurements.Sum()}ms");
-    Console.WriteLine($"Average time per game: {timeMeasurements.Average()}ms");
-    Console.WriteLine("\nStats from the games played:");
-    Console.WriteLine(counter.ToString());
-}, noOfRunsOption, bot1NameArgument, bot2NameArgument);
+    if (threads == 1)
+    {
+        Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}:\n");
 
-return mainCommand.Invoke(args);
+        var counter = new GameEndStatsCounter();
+
+        var timeMeasurements = new long[runs];
+
+        var granularWatch = new Stopwatch();
+        for (var i = 0; i < runs; i++)
+        {
+            var bot1 = (AI?)Activator.CreateInstance(bot1Type);
+            var bot2 = (AI?)Activator.CreateInstance(bot2Type);
+
+            granularWatch.Reset();
+            granularWatch.Start();
+            var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+            var (endReason, _) = game.Play();
+            granularWatch.Stop();
+
+            var gameTimeTaken = granularWatch.ElapsedMilliseconds;
+            timeMeasurements[i] = gameTimeTaken;
+
+            counter.Add(endReason);
+        }
+
+        Console.WriteLine($"Total time taken: {timeMeasurements.Sum()}ms");
+        Console.WriteLine($"Average time per game: {timeMeasurements.Average()}ms");
+        Console.WriteLine("\nStats from the games played:");
+        Console.WriteLine(counter.ToString());    
+    }
+    else
+    {
+        
+    }
+}, noOfRunsOption, threadsOption, bot1NameArgument, bot2NameArgument);
+
+mainCommand.Invoke(args);
+
+return returnValue;
