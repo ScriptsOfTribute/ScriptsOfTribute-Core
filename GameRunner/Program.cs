@@ -50,7 +50,8 @@ Type? FindBot(string name, out string? errorMessage)
 
     if (botCount > 1)
     {
-        errorMessage = "More than one bots with the same name found. Please, specify full name of the target bot: <namespace>.Name";
+        errorMessage = "More than one bots with the same name found. Please, specify full name of the target bot: <namespace>.Name. Bots found:\n";
+        errorMessage += string.Join('\n', allBots.Select(b => b.FullName));
         return null;
     }
 
