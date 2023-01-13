@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using SimpleBotsTests;
 using TalesOfTribute.AI;
+using TalesOfTribute.Board;
 
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
@@ -95,15 +96,15 @@ var mainCommand = new RootCommand("A game runner for bots.")
 };
 
 int returnValue = 0;
-mainCommand.SetHandler((runs, threads, bot1Type, bot2Type) =>
+mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
 {
-    if (threads < 1)
+    if (noOfThreads < 1)
     {
         Console.Error.WriteLine("Can't use less than 0 threads.");
         returnValue = -1;
     }
 
-    if (threads == 1)
+    if (noOfThreads == 1)
     {
         Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}:\n");
 
@@ -136,7 +137,49 @@ mainCommand.SetHandler((runs, threads, bot1Type, bot2Type) =>
     }
     else
     {
-        
+        if (noOfThreads > Environment.ProcessorCount)
+        {
+            Console.WriteLine($"WARNING: More threads ({noOfThreads}) specified than logical processor count ({Environment.ProcessorCount}).");
+        }
+
+        var gamesPerThread = runs / noOfThreads;
+        var gamesPerThreadRemainder = runs % noOfThreads;
+        var threads = new Task<List<EndGameState>>[noOfThreads];
+
+        List<EndGameState> PlayGames(int amount, Type bot1Type, Type bot2Type)
+        {
+            var results = new EndGameState[amount];
+            for (var i = 0; i < amount; i++)
+            {
+                var bot1 = (AI?)Activator.CreateInstance(bot1Type);
+                var bot2 = (AI?)Activator.CreateInstance(bot2Type);
+                var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+                var (endReason, _) = game.Play();
+                results[i] = endReason;
+            }
+
+            return results.ToList();
+        }
+
+        var watch = Stopwatch.StartNew();
+        for (var i = 0; i < noOfThreads; i++)
+        {
+            var spawnAdditionalGame = gamesPerThreadRemainder <= 0 ? 0 : 1;
+            gamesPerThreadRemainder -= 1;
+            var gamesToPlay = gamesPerThread + spawnAdditionalGame;
+            Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
+            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!));
+        }
+        Task.WaitAll(threads.ToArray<Task>());
+
+        var timeTaken = watch.ElapsedMilliseconds;
+
+        var counter = new GameEndStatsCounter();
+        threads.SelectMany(t => t.Result).ToList().ForEach(r => counter.Add(r));
+
+        Console.WriteLine($"\nTotal time taken: {timeTaken}ms");
+        Console.WriteLine("\nStats from the games played:");
+        Console.WriteLine(counter.ToString());
     }
 }, noOfRunsOption, threadsOption, bot1NameArgument, bot2NameArgument);
 
