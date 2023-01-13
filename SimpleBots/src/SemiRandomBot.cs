@@ -100,12 +100,12 @@ public class SemiRandomBot : AI
         return possibleMoves.FindAll(x => x.Command == commandType);
     }
 
-    private void UpdateAmountOfPatronsCards(SerializedBoard serializedBoard){
+    private void UpdateAmountOfPatronsCards(GameState gameState){
         numberOfPatronCards = new Dictionary<PatronId, int>();
-        foreach (PatronId patron in serializedBoard.Patrons){
+        foreach (PatronId patron in gameState.Patrons){
             numberOfPatronCards[patron] = 0;
         }
-        List<UniqueCard> allPlayerCards = GetAllPlayerCards(serializedBoard);
+        List<UniqueCard> allPlayerCards = GetAllPlayerCards(gameState);
         foreach (UniqueCard card in allPlayerCards){
             numberOfPatronCards[card.Deck] += 1;
         }
@@ -130,15 +130,15 @@ public class SemiRandomBot : AI
         }
     }
 
-    private void RemoveDestroyedCards(SerializedBoard serializedBoard, List<Move> playCardMoves){
+    private void RemoveDestroyedCards(GameState gameState, List<Move> playCardMoves){
         List<UniqueCard> playableCard = new List<UniqueCard>();
         foreach (Move m in playCardMoves){
             SimpleCardMove move = m as SimpleCardMove;
             playableCard.Add(move.Card);
         }
-        int numberOfLastActions = serializedBoard.CompletedActions.Count - allCompletedActions.Count;
-        List<CompletedAction> lastCompltedActions = serializedBoard.CompletedActions.TakeLast(numberOfLastActions).ToList();
-        allCompletedActions = serializedBoard.CompletedActions;
+        int numberOfLastActions = gameState.CompletedActions.Count - allCompletedActions.Count;
+        List<CompletedAction> lastCompltedActions = gameState.CompletedActions.TakeLast(numberOfLastActions).ToList();
+        allCompletedActions = gameState.CompletedActions;
         foreach (CompletedAction action in lastCompltedActions){
             if ((action.Type == CompletedActionType.DESTROY_CARD || action.Type ==CompletedActionType.DISCARD) && action.TargetCard is not null){
                 UniqueCard destroyedCard = action.TargetCard;
@@ -154,22 +154,20 @@ public class SemiRandomBot : AI
                     }
                 }
             }
-            if (action.Type == CompletedActionType.DRAW){
-                foreach(UniqueCard card in playableCard){
-                    bool found = false;
-                    for (int i = 0; i < 4; i++)
-                    {
-                        for (int j = 0; j < sortedByPatronCardsInHand[card.Deck].SortedByMaxCombo[i].Count; j++)
-                        {
-                            if (sortedByPatronCardsInHand[card.Deck].SortedByMaxCombo[i][j].UniqueId == card.UniqueId){
-                                found = true;
-                            }
-                        }
-                    }
-                    if (!found){
-                        HandleCard(card);
+        }
+        foreach(UniqueCard card in playableCard){
+            bool found = false;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < sortedByPatronCardsInHand[card.Deck].SortedByMaxCombo[i].Count; j++)
+                {
+                    if (sortedByPatronCardsInHand[card.Deck].SortedByMaxCombo[i][j].UniqueId == card.UniqueId){
+                        found = true;
                     }
                 }
+            }
+            if (!found){
+                HandleCard(card);
             }
         }
     }
@@ -198,15 +196,15 @@ public class SemiRandomBot : AI
         }
     }
 
-    private List<UniqueCard> GetAllPlayerCards(SerializedBoard serializedBoard){
-        return serializedBoard.CurrentPlayer.Hand.Concat(serializedBoard.CurrentPlayer.Played.Concat(serializedBoard.CurrentPlayer.CooldownPile.Concat(serializedBoard.CurrentPlayer.DrawPile))).ToList();
+    private List<UniqueCard> GetAllPlayerCards(GameState gameState){
+        return gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
     }
 
-    private UniqueCard BuyCard(List<UniqueCard> tavern, SerializedBoard serializedBoard, List<Move> possibleMoves) {
-        List<UniqueCard> affordableCards = tavern.FindAll(x=> x.Cost<=serializedBoard.CurrentPlayer.Coins);
+    private UniqueCard BuyCard(List<UniqueCard> tavern, GameState gameState, List<Move> possibleMoves) {
+        List<UniqueCard> affordableCards = tavern.FindAll(x=> x.Cost<=gameState.CurrentPlayer.Coins);
         UniqueCard chosenCard = affordableCards[0];
         int bestHeuristicScore = 0;
-        UpdateAmountOfPatronsCards(serializedBoard);
+        UpdateAmountOfPatronsCards(gameState);
 
         foreach(UniqueCard card in affordableCards) {
             int cardHeuristicScore = 0;
@@ -215,14 +213,14 @@ public class SemiRandomBot : AI
 
             switch (card.Deck) {
                 case PatronId.TREASURY:
-                    int opponnetAgents = serializedBoard.EnemyPlayer.Agents.Count;
+                    int opponnetAgents = gameState.EnemyPlayer.Agents.Count;
                     // really situational deck, you don't want to waste money unless boardstate need that
                     switch (card.Name) {
                         case "Tithe":
                             int numberOfPatronWhichFavoursMe = 0;
 
-                            foreach (KeyValuePair<PatronId, PlayerEnum> entry in serializedBoard.PatronStates.All) {
-                                if (entry.Value == serializedBoard.CurrentPlayer.PlayerID) {
+                            foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All) {
+                                if (entry.Value == gameState.CurrentPlayer.PlayerID) {
                                     numberOfPatronWhichFavoursMe += 1;
                                 }
                                 else {
@@ -232,13 +230,13 @@ public class SemiRandomBot : AI
                                 }
                             }
 
-                            if (numberOfPatronWhichFavoursMe + serializedBoard.CurrentPlayer.PatronCalls + 1 == 4) {
+                            if (numberOfPatronWhichFavoursMe + gameState.CurrentPlayer.PatronCalls + 1 == 4) {
                                 cardHeuristicScore = heuristicWinMoveValue;
                             }
                             break;
 
                         case "Black Sacrament":
-                            foreach(SerializedAgent agent in serializedBoard.EnemyPlayer.Agents) {
+                            foreach(SerializedAgent agent in gameState.EnemyPlayer.Agents) {
                                 tier += (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
                             }
 
@@ -246,7 +244,7 @@ public class SemiRandomBot : AI
                             break;
 
                         case "Ambush":
-                            foreach(SerializedAgent agent in serializedBoard.EnemyPlayer.Agents) {
+                            foreach(SerializedAgent agent in gameState.EnemyPlayer.Agents) {
                                 tier += (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
                             }
 
@@ -340,17 +338,17 @@ public class SemiRandomBot : AI
         return cardToSacrifice;
     }
 
-    private List<SerializedAgent> OpponentAgents(SerializedBoard serializedBoard){
-        List<SerializedAgent> opponentAgents = serializedBoard.EnemyPlayer.Agents;
-        List<SerializedAgent> tauntOpponentAgents = serializedBoard.EnemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
+    private List<SerializedAgent> OpponentAgents(GameState gameState){
+        List<SerializedAgent> opponentAgents = gameState.EnemyPlayer.Agents;
+        List<SerializedAgent> tauntOpponentAgents = gameState.EnemyPlayer.Agents.FindAll(agent => agent.RepresentingCard.Taunt);
         if (tauntOpponentAgents.Any()){
             return tauntOpponentAgents;
         }
         return opponentAgents;
     }
-    private UniqueCard AttackAgent(SerializedBoard serializedBoard){
-        List<SerializedAgent> opponentAgents = OpponentAgents(serializedBoard);
-        int myPower = serializedBoard.CurrentPlayer.Power;
+    private UniqueCard AttackAgent(GameState gameState){
+        List<SerializedAgent> opponentAgents = OpponentAgents(gameState);
+        int myPower = gameState.CurrentPlayer.Power;
         int idxAgentToKill = -1;
         int tierAgentToKill = 0;
         int idxAgentToHurt = -1;
@@ -377,11 +375,11 @@ public class SemiRandomBot : AI
         return opponentAgents[idxAgentToHurt].RepresentingCard;
     }
 
-    private int HeuristicValueOfPatronActivations(SerializedBoard serializedBoard, PatronId patron){
-        List<UniqueCard> drawPileCards = serializedBoard.CurrentPlayer.DrawPile;
-        List<UniqueCard> handCards = serializedBoard.CurrentPlayer.Hand;
-        List<UniqueCard> playedCards = serializedBoard.CurrentPlayer.Played;
-        List<UniqueCard> coolDownPileCards = serializedBoard.CurrentPlayer.CooldownPile;
+    private int HeuristicValueOfPatronActivations(GameState gameState, PatronId patron){
+        List<UniqueCard> drawPileCards = gameState.CurrentPlayer.DrawPile;
+        List<UniqueCard> handCards = gameState.CurrentPlayer.Hand;
+        List<UniqueCard> playedCards = gameState.CurrentPlayer.Played;
+        List<UniqueCard> coolDownPileCards = gameState.CurrentPlayer.CooldownPile;
 
 
         switch (patron){
@@ -393,35 +391,56 @@ public class SemiRandomBot : AI
                     return 0;
                 }
             case PatronId.DUKE_OF_CROWS:
-                if (serializedBoard.CurrentPlayer.Coins>=10){
-                    return (serializedBoard.CurrentPlayer.Coins/serializedBoard.CurrentPlayer.Prestige) * bigHeuristicValue;
+                if (gameState.CurrentPlayer.Coins>=10){
+                    return (gameState.CurrentPlayer.Coins/gameState.CurrentPlayer.Prestige) * bigHeuristicValue;
                 }
-                if (serializedBoard.CurrentPlayer.Coins-1+serializedBoard.CurrentPlayer.Prestige>40){
+                if (gameState.CurrentPlayer.Coins-1+gameState.CurrentPlayer.Prestige>40){
                     return bigHeuristicValue;
                 }
                 return 0;
             case PatronId.RAJHIN:
-                int opponentNumberOfCards = serializedBoard.EnemyPlayer.Hand.Concat(serializedBoard.EnemyPlayer.CooldownPile.Concat(serializedBoard.EnemyPlayer.DrawPile.Concat(serializedBoard.EnemyPlayer.Played))).ToList().Count();
+                int opponentNumberOfCards = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.EnemyPlayer.CooldownPile.Concat(gameState.EnemyPlayer.Played)).ToList().Count();
+                Console.WriteLine("HAND: " + gameState.EnemyPlayer.HandAndDraw.Count);
+                Console.WriteLine("COOLDOWN: " + gameState.EnemyPlayer.CooldownPile.Count);
+                Console.WriteLine("PLAYED: " + gameState.EnemyPlayer.Played.Count);
+                Console.WriteLine("ALL: " + opponentNumberOfCards);
+                Console.WriteLine();
+                
+                if (opponentNumberOfCards == 0) {
+                    foreach (CompletedAction action in gameState.CompletedActions) {
+                        bugLog.Append(action.ToString() + System.Environment.NewLine);
+                    }
+
+                    Console.WriteLine("CURRENT SEED: " + gameState.CurrentSeed);
+                    Console.WriteLine("INITIAL SEED: " + gameState.InitialSeed);
+
+                    foreach(KeyValuePair<PatronId, PlayerEnum> pair in gameState.PatronStates.All){
+                        Console.WriteLine(pair.Key + " " + pair.Value);
+                    }
+                    
+                    File.AppendAllText("0_cards_opp.txt", bugLog.ToString());
+                }
+
                 return bigHeuristicValue * (5/opponentNumberOfCards);
             case PatronId.PSIJIC:
                 int agentsTierValue = 0;
-                foreach (SerializedAgent agent in serializedBoard.EnemyPlayer.Agents){
+                foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
                     agentsTierValue += (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
                 }
                 return agentsTierValue * heuristicValueOfPatronActivations;
             case PatronId.ORGNUM:
                 if (powerNeed > 0){
-                    return heuristicValueOfPatronActivations * powerNeed * GetAllPlayerCards(serializedBoard).Count;
+                    return heuristicValueOfPatronActivations * powerNeed * GetAllPlayerCards(gameState).Count;
                 }
                 return 0;
             case PatronId.HLAALU:
                 int cardsValue = 0;
-                foreach(UniqueCard card in serializedBoard.CurrentPlayer.Played.Concat(serializedBoard.CurrentPlayer.CooldownPile).ToList()){
+                foreach(UniqueCard card in gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile).ToList()){
                     cardsValue += card.Cost-1;
                 }
                 return heuristicValueOfPatronActivations * cardsValue;
             case PatronId.PELIN:
-                return serializedBoard.CurrentPlayer.CooldownPile.FindAll(x => x.Type == CardType.AGENT).Count() * heuristicValueOfPatronActivations;
+                return gameState.CurrentPlayer.CooldownPile.FindAll(x => x.Type == CardType.AGENT).Count() * heuristicValueOfPatronActivations;
             case PatronId.RED_EAGLE:
                 return heuristicValueOfPatronActivations*5;
             case PatronId.TREASURY:
@@ -437,7 +456,7 @@ public class SemiRandomBot : AI
         }
     }
 
-    private PatronId ActivatePatron(SerializedBoard serializedBoard, List<Move> possibleMoves){
+    private PatronId ActivatePatron(GameState gameState, List<Move> possibleMoves){
         List<Move> patronMovess = possibleMoves.FindAll(x => x.Command == CommandEnum.CALL_PATRON);
         List<SimplePatronMove> patronMoves = new List<SimplePatronMove>();
         SimplePatronMove patronMove;
@@ -446,15 +465,15 @@ public class SemiRandomBot : AI
             patronMoves.Add(patronMove);
         }
         List<PatronId> patronThatCanBeActivated = patronMoves.Select(x => x.PatronId).ToList();
-        List<UniqueCard> coolDownPile = serializedBoard.CurrentPlayer.Hand;
-        List<UniqueCard> played = serializedBoard.CurrentPlayer.Played;
+        List<UniqueCard> coolDownPile = gameState.CurrentPlayer.Hand;
+        List<UniqueCard> played = gameState.CurrentPlayer.Played;
         List<UniqueCard> cursed = coolDownPile.Concat(played).ToList().FindAll(card => card.Type==CardType.CURSE);
         int numberOfPatronWhichFavoursMe = 0;
         int numberOfPatronWhichFavoursOpponent = 0;
         int myNumberOfPatronActivationToWin = 0;
         int opppnentNumberOfPatronActivationToWin = 0;
 
-        foreach (KeyValuePair<PatronId, PlayerEnum> entry in serializedBoard.PatronStates.All) {
+        foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All) {
             if (PatronId.TREASURY == entry.Key){
                 continue;
             }
@@ -463,7 +482,7 @@ public class SemiRandomBot : AI
                     myNumberOfPatronActivationToWin += 1;
                     opppnentNumberOfPatronActivationToWin += 1;
                 }
-                if (entry.Value == serializedBoard.CurrentPlayer.PlayerID){
+                if (entry.Value == gameState.CurrentPlayer.PlayerID){
                     opppnentNumberOfPatronActivationToWin += 1;
                 }
                 else{
@@ -471,11 +490,11 @@ public class SemiRandomBot : AI
                 }
             }
             else{
-                if (entry.Value == serializedBoard.CurrentPlayer.PlayerID) {
+                if (entry.Value == gameState.CurrentPlayer.PlayerID) {
                     opppnentNumberOfPatronActivationToWin += 2;
                     numberOfPatronWhichFavoursMe += 1;
                 }
-                if(entry.Value == serializedBoard.EnemyPlayer.PlayerID){
+                if(entry.Value == gameState.EnemyPlayer.PlayerID){
                     myNumberOfPatronActivationToWin += 2;
                     numberOfPatronWhichFavoursOpponent +=1;
                 }
@@ -486,9 +505,9 @@ public class SemiRandomBot : AI
             }
         }
 
-        if (myNumberOfPatronActivationToWin <= serializedBoard.CurrentPlayer.PatronCalls){
-            foreach (KeyValuePair<PatronId, PlayerEnum> entry in serializedBoard.PatronStates.All){
-                if (entry.Value != serializedBoard.CurrentPlayer.PlayerID && patronThatCanBeActivated.Contains(entry.Key)){
+        if (myNumberOfPatronActivationToWin <= gameState.CurrentPlayer.PatronCalls){
+            foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All){
+                if (entry.Value != gameState.CurrentPlayer.PlayerID && patronThatCanBeActivated.Contains(entry.Key)){
                     return entry.Key;
                 }
             }
@@ -502,10 +521,10 @@ public class SemiRandomBot : AI
         int maxHeuristicValueOfActivation = -10000;
         int patronHeuristicActivationValue;
         PatronId selectedPatron = patronThatCanBeActivated[0];
-        List<PatronId> allPatrons = serializedBoard.PatronStates.All.Keys.ToList();
+        List<PatronId> allPatrons = gameState.PatronStates.All.Keys.ToList();
         allPatrons.Add(PatronId.TREASURY);
         foreach (PatronId patron in patronThatCanBeActivated){
-            patronHeuristicActivationValue = HeuristicValueOfPatronActivations(serializedBoard, patron);
+            patronHeuristicActivationValue = HeuristicValueOfPatronActivations(gameState, patron);
             if (patronHeuristicActivationValue > maxHeuristicValueOfActivation){
                 maxHeuristicValueOfActivation = patronHeuristicActivationValue;
                 selectedPatron = patron;
@@ -514,10 +533,10 @@ public class SemiRandomBot : AI
         return selectedPatron;
     }
 
-    private UniqueCard PatronActivationMove(SerializedBoard serializedBoard, List<Move> possibleMoves){
-        UpdateAmountOfPatronsCards(serializedBoard);
+    private UniqueCard PatronActivationMove(GameState gameState, List<Move> possibleMoves){
+        UpdateAmountOfPatronsCards(gameState);
         Dictionary <UniqueCard, int> cardValue = new Dictionary<UniqueCard, int>();
-        switch (serializedBoard.PendingChoice.Context.PatronSource){
+        switch (gameState.PendingChoice.Context.PatronSource){
             case PatronId.TREASURY:
                 foreach(Move m in possibleMoves){
                     MakeChoiceMove<UniqueCard> move = m as MakeChoiceMove<UniqueCard>;
@@ -555,21 +574,21 @@ public class SemiRandomBot : AI
                 foreach(Move m in possibleMoves){
                     MakeChoiceMove<UniqueCard> move = m as MakeChoiceMove<UniqueCard>;
                     foreach (UniqueCard card in move.Choices){
-                        cardValue[card] = (int)CardTierList.GetCardTier(card.Name) + serializedBoard.EnemyPlayer.Agents.Find(agent => agent.RepresentingCard.UniqueId == card.UniqueId).CurrentHp;
+                        cardValue[card] = (int)CardTierList.GetCardTier(card.Name) + gameState.EnemyPlayer.Agents.Find(agent => agent.RepresentingCard.UniqueId == card.UniqueId).CurrentHp;
                     }
                 }
                 return cardValue.MaxBy(x => x.Value).Key;
         }
     }
     
-    private int GetEffectChoiceValue(UniqueEffect effect, SerializedBoard serializedBoard){
-        UpdateAmountOfPatronsCards(serializedBoard);
+    private int GetEffectChoiceValue(UniqueEffect effect, GameState gameState){
+        UpdateAmountOfPatronsCards(gameState);
         int counter = 0;
         switch (effect.Type){
             case EffectType.GAIN_COIN:
-                foreach(UniqueCard card in serializedBoard.TavernAvailableCards){
+                foreach(UniqueCard card in gameState.TavernAvailableCards){
                     if (CardTierList.GetCardTier(card.Name)>=TierEnum.B || numberOfPatronCards[card.Deck]>=3){
-                        if (card.Cost>= serializedBoard.CurrentPlayer.Coins && card.Cost <= serializedBoard.CurrentPlayer.Coins+effect.Amount){
+                        if (card.Cost>= gameState.CurrentPlayer.Coins && card.Cost <= gameState.CurrentPlayer.Coins+effect.Amount){
                             counter +=1;
                         }
                     }
@@ -581,44 +600,44 @@ public class SemiRandomBot : AI
                 return effect.Amount * prestigeValue;
             case EffectType.ACQUIRE_TAVERN:
                 int maxHeuristicValue = -1;
-                foreach(UniqueCard card in serializedBoard.TavernAvailableCards){
+                foreach(UniqueCard card in gameState.TavernAvailableCards){
                     maxHeuristicValue = Math.Max(maxHeuristicValue,  (int)CardTierList.GetCardTier(card.Name) + numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue);
                 }
                 return maxHeuristicValue;
             case EffectType.OPP_LOSE_PRESTIGE:
-                if (serializedBoard.EnemyPlayer.Prestige>=serializedBoard.CurrentPlayer.Prestige){
+                if (gameState.EnemyPlayer.Prestige>=gameState.CurrentPlayer.Prestige){
                     return bigHeuristicValue;
                 }
-                return (int)((double)serializedBoard.EnemyPlayer.Prestige/(double)serializedBoard.CurrentPlayer.Prestige)*1000;
+                return (int)((double)gameState.EnemyPlayer.Prestige/(double)gameState.CurrentPlayer.Prestige)*1000;
             case EffectType.REPLACE_TAVERN:
                 /*
                 int finalvalue= 0;
-                int cardLeftInHand = serializedBoard.CurrentPlayer.Hand.Count();
-                List<UniqueCard> affordableCards = serializedBoard.TavernAvailableCards.FindAll(card => card.Cost <= serializedBoard.CurrentPlayer.Coins);
-                foreach(UniqueCard card in serializedBoard.TavernAvailableCards){
+                int cardLeftInHand = gameState.CurrentPlayer.Hand.Count();
+                List<UniqueCard> affordableCards = gameState.TavernAvailableCards.FindAll(card => card.Cost <= gameState.CurrentPlayer.Coins);
+                foreach(UniqueCard card in gameState.TavernAvailableCards){
                     if (CardTierList.GetCardTier(card.Name) >= TierEnum.B )
                 }
                 */
                 return 800;
             case EffectType.DESTROY_CARD:
-                foreach (UniqueCard card in GetAllPlayerCards(serializedBoard)){
+                foreach (UniqueCard card in GetAllPlayerCards(gameState)){
                     if (CardTierList.GetCardTier(card.Name)<= TierEnum.C || numberOfPatronCards[card.Deck]<=3){
                         counter +=1;
                     }
                 }
                 return 200*counter;     
             case EffectType.DRAW:
-                return 500 * serializedBoard.CurrentPlayer.Hand.Count();
+                return 500 * gameState.CurrentPlayer.Hand.Count();
             case EffectType.OPP_DISCARD:
                 return bigHeuristicValue;
             case EffectType.RETURN_TOP:
                 int value = 0;
-                foreach (UniqueCard card in serializedBoard.CurrentPlayer.CooldownPile.TakeLast(effect.Amount)){
+                foreach (UniqueCard card in gameState.CurrentPlayer.CooldownPile.TakeLast(effect.Amount)){
                     value += (int)CardTierList.GetCardTier(card.Name);
                 }
                 return value;                       
             case EffectType.TOSS:
-                return 200 * serializedBoard.CurrentPlayer.Hand.Count();
+                return 200 * gameState.CurrentPlayer.Hand.Count();
             default:
                 return 500;
         }
@@ -640,15 +659,15 @@ public class SemiRandomBot : AI
         return cardsValue.Take(k).Select(x => x.Value).ToList();
     }
 
-    private List<UniqueCard>? CardsSelection(SerializedBoard serializedBoard){
-        switch (serializedBoard.PendingChoice.ChoiceFollowUp){
+    private List<UniqueCard>? CardsSelection(GameState gameState){
+        switch (gameState.PendingChoice.ChoiceFollowUp){
             case ChoiceFollowUp.ACQUIRE_CARDS:
             case ChoiceFollowUp.KNOCKOUT_AGENTS:
             case ChoiceFollowUp.TOSS_CARDS:
             case ChoiceFollowUp.REFRESH_CARDS:
-                return SelectKBestCards(serializedBoard.PendingChoice.PossibleCards, serializedBoard.PendingChoice.MaxChoices);
+                return SelectKBestCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
             default:
-                return SelectKWorstCards(serializedBoard.PendingChoice.PossibleCards, serializedBoard.PendingChoice.MaxChoices);
+                return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
         }
     }
 
@@ -656,84 +675,89 @@ public class SemiRandomBot : AI
         return availablePatrons[random.Next(availablePatrons.Count)];
     }
 
-    private void LogAllCard(SerializedBoard serializedBoard){
-        foreach (UniqueCard card in serializedBoard.CurrentPlayer.Hand){
-            Console.WriteLine("Hand: " + card.Name + " " + "type: " + card.Type.ToString() +" " + "unique_id: " + card.UniqueId.ToString());
+    private void LogAllCard(GameState gameState){
+        foreach (UniqueCard card in gameState.CurrentPlayer.Hand){
+            //Console.WriteLine("Hand: " + card.Name + " " + "type: " + card.Type.ToString() +" " + "unique_id: " + card.UniqueId.ToString());
         }
-        foreach (SerializedAgent agent in serializedBoard.CurrentPlayer.Agents){
-            Console.WriteLine("Agents: " + agent.RepresentingCard.Name + " " + "type: " + agent.RepresentingCard.Type.ToString()+" " + "unique_id: " + agent.RepresentingCard.UniqueId.ToString());
+        foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
+            //Console.WriteLine("Agents: " + agent.RepresentingCard.Name + " " + "type: " + agent.RepresentingCard.Type.ToString()+" " + "unique_id: " + agent.RepresentingCard.UniqueId.ToString());
         }
     }
 
-    public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves){
+    public override Move Play(GameState gameState, List<Move> possibleMoves){
 
         if (startOfGame){
             startOfGame = false;
-            HandleStartOfGame(serializedBoard.PatronStates.All.Keys.ToList());
+            HandleStartOfGame(gameState.PatronStates.All.Keys.ToList());
         }
 
         List<Move> playCardMoves = possibleMoves.FindAll(x => x.Command ==CommandEnum.PLAY_CARD || x.Command ==CommandEnum.ACTIVATE_AGENT);
-        HandleAllCardsInHand(serializedBoard.CurrentPlayer.Hand.Concat(serializedBoard.CurrentPlayer.Agents.Select(agent => agent.RepresentingCard)).ToList());
+        HandleAllCardsInHand(gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Agents.Select(agent => agent.RepresentingCard)).ToList());
 
         if (startOfTurn){
             startOfTurn = false;
             deckInPlay = PatronId.TREASURY;
 
-            List<SerializedAgent> contractAgents = serializedBoard.CurrentPlayer.Agents.FindAll(agent => agent.RepresentingCard.Type == CardType.CONTRACT_AGENT);
+            List<SerializedAgent> contractAgents = gameState.CurrentPlayer.Agents.FindAll(agent => agent.RepresentingCard.Type == CardType.CONTRACT_AGENT);
             foreach (SerializedAgent contractAgent in contractAgents){
                 HandleCard(contractAgent.RepresentingCard);
                 cardsInHandAndOnBoard.Add(contractAgent.RepresentingCard);
             }
-            allCompletedActions = serializedBoard.CompletedActions;
+            allCompletedActions = gameState.CompletedActions;
         }
         else{
-            int numberOfLastActions = serializedBoard.CompletedActions.Count - allCompletedActions.Count;
-            Console.WriteLine(System.Environment.NewLine);
-            List<CompletedAction> lastCompltedActions = serializedBoard.CompletedActions.TakeLast(numberOfLastActions).ToList();
+            int numberOfLastActions = gameState.CompletedActions.Count - allCompletedActions.Count;
+            //Console.WriteLine(System.Environment.NewLine);
+            List<CompletedAction> lastCompltedActions = gameState.CompletedActions.TakeLast(numberOfLastActions).ToList();
             foreach (CompletedAction action in lastCompltedActions){
-                Console.WriteLine(action.ToString());
+                //Console.WriteLine(action.ToString());
             }
-            RemoveDestroyedCards(serializedBoard, playCardMoves);
+            RemoveDestroyedCards(gameState, playCardMoves);
         }
+        /*
+        if (gameState.EnemyPlayer.HandAndDraw.Concat(gameState.EnemyPlayer.CooldownPile.Concat(gameState.EnemyPlayer.Played)).ToList().Count()>0){
+            File.AppendAllText("enumybug.txt", gameState.CompletedActions.ForEach(p => p.ToString());
+        }
+        */
 
        
         if (playCardMoves.Count > 0){
-            Console.WriteLine("Possible moves");
+            //Console.WriteLine("Possible moves");
             foreach (Move m in playCardMoves){
                 SimpleCardMove move = m as SimpleCardMove;
-                Console.WriteLine(move.Command + " " + move.Card.Name + " " + move.Card.UniqueId);
+                //Console.WriteLine(move.Command + " " + move.Card.Name + " " + move.Card.UniqueId);
             }
-            Console.WriteLine("Log all cards");
-            LogAllCard(serializedBoard);
+            //Console.WriteLine("Log all cards");
+            LogAllCard(gameState);
             chosenCard = PlayCard();
-            if ((chosenCard.Type == CardType.AGENT  || chosenCard.Type==CardType.CONTRACT_AGENT)&& serializedBoard.CurrentPlayer.Agents.Any(x => x.RepresentingCard.UniqueId == chosenCard.UniqueId)){
-                Console.WriteLine("Chosen move");
-                Console.WriteLine("Agent activation: " + chosenCard.Name);
+            if ((chosenCard.Type == CardType.AGENT  || chosenCard.Type==CardType.CONTRACT_AGENT)&& gameState.CurrentPlayer.Agents.Any(x => x.RepresentingCard.UniqueId == chosenCard.UniqueId)){
+                //Console.WriteLine("Chosen move");
+                //Console.WriteLine("Agent activation: " + chosenCard.Name);
                 return Move.ActivateAgent(chosenCard);
             }
-            Console.WriteLine("Chosen move");
-            Console.WriteLine("Play card: " + chosenCard.Name   + " " + chosenCard.UniqueId);
+            //Console.WriteLine("Chosen move");
+            //Console.WriteLine("Play card: " + chosenCard.Name   + " " + chosenCard.UniqueId);
             return Move.PlayCard(chosenCard);
         }
         if (GetAllMoveOfType(possibleMoves, CommandEnum.BUY_CARD).Count > 0){
-            return Move.BuyCard(BuyCard(serializedBoard.TavernAvailableCards, serializedBoard, possibleMoves));
+            return Move.BuyCard(BuyCard(gameState.TavernAvailableCards, gameState, possibleMoves));
         }
         if (GetAllMoveOfType(possibleMoves, CommandEnum.CALL_PATRON).Count>0){
-            return Move.CallPatron(ActivatePatron(serializedBoard, possibleMoves));
+            return Move.CallPatron(ActivatePatron(gameState, possibleMoves));
         }
         if (GetAllMoveOfType(possibleMoves, CommandEnum.ATTACK).Count >0){
-            return Move.Attack(AttackAgent(serializedBoard));
+            return Move.Attack(AttackAgent(gameState));
         }
         if (GetAllMoveOfType(possibleMoves, CommandEnum.MAKE_CHOICE).Count>0){
-            switch (serializedBoard.PendingChoice.Context.ChoiceType){
+            switch (gameState.PendingChoice.Context.ChoiceType){
                 case ChoiceType.CARD_EFFECT:
-                    return Move.MakeChoice(CardsSelection(serializedBoard));
+                    return Move.MakeChoice(CardsSelection(gameState));
                 case ChoiceType.EFFECT_CHOICE:
                     Move selectedMove = possibleMoves[0];
                     int maxValue = -1;
                     foreach(Move m in possibleMoves){
                         MakeChoiceMove<UniqueEffect> move = m as MakeChoiceMove<UniqueEffect>;
-                        int moveValue = GetEffectChoiceValue(move.Choices[0], serializedBoard);
+                        int moveValue = GetEffectChoiceValue(move.Choices[0], gameState);
                         if (moveValue > maxValue){
                             maxValue = moveValue;
                             selectedMove = m;
@@ -741,7 +765,7 @@ public class SemiRandomBot : AI
                     }
                     return selectedMove;
                 case ChoiceType.PATRON_ACTIVATION:
-                    UniqueCard selectedCard = PatronActivationMove(serializedBoard, possibleMoves);
+                    UniqueCard selectedCard = PatronActivationMove(gameState, possibleMoves);
                     return Move.MakeChoice(new List<UniqueCard> {selectedCard});
             }
         }

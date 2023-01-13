@@ -55,10 +55,10 @@ public class RandomHeuristicBot : AI
         return selectedPatron ?? availablePatrons.PickRandom();
     }
 
-    private int BoardStateHeuristicValueEndTurn(SerializedBoard serializedBoard, List<CompletedAction> startOfturnCompletedActions){
+    private int BoardStateHeuristicValueEndTurn(GameState gameState, List<CompletedAction> startOfturnCompletedActions){
         int finalValue = 0;
-        foreach (KeyValuePair<PatronId, PlayerEnum> entry in serializedBoard.PatronStates.All) {
-            if (entry.Value == serializedBoard.CurrentPlayer.PlayerID) {
+        foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All) {
+            if (entry.Value == gameState.CurrentPlayer.PlayerID) {
                 finalValue += patronFavour;
             }
             else if (entry.Value == PlayerEnum.NO_PLAYER_SELECTED){
@@ -69,22 +69,22 @@ public class RandomHeuristicBot : AI
             }
         }
 
-        finalValue += serializedBoard.CurrentPlayer.Coins * coinsValue;
-        finalValue += serializedBoard.CurrentPlayer.Power * powerValue;
-        finalValue += serializedBoard.CurrentPlayer.Prestige * prestigeValue;
+        finalValue += gameState.CurrentPlayer.Coins * coinsValue;
+        finalValue += gameState.CurrentPlayer.Power * powerValue;
+        finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
         
         int tier = -10000;
-        foreach (SerializedAgent agent in serializedBoard.CurrentPlayer.Agents){
+        foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
             tier = (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
             finalValue += agentOnBoardValue * tier + agent.CurrentHp * hpValue;
         }
 
-        foreach (SerializedAgent agent in serializedBoard.EnemyPlayer.Agents){
+        foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
             tier = (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
             finalValue -= agentOnBoardValue * tier + agent.CurrentHp * hpValue + opponentAgentsPenaltyValue;
         }
 
-        List<UniqueCard> allCards = serializedBoard.CurrentPlayer.Hand.Concat(serializedBoard.CurrentPlayer.Played.Concat(serializedBoard.CurrentPlayer.CooldownPile.Concat(serializedBoard.CurrentPlayer.DrawPile))).ToList();
+        List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
         Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
 
         foreach(Card card in allCards){
@@ -101,11 +101,11 @@ public class RandomHeuristicBot : AI
         foreach (KeyValuePair<PatronId, int> entry in potentialComboNumber){
             finalValue += (int)Math.Pow(entry.Value, potentialComboValue);
         }
-        foreach(Card card in serializedBoard.TavernCards){
+        foreach(Card card in gameState.TavernCards){
             finalValue -= penaltyForHighTierInTavern * (int)CardTierList.GetCardTier(card.Name);
         }
 
-        finalValue += CountNumberOfDrawsInTurn(startOfturnCompletedActions, serializedBoard.CompletedActions) * numberOfDrawsValue;
+        finalValue += CountNumberOfDrawsInTurn(startOfturnCompletedActions, gameState.CompletedActions) * numberOfDrawsValue;
         return finalValue;
     }
 
@@ -113,19 +113,19 @@ public class RandomHeuristicBot : AI
         return possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
     }
 
-    private (List<Move>, SerializedBoard) GenerateRandomTurnMoves(SerializedBoard serializedBoard, List<Move> possibleMoves){
+    private (List<Move>, GameState) GenerateRandomTurnMoves(GameState gameState, List<Move> possibleMoves){
         List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(possibleMoves);
         List<Move> movesOrder = new List<Move>();
         while (notEndTurnPossibleMoves.Count != 0){
             Move chosenMove = notEndTurnPossibleMoves.PickRandom();
             movesOrder.Add(chosenMove);
-            (serializedBoard, List<Move> newPossibleMoves) = serializedBoard.ApplyState(chosenMove);
+            (gameState, List<Move> newPossibleMoves) = gameState.ApplyState(chosenMove);
             notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
         }
-        return (movesOrder, serializedBoard);
+        return (movesOrder, gameState);
     }
 
-    private List<Move> GenerateKTurnGamesAndSelectBest(SerializedBoard serializedBoard, List<Move> possibleMoves){
+    private List<Move> GenerateKTurnGamesAndSelectBest(GameState gameState, List<Move> possibleMoves){
         List<Move> bestPlayout = new List<Move>();
         int highestHeuristicValue = -100000000;
         int heuristicValue = 0;
@@ -133,8 +133,8 @@ public class RandomHeuristicBot : AI
         Stopwatch s = new Stopwatch();
         s.Start();
         while (s.Elapsed < TimeSpan.FromSeconds(0.5)){
-            (List<Move> generatedPlayout, SerializedBoard endTurnBoard)= GenerateRandomTurnMoves(serializedBoard, possibleMoves);
-            heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard, serializedBoard.CompletedActions);
+            (List<Move> generatedPlayout, GameState endTurnBoard)= GenerateRandomTurnMoves(gameState, possibleMoves);
+            heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard, gameState.CompletedActions);
             if (highestHeuristicValue < heuristicValue){
                 bestPlayout = generatedPlayout;
                 highestHeuristicValue = heuristicValue;
@@ -147,22 +147,22 @@ public class RandomHeuristicBot : AI
         return bestPlayout;
     }
 
-    public override Move Play(SerializedBoard serializedBoard, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
         if (startOfGame){
-            myID = serializedBoard.CurrentPlayer.PlayerID;
-            patrons = string.Join(",", serializedBoard.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
+            myID = gameState.CurrentPlayer.PlayerID;
+            patrons = string.Join(",", gameState.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
             startOfGame = false;
         }
         if (newGenarate){
-            selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(serializedBoard, possibleMoves);
+            selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
             newGenarate = false;
         }
         if (selectedTurnPlayout.Count != 0){
             Move move = selectedTurnPlayout[0];
             selectedTurnPlayout.RemoveAt(0);
             if (!possibleMoves.Contains(move)){
-                selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(serializedBoard, possibleMoves);
+                selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
                 newGenarate = false;
                 move = selectedTurnPlayout[0];
                 selectedTurnPlayout.RemoveAt(0);

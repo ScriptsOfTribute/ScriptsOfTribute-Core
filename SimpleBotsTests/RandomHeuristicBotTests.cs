@@ -58,22 +58,21 @@ public class RandomHeuristicBotTests
     {
         //ClashEveryBotTogether cl = new ClashEveryBotTogether();
         //cl.BotClash();
-        //AdjustParametersByEvolution ewo = new AdjustParametersByEvolution();
-        //int[] genotype = ewo.Evolution(20, 1000, 2);
+        AdjustParametersByEvolution ewo = new AdjustParametersByEvolution();
+        int[] genotype = ewo.Evolution(100, 1000, 2);
         
-        const int testAmount = 100000;
+        const int testAmount = 1000;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
             var bot1 = new SemiRandomBot();
-            //bot1.SetGenotype(genotype);
+            bot1.SetGenotype(genotype);
             var bot2 = new RandomMaximizePrestigeBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
-
-            if (endState.Reason == GameEndReason.INCORRECT_MOVE)
+            if (endState.Reason == GameEndReason.INCORRECT_MOVE || endState.Reason == GameEndReason.INTERNAL_ERROR)
             {
                 Console.WriteLine(endState.Winner);
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
