@@ -86,12 +86,12 @@ var mainCommand = new RootCommand("A game runner for bots.")
 
 mainCommand.SetHandler((runs, bot1Type, bot2Type) =>
 {
-    Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}");
+    Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}:\n");
 
     var counter = new GameEndStatsCounter();
 
     var timeMeasurements = new long[runs];
-    
+
     var granularWatch = new Stopwatch();
     for (var i = 0; i < runs; i++)
     {
@@ -112,6 +112,7 @@ mainCommand.SetHandler((runs, bot1Type, bot2Type) =>
 
     Console.WriteLine($"Total time taken: {timeMeasurements.Sum()}ms");
     Console.WriteLine($"Average time per game: {timeMeasurements.Average()}ms");
+    Console.WriteLine("\nStats from the games played:");
     Console.WriteLine(counter.ToString());
 }, noOfRunsOption, bot1NameArgument, bot2NameArgument);
 
