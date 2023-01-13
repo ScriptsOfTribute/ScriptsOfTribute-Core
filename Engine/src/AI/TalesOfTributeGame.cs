@@ -26,9 +26,9 @@ public class TalesOfTributeGame
         _players[1] = players[1];
     }
 
-    private async Task<Move> MoveTask(GameState state, List<Move> moves)
+    private Task<Move> MoveTask(GameState state, List<Move> moves)
     {
-        return await Task.Run(() =>
+        return Task.Run(() =>
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -39,7 +39,7 @@ public class TalesOfTributeGame
         });
     }
 
-    private async Task<(EndGameState?, Move?)> PlayWithTimeout()
+    private (EndGameState?, Move?) PlayWithTimeout()
     {
         TimeSpan timeout;
         GameEndReason timeoutType;
@@ -58,9 +58,7 @@ public class TalesOfTributeGame
         var moves = _api.GetListOfPossibleMoves();
 
         var task = MoveTask(state, moves);
-        var res = await Task.WhenAny(task, Task.Delay(timeout));
-
-        if (res == task)
+        if (task.Wait(timeout))
         {
             var result = task.Result;
             _moveHistory.Add(result);
@@ -70,12 +68,12 @@ public class TalesOfTributeGame
         return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);
     }
     
-    public async Task<(EndGameState, SerializedBoard)> Play()
+    public (EndGameState, SerializedBoard) Play()
     {
         EndGameState? endGameState = null;
         do
         {
-            var startOfTurnResult = await HandleStartOfTurnChoices();
+            var startOfTurnResult = HandleStartOfTurnChoices();
             if (startOfTurnResult is not null)
             {
                 return EndGame(startOfTurnResult);
@@ -84,7 +82,7 @@ public class TalesOfTributeGame
             Move? move;
             do
             {
-                (var timeout, move) = await PlayWithTimeout();
+                (var timeout, move) = PlayWithTimeout();
 
                 if (timeout is not null)
                 {
@@ -96,7 +94,7 @@ public class TalesOfTributeGame
                     throw new EngineException("This shouldn't happen - there is a bug in the engine!");
                 }
 
-                var result = await HandleFreeMove(move);
+                var result = HandleFreeMove(move);
                 if (result is not null)
                 {
                     return EndGame(result);
@@ -125,7 +123,7 @@ public class TalesOfTributeGame
     }
 
 
-    private async Task<EndGameState?> HandleStartOfTurnChoices()
+    private EndGameState? HandleStartOfTurnChoices()
     {
         if (_api.BoardState != BoardState.START_OF_TURN_CHOICE_PENDING)
         {
@@ -141,7 +139,7 @@ public class TalesOfTributeGame
                     "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
             }
                 
-            var result = await HandleStartOfTurnChoice();
+            var result = HandleStartOfTurnChoice();
 
             if (result is not null)
             {
@@ -152,9 +150,9 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private async Task<EndGameState?> HandleStartOfTurnChoice()
+    private EndGameState? HandleStartOfTurnChoice()
     {
-        var (timeout, playersChoice) = await PlayWithTimeout();
+        var (timeout, playersChoice) = PlayWithTimeout();
 
         if (timeout is not null)
         {
@@ -169,7 +167,7 @@ public class TalesOfTributeGame
         return _api.MakeChoice(makeChoiceMove.Choices);
     }
 
-    private async Task<EndGameState?> HandleFreeMove(Move move)
+    private EndGameState? HandleFreeMove(Move move)
     {
         if (!_api.IsMoveLegal(move))
         {
@@ -184,39 +182,39 @@ public class TalesOfTributeGame
 
         return move.Command switch
         {
-            CommandEnum.PLAY_CARD => await HandlePlayCard((SimpleCardMove)move),
+            CommandEnum.PLAY_CARD => HandlePlayCard((SimpleCardMove)move),
             CommandEnum.ATTACK => HandleAttack((SimpleCardMove)move),
-            CommandEnum.BUY_CARD => await HandleBuyCard((SimpleCardMove)move),
-            CommandEnum.CALL_PATRON => await HandleCallPatron((SimplePatronMove)move),
-            CommandEnum.ACTIVATE_AGENT => await HandleActivateAgent((SimpleCardMove)move),
+            CommandEnum.BUY_CARD => HandleBuyCard((SimpleCardMove)move),
+            CommandEnum.CALL_PATRON => HandleCallPatron((SimplePatronMove)move),
+            CommandEnum.ACTIVATE_AGENT => HandleActivateAgent((SimpleCardMove)move),
             CommandEnum.END_TURN => null,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private async Task<EndGameState?> HandleActivateAgent(SimpleCardMove move)
+    private EndGameState? HandleActivateAgent(SimpleCardMove move)
     {
-        return _api.ActivateAgent(move.Card) ?? await ConsumePotentialPendingMoves();
+        return _api.ActivateAgent(move.Card) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandlePlayCard(SimpleCardMove move)
+    private EndGameState? HandlePlayCard(SimpleCardMove move)
     {
-        return _api.PlayCard(move.Card) ?? await ConsumePotentialPendingMoves();
+        return _api.PlayCard(move.Card) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleBuyCard(SimpleCardMove move)
+    private EndGameState? HandleBuyCard(SimpleCardMove move)
     {
-        return _api.BuyCard(move.Card) ?? await ConsumePotentialPendingMoves();
+        return _api.BuyCard(move.Card) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> ConsumePotentialPendingMoves()
+    private EndGameState? ConsumePotentialPendingMoves()
     {
         SerializedChoice? choice = null;
         try
         {
             while ((choice = _api.PendingChoice) is not null)
             {
-                var result = await HandleChoice(choice);
+                var result = HandleChoice(choice);
 
                 if (result is not null)
                 {
@@ -235,23 +233,23 @@ public class TalesOfTributeGame
     private EndGameState? HandleAttack(SimpleCardMove move)
         => _api.AttackAgent(move.Card);
 
-    private async Task<EndGameState?> HandleCallPatron(SimplePatronMove move)
+    private EndGameState? HandleCallPatron(SimplePatronMove move)
     {
         if (!Enum.IsDefined(typeof(PatronId), move.PatronId))
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Invalid patron selected.");
         }
 
-        return _api.PatronActivation(move.PatronId) ?? await ConsumePotentialPendingMoves();
+        return _api.PatronActivation(move.PatronId) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleChoice(SerializedChoice result)
+    private EndGameState? HandleChoice(SerializedChoice result)
     {
         switch (result.Type)
         {
             case Choice.DataType.CARD:
             {
-                var (timeout, move) = await PlayWithTimeout();
+                var (timeout, move) = PlayWithTimeout();
                 if (timeout is not null)
                 {
                     return timeout;
@@ -273,7 +271,7 @@ public class TalesOfTributeGame
             }
             case Choice.DataType.EFFECT:
             {
-                var (timeout, move) = await PlayWithTimeout();
+                var (timeout, move) = PlayWithTimeout();
                 if (timeout is not null)
                 {
                     return timeout;
