@@ -146,17 +146,25 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
         var gamesPerThreadRemainder = runs % noOfThreads;
         var threads = new Task<List<EndGameState>>[noOfThreads];
 
-        List<EndGameState> PlayGames(int amount, Type bot1Type, Type bot2Type)
+        List<EndGameState> PlayGames(int amount, Type bot1T, Type bot2T, int threadNo)
         {
             var results = new EndGameState[amount];
+            var timeMeasurements = new long[amount];
+            var watch = new Stopwatch();
             for (var i = 0; i < amount; i++)
             {
-                var bot1 = (AI?)Activator.CreateInstance(bot1Type);
-                var bot2 = (AI?)Activator.CreateInstance(bot2Type);
+                var bot1 = (AI?)Activator.CreateInstance(bot1T);
+                var bot2 = (AI?)Activator.CreateInstance(bot2T);
+                watch.Reset();
+                watch.Start();
                 var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
                 var (endReason, _) = game.Play();
+                watch.Stop();
                 results[i] = endReason;
+                timeMeasurements[i] = watch.ElapsedMilliseconds;
             }
+
+            Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}.");
 
             return results.ToList();
         }
@@ -168,7 +176,7 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
             gamesPerThreadRemainder -= 1;
             var gamesToPlay = gamesPerThread + spawnAdditionalGame;
             Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
-            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!));
+            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, i));
         }
         Task.WaitAll(threads.ToArray<Task>());
 
