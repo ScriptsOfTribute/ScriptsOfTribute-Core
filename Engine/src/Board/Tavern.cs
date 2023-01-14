@@ -25,26 +25,6 @@ namespace TalesOfTribute
             }
         }
 
-        public UniqueCard Acquire(UniqueCard card)
-        {
-            if (!AvailableCards.Contains(card))
-            {
-                throw new EngineException($"Card {card.CommonId} is not available!");
-            }
-            int idx = AvailableCards.FindIndex(x => x.UniqueId == card.UniqueId);
-            AvailableCards.RemoveAt(idx);
-            if (_simulationState && Cards.First().CommonId != CardId.UNKNOWN)
-            {
-                AvailableCards.Insert(idx, GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
-            }
-            else
-            {
-                AvailableCards.Insert(idx, this.Cards.First());
-            }
-            Cards.RemoveAt(0);
-            return card;
-        }
-
         public List<UniqueCard> GetAffordableCards(int coin)
         {
             return this.AvailableCards.Where(card => card.CommonId != CardId.UNKNOWN && card.Cost <= coin).ToList();
@@ -68,9 +48,16 @@ namespace TalesOfTribute
 
         public void DrawAt(int index)
         {
-            var newCard = Cards.First();
-            Cards.Remove(newCard);
-            AvailableCards.Insert(index, newCard);
+            
+            if (_simulationState && Cards.First().CommonId != CardId.UNKNOWN)
+            {
+                AvailableCards.Insert(index, GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
+            }
+            else
+            {
+                AvailableCards.Insert(index, this.Cards.First());
+            }
+            Cards.RemoveAt(0);
         }
 
         private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards, bool cheats)

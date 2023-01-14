@@ -157,8 +157,6 @@ namespace TalesOfTribute
             var cooldownShuffled = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
             DrawPile.AddRange(cooldownShuffled);
             CooldownPile.Clear();
-            // TODO: Adjust known cards after testing in game (TODO above).
-            KnownUpcomingDrawsAmount = 0;
         }
 
         public void EndTurn()
