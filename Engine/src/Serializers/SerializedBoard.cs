@@ -50,19 +50,19 @@ namespace TalesOfTribute
 
         public SerializedBoard(
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
-            TavernAvailableCards = tavern.AvailableCards.ToList();
+            TavernAvailableCards = tavern.AvailableCards;
             TavernCards = tavern.Cards;
             PatronStates = new PatronStates(patrons.ToList());
             BoardState = state;
             PendingChoice = maybeChoice?.Serialize();
             ComboStates = comboContext.ToComboStates();
             UpcomingEffects = upcomingEffects.ToList();
-            StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
-            CompletedActions = completedActions.ToList();
+            StartOfNextTurnEffects = startOfNextTurnEffects;
+            CompletedActions = completedActions;
             GameEndState = endGameState;
             CurrentSeed = rng.CurrentSeed;
             InitialSeed = rng.InitialSeed;

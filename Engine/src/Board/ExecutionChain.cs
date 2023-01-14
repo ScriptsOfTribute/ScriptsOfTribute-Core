@@ -6,11 +6,21 @@ namespace TalesOfTribute;
 
 public class ExecutionChain
 {
-    private List<UniqueBaseEffect> _pendingEffects = new();
+    private List<UniqueBaseEffect> _pendingEffects;
     public IReadOnlyCollection<UniqueBaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
     public bool Empty => _pendingEffects.Count == 0;
     public Choice? PendingChoice { get; private set; }
     public bool Completed => Empty && PendingChoice is null;
+
+    public ExecutionChain()
+    {
+        _pendingEffects = new();
+    }
+
+    public ExecutionChain(int capacity)
+    {
+        _pendingEffects = new List<UniqueBaseEffect>(capacity);
+    }
 
     public void Add(UniqueBaseEffect effect)
     {
@@ -84,7 +94,7 @@ public class ExecutionChain
 
     public static ExecutionChain FromEffects(List<UniqueBaseEffect> effects, Choice? pendingChoice)
     {
-        var chain = new ExecutionChain();
+        var chain = new ExecutionChain(effects.Count);
         effects.ForEach(e => chain.Add(e));
         chain.PendingChoice = pendingChoice;
         return chain;

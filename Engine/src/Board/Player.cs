@@ -319,9 +319,17 @@ namespace TalesOfTribute
 
         public static Player FromSerializedPlayer(SerializedPlayer player, SeededRandom rnd, bool cheats)
         {
-            return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, player.Hand.ToList(),
-                player.DrawPile.ToList(), player.Played.ToList(),
-                player.Agents.Select(Agent.FromSerializedAgent).ToList(), player.CooldownPile.ToList(),
+            var hand = new List<UniqueCard>(player.Hand.Count);
+            hand.AddRange(player.Hand);
+            var drawPile = new List<UniqueCard>(player.DrawPile.Count);
+            drawPile.AddRange(player.DrawPile);
+            var played = new List<UniqueCard>(player.Played.Count);
+            played.AddRange(player.Played);
+            var cooldownPile = new List<UniqueCard>(player.CooldownPile.Count);
+            cooldownPile.AddRange(player.CooldownPile);
+            return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, hand,
+                drawPile, played,
+                player.Agents.Select(Agent.FromSerializedAgent).ToList(), cooldownPile,
                 player.PatronCalls, rnd, player.KnownUpcomingDraws.Count, cheats);
         }
     }
