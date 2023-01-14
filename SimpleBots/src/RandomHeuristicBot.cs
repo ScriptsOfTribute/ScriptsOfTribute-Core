@@ -1,4 +1,3 @@
-using SimpleBots;
 using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
@@ -7,7 +6,7 @@ using TalesOfTribute.Board.Cards;
 using System.Diagnostics;
 using System.Text;
 
-namespace SimpleBotsTests;
+namespace SimpleBots;
 
 public class RandomHeuristicBot : AI
 {

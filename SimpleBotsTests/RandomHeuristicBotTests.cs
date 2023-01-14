@@ -16,7 +16,7 @@ public class RandomHeuristicBotTests
     {
         _testOutputHelper = testOutputHelper;
     }
-    /*
+    
     [Fact]
     public void RandomHeuristicGameShouldEndWithoutErrors()
     {
@@ -25,8 +25,8 @@ public class RandomHeuristicBotTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new SemiRandomBot();
-            var bot2 = new RandomBot();
+            var bot1 = new MaximizeAgentsBot();
+            var bot2 = new WinByPatronFavors();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
@@ -52,7 +52,7 @@ public class RandomHeuristicBotTests
         _testOutputHelper.WriteLine(counter.ToString());
     }
     
-    */
+    /*
     [Fact]
     public void MaxPrestigeVSHeuristicRandomTest()
     {
@@ -88,5 +88,6 @@ public class RandomHeuristicBotTests
         _testOutputHelper.WriteLine(counter.ToString());
         
     }
+    */
     
 }

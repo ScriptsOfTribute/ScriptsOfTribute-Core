@@ -1,10 +1,6 @@
 using SimpleBots;
 using TalesOfTribute;
 using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
-using TalesOfTribute.Board.Cards;
-using System.Diagnostics;
 using System.Text;
 
 namespace SimpleBotsTests;

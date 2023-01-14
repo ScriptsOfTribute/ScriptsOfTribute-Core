@@ -1,9 +1,6 @@
-using SimpleBots;
 using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
 
-namespace SimpleBotsTests;
+namespace SimpleBots;
 
 public enum TierEnum{
     S = 1000,

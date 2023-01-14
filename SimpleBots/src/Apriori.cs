@@ -1,12 +1,6 @@
-using SimpleBots;
 using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using System.Collections.Generic;
 
-using System.Linq;
-
-namespace SimpleBotsTests;
+namespace SimpleBots;
 
 public class Apriori{
 
