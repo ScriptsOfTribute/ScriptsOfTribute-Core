@@ -110,7 +110,7 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
 {
     if (noOfThreads < 1)
     {
-        Console.Error.WriteLine("Can't use less than 0 threads.");
+        Console.Error.WriteLine("Can't use less than 1 threads.");
         returnValue = -1;
     }
 
