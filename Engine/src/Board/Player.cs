@@ -151,17 +151,11 @@ namespace TalesOfTribute
             DrawPile = knownCards;
         }
 
-        // TODO: Check in game how that exactly should work (shuffle in on top? shuffle in to bottom?)
-        // Merge them together and shuffle everything?
-        // For now, DrawPile stays on bottom. This is probably not what happens, but I chose to implement this for now.
-        // In case this is what happens, well that may be a bit problematic, because in theory then we can remember
-        // order of cards at the bottom, so we would need to somehow mark them to be revealed (not unknown)
-        // when drawn by a bot if we deem it necessary.
+        // TODO: Check if this is 100% correct
         private void ShuffleCooldownPileIntoDrawPile()
         {
-            var newDrawPile = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
-            newDrawPile.AddRange(DrawPile);
-            DrawPile = newDrawPile;
+            var cooldownShuffled = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
+            DrawPile.AddRange(cooldownShuffled);
             CooldownPile.Clear();
             // TODO: Adjust known cards after testing in game (TODO above).
             KnownUpcomingDrawsAmount = 0;
