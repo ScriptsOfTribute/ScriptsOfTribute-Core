@@ -6,6 +6,7 @@ namespace TalesOfTribute.Board;
 
 public class TalesOfTributeApi : ITalesOfTributeApi
 {
+    public ulong Seed { get; }
     public int TurnCount => _turnCount;
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
@@ -41,6 +42,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         }
         _boardManager = new BoardManager(patrons, seed);
         _boardManager.SetUpGame();
+        Seed = seed;
     }
 
     // Serialization
