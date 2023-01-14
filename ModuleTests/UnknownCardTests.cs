@@ -288,7 +288,7 @@ public class UnknownCardTests
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(scryingGlobe1));
         (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard>()));
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason2)); //draw gold because toss add cooldown cards to bottom
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3)); // writ draw because we know its a writ from toss
+        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3)); // unknown draw
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason4)); // unknown draw
         Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.UNKNOWN)); // our writs instantiated above
         Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
