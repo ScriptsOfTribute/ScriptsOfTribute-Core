@@ -70,30 +70,30 @@ namespace TalesOfTribute
             
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.BUY_CARD, card));
 
-            var boughtCard = this.Tavern.Acquire(card);
-
-            CurrentPlayer.CoinsAmount -= boughtCard.Cost;
-            
-            switch (boughtCard.Type)
+            var idx = Tavern.RemoveCard(card);
+            switch (card.Type)
             {
                 case CardType.CONTRACT_AGENT:
                 {
-                    var agent = Agent.FromCard(boughtCard);
+                    var agent = Agent.FromCard(card);
                     agent.MarkActivated();
                     CurrentPlayer.Agents.Add(agent);
-                    CardActionManager.PlayCard(boughtCard);
+                    CardActionManager.PlayCard(card);
                     break;
                 }
                 case CardType.CONTRACT_ACTION:
                 {
-                    Tavern.Cards.Add(boughtCard);
-                    CardActionManager.PlayCard(boughtCard);
+                    Tavern.Cards.Add(card);
+                    CardActionManager.PlayCard(card);
                     break;
                 }
                 default:
-                    CurrentPlayer.CooldownPile.Add(boughtCard);
+                    CurrentPlayer.CooldownPile.Add(card);
                     break;
             }
+            Tavern.DrawAt(idx);
+
+            CurrentPlayer.CoinsAmount -= card.Cost;
         }
 
         public void EndTurn()

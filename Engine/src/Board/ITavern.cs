@@ -10,4 +10,6 @@ public interface ITavern
     UniqueCard Acquire(UniqueCard card);
     List<UniqueCard> GetAffordableCards(int coin);
     void ReplaceCard(UniqueCard card);
+    public int RemoveCard(UniqueCard card);
+    public void DrawAt(int index);
 }

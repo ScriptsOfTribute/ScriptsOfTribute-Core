@@ -52,12 +52,25 @@ namespace TalesOfTribute
 
         public void ReplaceCard(UniqueCard toReplace)
         {
-            UniqueCard newCard = Cards.First();
-            int idx = AvailableCards.IndexOf(toReplace);
+            DrawAt(RemoveCard(toReplace));
+        }
+
+        public int RemoveCard(UniqueCard card)
+        {
+            if (!AvailableCards.Contains(card))
+            {
+                throw new EngineException($"Card {card.CommonId} is not available!");
+            }
+            var idx = AvailableCards.IndexOf(card);
+            AvailableCards.Remove(card);
+            return idx;
+        }
+
+        public void DrawAt(int index)
+        {
+            var newCard = Cards.First();
             Cards.Remove(newCard);
-            Cards.Add(toReplace);
-            AvailableCards.Remove(toReplace);
-            AvailableCards.Insert(idx, newCard);
+            AvailableCards.Insert(index, newCard);
         }
 
         private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards, bool cheats)
