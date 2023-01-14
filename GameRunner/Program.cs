@@ -35,12 +35,14 @@ Type? FindBot(string name, out string? errorMessage)
 {
     errorMessage = null;
 
-    if (cachedBot is not null && cachedBot.Name == name)
+    bool findByFullName = name.Contains('.');
+
+    if (cachedBot is not null && (findByFullName ? cachedBot.FullName : cachedBot.Name) == name)
     {
         return cachedBot;
     }
 
-    var botCount = allBots.Count(t => t.Name == name);
+    var botCount = allBots.Count(t => (findByFullName ? t.FullName : t.Name) == name);
 
     if (botCount == 0)
     {
@@ -49,14 +51,22 @@ Type? FindBot(string name, out string? errorMessage)
         return null;
     }
 
-    if (botCount > 1)
+    if (botCount > 1 && !findByFullName)
     {
         errorMessage = "More than one bots with the same name found. Please, specify full name of the target bot: <namespace>.Name. Bots found:\n";
         errorMessage += string.Join('\n', allBots.Select(b => b.FullName));
         return null;
     }
+    // TODO: Support also specifying which file to use.
+    else if (botCount > 1 && findByFullName)
+    {
+        errorMessage = "More than one bots with the same full name found. This means you have different DLLs with the same namespaces and bot names.\n" +
+                       "This use case is not yet supported. List of all found bots:\n";
+        errorMessage += string.Join('\n', allBots.Select(b => b.FullName));
+        return null;
+    }
 
-    cachedBot = allBots.First(t => t.Name == name);
+    cachedBot = allBots.First(t => (findByFullName ? t.FullName : t.Name) == name);
 
     if (cachedBot.GetConstructor(Type.EmptyTypes) is null)
     {
