@@ -134,11 +134,9 @@ namespace TalesOfTribute
                 KnownUpcomingDrawsAmount = KnownUpcomingDrawsAmount > result.Count ? KnownUpcomingDrawsAmount : result.Count;
                 return result;
             }
-
             ReplaceDrawPileWithUnknownCards();
 
             return DrawPile
-                .Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN))
                 .Take(amount).ToList();
         }
 
@@ -151,7 +149,7 @@ namespace TalesOfTribute
             DrawPile = knownCards;
         }
 
-        // TODO: Check if this is 100% correct
+        // TODO: Check in game if this is 100% correct
         private void ShuffleCooldownPileIntoDrawPile()
         {
             var cooldownShuffled = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
