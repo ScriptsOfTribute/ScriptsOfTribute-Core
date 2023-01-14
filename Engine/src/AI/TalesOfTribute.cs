@@ -19,19 +19,17 @@ public class TalesOfTribute
         player2.Id = PlayerEnum.PLAYER2;
     }
 
-    private async Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
+    private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
     {
-        return await Task.Run(() => currentPlayer.SelectPatron(availablePatrons, round));
+        return Task.Run(() => currentPlayer.SelectPatron(availablePatrons, round));
     }
 
-    private async Task<(EndGameState?, PatronId?)> SelectPatronWithTimeout(PlayerEnum playerToWin, AI currentPlayer, List<PatronId> availablePatrons, int round)
+    private (EndGameState?, PatronId?) SelectPatronWithTimeout(PlayerEnum playerToWin, AI currentPlayer, List<PatronId> availablePatrons, int round)
     {
         var timeout = currentPlayer.MoveTimeout;
         var task = SelectPatronTask(currentPlayer, availablePatrons, round);
 
-        var res = await Task.WhenAny(task, Task.Delay(timeout));
-        
-        if (res == task)
+        if (task.Wait(timeout))
         {
             var endGameState = VerifyPatronSelection(playerToWin, task.Result, availablePatrons);
             if (endGameState is not null)
@@ -45,13 +43,13 @@ public class TalesOfTribute
         return (new EndGameState(playerToWin, GameEndReason.PATRON_SELECTION_TIMEOUT), null);
     }
 
-    private async Task<(EndGameState? ,PatronId[]?)> PatronSelection()
+    private (EndGameState? ,PatronId[]?) PatronSelection()
     {
         List<PatronId> patrons = Enum.GetValues(typeof(PatronId)).Cast<PatronId>()
             .Where(patronId => patronId != PatronId.TREASURY).ToList();
 
         List<PatronId> patronsSelected = new List<PatronId>();
-        var (endGameState, patron) = await SelectPatronWithTimeout(PlayerEnum.PLAYER2, _players[0], patrons, 1);
+        var (endGameState, patron) = SelectPatronWithTimeout(PlayerEnum.PLAYER2, _players[0], patrons, 1);
         if (endGameState is not null)
         {
             return (endGameState, null);
@@ -59,7 +57,7 @@ public class TalesOfTribute
         patronsSelected.Add((PatronId)patron!);
         patrons.Remove((PatronId)patron);
 
-        (endGameState, patron) = await SelectPatronWithTimeout(PlayerEnum.PLAYER1, _players[1], patrons, 1);
+        (endGameState, patron) = SelectPatronWithTimeout(PlayerEnum.PLAYER1, _players[1], patrons, 1);
         if (endGameState is not null)
         {
             return (endGameState, null);
@@ -69,7 +67,7 @@ public class TalesOfTribute
 
         patronsSelected.Add(PatronId.TREASURY);
 
-        (endGameState, patron) = await SelectPatronWithTimeout(PlayerEnum.PLAYER1, _players[1], patrons, 2);
+        (endGameState, patron) = SelectPatronWithTimeout(PlayerEnum.PLAYER1, _players[1], patrons, 2);
         if (endGameState is not null)
         {
             return (endGameState, null);
@@ -77,7 +75,7 @@ public class TalesOfTribute
         patronsSelected.Add((PatronId)patron!);
         patrons.Remove((PatronId)patron);
 
-        (endGameState, patron) = await SelectPatronWithTimeout(PlayerEnum.PLAYER2, _players[0], patrons, 2);
+        (endGameState, patron) = SelectPatronWithTimeout(PlayerEnum.PLAYER2, _players[0], patrons, 2);
         if (endGameState is not null)
         {
             return (endGameState, null);
@@ -100,7 +98,7 @@ public class TalesOfTribute
 
     public (EndGameState, SerializedBoard?) Play()
     {
-        var (endGameState, patrons) = PatronSelection().Result;
+        var (endGameState, patrons) = PatronSelection();
 
         if (endGameState is not null)
         {
@@ -111,7 +109,7 @@ public class TalesOfTribute
 
         _game = new TalesOfTributeGame(_players, new TalesOfTributeApi(patrons!, Seed));
 
-        var r = _game!.Play().Result;
+        var r = _game!.Play();
 
         return r;
     }

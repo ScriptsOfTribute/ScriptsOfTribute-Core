@@ -69,7 +69,11 @@ namespace TalesOfTribute
 
         public static Tavern FromSerializedBoard(SerializedBoard serializedBoard)
         {
-            return new Tavern(serializedBoard.TavernCards.ToList(), serializedBoard.TavernAvailableCards.ToList(), serializedBoard.Cheats);
+            var tavernCards = new List<UniqueCard>(serializedBoard.TavernCards.Count);
+            tavernCards.AddRange(serializedBoard.TavernCards);
+            var tavernAvailableCards = new List<UniqueCard>(serializedBoard.TavernAvailableCards.Count);
+            tavernAvailableCards.AddRange(serializedBoard.TavernAvailableCards);
+            return new Tavern(tavernCards, tavernAvailableCards, serializedBoard.Cheats);
         }
     }
 }

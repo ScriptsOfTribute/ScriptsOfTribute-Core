@@ -34,10 +34,10 @@ public class SerializedPlayer
     public SerializedPlayer(IPlayer player)
     {
         PlayerID = player.ID;
-        Hand = player.Hand.ToList();
-        DrawPile = player.DrawPile.ToList();
-        CooldownPile = player.CooldownPile.ToList();
-        Played = player.Played.ToList();
+        Hand = player.Hand;
+        DrawPile = player.DrawPile;
+        CooldownPile = player.CooldownPile;
+        Played = player.Played;
         Agents = player.Agents.Select(agent => new SerializedAgent(agent)).ToList();
         Power = player.PowerAmount;
         PatronCalls = player.PatronCalls;
