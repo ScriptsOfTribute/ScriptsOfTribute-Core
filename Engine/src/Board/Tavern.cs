@@ -48,7 +48,11 @@ namespace TalesOfTribute
 
         public void DrawAt(int index)
         {
-            
+            if (!Cards.Any())
+            {
+                return;
+            }
+
             if (_simulationState && Cards.First().CommonId != CardId.UNKNOWN)
             {
                 AvailableCards.Insert(index, GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
