@@ -41,7 +41,10 @@ public class WinByPatronFavors : AI
             if (m.Command == CommandEnum.BUY_CARD){
                 SimpleCardMove move = m as SimpleCardMove;
                 if (move.Card.Name == "Tithe" && gameState.CurrentPlayer.PatronCalls <=0){
-                    return m;
+                    (GameState newGameState, List<Move> newPossibleMoves) = gameState.ApplyState(m);
+                    if (ActivatePatronWhichDoesntFavorMe(newGameState, newPossibleMoves) is not null){
+                        return m;
+                    }
                 }
             }
         }

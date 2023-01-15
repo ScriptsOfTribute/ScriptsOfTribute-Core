@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SimpleBots;
 
-public class SemiRandomBot : AI
+public class HeuristicBot : AI
 {
     Random random = new Random(); 
 
@@ -48,19 +48,17 @@ public class SemiRandomBot : AI
 
     public class DuplicateKeyComparer<TKey>: IComparer<TKey> where TKey:IComparable
     {
-        #region IComparer<TKey> Members
-
         public int Compare(TKey x, TKey y)
         {
             int result = x.CompareTo(y);
 
-            if (result == 0)
-                return 1; // Handle equality as being greater. Note: this will break Remove(key) or
-            else          // IndexOfKey(key) since the comparer never returns 0 to signal key equality
+            if (result == 0){
+                return 1;
+            }
+            else{
                 return result;
+            }
         }
-
-        #endregion
     }
 
     public int[] GetGenotype(){
@@ -197,6 +195,17 @@ public class SemiRandomBot : AI
 
     private List<UniqueCard> GetAllPlayerCards(GameState gameState){
         return gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
+    }
+
+    private int CoinNeed(GameState gameState){
+        List<UniqueCard> notAffordableCards = gameState.TavernAvailableCards.FindAll(x=> x.Cost==1+gameState.CurrentPlayer.Coins);
+        UpdateAmountOfPatronsCards(gameState);
+        foreach (UniqueCard card in notAffordableCards){
+            if (CardTierList.GetCardTier(card.Name)== TierEnum.A || numberOfPatronCards[card.Deck]>5){
+                return 1;
+            }
+        }
+        return 0;
     }
 
     private UniqueCard BuyCard(List<UniqueCard> tavern, GameState gameState, List<Move> possibleMoves) {
@@ -399,27 +408,9 @@ public class SemiRandomBot : AI
                 return 0;
             case PatronId.RAJHIN:
                 int opponentNumberOfCards = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.EnemyPlayer.CooldownPile.Concat(gameState.EnemyPlayer.Played)).ToList().Count();
-                Console.WriteLine("HAND: " + gameState.EnemyPlayer.HandAndDraw.Count);
-                Console.WriteLine("COOLDOWN: " + gameState.EnemyPlayer.CooldownPile.Count);
-                Console.WriteLine("PLAYED: " + gameState.EnemyPlayer.Played.Count);
-                Console.WriteLine("ALL: " + opponentNumberOfCards);
-                Console.WriteLine();
-                
-                if (opponentNumberOfCards == 0) {
-                    foreach (CompletedAction action in gameState.CompletedActions) {
-                        bugLog.Append(action.ToString() + System.Environment.NewLine);
-                    }
-
-                    Console.WriteLine("CURRENT SEED: " + gameState.CurrentSeed);
-                    Console.WriteLine("INITIAL SEED: " + gameState.InitialSeed);
-
-                    foreach(KeyValuePair<PatronId, PlayerEnum> pair in gameState.PatronStates.All){
-                        Console.WriteLine(pair.Key + " " + pair.Value);
-                    }
-                    
-                    File.AppendAllText("0_cards_opp.txt", bugLog.ToString());
+                if (opponentNumberOfCards == 0){
+                    return 0;
                 }
-
                 return bigHeuristicValue * (5/opponentNumberOfCards);
             case PatronId.PSIJIC:
                 int agentsTierValue = 0;
@@ -551,7 +542,7 @@ public class SemiRandomBot : AI
                         }
                     }
                 }
-                return cardValue.MinBy(x => x.Value).Key;
+                return cardValue.OrderBy(x => x.Value).First().Key;
             case PatronId.HLAALU:
                 foreach(Move m in possibleMoves){
                     MakeChoiceMove<UniqueCard> move = m as MakeChoiceMove<UniqueCard>;
@@ -559,7 +550,7 @@ public class SemiRandomBot : AI
                         cardValue[card] = card.Cost * 100 - numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue - (int)CardTierList.GetCardTier(card.Name);
                     }
                 }
-                return cardValue.MaxBy(x => x.Value).Key;
+                return cardValue.OrderBy(x => x.Value).Last().Key;
             case PatronId.PELIN:
                 foreach(Move m in possibleMoves){
                     MakeChoiceMove<UniqueCard> move = m as MakeChoiceMove<UniqueCard>;
@@ -567,7 +558,7 @@ public class SemiRandomBot : AI
                         cardValue[card] = numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue + (int)CardTierList.GetCardTier(card.Name);
                     }
                 }
-                return cardValue.MaxBy(x => x.Value).Key;
+                return cardValue.OrderBy(x => x.Value).Last().Key;
             default:
             //case PatronId.PSIJIC:
                 foreach(Move m in possibleMoves){
@@ -576,7 +567,7 @@ public class SemiRandomBot : AI
                         cardValue[card] = (int)CardTierList.GetCardTier(card.Name) + gameState.EnemyPlayer.Agents.Find(agent => agent.RepresentingCard.UniqueId == card.UniqueId).CurrentHp;
                     }
                 }
-                return cardValue.MaxBy(x => x.Value).Key;
+                return cardValue.OrderBy(x => x.Value).Last().Key;
         }
     }
     
@@ -609,22 +600,20 @@ public class SemiRandomBot : AI
                 }
                 return (int)((double)gameState.EnemyPlayer.Prestige/(double)gameState.CurrentPlayer.Prestige)*1000;
             case EffectType.REPLACE_TAVERN:
-                /*
-                int finalvalue= 0;
                 int cardLeftInHand = gameState.CurrentPlayer.Hand.Count();
-                List<UniqueCard> affordableCards = gameState.TavernAvailableCards.FindAll(card => card.Cost <= gameState.CurrentPlayer.Coins);
-                foreach(UniqueCard card in gameState.TavernAvailableCards){
-                    if (CardTierList.GetCardTier(card.Name) >= TierEnum.B )
+                if (cardLeftInHand >=1 ){
+                    List<UniqueCard> uselessCards = gameState.TavernAvailableCards.FindAll(card => card.Cost > gameState.CurrentPlayer.Coins || CardTierList.GetCardTier(card.Name) < TierEnum.B);
+                    return uselessCards.Count * 100;
                 }
-                */
-                return 800;
+                List<UniqueCard> tooGoodCards = gameState.TavernAvailableCards.FindAll(card => CardTierList.GetCardTier(card.Name) >= TierEnum.B);
+                return tooGoodCards.Count * 150;
             case EffectType.DESTROY_CARD:
                 foreach (UniqueCard card in GetAllPlayerCards(gameState)){
                     if (CardTierList.GetCardTier(card.Name)<= TierEnum.C || numberOfPatronCards[card.Deck]<=3){
                         counter +=1;
                     }
                 }
-                return 200*counter;     
+                return 100*counter;     
             case EffectType.DRAW:
                 return 500 * gameState.CurrentPlayer.Hand.Count();
             case EffectType.OPP_DISCARD:
@@ -660,6 +649,11 @@ public class SemiRandomBot : AI
 
     private List<UniqueCard>? CardsSelection(GameState gameState){
         switch (gameState.PendingChoice.ChoiceFollowUp){
+            case ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN:
+                if (gameState.CurrentPlayer.Hand.Count()>=1){
+                    return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
+                }
+                return SelectKBestCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
             case ChoiceFollowUp.ACQUIRE_CARDS:
             case ChoiceFollowUp.KNOCKOUT_AGENTS:
             case ChoiceFollowUp.TOSS_CARDS:
@@ -672,15 +666,6 @@ public class SemiRandomBot : AI
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round){
         return availablePatrons[random.Next(availablePatrons.Count)];
-    }
-
-    private void LogAllCard(GameState gameState){
-        foreach (UniqueCard card in gameState.CurrentPlayer.Hand){
-            //Console.WriteLine("Hand: " + card.Name + " " + "type: " + card.Type.ToString() +" " + "unique_id: " + card.UniqueId.ToString());
-        }
-        foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
-            //Console.WriteLine("Agents: " + agent.RepresentingCard.Name + " " + "type: " + agent.RepresentingCard.Type.ToString()+" " + "unique_id: " + agent.RepresentingCard.UniqueId.ToString());
-        }
     }
 
     public override Move Play(GameState gameState, List<Move> possibleMoves){
@@ -696,6 +681,8 @@ public class SemiRandomBot : AI
         if (startOfTurn){
             startOfTurn = false;
             deckInPlay = PatronId.TREASURY;
+            coinsNeed = 0;
+            powerNeed = 0;
 
             List<SerializedAgent> contractAgents = gameState.CurrentPlayer.Agents.FindAll(agent => agent.RepresentingCard.Type == CardType.CONTRACT_AGENT);
             foreach (SerializedAgent contractAgent in contractAgents){
@@ -705,38 +692,35 @@ public class SemiRandomBot : AI
             allCompletedActions = gameState.CompletedActions;
         }
         else{
-            int numberOfLastActions = gameState.CompletedActions.Count - allCompletedActions.Count;
-            //Console.WriteLine(System.Environment.NewLine);
-            List<CompletedAction> lastCompltedActions = gameState.CompletedActions.TakeLast(numberOfLastActions).ToList();
-            foreach (CompletedAction action in lastCompltedActions){
-                //Console.WriteLine(action.ToString());
-            }
             RemoveDestroyedCards(gameState, playCardMoves);
         }
-        /*
-        if (gameState.EnemyPlayer.HandAndDraw.Concat(gameState.EnemyPlayer.CooldownPile.Concat(gameState.EnemyPlayer.Played)).ToList().Count()>0){
-            File.AppendAllText("enumybug.txt", gameState.CompletedActions.ForEach(p => p.ToString());
-        }
-        */
 
        
         if (playCardMoves.Count > 0){
-            //Console.WriteLine("Possible moves");
-            foreach (Move m in playCardMoves){
-                SimpleCardMove move = m as SimpleCardMove;
-                //Console.WriteLine(move.Command + " " + move.Card.Name + " " + move.Card.UniqueId);
-            }
-            //Console.WriteLine("Log all cards");
-            LogAllCard(gameState);
             chosenCard = PlayCard();
             if ((chosenCard.Type == CardType.AGENT  || chosenCard.Type==CardType.CONTRACT_AGENT)&& gameState.CurrentPlayer.Agents.Any(x => x.RepresentingCard.UniqueId == chosenCard.UniqueId)){
-                //Console.WriteLine("Chosen move");
-                //Console.WriteLine("Agent activation: " + chosenCard.Name);
                 return Move.ActivateAgent(chosenCard);
             }
-            //Console.WriteLine("Chosen move");
-            //Console.WriteLine("Play card: " + chosenCard.Name   + " " + chosenCard.UniqueId);
             return Move.PlayCard(chosenCard);
+        }
+        if (gameState.EnemyPlayer.Power > 40 && gameState.CurrentPlayer.Power < gameState.EnemyPlayer.Power){
+            if (possibleMoves.Contains(Move.CallPatron(PatronId.DUKE_OF_CROWS))){
+                return Move.CallPatron(PatronId.DUKE_OF_CROWS);
+            }
+            if (possibleMoves.Contains(Move.CallPatron(PatronId.ORGNUM))){
+                return Move.CallPatron(PatronId.ORGNUM);
+            }
+            List<Move> buyCardMoves = GetAllMoveOfType(possibleMoves, CommandEnum.BUY_CARD);
+            foreach (Move m in buyCardMoves){
+                SimpleCardMove move = m as SimpleCardMove;
+                if (move.Card.Name == "Imprisonment"){
+                    return m;
+                }
+            }
+        }
+        coinsNeed = CoinNeed(gameState);
+        if (coinsNeed == 1 && possibleMoves.Contains(Move.CallPatron(PatronId.ANSEI))){
+            return Move.CallPatron(PatronId.ANSEI);
         }
         if (GetAllMoveOfType(possibleMoves, CommandEnum.BUY_CARD).Count > 0){
             return Move.BuyCard(BuyCard(gameState.TavernAvailableCards, gameState, possibleMoves));
@@ -778,4 +762,3 @@ public class SemiRandomBot : AI
         startOfGame = true;
     }
 }
-

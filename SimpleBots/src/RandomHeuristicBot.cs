@@ -131,7 +131,7 @@ public class RandomHeuristicBot : AI
         int howManySimulation = 0;
         Stopwatch s = new Stopwatch();
         s.Start();
-        while (s.Elapsed < TimeSpan.FromSeconds(0.5)){
+        while (s.Elapsed < TimeSpan.FromSeconds(0.1)){
             (List<Move> generatedPlayout, GameState endTurnBoard)= GenerateRandomTurnMoves(gameState, possibleMoves);
             heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard, gameState.CompletedActions);
             if (highestHeuristicValue < heuristicValue){

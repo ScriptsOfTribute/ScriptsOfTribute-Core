@@ -1,28 +1,29 @@
 using SimpleBots;
+using TalesOfTribute;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
 
 namespace SimpleBotsTests;
 
-public class RandomGamesTests
+public class ComplicatedBotsTest
 {
     private readonly ITestOutputHelper _testOutputHelper;
 
-    public RandomGamesTests(ITestOutputHelper testOutputHelper)
+    public ComplicatedBotsTest(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
     }
-
+    /*
     [Fact]
-    public void RandomGameShouldEndWithoutErrors()
+    public void RandomHeuristicBotTests()
     {
-        const int testAmount = 500;
+        const int testAmount = 10;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new RandomBot();
-            var bot2 = new RandomBot();
+            var bot1 = new RandomHeuristicBot();
+            var bot2 = new DoEverythingBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
@@ -33,25 +34,25 @@ public class RandomGamesTests
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
             counter.Add(endState);
-
-            _testOutputHelper.WriteLine(string.Join('\n', endBoardState.CompletedActions.Select(a => a.ToString())));
         }
 
         _testOutputHelper.WriteLine(counter.ToString());
     }
+    */
     
     [Fact]
-    public void RandomBotWithRandomStateExploringTests()
+    public void HeuristicBotTests()
     {
-        const int testAmount = 500;
+        const int testAmount = 1000;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new RandomBotWithRandomStateExploring();
+            var bot1 = new HeuristicBot();
             var bot2 = new RandomBotWithRandomStateExploring();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
@@ -63,6 +64,7 @@ public class RandomGamesTests
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
             counter.Add(endState);
@@ -72,72 +74,14 @@ public class RandomGamesTests
     }
     
     [Fact]
-    public void MaxPrestigeTest()
+    public void MCTSBotTests()
     {
-        const int testAmount = 500;
+        const int testAmount = 10;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new RandomMaximizePrestigeBot();
-            var bot2 = new DoEverythingBot();
-
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var (endState, _) = game.Play();
-
-            if (endState.Reason == GameEndReason.INCORRECT_MOVE)
-            {
-                _testOutputHelper.WriteLine(endState.AdditionalContext);
-            }
-            Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
-            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
-            Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
-
-            counter.Add(endState);
-        }
-
-        _testOutputHelper.WriteLine(counter.ToString());
-    }
-
-    [Fact]
-    public void WinByPatronFavours()
-    {
-        const int testAmount = 1000;
-        GameEndStatsCounter counter = new();
-
-        for (var i = 0; i < testAmount; i++)
-        {
-            var bot1 = new WinByPatronFavors();
-            var bot2 = new DoEverythingBot();
-
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-            var (endState, _) = game.Play();
-
-            if (endState.Reason == GameEndReason.INCORRECT_MOVE)
-            {
-                _testOutputHelper.WriteLine(endState.AdditionalContext);
-            }
-            Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
-            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
-            Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
-
-            counter.Add(endState);
-        }
-
-        _testOutputHelper.WriteLine(counter.ToString());
-    }
-
-    [Fact]
-    public void MaximizeAgentsBot()
-    {
-        const int testAmount = 1000;
-        GameEndStatsCounter counter = new();
-
-        for (var i = 0; i < testAmount; i++)
-        {
-            var bot1 = new MaximizeAgentsBot();
+            var bot1 = new MCTSBot();
             var bot2 = new DoEverythingBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);

@@ -8,6 +8,7 @@ public enum TierEnum{
     B = 200,
     C = 90,
     D = 40,
+    UNKNOWN = 0,
 }
 
 public class CardTier{
@@ -135,7 +136,8 @@ public class CardTierList{
         new CardTier("Imprisonment", PatronId.TREASURY, TierEnum.B),
         new CardTier("Ragpicker", PatronId.TREASURY, TierEnum.B),
         new CardTier("Tithe", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Writ of Coin", PatronId.TREASURY, TierEnum.B)
+        new CardTier("Writ of Coin", PatronId.TREASURY, TierEnum.B),
+        new CardTier("Unknown", PatronId.TREASURY, TierEnum.UNKNOWN)
     };
 
     public static TierEnum GetCardTier(string cardName){

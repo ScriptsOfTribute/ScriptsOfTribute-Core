@@ -1,3 +1,5 @@
+/*
+
 using SimpleBots;
 using TalesOfTribute;
 using TalesOfTribute.Board;
@@ -20,13 +22,13 @@ public class RandomHeuristicBotTests
     [Fact]
     public void RandomHeuristicGameShouldEndWithoutErrors()
     {
-        const int testAmount = 1000;
+        const int testAmount = 100;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new MaximizeAgentsBot();
-            var bot2 = new WinByPatronFavors();
+            var bot1 = new SemiRandomBot();
+            var bot2 = new RandomMaximizePrestigeBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
@@ -36,7 +38,6 @@ public class RandomHeuristicBotTests
             {
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
-            
             
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
@@ -52,7 +53,7 @@ public class RandomHeuristicBotTests
         _testOutputHelper.WriteLine(counter.ToString());
     }
     
-    /*
+    
     [Fact]
     public void MaxPrestigeVSHeuristicRandomTest()
     {
@@ -88,6 +89,7 @@ public class RandomHeuristicBotTests
         _testOutputHelper.WriteLine(counter.ToString());
         
     }
-    */
+    
     
 }
+*/

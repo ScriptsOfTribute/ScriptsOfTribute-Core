@@ -1,10 +1,5 @@
 using SimpleBots;
 using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
-using TalesOfTribute.Board.Cards;
-using System.Diagnostics;
 using System.Text;
 
 namespace SimpleBotsTests;
@@ -53,20 +48,18 @@ public class AdjustParametersByEvolution{
     }
 
     public int[] Evolution(int sizeOfPopulation, int numberOfGenerations, int mutationRate){
-        SemiRandomBot[] population = new SemiRandomBot[sizeOfPopulation];
+        HeuristicBot[] population = new HeuristicBot[sizeOfPopulation];
         for (int i=0; i < sizeOfPopulation; i++){
-            SemiRandomBot bot = new SemiRandomBot();
+            HeuristicBot bot = new HeuristicBot();
             bot.SetGenotype(GetRandomIndividual(9));
             population[i] = bot;
         }
-        SemiRandomBot[] winners = new SemiRandomBot[sizeOfPopulation/2];
-        SemiRandomBot[] children = new SemiRandomBot[sizeOfPopulation/2];
+        HeuristicBot[] winners = new HeuristicBot[sizeOfPopulation/2];
+        HeuristicBot[] children = new HeuristicBot[sizeOfPopulation/2];
         for (int generation =0; generation < numberOfGenerations; generation++){
             for (int j = 0; j< sizeOfPopulation; j+=2){
                 var game = new TalesOfTribute.AI.TalesOfTribute(population[j], population[j+1]);
                 var (endState, endBoardState) = game.Play();
-
-                Console.WriteLine("INDEX: " + j/2);
 
                 if (endState.Winner == PlayerEnum.PLAYER1){
                     winners[j/2] = population[j];
@@ -76,12 +69,11 @@ public class AdjustParametersByEvolution{
                 }
             }
             for (int j =0; j < sizeOfPopulation/2; j+=2){
-                Console.WriteLine("SECOND INDEX:" + j);
                 (int[] genotype1, int[] genotype2) = Inheritence(winners[j].GetGenotype(), winners[j+1].GetGenotype());
                 genotype1 = Mutation(genotype1, mutationRate);
                 genotype2 = Mutation(genotype1, mutationRate);
-                children[j] = new SemiRandomBot();
-                children[j+1] = new SemiRandomBot();
+                children[j] = new HeuristicBot();
+                children[j+1] = new HeuristicBot();
                 children[j].SetGenotype(genotype1);
                 children[j+1].SetGenotype(genotype2);
             }
