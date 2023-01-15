@@ -43,6 +43,7 @@ namespace TalesOfTribute
             }
             var idx = AvailableCards.IndexOf(card);
             AvailableCards.Remove(card);
+            Cards.Add(card);
             return idx;
         }
 
