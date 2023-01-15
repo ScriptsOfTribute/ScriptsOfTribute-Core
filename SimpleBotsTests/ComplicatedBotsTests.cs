@@ -13,7 +13,7 @@ public class ComplicatedBotsTest
     {
         _testOutputHelper = testOutputHelper;
     }
-    /*
+    
     [Fact]
     public void RandomHeuristicBotTests()
     {
@@ -42,7 +42,7 @@ public class ComplicatedBotsTest
 
         _testOutputHelper.WriteLine(counter.ToString());
     }
-    */
+    
     
     [Fact]
     public void HeuristicBotTests()

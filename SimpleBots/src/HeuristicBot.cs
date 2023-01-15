@@ -15,25 +15,25 @@ public class HeuristicBot : AI
 
     private bool startOfTurn = true;
 
-    private int knockoutAgent = 200;
+    private int knockoutAgent = 6498;
 
-    private int heuristicPatronAmountCardValue = 300;
+    private int heuristicPatronAmountCardValue = 7221;
 
-    private int heuristicConstAttackValue =250;
+    private int heuristicConstAttackValue =3542;
 
-    private int heuristicWinMoveValue = 10000;
+    private int heuristicWinMoveValue = -2254;
 
-    private int heuristicValueOfPatronActivations = 100;
+    private int heuristicValueOfPatronActivations = -2739;
 
-    private int bigHeuristicValue = 5000;
+    private int bigHeuristicValue = 1987;
 
     private int coinsNeed = 0;
 
     private int powerNeed = 0;
 
-    private int coinsValue = 10;
-    private int powerValue = 400;
-    private int prestigeValue = 1000;
+    private int coinsValue = 3928;
+    private int powerValue = 6763;
+    private int prestigeValue = 5876;
 
     private PatronId deckInPlay;
 
@@ -608,6 +608,9 @@ public class HeuristicBot : AI
                 List<UniqueCard> tooGoodCards = gameState.TavernAvailableCards.FindAll(card => CardTierList.GetCardTier(card.Name) >= TierEnum.B);
                 return tooGoodCards.Count * 150;
             case EffectType.DESTROY_CARD:
+                if (GetAllPlayerCards(gameState).Count <= 5){
+                    return -1000000000;
+                }
                 foreach (UniqueCard card in GetAllPlayerCards(gameState)){
                     if (CardTierList.GetCardTier(card.Name)<= TierEnum.C || numberOfPatronCards[card.Deck]<=3){
                         counter +=1;
@@ -659,6 +662,11 @@ public class HeuristicBot : AI
             case ChoiceFollowUp.TOSS_CARDS:
             case ChoiceFollowUp.REFRESH_CARDS:
                 return SelectKBestCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
+            case ChoiceFollowUp.DESTROY_CARDS:
+                if (GetAllPlayerCards(gameState).Count <= 5){
+                    return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MinChoices);
+                }
+                return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
             default:
                 return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
         }

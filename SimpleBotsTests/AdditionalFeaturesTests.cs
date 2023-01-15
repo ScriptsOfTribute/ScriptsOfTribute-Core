@@ -26,7 +26,7 @@ public class AdditionalFeaturesTests
         for (var i = 0; i < testAmount; i++)
         {
             var bot1 = new HeuristicBot();
-            bot1.SetGenotype(genotype);
+            //bot1.SetGenotype(genotype);
             var bot2 = new RandomBotWithRandomStateExploring();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
