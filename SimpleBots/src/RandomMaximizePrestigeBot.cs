@@ -16,6 +16,7 @@ public class RandomMaximizePrestigeBot : AI
         var movesToCheck = possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
         if (movesToCheck.Count == 0)
         {
+            Log(Move.EndTurn().ToString());
             return Move.EndTurn();
         }
 
@@ -25,6 +26,7 @@ public class RandomMaximizePrestigeBot : AI
             var (newState, newPossibleMoves) = gameState.ApplyState(move);
             if (newState.GameEndState?.Winner == Id)
             {
+                Log(move.ToString());
                 return move;
             }
 
@@ -37,6 +39,7 @@ public class RandomMaximizePrestigeBot : AI
                 var (newestState, _) = newState.ApplyState(newMove);
                 if (newestState.GameEndState?.Winner == Id)
                 {
+                    Log(move.ToString());
                     return newMove;
                 }
 
@@ -54,10 +57,14 @@ public class RandomMaximizePrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            return possibleMoves.PickRandom();
+            var finalMove = possibleMoves.PickRandom();
+            Log(finalMove.ToString());
+            return finalMove;
         }
 
-        return prestigeToMove[prestigeToMove.Keys.Max()].PickRandom();
+        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom();
+        Log(bestMove.ToString());
+        return bestMove;
     }
 
     public override void GameEnd(EndGameState state)

@@ -44,4 +44,7 @@ public interface ITalesOfTributeApi
     /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
     /// </summary>
     EndGameState? CheckWinner();
+
+    public void Log(string message);
+    public void Log(List<(DateTime, string)> messages);
 }

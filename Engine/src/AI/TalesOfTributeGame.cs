@@ -41,6 +41,9 @@ public class TalesOfTributeGame
 
     private (EndGameState?, Move?) PlayWithTimeout()
     {
+        _api.Log(CurrentPlayer.LogMessages);
+        CurrentPlayer.LogMessages.Clear();
+
         TimeSpan timeout;
         GameEndReason timeoutType;
         if (CurrentPlayer.MoveTimeout < CurrentTurnTimeRemaining)

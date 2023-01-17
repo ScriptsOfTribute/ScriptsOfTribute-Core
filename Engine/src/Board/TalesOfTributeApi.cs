@@ -1,6 +1,7 @@
 using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
+using TalesOfTribute.utils;
 
 namespace TalesOfTribute.Board;
 
@@ -15,7 +16,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     private EndGameState? _endGameState = null;
 
     private readonly BoardManager _boardManager;
-    private int _turnCount;
+    private int _turnCount = 1;
+    private int _moveThisTurn = 1;
+    private Logger _logger = new(Console.Out);
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
@@ -102,6 +105,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
         try
         {
+            _moveThisTurn += 1;
             f();
         }
         catch (EngineException e)
@@ -203,7 +207,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public EndGameState? EndTurn()
     {
-        _turnCount++;
+        _turnCount += 1;
+        _moveThisTurn = 1;
         _boardManager.EndTurn();
         return CheckWinner();
     }
@@ -233,5 +238,15 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager
             .Patrons.First(p => p.PatronID == patronId)
             .CanPatronBeActivated(_boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
+    }
+
+    public void Log(string message)
+    {
+        _logger.Log(message);
+    }
+
+    public void Log(List<(DateTime, string)> messages)
+    {
+        messages.ForEach(e => _logger.Log(CurrentPlayerId, e.Item1, _turnCount, _moveThisTurn, e.Item2));
     }
 }
