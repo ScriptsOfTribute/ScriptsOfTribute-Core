@@ -31,9 +31,32 @@ threadsOption.AddAlias("-t");
 
 var logsOption = new Option<bool>(
     name: "--enable-logs",
-    description: "Enable logging.",
+    description: "Enable logging (to standard output by default).",
     getDefaultValue: () => false);
 logsOption.AddAlias("-l");
+
+var logFileDestination = new Option<TextWriter?>(
+    name: "--log-file",
+    description: "Log to file instead of standard output.",
+    parseArgument: result =>
+    {
+        if (result.Tokens.Count == 0)
+        {
+            result.ErrorMessage = "No file name provided.";
+            return null;
+        }
+
+        var path = result.Tokens.Single().Value;
+        if (File.Exists(path))
+        {
+            result.ErrorMessage = "File already exists.";
+            return null;
+        }
+
+        return File.CreateText(path);
+    });
+logFileDestination.AddAlias("-f");
+
 
 Type? cachedBot = null;
 
@@ -108,12 +131,13 @@ var mainCommand = new RootCommand("A game runner for bots.")
     noOfRunsOption,
     threadsOption,
     logsOption,
+    logFileDestination,
     bot1NameArgument,
     bot2NameArgument,
 };
 
 int returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, enableLogs, bot1Type, bot2Type) =>
+mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1Type, bot2Type) =>
 {
     if (noOfThreads < 1)
     {
@@ -138,6 +162,10 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, bot1Type, bot2Type) =>
             granularWatch.Reset();
             granularWatch.Start();
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+            if (logFileDestination is not null)
+            {
+                game.LogTarget = logFileDestination;
+            }
             var (endReason, _) = game.Play();
             granularWatch.Stop();
 
@@ -213,7 +241,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, bot1Type, bot2Type) =>
         Console.WriteLine("\nStats from the games played:");
         Console.WriteLine(counter.ToString());
     }
-}, noOfRunsOption, threadsOption, logsOption, bot1NameArgument, bot2NameArgument);
+}, noOfRunsOption, threadsOption, logsOption, logFileDestination, bot1NameArgument, bot2NameArgument);
 
 mainCommand.Invoke(args);
 
