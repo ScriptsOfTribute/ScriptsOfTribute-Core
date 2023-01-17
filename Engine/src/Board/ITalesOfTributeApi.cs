@@ -49,4 +49,5 @@ public interface ITalesOfTributeApi
     public void Log(string message);
     public void Log(PlayerEnum player, string message);
     public void Log(List<(DateTime, string)> messages);
+    public void Log(PlayerEnum player, List<(DateTime, string)> messages);
 }

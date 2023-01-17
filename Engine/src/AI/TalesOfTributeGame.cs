@@ -89,6 +89,11 @@ public class TalesOfTributeGame
     
     public (EndGameState, SerializedBoard) Play()
     {
+        _api.Log(CurrentPlayer.LogMessages);
+        CurrentPlayer.LogMessages.Clear();
+        _api.Log(EnemyPlayer.Id, EnemyPlayer.LogMessages);
+        EnemyPlayer.LogMessages.Clear();
+
         EndGameState? endGameState = null;
         do
         {

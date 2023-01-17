@@ -265,4 +265,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     {
         messages.ForEach(e => _logger.Log(CurrentPlayerId, e.Item1, _turnCount, _moveThisTurn, e.Item2));
     }
+    
+    public void Log(PlayerEnum player, List<(DateTime, string)> messages)
+    {
+        messages.ForEach(e => _logger.Log(player, e.Item1, _turnCount, _moveThisTurn, e.Item2));
+    }
 }
