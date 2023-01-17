@@ -58,11 +58,25 @@ public class TalesOfTributeGame
         var moves = _api.GetListOfPossibleMoves();
 
         var task = MoveTask(state, moves);
-        if (task.Wait(timeout))
+
+        try
         {
-            var result = task.Result;
-            _moveHistory.Add(result);
-            return (null, result);
+            if (task.Wait(timeout))
+            {
+                var result = task.Result;
+                _moveHistory.Add(result);
+                return (null, result);
+            }
+        }
+        catch (AggregateException e)
+        {
+            if (e.InnerExceptions.Any())
+            {
+                var message = string.Join('\n', e.InnerExceptions.Select(e => $"{e.Message}\n{e.StackTrace}\n\n"));
+                return (new EndGameState(_api.EnemyPlayerId, GameEndReason.BOT_EXCEPTION, message), null);
+            }
+            
+            return (new EndGameState(PlayerEnum.NO_PLAYER_SELECTED, GameEndReason.INTERNAL_ERROR, $"{e.Message}\n{e.StackTrace}"), null);
         }
 
         return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);

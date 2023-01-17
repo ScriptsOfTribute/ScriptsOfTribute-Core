@@ -12,5 +12,6 @@ public enum GameEndReason
     PATRON_SELECTION_FAILURE,
     TURN_LIMIT_EXCEEDED,
     INTERNAL_ERROR,
+    BOT_EXCEPTION
 }
 
