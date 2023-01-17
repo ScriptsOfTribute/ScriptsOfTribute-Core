@@ -15,6 +15,17 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public SerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
     private EndGameState? _endGameState = null;
 
+    private TextWriter _logTarget = Console.Out;
+    public TextWriter LogTarget
+    {
+        get => _logTarget;
+        set
+        {
+            _logTarget = value;
+            _logger = new(value);
+        }
+    }
+
     private readonly BoardManager _boardManager;
     private int _turnCount = 1;
     private int _moveThisTurn = 1;

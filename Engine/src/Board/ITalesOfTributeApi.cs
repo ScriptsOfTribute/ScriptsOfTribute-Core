@@ -12,6 +12,7 @@ public interface ITalesOfTributeApi
     public BoardState BoardState { get; }
     public SerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
+    public TextWriter LogTarget { get; set; }
 
     public EndGameState? MakeChoice(List<UniqueCard> choices);
     public EndGameState? MakeChoice(UniqueEffect choice);

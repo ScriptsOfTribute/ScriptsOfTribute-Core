@@ -10,6 +10,7 @@ public class TalesOfTribute
     private TalesOfTributeGame? _game;
 
     public ulong Seed = (ulong)Environment.TickCount;
+    public TextWriter LogTarget { get; set; } = Console.Out;
 
     public TalesOfTribute(AI player1, AI player2)
     {
@@ -107,7 +108,11 @@ public class TalesOfTribute
             return (endGameState, null);
         }
 
-        _game = new TalesOfTributeGame(_players, new TalesOfTributeApi(patrons!, Seed));
+        var api = new TalesOfTributeApi(patrons!, Seed)
+        {
+            LogTarget = this.LogTarget
+        };
+        _game = new TalesOfTributeGame(_players, api);
 
         var r = _game!.Play();
 

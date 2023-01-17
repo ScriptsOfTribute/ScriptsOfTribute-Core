@@ -83,7 +83,10 @@ public class RandomGamesTests
             var bot1 = new RandomMaximizePrestigeBot();
             var bot2 = new DoEverythingBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2)
+            {
+                LogTarget = File.CreateText("logs.txt")
+            };
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
