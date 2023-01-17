@@ -1,17 +1,22 @@
 ﻿using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
+using TalesOfTribute.utils;
 
 namespace TalesOfTribute.Board;
 
 public interface ITalesOfTributeApi
 {
     int TurnCount { get; }
+    public int TurnMoveCount { get; }
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
     public SerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
+    public TextWriter LogTarget { get; set; }
+    public bool LoggerEnabled { get; }
+    public Logger Logger { get; }
 
     public EndGameState? MakeChoice(List<UniqueCard> choices);
     public EndGameState? MakeChoice(UniqueEffect choice);

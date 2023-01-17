@@ -33,6 +33,7 @@ namespace TalesOfTribute
         public void ReplaceCard(UniqueCard toReplace)
         {
             DrawAt(RemoveCard(toReplace));
+            Cards.Add(toReplace);
         }
 
         public int RemoveCard(UniqueCard card)
@@ -43,7 +44,6 @@ namespace TalesOfTribute
             }
             var idx = AvailableCards.IndexOf(card);
             AvailableCards.Remove(card);
-            Cards.Add(card);
             return idx;
         }
 

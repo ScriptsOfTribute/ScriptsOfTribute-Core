@@ -57,6 +57,7 @@ public class GameEndStatsCounter
             case GameEndReason.PATRON_SELECTION_FAILURE:
             case GameEndReason.INCORRECT_MOVE:
             case GameEndReason.INTERNAL_ERROR:
+            case GameEndReason.BOT_EXCEPTION:
                 _otherEnds++;
                 break;
             default:

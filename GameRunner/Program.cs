@@ -29,6 +29,47 @@ var threadsOption = new Option<int>(
     getDefaultValue: () => 1);
 threadsOption.AddAlias("-t");
 
+var logsOption = new Option<bool>(
+    name: "--enable-logs",
+    description: "Enable logging (to standard output by default).",
+    getDefaultValue: () => false);
+logsOption.AddAlias("-l");
+
+var logFileDestination = new Option<TextWriter?>(
+    name: "--log-file",
+    description: "Log to file instead of standard output.",
+    parseArgument: result =>
+    {
+        if (result.Tokens.Count == 0)
+        {
+            result.ErrorMessage = "No file name provided.";
+            return null;
+        }
+
+        var path = result.Tokens.Single().Value;
+        if (File.Exists(path))
+        {
+            ConsoleKey response;
+            do
+            {
+                Console.WriteLine("File already exists. Do you want to override it? [Y/n]");
+                response = Console.ReadKey(false).Key;
+                if (response != ConsoleKey.Enter)
+                    Console.WriteLine();
+            } while (response != ConsoleKey.Y && response != ConsoleKey.N && response != ConsoleKey.Enter);
+
+            if (response == ConsoleKey.N)
+            {
+                result.ErrorMessage = "Aborted.";
+                return null;
+            }
+        }
+
+        return File.CreateText(path);
+    });
+logFileDestination.AddAlias("-f");
+
+
 Type? cachedBot = null;
 
 Type? FindBot(string name, out string? errorMessage)
@@ -101,16 +142,18 @@ var mainCommand = new RootCommand("A game runner for bots.")
 {
     noOfRunsOption,
     threadsOption,
+    logsOption,
+    logFileDestination,
     bot1NameArgument,
-    bot2NameArgument
+    bot2NameArgument,
 };
 
 int returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
+mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1Type, bot2Type) =>
 {
     if (noOfThreads < 1)
     {
-        Console.Error.WriteLine("Can't use less than 1 threads.");
+        Console.Error.WriteLine("ERROR: Can't use less than 1 thread.");
         returnValue = -1;
     }
 
@@ -130,7 +173,14 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
 
             granularWatch.Reset();
             granularWatch.Start();
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+            var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!)
+            {
+                LoggerEnabled = enableLogs
+            };
+            if (logFileDestination is not null)
+            {
+                game.LogTarget = logFileDestination;
+            }
             var (endReason, _) = game.Play();
             granularWatch.Stop();
 
@@ -147,9 +197,16 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
     }
     else
     {
+        if (enableLogs)
+        {
+            Console.Error.WriteLine("ERROR: Logs are not supported with multi-threading.");
+            returnValue = -1;
+            return;
+        }
+
         if (noOfThreads > Environment.ProcessorCount)
         {
-            Console.WriteLine($"WARNING: More threads ({noOfThreads}) specified than logical processor count ({Environment.ProcessorCount}).");
+            Console.Error.WriteLine($"WARNING: More threads ({noOfThreads}) specified than logical processor count ({Environment.ProcessorCount}).");
         }
 
         var gamesPerThread = runs / noOfThreads;
@@ -186,7 +243,8 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
             gamesPerThreadRemainder -= 1;
             var gamesToPlay = gamesPerThread + spawnAdditionalGame;
             Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
-            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, i));
+            var threadNo = i;
+            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, threadNo));
         }
         Task.WaitAll(threads.ToArray<Task>());
 
@@ -199,7 +257,7 @@ mainCommand.SetHandler((runs, noOfThreads, bot1Type, bot2Type) =>
         Console.WriteLine("\nStats from the games played:");
         Console.WriteLine(counter.ToString());
     }
-}, noOfRunsOption, threadsOption, bot1NameArgument, bot2NameArgument);
+}, noOfRunsOption, threadsOption, logsOption, logFileDestination, bot1NameArgument, bot2NameArgument);
 
 mainCommand.Invoke(args);
 

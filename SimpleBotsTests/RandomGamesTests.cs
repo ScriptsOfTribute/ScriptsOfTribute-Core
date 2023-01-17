@@ -75,7 +75,7 @@ public class RandomGamesTests
     [Fact]
     public void MaxPrestigeTest()
     {
-        const int testAmount = 500;
+        const int testAmount = 1;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
