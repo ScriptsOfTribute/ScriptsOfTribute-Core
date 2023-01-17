@@ -243,7 +243,8 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
             gamesPerThreadRemainder -= 1;
             var gamesToPlay = gamesPerThread + spawnAdditionalGame;
             Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
-            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, i));
+            var threadNo = i;
+            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, threadNo));
         }
         Task.WaitAll(threads.ToArray<Task>());
 
