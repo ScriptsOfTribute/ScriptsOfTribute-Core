@@ -22,14 +22,14 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         set
         {
             _logTarget = value;
-            _logger = new(value);
+            Logger = new(value);
         }
     }
 
     private readonly BoardManager _boardManager;
     private int _turnCount = 1;
     private int _moveThisTurn = 1;
-    private Logger _logger = new(Console.Out);
+    public Logger Logger { get; private set; } = new(Console.Out);
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
@@ -253,21 +253,21 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public void Log(string message)
     {
-        _logger.Log(CurrentPlayerId, message);
+        Logger.Log(CurrentPlayerId, message);
     }
 
     public void Log(PlayerEnum player, string message)
     {
-        _logger.Log(player, message);
+        Logger.Log(player, message);
     }
 
     public void Log(List<(DateTime, string)> messages)
     {
-        messages.ForEach(e => _logger.Log(CurrentPlayerId, e.Item1, _turnCount, _moveThisTurn, e.Item2));
+        messages.ForEach(e => Logger.Log(CurrentPlayerId, e.Item1, _turnCount, _moveThisTurn, e.Item2));
     }
     
     public void Log(PlayerEnum player, List<(DateTime, string)> messages)
     {
-        messages.ForEach(e => _logger.Log(player, e.Item1, _turnCount, _moveThisTurn, e.Item2));
+        messages.ForEach(e => Logger.Log(player, e.Item1, _turnCount, _moveThisTurn, e.Item2));
     }
 }

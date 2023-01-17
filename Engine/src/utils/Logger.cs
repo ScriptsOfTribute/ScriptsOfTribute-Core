@@ -21,4 +21,9 @@ public class Logger
         var s = $"[{player}][{timestamp:hh:mm:ss:fff}][{turn:000}][{move:00}] {message}\n";
         _writer.Write(s);
     }
+
+    public void Flush()
+    {
+        _writer.Flush();
+    }
 }

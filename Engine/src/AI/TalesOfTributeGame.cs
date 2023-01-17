@@ -330,6 +330,7 @@ public class TalesOfTributeGame
         EnemyPlayer.GameEnd(state);
         EnemyPlayer.LogMessages.ForEach(m => _api.Log(EnemyPlayer.Id, m.Item2));
         EndGameState = state;
+        _api.Logger.Flush();
         return (state, _api.GetSerializer());
     }
 }
