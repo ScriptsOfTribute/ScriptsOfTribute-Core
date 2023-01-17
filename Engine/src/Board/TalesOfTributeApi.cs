@@ -104,7 +104,6 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         {
             f();
         }
-        // TODO: Add engine specific exception.
         catch (EngineException e)
         {
             _endGameState = new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
