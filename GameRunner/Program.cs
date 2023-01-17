@@ -49,8 +49,20 @@ var logFileDestination = new Option<TextWriter?>(
         var path = result.Tokens.Single().Value;
         if (File.Exists(path))
         {
-            result.ErrorMessage = "File already exists.";
-            return null;
+            ConsoleKey response;
+            do
+            {
+                Console.WriteLine("File already exists. Do you want to override it? [Y/n]");
+                response = Console.ReadKey(false).Key;
+                if (response != ConsoleKey.Enter)
+                    Console.WriteLine();
+            } while (response != ConsoleKey.Y && response != ConsoleKey.N && response != ConsoleKey.Enter);
+
+            if (response == ConsoleKey.N)
+            {
+                result.ErrorMessage = "Aborted.";
+                return null;
+            }
         }
 
         return File.CreateText(path);
