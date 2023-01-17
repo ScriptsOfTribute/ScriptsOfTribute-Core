@@ -22,15 +22,30 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         get => _logTarget;
         set
         {
+            Logger.Flush();
             _logTarget = value;
-            Logger = new(value);
+            Logger = new(value, LoggerEnabled);
+        }
+    }
+
+    private bool _loggerEnabled = false;
+
+    public bool LoggerEnabled
+    {
+        get => _loggerEnabled;
+        set
+        {
+            if (value == _loggerEnabled) return;
+            Logger.Flush();
+            _loggerEnabled = value;
+            Logger = new(LogTarget, value);
         }
     }
 
     private readonly BoardManager _boardManager;
     private int _turnCount = 1;
     private int _turnMoveCount = 1;
-    public Logger Logger { get; private set; } = new(Console.Out);
+    public Logger Logger { get; private set; } = new(Console.Out, false);
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)

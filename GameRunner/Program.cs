@@ -161,7 +161,10 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
 
             granularWatch.Reset();
             granularWatch.Start();
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+            var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!)
+            {
+                LoggerEnabled = enableLogs
+            };
             if (logFileDestination is not null)
             {
                 game.LogTarget = logFileDestination;

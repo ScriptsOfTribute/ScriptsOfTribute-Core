@@ -15,6 +15,7 @@ public interface ITalesOfTributeApi
     public SerializedChoice? PendingChoice { get; }
     SerializedBoard GetSerializer();
     public TextWriter LogTarget { get; set; }
+    public bool LoggerEnabled { get; }
     public Logger Logger { get; }
 
     public EndGameState? MakeChoice(List<UniqueCard> choices);
