@@ -11,11 +11,11 @@ public class Logger
         _writer = writer;
     }
 
-    public void Log(string message)
+    public void Log(PlayerEnum player, string message)
     {
-        _writer.Write(message + '\n');
+        _writer.Write($"[{player}] {message}\n");
     }
-    
+
     public void Log(PlayerEnum player, DateTime timestamp, int turn, int move, string message)
     {
         var s = $"[{player}][{timestamp:hh:mm:ss:fff}][{turn:000}][{move:00}] {message}\n";

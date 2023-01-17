@@ -69,5 +69,6 @@ public class RandomMaximizePrestigeBot : AI
 
     public override void GameEnd(EndGameState state)
     {
+        Log("Game ended : (");
     }
 }

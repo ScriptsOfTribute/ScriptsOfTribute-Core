@@ -253,7 +253,12 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public void Log(string message)
     {
-        _logger.Log(message);
+        _logger.Log(CurrentPlayerId, message);
+    }
+
+    public void Log(PlayerEnum player, string message)
+    {
+        _logger.Log(player, message);
     }
 
     public void Log(List<(DateTime, string)> messages)

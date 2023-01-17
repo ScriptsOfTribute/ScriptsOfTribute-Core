@@ -41,9 +41,6 @@ public class TalesOfTributeGame
 
     private (EndGameState?, Move?) PlayWithTimeout()
     {
-        _api.Log(CurrentPlayer.LogMessages);
-        CurrentPlayer.LogMessages.Clear();
-
         TimeSpan timeout;
         GameEndReason timeoutType;
         if (CurrentPlayer.MoveTimeout < CurrentTurnTimeRemaining)
@@ -68,11 +65,16 @@ public class TalesOfTributeGame
             {
                 var result = task.Result;
                 _moveHistory.Add(result);
+                _api.Log(CurrentPlayer.LogMessages);
+                CurrentPlayer.LogMessages.Clear();
                 return (null, result);
             }
         }
         catch (AggregateException e)
         {
+            _api.Log(CurrentPlayer.LogMessages);
+            CurrentPlayer.LogMessages.Clear();
+
             if (e.InnerExceptions.Any())
             {
                 var message = string.Join('\n', e.InnerExceptions.Select(e => $"{e.Message}\n{e.StackTrace}\n\n"));
@@ -130,6 +132,8 @@ public class TalesOfTributeGame
 
     private EndGameState? HandleEndTurn()
     {
+        _api.Log(CurrentPlayer.LogMessages);
+        CurrentPlayer.LogMessages.Clear();
         _currentTurnTimeElapsed = TimeSpan.Zero;
         if (_api.TurnCount > TurnLimit)
         {
@@ -317,7 +321,9 @@ public class TalesOfTributeGame
         state.AdditionalContext +=
             $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
         CurrentPlayer.GameEnd(state);
+        CurrentPlayer.LogMessages.ForEach(m => _api.Log(CurrentPlayer.Id, m.Item2));
         EnemyPlayer.GameEnd(state);
+        EnemyPlayer.LogMessages.ForEach(m => _api.Log(EnemyPlayer.Id, m.Item2));
         EndGameState = state;
         return (state, _api.GetSerializer());
     }

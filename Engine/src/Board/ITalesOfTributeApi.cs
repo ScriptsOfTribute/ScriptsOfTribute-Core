@@ -47,5 +47,6 @@ public interface ITalesOfTributeApi
     EndGameState? CheckWinner();
 
     public void Log(string message);
+    public void Log(PlayerEnum player, string message);
     public void Log(List<(DateTime, string)> messages);
 }
