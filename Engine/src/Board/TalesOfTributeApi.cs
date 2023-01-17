@@ -9,6 +9,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 {
     public ulong Seed { get; }
     public int TurnCount => _turnCount;
+    public int TurnMoveCount => _turnMoveCount;
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
@@ -28,7 +29,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     private readonly BoardManager _boardManager;
     private int _turnCount = 1;
-    private int _moveThisTurn = 1;
+    private int _turnMoveCount = 1;
     public Logger Logger { get; private set; } = new(Console.Out);
 
     // Constructors
@@ -116,7 +117,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
         try
         {
-            _moveThisTurn += 1;
+            _turnMoveCount += 1;
             f();
         }
         catch (EngineException e)
@@ -219,7 +220,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public EndGameState? EndTurn()
     {
         _turnCount += 1;
-        _moveThisTurn = 1;
+        _turnMoveCount = 1;
         _boardManager.EndTurn();
         return CheckWinner();
     }
@@ -263,11 +264,11 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public void Log(List<(DateTime, string)> messages)
     {
-        messages.ForEach(e => Logger.Log(CurrentPlayerId, e.Item1, _turnCount, _moveThisTurn, e.Item2));
+        messages.ForEach(e => Logger.Log(CurrentPlayerId, e.Item1, _turnCount, _turnMoveCount, e.Item2));
     }
     
     public void Log(PlayerEnum player, List<(DateTime, string)> messages)
     {
-        messages.ForEach(e => Logger.Log(player, e.Item1, _turnCount, _moveThisTurn, e.Item2));
+        messages.ForEach(e => Logger.Log(player, e.Item1, _turnCount, _turnMoveCount, e.Item2));
     }
 }

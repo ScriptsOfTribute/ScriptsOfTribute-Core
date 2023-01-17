@@ -65,14 +65,14 @@ public class TalesOfTributeGame
             {
                 var result = task.Result;
                 _moveHistory.Add(result);
-                _api.Log(CurrentPlayer.LogMessages);
+                _api.Logger.Log(CurrentPlayer.LogMessages, CurrentPlayer.Id, _api.TurnCount, _api.TurnMoveCount);
                 CurrentPlayer.LogMessages.Clear();
                 return (null, result);
             }
         }
         catch (AggregateException e)
         {
-            _api.Log(CurrentPlayer.LogMessages);
+            _api.Logger.Log(CurrentPlayer.LogMessages, CurrentPlayer.Id, _api.TurnCount, _api.TurnMoveCount);
             CurrentPlayer.LogMessages.Clear();
 
             if (e.InnerExceptions.Any())
@@ -89,9 +89,9 @@ public class TalesOfTributeGame
     
     public (EndGameState, SerializedBoard) Play()
     {
-        _api.Log(CurrentPlayer.LogMessages);
+        CurrentPlayer.LogMessages.ForEach(m => _api.Logger.Log(CurrentPlayer.Id, m.Item2));
+        EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
         CurrentPlayer.LogMessages.Clear();
-        _api.Log(EnemyPlayer.Id, EnemyPlayer.LogMessages);
         EnemyPlayer.LogMessages.Clear();
 
         EndGameState? endGameState = null;
@@ -137,7 +137,7 @@ public class TalesOfTributeGame
 
     private EndGameState? HandleEndTurn()
     {
-        _api.Log(CurrentPlayer.LogMessages);
+        _api.Logger.Log(CurrentPlayer.LogMessages, CurrentPlayer.Id, _api.TurnCount, _api.TurnMoveCount);
         CurrentPlayer.LogMessages.Clear();
         _currentTurnTimeElapsed = TimeSpan.Zero;
         if (_api.TurnCount > TurnLimit)
@@ -326,9 +326,9 @@ public class TalesOfTributeGame
         state.AdditionalContext +=
             $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
         CurrentPlayer.GameEnd(state);
-        CurrentPlayer.LogMessages.ForEach(m => _api.Log(CurrentPlayer.Id, m.Item2));
+        CurrentPlayer.LogMessages.ForEach(m => _api.Logger.Log(CurrentPlayer.Id, m.Item2));
         EnemyPlayer.GameEnd(state);
-        EnemyPlayer.LogMessages.ForEach(m => _api.Log(EnemyPlayer.Id, m.Item2));
+        EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
         EndGameState = state;
         _api.Logger.Flush();
         return (state, _api.GetSerializer());

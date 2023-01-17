@@ -22,6 +22,11 @@ public class Logger
         _writer.Write(s);
     }
 
+    public void Log(List<(DateTime, string)> messagesWithTimestamp, PlayerEnum player, int turn, int move)
+    {
+        messagesWithTimestamp.ForEach(m => Log(player, m.Item1, turn, move, m.Item2));
+    }
+
     public void Flush()
     {
         _writer.Flush();

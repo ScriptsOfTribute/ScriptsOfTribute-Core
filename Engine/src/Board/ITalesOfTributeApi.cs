@@ -8,6 +8,7 @@ namespace TalesOfTribute.Board;
 public interface ITalesOfTributeApi
 {
     int TurnCount { get; }
+    public int TurnMoveCount { get; }
     PlayerEnum CurrentPlayerId { get; }
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
@@ -47,9 +48,4 @@ public interface ITalesOfTributeApi
     /// Returns ID or player who won the game. If game is still going it returns <c>PlayerEnum.NO_PLAYER_SELECTED</c>
     /// </summary>
     EndGameState? CheckWinner();
-
-    public void Log(string message);
-    public void Log(PlayerEnum player, string message);
-    public void Log(List<(DateTime, string)> messages);
-    public void Log(PlayerEnum player, List<(DateTime, string)> messages);
 }
