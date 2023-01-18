@@ -35,6 +35,12 @@ var logsOption = new Option<bool>(
     getDefaultValue: () => false);
 logsOption.AddAlias("-l");
 
+var seedOption = new Option<ulong?>(
+    name: "--seed",
+    description: "Specify seed for RNG. In case of multiple games, each subsequent game will be played with <seed+1>.",
+    getDefaultValue: () => null);
+seedOption.AddAlias("-s");
+
 var logFileDestination = new Option<TextWriter?>(
     name: "--log-file",
     description: "Log to file instead of standard output.",
@@ -144,12 +150,13 @@ var mainCommand = new RootCommand("A game runner for bots.")
     threadsOption,
     logsOption,
     logFileDestination,
+    seedOption,
     bot1NameArgument,
     bot2NameArgument,
 };
 
 int returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1Type, bot2Type) =>
+mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybeSeed, bot1Type, bot2Type) =>
 {
     if (noOfThreads < 1)
     {
@@ -159,7 +166,8 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
 
     if (noOfThreads == 1)
     {
-        Console.WriteLine($"Running {runs} games: {bot1Type!.Name} vs {bot2Type!.Name}:\n");
+        Console.WriteLine($"Running {runs} games - {bot1Type!.Name} vs {bot2Type!.Name}" +
+                          $"{(maybeSeed is null ? "" : $" - with seed: {maybeSeed}")}\n");
 
         var counter = new GameEndStatsCounter();
 
@@ -180,6 +188,12 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
             if (logFileDestination is not null)
             {
                 game.LogTarget = logFileDestination;
+            }
+
+            if (maybeSeed is { } u)
+            {
+                game.Seed = u;
+                maybeSeed += 1;
             }
             var (endReason, _) = game.Play();
             granularWatch.Stop();
@@ -213,7 +227,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
         var gamesPerThreadRemainder = runs % noOfThreads;
         var threads = new Task<List<EndGameState>>[noOfThreads];
 
-        List<EndGameState> PlayGames(int amount, Type bot1T, Type bot2T, int threadNo)
+        List<EndGameState> PlayGames(int amount, Type bot1T, Type bot2T, int threadNo, ulong? seed = null)
         {
             var results = new EndGameState[amount];
             var timeMeasurements = new long[amount];
@@ -225,13 +239,18 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
                 watch.Reset();
                 watch.Start();
                 var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+                if (seed is { } s)
+                {
+                    game.Seed = s;
+                    seed += 1;
+                }
                 var (endReason, _) = game.Play();
                 watch.Stop();
                 results[i] = endReason;
                 timeMeasurements[i] = watch.ElapsedMilliseconds;
             }
 
-            Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}.");
+            Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}ms.");
 
             return results.ToList();
         }
@@ -244,7 +263,16 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
             var gamesToPlay = gamesPerThread + spawnAdditionalGame;
             Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
             var threadNo = i;
-            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, threadNo));
+            if (maybeSeed is not null)
+            {
+                var currentSeed = maybeSeed;
+                threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, threadNo, currentSeed));
+                maybeSeed += (ulong)gamesToPlay;
+            }
+            else
+            {
+                threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, threadNo));
+            }
         }
         Task.WaitAll(threads.ToArray<Task>());
 
@@ -257,7 +285,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, bot1T
         Console.WriteLine("\nStats from the games played:");
         Console.WriteLine(counter.ToString());
     }
-}, noOfRunsOption, threadsOption, logsOption, logFileDestination, bot1NameArgument, bot2NameArgument);
+}, noOfRunsOption, threadsOption, logsOption, logFileDestination, seedOption, bot1NameArgument, bot2NameArgument);
 
 mainCommand.Invoke(args);
 

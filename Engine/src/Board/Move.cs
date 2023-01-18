@@ -10,7 +10,7 @@ namespace TalesOfTribute
         BUY_CARD,
         CALL_PATRON,
         MAKE_CHOICE,
-        END_TURN ,
+        END_TURN,
     }
 
     public class Move

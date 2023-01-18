@@ -43,7 +43,7 @@ public class RandomGamesTests
 
         _testOutputHelper.WriteLine(counter.ToString());
     }
-    
+
     [Fact]
     public void RandomBotWithRandomStateExploringTests()
     {
@@ -71,11 +71,11 @@ public class RandomGamesTests
 
         _testOutputHelper.WriteLine(counter.ToString());
     }
-    
+
     [Fact]
     public void MaxPrestigeTest()
     {
-        const int testAmount = 1;
+        const int testAmount = 500;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
