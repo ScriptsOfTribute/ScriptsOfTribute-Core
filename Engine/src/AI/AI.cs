@@ -5,7 +5,20 @@ namespace TalesOfTribute.AI;
 
 public abstract class AI
 {
+    private ulong _seed;
     public PlayerEnum Id { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
+
+    public ulong Seed
+    {
+        get => _seed;
+        set
+        {
+            _seed = value;
+            Rng = new(value);
+        }
+    }
+
+    public SeededRandom Rng { get; private set; } = new();
 
     // Round - which selection this is (first or second)
     public abstract PatronId SelectPatron(List<PatronId> availablePatrons, int round); // Will be called only twice

@@ -8,11 +8,11 @@ namespace SimpleBots;
 public class RandomBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        return possibleMoves.PickRandom();
+        return possibleMoves.PickRandom(Rng);
     }
 
     public override void GameEnd(EndGameState state)

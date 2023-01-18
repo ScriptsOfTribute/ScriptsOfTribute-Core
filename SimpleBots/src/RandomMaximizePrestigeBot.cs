@@ -9,7 +9,7 @@ namespace SimpleBotsTests;
 public class RandomMaximizePrestigeBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -23,7 +23,7 @@ public class RandomMaximizePrestigeBot : AI
         Dictionary<int, List<Move>> prestigeToMove = new();
         foreach (var move in movesToCheck)
         {
-            var (newState, newPossibleMoves) = gameState.ApplyState(move, 123);
+            var (newState, newPossibleMoves) = gameState.ApplyState(move, Seed);
             if (newState.GameEndState?.Winner == Id)
             {
                 Log(move.ToString());
@@ -57,12 +57,12 @@ public class RandomMaximizePrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            var finalMove = possibleMoves.PickRandom();
+            var finalMove = possibleMoves.PickRandom(Rng);
             Log(finalMove.ToString());
             return finalMove;
         }
 
-        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom();
+        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);
         Log(bestMove.ToString());
         return bestMove;
     }

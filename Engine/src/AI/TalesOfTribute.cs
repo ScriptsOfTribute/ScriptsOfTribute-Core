@@ -8,8 +8,18 @@ public class TalesOfTribute
     private AI[] _players = new AI[2];
 
     private TalesOfTributeGame? _game;
+    private ulong _seed = (ulong)Environment.TickCount;
 
-    public ulong Seed = (ulong)Environment.TickCount;
+    public ulong Seed
+    {
+        get => _seed;
+        set
+        {
+            _seed = value;
+            _players[0].Seed = value;
+            _players[1].Seed = value;
+        }
+    }
     public TextWriter LogTarget { get; set; } = Console.Out;
     public bool LoggerEnabled { get; set; } = false;
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
@@ -20,6 +30,8 @@ public class TalesOfTribute
         _players[1] = player2;
         player1.Id = PlayerEnum.PLAYER1;
         player2.Id = PlayerEnum.PLAYER2;
+        player1.Seed = Seed;
+        player2.Seed = Seed;
     }
 
     private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
