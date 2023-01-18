@@ -23,7 +23,7 @@ public class RandomMaximizePrestigeBot : AI
         Dictionary<int, List<Move>> prestigeToMove = new();
         foreach (var move in movesToCheck)
         {
-            var (newState, newPossibleMoves) = gameState.ApplyState(move);
+            var (newState, newPossibleMoves) = gameState.ApplyState(move, 123);
             if (newState.GameEndState?.Winner == Id)
             {
                 Log(move.ToString());
