@@ -12,6 +12,7 @@ public class TalesOfTribute
     public ulong Seed = (ulong)Environment.TickCount;
     public TextWriter LogTarget { get; set; } = Console.Out;
     public bool LoggerEnabled { get; set; } = false;
+    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
     public TalesOfTribute(AI player1, AI player2)
     {
@@ -28,10 +29,9 @@ public class TalesOfTribute
 
     private (EndGameState?, PatronId?) SelectPatronWithTimeout(PlayerEnum playerToWin, AI currentPlayer, List<PatronId> availablePatrons, int round)
     {
-        var timeout = currentPlayer.MoveTimeout;
         var task = SelectPatronTask(currentPlayer, availablePatrons, round);
 
-        if (task.Wait(timeout))
+        if (task.Wait(Timeout))
         {
             var endGameState = VerifyPatronSelection(playerToWin, task.Result, availablePatrons);
             if (endGameState is not null)
@@ -114,7 +114,7 @@ public class TalesOfTribute
             LogTarget = this.LogTarget,
             LoggerEnabled = LoggerEnabled,
         };
-        _game = new TalesOfTributeGame(_players, api);
+        _game = new TalesOfTributeGame(_players, api, Timeout);
 
         var r = _game!.Play();
 

@@ -5,10 +5,6 @@ namespace TalesOfTribute.AI;
 
 public abstract class AI
 {
-    public virtual TimeSpan TurnTimeout { get; } = TimeSpan.FromSeconds(10);
-
-    public virtual TimeSpan MoveTimeout { get; } = TimeSpan.FromSeconds(3);
-
     public PlayerEnum Id { get; set; } = PlayerEnum.NO_PLAYER_SELECTED;
 
     // Round - which selection this is (first or second)

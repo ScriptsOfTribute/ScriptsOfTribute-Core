@@ -28,7 +28,6 @@ public class DoEverythingBotTests
             var (endState, _) = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
             counter.Add(endState);
@@ -53,7 +52,6 @@ public class DoEverythingBotTests
             var (endState, _) = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
             counter.Add(endState);

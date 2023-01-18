@@ -7,9 +7,6 @@ namespace SimpleBots;
 
 public class TurnTimeoutBot : AI
 {
-    public override TimeSpan MoveTimeout { get; } = TimeSpan.FromSeconds(2);
-    public override TimeSpan TurnTimeout { get; } = TimeSpan.FromSeconds(4);
-
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
     {
         return availablePatrons[0];
@@ -17,7 +14,13 @@ public class TurnTimeoutBot : AI
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
+        Task.Delay(TimeSpan.FromSeconds(1)).Wait();
+        var movesWithoutEndTurn = possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
+
+        if (movesWithoutEndTurn.Any())
+        {
+            return movesWithoutEndTurn.First();
+        }
         return possibleMoves[0];
     }
 

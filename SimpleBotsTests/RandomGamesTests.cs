@@ -33,7 +33,6 @@ public class RandomGamesTests
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
             counter.Add(endState);
@@ -63,7 +62,6 @@ public class RandomGamesTests
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
             counter.Add(endState);
@@ -91,7 +89,6 @@ public class RandomGamesTests
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 

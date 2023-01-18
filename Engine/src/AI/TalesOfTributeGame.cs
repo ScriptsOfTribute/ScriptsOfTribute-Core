@@ -16,12 +16,14 @@ public class TalesOfTributeGame
     public EndGameState? EndGameState { get; private set; }
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
-    private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
+    private TimeSpan _timeout;
+    private TimeSpan CurrentTurnTimeRemaining => _timeout - _currentTurnTimeElapsed;
     private List<Move> _moveHistory = new();
 
-    public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api)
+    public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api, TimeSpan timeout)
     {
         _api = api;
+        _timeout = timeout;
         _players[0] = players[0];
         _players[1] = players[1];
     }
@@ -41,18 +43,6 @@ public class TalesOfTributeGame
 
     private (EndGameState?, Move?) PlayWithTimeout()
     {
-        TimeSpan timeout;
-        GameEndReason timeoutType;
-        if (CurrentPlayer.MoveTimeout < CurrentTurnTimeRemaining)
-        {
-            timeout = CurrentPlayer.MoveTimeout;
-            timeoutType = GameEndReason.MOVE_TIMEOUT;
-        }
-        else
-        {
-            timeout = CurrentTurnTimeRemaining;
-            timeoutType = GameEndReason.TURN_TIMEOUT;
-        }
         var board = _api.GetSerializer();
         var state = new GameState(board);
         var moves = _api.GetListOfPossibleMoves();
@@ -61,7 +51,7 @@ public class TalesOfTributeGame
 
         try
         {
-            if (task.Wait(timeout))
+            if (task.Wait(CurrentTurnTimeRemaining))
             {
                 var result = task.Result;
                 _moveHistory.Add(result);
@@ -84,7 +74,7 @@ public class TalesOfTributeGame
             return (new EndGameState(PlayerEnum.NO_PLAYER_SELECTED, GameEndReason.INTERNAL_ERROR, $"{e.Message}\n{e.StackTrace}"), null);
         }
 
-        return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);
+        return (new EndGameState(_api.EnemyPlayerId, GameEndReason.TURN_TIMEOUT), null);
     }
     
     public (EndGameState, SerializedBoard) Play()
