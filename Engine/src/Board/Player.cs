@@ -137,6 +137,7 @@ namespace TalesOfTribute
             ReplaceDrawPileWithUnknownCards();
 
             return DrawPile
+                .Where(c => c.CommonId != CardId.UNKNOWN)
                 .Take(amount).ToList();
         }
 

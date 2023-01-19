@@ -9,7 +9,7 @@ namespace SimpleBots;
 public class DoEverythingBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -19,7 +19,7 @@ public class DoEverythingBot : AI
             return Move.EndTurn();
         }
 
-        return movesWithoutEndTurn.PickRandom();
+        return movesWithoutEndTurn.PickRandom(Rng);
     }
 
     public override void GameEnd(EndGameState state)

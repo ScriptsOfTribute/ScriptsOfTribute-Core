@@ -8,10 +8,21 @@ public class TalesOfTribute
     private AI[] _players = new AI[2];
 
     private TalesOfTributeGame? _game;
+    private ulong _seed = (ulong)Environment.TickCount;
 
-    public ulong Seed = (ulong)Environment.TickCount;
+    public ulong Seed
+    {
+        get => _seed;
+        set
+        {
+            _seed = value;
+            _players[0].Seed = value;
+            _players[1].Seed = value;
+        }
+    }
     public TextWriter LogTarget { get; set; } = Console.Out;
     public bool LoggerEnabled { get; set; } = false;
+    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
     public TalesOfTribute(AI player1, AI player2)
     {
@@ -19,6 +30,8 @@ public class TalesOfTribute
         _players[1] = player2;
         player1.Id = PlayerEnum.PLAYER1;
         player2.Id = PlayerEnum.PLAYER2;
+        player1.Seed = Seed;
+        player2.Seed = Seed;
     }
 
     private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
@@ -28,10 +41,9 @@ public class TalesOfTribute
 
     private (EndGameState?, PatronId?) SelectPatronWithTimeout(PlayerEnum playerToWin, AI currentPlayer, List<PatronId> availablePatrons, int round)
     {
-        var timeout = currentPlayer.MoveTimeout;
         var task = SelectPatronTask(currentPlayer, availablePatrons, round);
 
-        if (task.Wait(timeout))
+        if (task.Wait(Timeout))
         {
             var endGameState = VerifyPatronSelection(playerToWin, task.Result, availablePatrons);
             if (endGameState is not null)
@@ -114,7 +126,7 @@ public class TalesOfTribute
             LogTarget = this.LogTarget,
             LoggerEnabled = LoggerEnabled,
         };
-        _game = new TalesOfTributeGame(_players, api);
+        _game = new TalesOfTributeGame(_players, api, Timeout);
 
         var r = _game!.Play();
 

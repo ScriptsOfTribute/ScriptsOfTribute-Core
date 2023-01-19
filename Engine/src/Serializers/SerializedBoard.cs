@@ -31,6 +31,25 @@ namespace TalesOfTribute
         public readonly ulong CurrentSeed;
         public readonly bool Cheats = false;
 
+        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
+        {
+            CurrentPlayer = currentPlayer;
+            EnemyPlayer = enemyPlayer;
+            PatronStates = patronStates;
+            TavernAvailableCards = tavernAvailableCards;
+            TavernCards = tavernCards;
+            BoardState = boardState;
+            PendingChoice = pendingChoice;
+            ComboStates = comboStates;
+            UpcomingEffects = upcomingEffects;
+            StartOfNextTurnEffects = startOfNextTurnEffects;
+            CompletedActions = completedActions;
+            GameEndState = gameEndState;
+            InitialSeed = initialSeed;
+            CurrentSeed = currentSeed;
+            Cheats = cheats;
+        }
+
         public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
         {
             CurrentPlayer = currentPlayer;
