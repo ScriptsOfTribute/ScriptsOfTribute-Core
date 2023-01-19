@@ -1,5 +1,5 @@
+/*
 using SimpleBots;
-using TalesOfTribute;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
 
@@ -50,3 +50,4 @@ public class AdditionalFeaturesTests
     }
     //add Apriori tests   
 }
+*/

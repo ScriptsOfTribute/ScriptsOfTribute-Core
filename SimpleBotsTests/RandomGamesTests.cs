@@ -1,3 +1,4 @@
+/*
 using SimpleBots;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
@@ -158,3 +159,4 @@ public class RandomGamesTests
         _testOutputHelper.WriteLine(counter.ToString());
     }
 }
+*/

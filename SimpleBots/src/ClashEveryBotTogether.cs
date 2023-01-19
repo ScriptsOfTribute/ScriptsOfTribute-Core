@@ -11,9 +11,9 @@ public class ClashEveryBotTogether{
 
     private string loggerPath = "allBotsStatistics.txt";
 
-    private int numberOfTrials = 5;
+    private int numberOfTrials = 1000;
 
-    private AI[] bots = new AI[] {new RandomBot(), new DoEverythingBot(), new RandomBotWithRandomStateExploring(), new RandomMaximizePrestigeBot(), new RandomHeuristicBot()};//, new SemiRandomBot()}; new RandomHeuristicBot()
+    private AI[] bots = new AI[] {new RandomBot(), new DoEverythingBot(), new WinByPatronFavors(), new RandomMaximizePrestigeBot(), new MaximizeAgentsBot()};//, new SemiRandomBot()}; new RandomHeuristicBot()
 
     private double[] botsWinCounter = new double[5];
 
