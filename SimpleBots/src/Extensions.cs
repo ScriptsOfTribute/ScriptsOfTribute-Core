@@ -1,15 +1,14 @@
-﻿namespace SimpleBots;
+﻿using TalesOfTribute;
+
+namespace SimpleBots;
 
 public static class Extensions
 {
-    public static readonly Random Rnd = new();
-
-    public static int RandomK(int lowerBound, int upperBoaund){
-        return Rnd.Next(lowerBound, upperBoaund);
+    public static int RandomK(int lowerBound, int upperBoaund, SeededRandom rng){
+        return (rng.Next() % (upperBoaund + 1 - lowerBound)) + lowerBound;
     }
-
-    public static T PickRandom<T>(this List<T> source)
+    public static T PickRandom<T>(this List<T> source, SeededRandom rng)
     {
-        return source[Rnd.Next(source.Count)];
+        return source[rng.Next() % source.Count];
     }
 }

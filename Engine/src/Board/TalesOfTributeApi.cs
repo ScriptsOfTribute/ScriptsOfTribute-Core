@@ -1,20 +1,51 @@
 using TalesOfTribute.Board.CardAction;
 using TalesOfTribute.Board.Cards;
 using TalesOfTribute.Serializers;
+using TalesOfTribute.utils;
 
 namespace TalesOfTribute.Board;
 
 public class TalesOfTributeApi : ITalesOfTributeApi
 {
+    public ulong Seed { get; }
     public int TurnCount => _turnCount;
+    public int TurnMoveCount => _turnMoveCount;
     public PlayerEnum CurrentPlayerId => _boardManager.CurrentPlayer.ID;
     public PlayerEnum EnemyPlayerId => _boardManager.EnemyPlayer.ID;
     public BoardState BoardState => _boardManager.CardActionManager.State;
     public SerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
     private EndGameState? _endGameState = null;
 
+    private TextWriter _logTarget = Console.Out;
+    public TextWriter LogTarget
+    {
+        get => _logTarget;
+        set
+        {
+            Logger.Flush();
+            _logTarget = value;
+            Logger = new(value, LoggerEnabled);
+        }
+    }
+
+    private bool _loggerEnabled = false;
+
+    public bool LoggerEnabled
+    {
+        get => _loggerEnabled;
+        set
+        {
+            if (value == _loggerEnabled) return;
+            Logger.Flush();
+            _loggerEnabled = value;
+            Logger = new(LogTarget, value);
+        }
+    }
+
     private readonly BoardManager _boardManager;
-    private int _turnCount;
+    private int _turnCount = 1;
+    private int _turnMoveCount = 1;
+    public Logger Logger { get; private set; } = new(Console.Out, false);
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
@@ -41,6 +72,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         }
         _boardManager = new BoardManager(patrons, seed);
         _boardManager.SetUpGame();
+        Seed = seed;
     }
 
     // Serialization
@@ -100,9 +132,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
         try
         {
+            _turnMoveCount += 1;
             f();
         }
-        // TODO: Add engine specific exception.
         catch (EngineException e)
         {
             _endGameState = new EndGameState(EnemyPlayerId, GameEndReason.INCORRECT_MOVE, e.Message);
@@ -202,7 +234,8 @@ public class TalesOfTributeApi : ITalesOfTributeApi
 
     public EndGameState? EndTurn()
     {
-        _turnCount++;
+        _turnCount += 1;
+        _turnMoveCount = 1;
         _boardManager.EndTurn();
         return CheckWinner();
     }
@@ -232,5 +265,25 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager
             .Patrons.First(p => p.PatronID == patronId)
             .CanPatronBeActivated(_boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
+    }
+
+    public void Log(string message)
+    {
+        Logger.Log(CurrentPlayerId, message);
+    }
+
+    public void Log(PlayerEnum player, string message)
+    {
+        Logger.Log(player, message);
+    }
+
+    public void Log(List<(DateTime, string)> messages)
+    {
+        messages.ForEach(e => Logger.Log(CurrentPlayerId, e.Item1, _turnCount, _turnMoveCount, e.Item2));
+    }
+    
+    public void Log(PlayerEnum player, List<(DateTime, string)> messages)
+    {
+        messages.ForEach(e => Logger.Log(player, e.Item1, _turnCount, _turnMoveCount, e.Item2));
     }
 }

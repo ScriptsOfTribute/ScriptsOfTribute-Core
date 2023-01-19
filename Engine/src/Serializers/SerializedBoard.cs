@@ -31,6 +31,25 @@ namespace TalesOfTribute
         public readonly ulong CurrentSeed;
         public readonly bool Cheats = false;
 
+        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
+        {
+            CurrentPlayer = currentPlayer;
+            EnemyPlayer = enemyPlayer;
+            PatronStates = patronStates;
+            TavernAvailableCards = tavernAvailableCards;
+            TavernCards = tavernCards;
+            BoardState = boardState;
+            PendingChoice = pendingChoice;
+            ComboStates = comboStates;
+            UpcomingEffects = upcomingEffects;
+            StartOfNextTurnEffects = startOfNextTurnEffects;
+            CompletedActions = completedActions;
+            GameEndState = gameEndState;
+            InitialSeed = initialSeed;
+            CurrentSeed = currentSeed;
+            Cheats = cheats;
+        }
+
         public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
         {
             CurrentPlayer = currentPlayer;
@@ -50,19 +69,19 @@ namespace TalesOfTribute
 
         public SerializedBoard(
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, IEnumerable<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
-            TavernAvailableCards = tavern.AvailableCards.ToList();
+            TavernAvailableCards = tavern.AvailableCards;
             TavernCards = tavern.Cards;
             PatronStates = new PatronStates(patrons.ToList());
             BoardState = state;
             PendingChoice = maybeChoice?.Serialize();
             ComboStates = comboContext.ToComboStates();
             UpcomingEffects = upcomingEffects.ToList();
-            StartOfNextTurnEffects = startOfNextTurnEffects.ToList();
-            CompletedActions = completedActions.ToList();
+            StartOfNextTurnEffects = startOfNextTurnEffects;
+            CompletedActions = completedActions;
             GameEndState = endGameState;
             CurrentSeed = rng.CurrentSeed;
             InitialSeed = rng.InitialSeed;

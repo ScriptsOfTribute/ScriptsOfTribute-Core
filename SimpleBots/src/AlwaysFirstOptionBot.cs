@@ -5,10 +5,8 @@ using TalesOfTribute.Serializers;
 
 namespace SimpleBots;
 
-public class MoveTimeoutBot : AI
+public class AlwaysFirstOptionBot : AI
 {
-    public override TimeSpan MoveTimeout { get; } = TimeSpan.FromSeconds(3);
-
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
     {
         return availablePatrons[0];
@@ -16,7 +14,6 @@ public class MoveTimeoutBot : AI
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        Task.Delay(TimeSpan.FromSeconds(4)).Wait();
         return possibleMoves[0];
     }
 

@@ -51,11 +51,12 @@ public class GameEndStatsCounter
             case GameEndReason.PATRON_FAVOR:
                 _patronFavorEnds++;
                 break;
-            case GameEndReason.MOVE_TIMEOUT:
             case GameEndReason.TURN_TIMEOUT:
             case GameEndReason.PATRON_SELECTION_TIMEOUT:
             case GameEndReason.PATRON_SELECTION_FAILURE:
             case GameEndReason.INCORRECT_MOVE:
+            case GameEndReason.INTERNAL_ERROR:
+            case GameEndReason.BOT_EXCEPTION:
                 _otherEnds++;
                 break;
             default:

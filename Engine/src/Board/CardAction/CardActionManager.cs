@@ -221,9 +221,13 @@ public class CardActionManager
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        
+
         var chain = ExecutionChain.FromEffects(serializedBoard.UpcomingEffects, choiceForChain);
-        var startOfNextTurnEffects = serializedBoard.StartOfNextTurnEffects.ToList();
+        var startOfNextTurnEffects = new List<UniqueBaseEffect>(serializedBoard.StartOfNextTurnEffects.Count);
+        startOfNextTurnEffects.AddRange(serializedBoard.StartOfNextTurnEffects);
+
+        var completedActions = new List<CompletedAction>(serializedBoard.CompletedActions.Count + 2);
+        completedActions.AddRange(serializedBoard.CompletedActions);
 
         var result = new CardActionManager(playerContext, tavern)
         {
@@ -232,7 +236,7 @@ public class CardActionManager
             _pendingExecutionChain = chain,
             _pendingPatronChoice = patronChoice,
             ComboContext = comboContext,
-            CompletedActions = serializedBoard.CompletedActions.ToList(),
+            CompletedActions = completedActions,
         };
 
         return result;

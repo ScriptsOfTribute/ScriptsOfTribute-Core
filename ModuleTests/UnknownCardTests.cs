@@ -236,7 +236,7 @@ public class UnknownCardTests
 
     // TODO: If we change Cycling behavior after testing, this test will likely break.
     [Fact]
-    void DeckCycleShouldResetInformationAboutUpcomingCards()
+    void DeckCycleBehaviourWithTossAndUnknownCards()
     {
         // Refresh 2 (put 2 cards from Cooldown on top of Draw)
         var helShiraHerald = GlobalCardDatabase.Instance.GetCard(CardId.HEL_SHIRA_HERALD);
@@ -283,15 +283,15 @@ public class UnknownCardTests
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(helShiraHerald));
         (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { gold1, gold2 }));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason1));
+        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason1)); // draw gold
         // This action should Deck Cycle, because there is 1 item in DrawPile, so Toss 2 Cycles.
         (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(scryingGlobe1));
         (newState, possibleMoves) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard>()));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason2));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3));
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason4));
-        Assert.Equal(3, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.UNKNOWN));
-        Assert.Equal(1, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
+        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason2)); //draw gold because toss add cooldown cards to bottom
+        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason3)); // unknown draw
+        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(harvestSeason4)); // unknown draw
+        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.UNKNOWN)); // our writs instantiated above
+        Assert.Equal(2, newState.CurrentPlayer.Hand.Count(c => c.CommonId == CardId.GOLD));
     }
 
     [Fact]

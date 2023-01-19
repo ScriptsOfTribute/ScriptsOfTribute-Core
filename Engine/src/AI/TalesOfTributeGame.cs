@@ -16,19 +16,21 @@ public class TalesOfTributeGame
     public EndGameState? EndGameState { get; private set; }
     private AI CurrentPlayer => _players[(int)_api.CurrentPlayerId];
     private AI EnemyPlayer => _players[(int)_api.EnemyPlayerId];
-    private TimeSpan CurrentTurnTimeRemaining => CurrentPlayer.TurnTimeout - _currentTurnTimeElapsed;
+    private TimeSpan _timeout;
+    private TimeSpan CurrentTurnTimeRemaining => _timeout - _currentTurnTimeElapsed;
     private List<Move> _moveHistory = new();
 
-    public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api)
+    public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api, TimeSpan timeout)
     {
         _api = api;
+        _timeout = timeout;
         _players[0] = players[0];
         _players[1] = players[1];
     }
 
-    private async Task<Move> MoveTask(GameState state, List<Move> moves)
+    private Task<Move> MoveTask(GameState state, List<Move> moves)
     {
-        return await Task.Run(() =>
+        return Task.Run(() =>
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -39,43 +41,53 @@ public class TalesOfTributeGame
         });
     }
 
-    private async Task<(EndGameState?, Move?)> PlayWithTimeout()
+    private (EndGameState?, Move?) PlayWithTimeout()
     {
-        TimeSpan timeout;
-        GameEndReason timeoutType;
-        if (CurrentPlayer.MoveTimeout < CurrentTurnTimeRemaining)
-        {
-            timeout = CurrentPlayer.MoveTimeout;
-            timeoutType = GameEndReason.MOVE_TIMEOUT;
-        }
-        else
-        {
-            timeout = CurrentTurnTimeRemaining;
-            timeoutType = GameEndReason.TURN_TIMEOUT;
-        }
         var board = _api.GetSerializer();
         var state = new GameState(board);
         var moves = _api.GetListOfPossibleMoves();
 
         var task = MoveTask(state, moves);
-        var res = await Task.WhenAny(task, Task.Delay(timeout));
 
-        if (res == task)
+        try
         {
-            var result = task.Result;
-            _moveHistory.Add(result);
-            return (null, result);
+            if (task.Wait(CurrentTurnTimeRemaining))
+            {
+                var result = task.Result;
+                _moveHistory.Add(result);
+                _api.Logger.Log(CurrentPlayer.LogMessages, CurrentPlayer.Id, _api.TurnCount, _api.TurnMoveCount);
+                CurrentPlayer.LogMessages.Clear();
+                return (null, result);
+            }
+        }
+        catch (AggregateException e)
+        {
+            _api.Logger.Log(CurrentPlayer.LogMessages, CurrentPlayer.Id, _api.TurnCount, _api.TurnMoveCount);
+            CurrentPlayer.LogMessages.Clear();
+
+            if (e.InnerExceptions.Any())
+            {
+                var message = string.Join('\n', e.InnerExceptions.Select(e => $"{e.Message}\n{e.StackTrace}\n\n"));
+                return (new EndGameState(_api.EnemyPlayerId, GameEndReason.BOT_EXCEPTION, message), null);
+            }
+            
+            return (new EndGameState(PlayerEnum.NO_PLAYER_SELECTED, GameEndReason.INTERNAL_ERROR, $"{e.Message}\n{e.StackTrace}"), null);
         }
 
-        return (new EndGameState(_api.EnemyPlayerId, timeoutType), null);
+        return (new EndGameState(_api.EnemyPlayerId, GameEndReason.TURN_TIMEOUT), null);
     }
     
-    public async Task<(EndGameState, SerializedBoard)> Play()
+    public (EndGameState, SerializedBoard) Play()
     {
+        CurrentPlayer.LogMessages.ForEach(m => _api.Logger.Log(CurrentPlayer.Id, m.Item2));
+        EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
+        CurrentPlayer.LogMessages.Clear();
+        EnemyPlayer.LogMessages.Clear();
+
         EndGameState? endGameState = null;
         do
         {
-            var startOfTurnResult = await HandleStartOfTurnChoices();
+            var startOfTurnResult = HandleStartOfTurnChoices();
             if (startOfTurnResult is not null)
             {
                 return EndGame(startOfTurnResult);
@@ -84,7 +96,7 @@ public class TalesOfTributeGame
             Move? move;
             do
             {
-                (var timeout, move) = await PlayWithTimeout();
+                (var timeout, move) = PlayWithTimeout();
 
                 if (timeout is not null)
                 {
@@ -96,7 +108,7 @@ public class TalesOfTributeGame
                     throw new EngineException("This shouldn't happen - there is a bug in the engine!");
                 }
 
-                var result = await HandleFreeMove(move);
+                var result = HandleFreeMove(move);
                 if (result is not null)
                 {
                     return EndGame(result);
@@ -115,6 +127,8 @@ public class TalesOfTributeGame
 
     private EndGameState? HandleEndTurn()
     {
+        _api.Logger.Log(CurrentPlayer.LogMessages, CurrentPlayer.Id, _api.TurnCount, _api.TurnMoveCount);
+        CurrentPlayer.LogMessages.Clear();
         _currentTurnTimeElapsed = TimeSpan.Zero;
         if (_api.TurnCount > TurnLimit)
         {
@@ -125,7 +139,7 @@ public class TalesOfTributeGame
     }
 
 
-    private async Task<EndGameState?> HandleStartOfTurnChoices()
+    private EndGameState? HandleStartOfTurnChoices()
     {
         if (_api.BoardState != BoardState.START_OF_TURN_CHOICE_PENDING)
         {
@@ -141,7 +155,7 @@ public class TalesOfTributeGame
                     "There is something wrong in the engine! In case other start of turn choices were added (other than DESTROY), this needs updating.");
             }
                 
-            var result = await HandleStartOfTurnChoice();
+            var result = HandleStartOfTurnChoice();
 
             if (result is not null)
             {
@@ -152,9 +166,9 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private async Task<EndGameState?> HandleStartOfTurnChoice()
+    private EndGameState? HandleStartOfTurnChoice()
     {
-        var (timeout, playersChoice) = await PlayWithTimeout();
+        var (timeout, playersChoice) = PlayWithTimeout();
 
         if (timeout is not null)
         {
@@ -169,7 +183,7 @@ public class TalesOfTributeGame
         return _api.MakeChoice(makeChoiceMove.Choices);
     }
 
-    private async Task<EndGameState?> HandleFreeMove(Move move)
+    private EndGameState? HandleFreeMove(Move move)
     {
         if (!_api.IsMoveLegal(move))
         {
@@ -184,39 +198,39 @@ public class TalesOfTributeGame
 
         return move.Command switch
         {
-            CommandEnum.PLAY_CARD => await HandlePlayCard((SimpleCardMove)move),
+            CommandEnum.PLAY_CARD => HandlePlayCard((SimpleCardMove)move),
             CommandEnum.ATTACK => HandleAttack((SimpleCardMove)move),
-            CommandEnum.BUY_CARD => await HandleBuyCard((SimpleCardMove)move),
-            CommandEnum.CALL_PATRON => await HandleCallPatron((SimplePatronMove)move),
-            CommandEnum.ACTIVATE_AGENT => await HandleActivateAgent((SimpleCardMove)move),
+            CommandEnum.BUY_CARD => HandleBuyCard((SimpleCardMove)move),
+            CommandEnum.CALL_PATRON => HandleCallPatron((SimplePatronMove)move),
+            CommandEnum.ACTIVATE_AGENT => HandleActivateAgent((SimpleCardMove)move),
             CommandEnum.END_TURN => null,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private async Task<EndGameState?> HandleActivateAgent(SimpleCardMove move)
+    private EndGameState? HandleActivateAgent(SimpleCardMove move)
     {
-        return _api.ActivateAgent(move.Card) ?? await ConsumePotentialPendingMoves();
+        return _api.ActivateAgent(move.Card) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandlePlayCard(SimpleCardMove move)
+    private EndGameState? HandlePlayCard(SimpleCardMove move)
     {
-        return _api.PlayCard(move.Card) ?? await ConsumePotentialPendingMoves();
+        return _api.PlayCard(move.Card) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleBuyCard(SimpleCardMove move)
+    private EndGameState? HandleBuyCard(SimpleCardMove move)
     {
-        return _api.BuyCard(move.Card) ?? await ConsumePotentialPendingMoves();
+        return _api.BuyCard(move.Card) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> ConsumePotentialPendingMoves()
+    private EndGameState? ConsumePotentialPendingMoves()
     {
         SerializedChoice? choice = null;
         try
         {
             while ((choice = _api.PendingChoice) is not null)
             {
-                var result = await HandleChoice(choice);
+                var result = HandleChoice(choice);
 
                 if (result is not null)
                 {
@@ -235,23 +249,23 @@ public class TalesOfTributeGame
     private EndGameState? HandleAttack(SimpleCardMove move)
         => _api.AttackAgent(move.Card);
 
-    private async Task<EndGameState?> HandleCallPatron(SimplePatronMove move)
+    private EndGameState? HandleCallPatron(SimplePatronMove move)
     {
         if (!Enum.IsDefined(typeof(PatronId), move.PatronId))
         {
             return new EndGameState(_api.EnemyPlayerId, GameEndReason.INCORRECT_MOVE, "Invalid patron selected.");
         }
 
-        return _api.PatronActivation(move.PatronId) ?? await ConsumePotentialPendingMoves();
+        return _api.PatronActivation(move.PatronId) ?? ConsumePotentialPendingMoves();
     }
 
-    private async Task<EndGameState?> HandleChoice(SerializedChoice result)
+    private EndGameState? HandleChoice(SerializedChoice result)
     {
         switch (result.Type)
         {
             case Choice.DataType.CARD:
             {
-                var (timeout, move) = await PlayWithTimeout();
+                var (timeout, move) = PlayWithTimeout();
                 if (timeout is not null)
                 {
                     return timeout;
@@ -273,7 +287,7 @@ public class TalesOfTributeGame
             }
             case Choice.DataType.EFFECT:
             {
-                var (timeout, move) = await PlayWithTimeout();
+                var (timeout, move) = PlayWithTimeout();
                 if (timeout is not null)
                 {
                     return timeout;
@@ -302,8 +316,11 @@ public class TalesOfTributeGame
         state.AdditionalContext +=
             $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
         CurrentPlayer.GameEnd(state);
+        CurrentPlayer.LogMessages.ForEach(m => _api.Logger.Log(CurrentPlayer.Id, m.Item2));
         EnemyPlayer.GameEnd(state);
+        EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
         EndGameState = state;
+        _api.Logger.Flush();
         return (state, _api.GetSerializer());
     }
 }

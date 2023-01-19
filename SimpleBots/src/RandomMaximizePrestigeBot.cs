@@ -11,22 +11,24 @@ namespace SimpleBotsTests;
 public class RandomMaximizePrestigeBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
         var movesToCheck = possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
         if (movesToCheck.Count == 0)
         {
+            Log(Move.EndTurn().ToString());
             return Move.EndTurn();
         }
 
         Dictionary<int, List<Move>> prestigeToMove = new();
         foreach (var move in movesToCheck)
         {
-            var (newState, newPossibleMoves) = gameState.ApplyState(move);
+            var (newState, newPossibleMoves) = gameState.ApplyState(move, Seed);
             if (newState.GameEndState?.Winner == Id)
             {
+                Log(move.ToString());
                 return move;
             }
 
@@ -39,6 +41,7 @@ public class RandomMaximizePrestigeBot : AI
                 var (newestState, _) = newState.ApplyState(newMove);
                 if (newestState.GameEndState?.Winner == Id)
                 {
+                    Log(move.ToString());
                     return newMove;
                 }
 
@@ -56,11 +59,11 @@ public class RandomMaximizePrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            var finalMove = possibleMoves.PickRandom();
+            var finalMove = possibleMoves.PickRandom(Rng);
             return finalMove;
         }
 
-        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom();
+        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);
         return bestMove;
     }
 
@@ -134,11 +137,14 @@ public class RandomMaximizePrestigeBot : AI
             return possibleMoves.PickRandom();
         }
 
-        return prestigeToMove[prestigeToMove.Keys.Max()].PickRandom();
+        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);
+        Log(bestMove.ToString());
+        return bestMove;
     }
 
     public override void GameEnd(EndGameState state)
     {
+        Log("Game ended : (");
     }
 }
 */

@@ -6,25 +6,19 @@ namespace SimpleBotsTests;
 
 public class TimeoutTests
 {
-    [Fact]
-    void MoveShouldCorrectlyTimeout()
-    {
-        var bot1 = new RandomBot();
-        var bot2 = new MoveTimeoutBot();
-        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
-
-        var (result, _) = game.Play();
-        
-        Assert.Equal(GameEndReason.MOVE_TIMEOUT, result.Reason);
-        Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
-    }
     
     [Fact]
     void TurnShouldCorrectlyTimeout()
     {
         var bot1 = new RandomBot();
+        // This bot should timeout, because he has to wait 1 second between each move.
+        // That means he can make 3 moves, but in the first turn there are always 5 possible cards to play,
+        // and he tries to make all the moves before ending turn.
         var bot2 = new TurnTimeoutBot();
-        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2)
+        {
+            Timeout = TimeSpan.FromSeconds(3)
+        };
 
         var (result, _) = game.Play();
         
@@ -37,7 +31,10 @@ public class TimeoutTests
     {
         var bot1 = new RandomBot();
         var bot2 = new PatronSelectionTimeoutBot();
-        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2)
+        {
+            Timeout = TimeSpan.FromSeconds(3)
+        };
 
         var (result, _) = game.Play();
         

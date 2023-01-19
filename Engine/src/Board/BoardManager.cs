@@ -13,20 +13,19 @@ namespace TalesOfTribute
         public Player CurrentPlayer => _playerContext.CurrentPlayer;
         public Player EnemyPlayer => _playerContext.EnemyPlayer;
         public readonly CardActionManager CardActionManager;
-        private readonly SeededRandom _rng = new();
-        private readonly bool _simulationMode = false;
+        private readonly SeededRandom _rng;
         private readonly bool _cheats = false;
 
         private int PrestigeTreshold = 40;
 
         public BoardManager(PatronId[] patrons, ulong seed)
         {
+            _rng = new SeededRandom(seed);
             this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
             Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons), _rng);
             _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rng), new Player(PlayerEnum.PLAYER2, _rng));
             CardActionManager = new CardActionManager(_playerContext, Tavern);
-            _rng = new SeededRandom(seed);
         }
 
         private Patron[] GetPatrons(IEnumerable<PatronId> patrons)
@@ -70,30 +69,30 @@ namespace TalesOfTribute
             
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.BUY_CARD, card));
 
-            var boughtCard = this.Tavern.Acquire(card);
-
-            CurrentPlayer.CoinsAmount -= boughtCard.Cost;
-            
-            switch (boughtCard.Type)
+            var idx = Tavern.RemoveCard(card);
+            switch (card.Type)
             {
                 case CardType.CONTRACT_AGENT:
                 {
-                    var agent = Agent.FromCard(boughtCard);
+                    var agent = Agent.FromCard(card);
                     agent.MarkActivated();
                     CurrentPlayer.Agents.Add(agent);
-                    CardActionManager.PlayCard(boughtCard);
+                    CardActionManager.PlayCard(card);
                     break;
                 }
                 case CardType.CONTRACT_ACTION:
                 {
-                    Tavern.Cards.Add(boughtCard);
-                    CardActionManager.PlayCard(boughtCard);
+                    Tavern.Cards.Add(card);
+                    CardActionManager.PlayCard(card);
                     break;
                 }
                 default:
-                    CurrentPlayer.CooldownPile.Add(boughtCard);
+                    CurrentPlayer.CooldownPile.Add(card);
                     break;
             }
+            Tavern.DrawAt(idx);
+
+            CurrentPlayer.CoinsAmount -= card.Cost;
         }
 
         public void EndTurn()
@@ -222,7 +221,6 @@ namespace TalesOfTribute
             _playerContext = playerContext;
             CardActionManager = cardActionManager;
             _rng = rng;
-            _simulationMode = !cheats;
             _cheats = cheats;
         }
 

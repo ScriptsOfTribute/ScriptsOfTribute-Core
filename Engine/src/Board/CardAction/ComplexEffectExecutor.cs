@@ -57,27 +57,26 @@ public class ComplexEffectExecutor
         }
 
         var choice = choices.First();
-        var card = _tavern.Acquire(choice);
-
-        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.ACQUIRE_CARD, c.Context!.CardSource!, card));
-
-        switch (card.Type)
+        
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.ACQUIRE_CARD, c.Context!.CardSource!, choice));
+        var idx = _tavern.RemoveCard(choice);
+        switch (choice.Type)
         {
             case CardType.CONTRACT_ACTION:
-                _parent.ImmediatePlayCard(card);
-                _tavern.Cards.Add(card);
+                _parent.ImmediatePlayCard(choice);
+                _tavern.Cards.Add(choice);
                 break;
             case CardType.CONTRACT_AGENT:
-                var agent = Agent.FromCard(card);
+                var agent = Agent.FromCard(choice);
                 agent.MarkActivated();
                 _currentPlayer.Agents.Add(agent);
-                _parent.ImmediatePlayCard(card);
+                _parent.ImmediatePlayCard(choice);
                 break;
             default:
-                _currentPlayer.CooldownPile.Add(card);
+                _currentPlayer.CooldownPile.Add(choice);
                 break;
         }
-
+        _tavern.DrawAt(idx);
         return new Success();
     }
 

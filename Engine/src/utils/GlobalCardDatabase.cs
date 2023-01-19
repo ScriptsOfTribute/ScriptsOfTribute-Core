@@ -2,19 +2,19 @@
 
 public class GlobalCardDatabase
 {
-    private static CardDatabase? _instance;
+    private static ThreadLocal<CardDatabase>? _instance;
 
     public static CardDatabase Instance
     {
         get
         {
-            if (_instance != null) return _instance;
+            if (_instance != null) return _instance.Value;
 
             var data = File.ReadAllText("cards.json");
             var parser = new Parser(data);
-            _instance = new CardDatabase(parser.CreateAllCards());
+            _instance = new ThreadLocal<CardDatabase>(() => new CardDatabase(parser.CreateAllCards()));
 
-            return _instance;
+            return _instance.Value;
         }
     }
 
