@@ -1,11 +1,8 @@
-﻿using TalesOfTribute;
-
-namespace GameRunner;
+﻿namespace GameRunner;
 
 public class LogFileNameProvider
 {
-    private object _lock = new();
-    private DirectoryInfo _directory;
+    private readonly DirectoryInfo _directory;
 
     public LogFileNameProvider(DirectoryInfo directory)
     {
