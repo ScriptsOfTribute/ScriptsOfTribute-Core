@@ -36,7 +36,7 @@ public class UnknownCardTests
     }
     
     [Fact]
-    void SimulatingDrawShouldInsertUnknownCardThatIsUnavailableToPlayButCanBeDiscarded()
+    void SimulatingDrawShouldInsertUnknownCardThatIsUnavailableToPlayAndCantBeFoundInChoices()
     {
         var drawPile = new List<UniqueCard>
         {
@@ -67,13 +67,7 @@ public class UnknownCardTests
         Assert.Equal(1, possibleMoves.Count(m => m.Command == CommandEnum.PLAY_CARD));
 
         (newState, _) = newState.ApplyState(Move.PlayCard(ragpicker));
-        Assert.Contains(CardId.UNKNOWN, newState.PendingChoice!.PossibleCards.Select(c => c.CommonId));
-
-        (newState, _) =
-            newState.ApplyState(
-                Move.MakeChoice(newState.PendingChoice!.PossibleCards.First(c => c.CommonId == CardId.UNKNOWN)));
-        
-        Assert.Empty(newState.CurrentPlayer.Hand);
+        Assert.DoesNotContain(CardId.UNKNOWN, newState.PendingChoice!.PossibleCards.Select(c => c.CommonId));
     }
 
     [Fact]
