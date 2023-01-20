@@ -3,7 +3,9 @@ using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.Reflection;
+using GameRunner;
 using SimpleBotsTests;
+using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
 
@@ -29,10 +31,10 @@ var threadsOption = new Option<int>(
     getDefaultValue: () => 1);
 threadsOption.AddAlias("-t");
 
-var logsOption = new Option<bool>(
+var logsOption = new Option<LogsEnabled>(
     name: "--enable-logs",
     description: "Enable logging (to standard output by default).",
-    getDefaultValue: () => false);
+    getDefaultValue: () => LogsEnabled.NONE);
 logsOption.AddAlias("-l");
 
 var seedOption = new Option<ulong?>(
@@ -41,39 +43,25 @@ var seedOption = new Option<ulong?>(
     getDefaultValue: () => null);
 seedOption.AddAlias("-s");
 
-var logFileDestination = new Option<TextWriter?>(
-    name: "--log-file",
-    description: "Log to file instead of standard output.",
+var logFileDestination = new Option<LogFileNameProvider?>(
+    name: "--log-destination",
+    description: "Log to files with names 'directory/<seed_bot.log>' instead of standard output. Specify the directory here.",
+    isDefault: true,
     parseArgument: result =>
     {
         if (result.Tokens.Count == 0)
         {
-            result.ErrorMessage = "No file name provided.";
             return null;
         }
 
-        var path = result.Tokens.Single().Value;
-        if (File.Exists(path))
-        {
-            ConsoleKey response;
-            do
-            {
-                Console.WriteLine("File already exists. Do you want to override it? [Y/n]");
-                response = Console.ReadKey(false).Key;
-                if (response != ConsoleKey.Enter)
-                    Console.WriteLine();
-            } while (response != ConsoleKey.Y && response != ConsoleKey.N && response != ConsoleKey.Enter);
-
-            if (response == ConsoleKey.N)
-            {
-                result.ErrorMessage = "Aborted.";
-                return null;
-            }
-        }
-
-        return File.CreateText(path);
-    });
-logFileDestination.AddAlias("-f");
+        var dirName = result.Tokens.Single().Value;
+        var dir = Directory.CreateDirectory(dirName);
+        return new LogFileNameProvider(dir);
+    })
+{
+    IsRequired = false,
+};
+logFileDestination.AddAlias("-d");
 
 
 Type? cachedBot = null;
@@ -155,8 +143,45 @@ var mainCommand = new RootCommand("A game runner for bots.")
     bot2NameArgument,
 };
 
-int returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybeSeed, bot1Type, bot2Type) =>
+TalesOfTribute.AI.TalesOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong? seed, LogFileNameProvider? logFileNameProvider)
+{
+    var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+    switch (enableLogs)
+    {
+        case LogsEnabled.P1:
+            game.P1LoggerEnabled = true;
+            break;
+        case LogsEnabled.P2:
+            game.P2LoggerEnabled = true;
+            break;
+        case LogsEnabled.NONE:
+            break;
+        case LogsEnabled.BOTH:
+            game.P1LoggerEnabled = true;
+            game.P2LoggerEnabled = true;
+            break;
+        default:
+            throw new ArgumentOutOfRangeException(nameof(enableLogs), enableLogs, null);
+    }
+
+    if (seed is { } s)
+    {
+        game.Seed = s;
+    }
+
+    if (logFileNameProvider is not null)
+    {
+        var (p1LogDest, p2LogDest) =
+            logFileNameProvider.GetForPlayers(game.Seed, game.P1LoggerEnabled, game.P2LoggerEnabled);   
+        game.P1LogTarget = p1LogDest;
+        game.P2LogTarget = p2LogDest;
+    }
+
+    return game;
+}
+
+var returnValue = 0;
+mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, maybeSeed, bot1Type, bot2Type) =>
 {
     if (noOfThreads < 1)
     {
@@ -178,23 +203,11 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybe
         {
             var bot1 = (AI?)Activator.CreateInstance(bot1Type);
             var bot2 = (AI?)Activator.CreateInstance(bot2Type);
+            var game = PrepareGame(bot1!, bot2!, enableLogs, maybeSeed, logFileNameProvider);
+            maybeSeed += 1;
 
             granularWatch.Reset();
             granularWatch.Start();
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!)
-            {
-                LoggerEnabled = enableLogs
-            };
-            if (logFileDestination is not null)
-            {
-                game.LogTarget = logFileDestination;
-            }
-
-            if (maybeSeed is { } u)
-            {
-                game.Seed = u;
-                maybeSeed += 1;
-            }
             var (endReason, _) = game.Play();
             granularWatch.Stop();
 
@@ -211,9 +224,9 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybe
     }
     else
     {
-        if (enableLogs)
+        if (enableLogs != LogsEnabled.NONE && logFileNameProvider is null)
         {
-            Console.Error.WriteLine("ERROR: Logs are not supported with multi-threading.");
+            Console.Error.WriteLine("ERROR: Logs to stdout are not supported with multi-threading. Specify file destination.");
             returnValue = -1;
             return;
         }
@@ -226,7 +239,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybe
         var gamesPerThread = runs / noOfThreads;
         var gamesPerThreadRemainder = runs % noOfThreads;
         var threads = new Task<List<EndGameState>>[noOfThreads];
-
+        
         List<EndGameState> PlayGames(int amount, Type bot1T, Type bot2T, int threadNo, ulong? seed = null)
         {
             var results = new EndGameState[amount];
@@ -236,25 +249,22 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybe
             {
                 var bot1 = (AI?)Activator.CreateInstance(bot1T);
                 var bot2 = (AI?)Activator.CreateInstance(bot2T);
+                var game = PrepareGame(bot1!, bot2!, enableLogs, seed, logFileNameProvider);
+                seed += 1;
+
                 watch.Reset();
                 watch.Start();
-                var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
-                if (seed is { } s)
-                {
-                    game.Seed = s;
-                    seed += 1;
-                }
                 var (endReason, _) = game.Play();
                 watch.Stop();
                 results[i] = endReason;
                 timeMeasurements[i] = watch.ElapsedMilliseconds;
             }
-
+        
             Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}ms.");
-
+        
             return results.ToList();
         }
-
+        
         var watch = Stopwatch.StartNew();
         for (var i = 0; i < noOfThreads; i++)
         {
@@ -275,12 +285,12 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileDestination, maybe
             }
         }
         Task.WaitAll(threads.ToArray<Task>());
-
+        
         var timeTaken = watch.ElapsedMilliseconds;
-
+        
         var counter = new GameEndStatsCounter();
         threads.SelectMany(t => t.Result).ToList().ForEach(r => counter.Add(r));
-
+        
         Console.WriteLine($"\nTotal time taken: {timeTaken}ms");
         Console.WriteLine("\nStats from the games played:");
         Console.WriteLine(counter.ToString());

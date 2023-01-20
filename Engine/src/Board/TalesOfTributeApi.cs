@@ -16,36 +16,10 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public SerializedChoice? PendingChoice => _boardManager.CardActionManager.PendingChoice?.Serialize();
     private EndGameState? _endGameState = null;
 
-    private TextWriter _logTarget = Console.Out;
-    public TextWriter LogTarget
-    {
-        get => _logTarget;
-        set
-        {
-            Logger.Flush();
-            _logTarget = value;
-            Logger = new(value, LoggerEnabled);
-        }
-    }
-
-    private bool _loggerEnabled = false;
-
-    public bool LoggerEnabled
-    {
-        get => _loggerEnabled;
-        set
-        {
-            if (value == _loggerEnabled) return;
-            Logger.Flush();
-            _loggerEnabled = value;
-            Logger = new(LogTarget, value);
-        }
-    }
-
     private readonly BoardManager _boardManager;
     private int _turnCount = 1;
     private int _turnMoveCount = 1;
-    public Logger Logger { get; private set; } = new(Console.Out, false);
+    public Logger Logger { get; } = new();
 
     // Constructors
     public TalesOfTributeApi(BoardManager boardManager)
@@ -265,25 +239,5 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _boardManager
             .Patrons.First(p => p.PatronID == patronId)
             .CanPatronBeActivated(_boardManager.CurrentPlayer, _boardManager.EnemyPlayer);
-    }
-
-    public void Log(string message)
-    {
-        Logger.Log(CurrentPlayerId, message);
-    }
-
-    public void Log(PlayerEnum player, string message)
-    {
-        Logger.Log(player, message);
-    }
-
-    public void Log(List<(DateTime, string)> messages)
-    {
-        messages.ForEach(e => Logger.Log(CurrentPlayerId, e.Item1, _turnCount, _turnMoveCount, e.Item2));
-    }
-    
-    public void Log(PlayerEnum player, List<(DateTime, string)> messages)
-    {
-        messages.ForEach(e => Logger.Log(player, e.Item1, _turnCount, _turnMoveCount, e.Item2));
     }
 }

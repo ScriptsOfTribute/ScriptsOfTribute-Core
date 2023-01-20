@@ -20,8 +20,10 @@ public class TalesOfTribute
             _players[1].Seed = value;
         }
     }
-    public TextWriter LogTarget { get; set; } = Console.Out;
-    public bool LoggerEnabled { get; set; } = false;
+    public TextWriter P1LogTarget { get; set; } = Console.Out;
+    public TextWriter P2LogTarget { get; set; } = Console.Out;
+    public bool P1LoggerEnabled { get; set; } = false;
+    public bool P2LoggerEnabled { get; set; } = false;
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
     public TalesOfTribute(AI player1, AI player2)
@@ -123,8 +125,13 @@ public class TalesOfTribute
 
         var api = new TalesOfTributeApi(patrons!, Seed)
         {
-            LogTarget = this.LogTarget,
-            LoggerEnabled = LoggerEnabled,
+            Logger =
+            {
+                P1LoggerEnabled = P1LoggerEnabled,
+                P2LoggerEnabled = P2LoggerEnabled,
+                P1LogTarget = P1LogTarget,
+                P2LogTarget = P2LogTarget
+            }
         };
         _game = new TalesOfTributeGame(_players, api, Timeout);
 
