@@ -4,36 +4,52 @@ namespace TalesOfTribute.utils;
 
 public class Logger
 {
-    private readonly TextWriter _writer;
-    public readonly bool Enabled;
+    public TextWriter P1LogTarget { get; set; } = Console.Out;
+    public TextWriter P2LogTarget { get; set; } = Console.Out;
+    public bool P1LoggerEnabled { get; set; } = false;
+    public bool P2LoggerEnabled { get; set; } = false;
 
-    public Logger(TextWriter writer, bool enabled)
+    public Logger()
     {
-        _writer = writer;
-        Enabled = enabled;
     }
 
     public void Log(PlayerEnum player, string message)
     {
-        if (!Enabled) return;
-        _writer.Write($"[{player}] {message}\n");
+        if (!EnabledFor(player)) return;
+        GetWriterFor(player)?.Write($"[{player}] {message}\n");
     }
 
     public void Log(PlayerEnum player, DateTime timestamp, int turn, int move, string message)
     {
-        if (!Enabled) return;
+        if (!EnabledFor(player)) return;
         var s = $"[{player}][{timestamp:hh:mm:ss:fff}][{turn:000}][{move:00}] {message}\n";
-        _writer.Write(s);
+        GetWriterFor(player)?.Write(s);
     }
 
     public void Log(List<(DateTime, string)> messagesWithTimestamp, PlayerEnum player, int turn, int move)
     {
-        if (!Enabled) return;
+        if (!EnabledFor(player)) return;
         messagesWithTimestamp.ForEach(m => Log(player, m.Item1, turn, move, m.Item2));
     }
 
     public void Flush()
     {
-        _writer.Flush();
+        P1LogTarget.Flush();
+        P2LogTarget.Flush();
     }
+
+    private TextWriter? GetWriterFor(PlayerEnum player) =>
+        player switch
+        {
+            PlayerEnum.PLAYER1 => P1LogTarget,
+            PlayerEnum.PLAYER2 => P2LogTarget,
+            _ => null,
+        };
+    public bool EnabledFor(PlayerEnum player) =>
+        player switch
+        {
+            PlayerEnum.PLAYER1 => P1LoggerEnabled,
+            PlayerEnum.PLAYER2 => P2LoggerEnabled,
+            _ => false,
+        };
 }
