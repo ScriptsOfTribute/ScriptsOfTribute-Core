@@ -434,7 +434,7 @@ public class Node
         return normalizedValue;
     }
 
-    public double Simulate() {
+    public double Simulate(SeededRandom rng) {
         GameState gameStateSave = this.gameState;
         List<Move> possibleMovesSave = copyMoveList(this.possibleMoves, this.gameState);
 
@@ -464,7 +464,7 @@ public class Node
         */
 
         while (!this.IsEnd()) {
-            Move move = this.possibleMoves[SimpleBots.Extensions.RandomK(0, (int)this.possibleMovesSize)];
+            Move move = this.possibleMoves[SimpleBots.Extensions.RandomK(0, (int)this.possibleMovesSize, rng)];
 
             this.prevMove = move;
 
@@ -549,7 +549,7 @@ public class MCTSBot : AI
 
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -590,7 +590,7 @@ public class MCTSBot : AI
         s.Start();
         while (s.Elapsed < TimeSpan.FromSeconds(0.25)){
             actNode = TreePolicy(actRoot);
-            double delta = actNode.Simulate();
+            double delta = actNode.Simulate(Rng);
             BackUp(actNode, delta);
             actionCounter++;
         }

@@ -8,7 +8,7 @@ namespace SimpleBots;
 public class WinByPatronFavors : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     private Move? ActivatePatronWhichDoesntFavorMe(GameState gameState, List<Move> movesWithoutEndTurn){
         Dictionary<PatronId, PlayerEnum> patronFavours = gameState.PatronStates.All;
@@ -49,7 +49,7 @@ public class WinByPatronFavors : AI
             }
         }
 
-        return movesWithoutEndTurn.PickRandom();
+        return movesWithoutEndTurn.PickRandom(Rng);
     }
 
     public override void GameEnd(EndGameState state)

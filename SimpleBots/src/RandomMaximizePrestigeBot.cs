@@ -42,7 +42,7 @@ public class RandomMaximizePrestigeBot : AI
                 if (newestState.GameEndState?.Winner == Id)
                 {
                     Log(move.ToString());
-                    return newMove;
+                    return move;
                 }
 
                 var val = newestState.CurrentPlayer.Prestige + newestState.CurrentPlayer.Power;

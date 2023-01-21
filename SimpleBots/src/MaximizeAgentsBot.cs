@@ -9,7 +9,7 @@ namespace SimpleBots;
 public class MaximizeAgentsBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     private Move? BuyAgent(List<Move> movesWithoutEndTurn){
         List<Move> contractAgentToBuy = new List<Move>();
@@ -51,7 +51,7 @@ public class MaximizeAgentsBot : AI
         
         List<Move> playCardMoves = movesWithoutEndTurn.FindAll(x => x.Command ==CommandEnum.PLAY_CARD || x.Command ==CommandEnum.ACTIVATE_AGENT);
         if (playCardMoves.Any()){
-            playCardMoves.PickRandom();
+            playCardMoves.PickRandom(Rng);
         }
         
         Move? agentBuy = BuyAgent(movesWithoutEndTurn);
@@ -59,7 +59,7 @@ public class MaximizeAgentsBot : AI
             return agentBuy;
         }
 
-        return movesWithoutEndTurn.PickRandom();
+        return movesWithoutEndTurn.PickRandom(Rng);
     }
 
     public override void GameEnd(EndGameState state)

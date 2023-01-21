@@ -10,19 +10,19 @@ namespace SimpleBots;
 
 public class RandomHeuristicBot : AI
 {
-    const int patronFavour = 200;
-    const int patronNeutral = 100;
-    const int patronUnfavour = -200;
-    const int coinsValue = 10;
-    const int powerValue = 400;
-    const int prestigeValue = 1000;
-    const int agentOnBoardValue = 125;
-    const int hpValue = 20;
-    const int opponentAgentsPenaltyValue = 40;
-    const int potentialComboValue = 20;
-    const int cardValue = 10;
-    const int penaltyForHighTierInTavern = 40;
-    const int numberOfDrawsValue = 35;
+    private int patronFavour = 200;
+    private int patronNeutral = 100;
+    private int patronUnfavour = -200;
+    private int coinsValue = 10;
+    private int powerValue = 400;
+    private int prestigeValue = 1000;
+    private int agentOnBoardValue = 125;
+    private int hpValue = 20;
+    private int opponentAgentsPenaltyValue = 40;
+    private int potentialComboValue = 20;
+    private int cardValue = 10;
+    private int penaltyForHighTierInTavern = 40;
+    private int numberOfDrawsValue = 35;
     private List<Move> selectedTurnPlayout = new List<Move>();
     private bool newGenarate = true;
     private StringBuilder log = new StringBuilder();
@@ -36,6 +36,26 @@ public class RandomHeuristicBot : AI
     private Apriori apriori = new Apriori();
     private int support = 4;
     private double confidence = 0.3;
+   
+    public int[] GetGenotype(){
+        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue};
+    }
+
+    public void SetGenotype(int[] values){
+        patronFavour = values[0];
+        patronNeutral = values[1];
+        patronNeutral = values[2];
+        coinsValue = values[3];
+        powerValue = values[4];
+        prestigeValue = values[5]; 
+        agentOnBoardValue = values[6];
+        hpValue = values[7];
+        opponentAgentsPenaltyValue = values[8];
+        potentialComboValue = values[9];
+        cardValue = values[10];
+        penaltyForHighTierInTavern = values[11];
+        numberOfDrawsValue = values[12];
+    }
 
     private int CountNumberOfDrawsInTurn(List<CompletedAction> startOfTurnCompletedActions, List<CompletedAction> completedActions){
         int numberOfLastActions = completedActions.Count - startOfTurnCompletedActions.Count;
@@ -51,7 +71,7 @@ public class RandomHeuristicBot : AI
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round){
         PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
-        return selectedPatron ?? availablePatrons.PickRandom();
+        return selectedPatron ?? availablePatrons.PickRandom(Rng);
     }
 
     private int BoardStateHeuristicValueEndTurn(GameState gameState, List<CompletedAction> startOfturnCompletedActions){
@@ -116,7 +136,7 @@ public class RandomHeuristicBot : AI
         List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(possibleMoves);
         List<Move> movesOrder = new List<Move>();
         while (notEndTurnPossibleMoves.Count != 0){
-            Move chosenMove = notEndTurnPossibleMoves.PickRandom();
+            Move chosenMove = notEndTurnPossibleMoves.PickRandom(Rng);
             movesOrder.Add(chosenMove);
             (gameState, List<Move> newPossibleMoves) = gameState.ApplyState(chosenMove);
             notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
@@ -131,7 +151,7 @@ public class RandomHeuristicBot : AI
         int howManySimulation = 0;
         Stopwatch s = new Stopwatch();
         s.Start();
-        while (s.Elapsed < TimeSpan.FromSeconds(0.1)){
+        while (s.Elapsed < TimeSpan.FromSeconds(0.01)){
             (List<Move> generatedPlayout, GameState endTurnBoard)= GenerateRandomTurnMoves(gameState, possibleMoves);
             heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard, gameState.CompletedActions);
             if (highestHeuristicValue < heuristicValue){
@@ -166,7 +186,7 @@ public class RandomHeuristicBot : AI
                 move = selectedTurnPlayout[0];
                 selectedTurnPlayout.RemoveAt(0);
             }
-            if (move.Command == CommandEnum.MAKE_CHOICE || move.Command == CommandEnum.BUY_CARD){
+            if (move.Command == CommandEnum.MAKE_CHOICE){
                 newGenarate = true;
             }
             return move;

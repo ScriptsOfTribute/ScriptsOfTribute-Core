@@ -1,31 +1,34 @@
 using SimpleBots;
 using TalesOfTribute;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleBotsTests;
 
 public class AdjustParametersByEvolution{
 
+    private Random rnd = new Random();
     private StringBuilder evolutionLogger = new StringBuilder();
 
-    private string evolutionLoggerPath = "evolution.txt";
+    private string evolutionLoggerPath = "evolution_HeuristicBot.txt";
 
-    private int[] GetRandomIndividual(int length){
+    private int[] GetRandomIndividual(int length, int minValue, int maxValue){
         int[] genotype = new int[length]; 
 
         for (int i = 0; i < length; i++)
         {
-            genotype[i] = SimpleBots.Extensions.RandomK(-5000, 10000);
+            genotype[i] = rnd.Next(minValue, maxValue);
         }
         return genotype;
     }
 
-    private int[] Mutation(int[] genotype, int mutationRate){
+    private int[] Mutation(int[] genotype, int mutationRate, int minValue, int maxValue){
         for (int i =0; i < genotype.Length; i++){
-            int chance = SimpleBots.Extensions.RandomK(0, 100);
+            int chance = rnd.Next(minValue, maxValue);
             if (chance <= mutationRate){
                 // albo zmiana znaku , albo wyzerowanie, albo przemnożenie przez jakąś stała z randomowym znakiem
-                genotype[i] =  SimpleBots.Extensions.RandomK(-5000, 10000);
+                genotype[i] =  rnd.Next(minValue, maxValue);
             }
         }
         return genotype;
@@ -35,7 +38,7 @@ public class AdjustParametersByEvolution{
         int[] child1 = new int[parent1.Length];
         int[] child2 = new int[parent1.Length];
         for (int i=0; i < parent1.Length; i++){
-            if (SimpleBots.Extensions.RandomK(0, 2)==1){
+            if (rnd.Next(0, 2)==1){
                 child1[i] = parent1[i];
                 child2[i] = parent2[i];
             }
@@ -46,43 +49,54 @@ public class AdjustParametersByEvolution{
         }
         return (child1, child2);
     }
-
-    public int[] Evolution(int sizeOfPopulation, int numberOfGenerations, int mutationRate){
+    //TODO zrobić to dla dowolnego bota
+    public int[] Evolution(int sizeOfPopulation, int numberOfGenerations, int mutationRate, int minValue, int maxValue){
+        //var t = Type.GetType(strFullyQualifiedName).Dump();
+        //var res = Activator.CreateInstance(t);
         HeuristicBot[] population = new HeuristicBot[sizeOfPopulation];
         for (int i=0; i < sizeOfPopulation; i++){
             HeuristicBot bot = new HeuristicBot();
-            bot.SetGenotype(GetRandomIndividual(9));
+            bot.SetGenotype(GetRandomIndividual(9, minValue, maxValue));
             population[i] = bot;
         }
         HeuristicBot[] winners = new HeuristicBot[sizeOfPopulation/2];
         HeuristicBot[] children = new HeuristicBot[sizeOfPopulation/2];
+        Task[] taskArray = new Task[5];
         for (int generation =0; generation < numberOfGenerations; generation++){
-            for (int j = 0; j< sizeOfPopulation; j+=2){
-                var game = new TalesOfTribute.AI.TalesOfTribute(population[j], population[j+1]);
-                var (endState, endBoardState) = game.Play();
+            for (int j = 0; j< sizeOfPopulation; j+=10){
+                for (int i = 0; i < taskArray.Length; i++){
+                    Console.WriteLine("START: " + (j/2 + i).ToString() + " " + (i*2 + j).ToString());
+                    taskArray[i] = Task.Factory.StartNew((thread_index_obj) => {
+                        int thread_index = (int)thread_index_obj;
+                        Console.WriteLine((j/2 + thread_index).ToString() + " " + (thread_index*2 + j).ToString());
+                        var game = new TalesOfTribute.AI.TalesOfTribute(population[thread_index*2 + j], population[thread_index*2 +1 +j]);
+                        var (endState, endBoardState) = game.Play();
 
-                if (endState.Winner == PlayerEnum.PLAYER1){
-                    winners[j/2] = population[j];
+                        if (endState.Winner == PlayerEnum.PLAYER1){
+                            winners[j/2 + thread_index] = population[thread_index*2 + j];
+                        }
+                        else{
+                            winners[j/2 + thread_index] = population[thread_index*2 + 1 + j];
+                        }
+                    }, i);
                 }
-                else{
-                    winners[j/2] = population[j+1];
-                }
+                Task.WaitAll(taskArray);
             }
             for (int j =0; j < sizeOfPopulation/2; j+=2){
                 (int[] genotype1, int[] genotype2) = Inheritence(winners[j].GetGenotype(), winners[j+1].GetGenotype());
-                genotype1 = Mutation(genotype1, mutationRate);
-                genotype2 = Mutation(genotype1, mutationRate);
+                genotype1 = Mutation(genotype1, mutationRate, minValue, maxValue);
+                genotype2 = Mutation(genotype1, mutationRate, minValue, maxValue);
                 children[j] = new HeuristicBot();
                 children[j+1] = new HeuristicBot();
                 children[j].SetGenotype(genotype1);
                 children[j+1].SetGenotype(genotype2);
             }
             population = winners.Concat(children).ToArray();
-            population = population.OrderBy(x => SimpleBots.Extensions.Rnd.Next()).ToArray();
+            population = population.OrderBy(x => rnd.Next()).ToArray();
 
-            evolutionLogger.Append("Generation: " + generation.ToString() + " " + string.Join(",", winners[SimpleBots.Extensions.Rnd.Next(sizeOfPopulation/2)].GetGenotype())+ System.Environment.NewLine);
+            evolutionLogger.Append("Generation: " + generation.ToString() + " " + string.Join(",", winners[rnd.Next(sizeOfPopulation/2)].GetGenotype())+ System.Environment.NewLine);
         }
         File.AppendAllText(evolutionLoggerPath, evolutionLogger.ToString());
-        return winners[SimpleBots.Extensions.Rnd.Next(sizeOfPopulation/2)].GetGenotype();
+        return winners[rnd.Next(sizeOfPopulation/2)].GetGenotype();
     }
 }

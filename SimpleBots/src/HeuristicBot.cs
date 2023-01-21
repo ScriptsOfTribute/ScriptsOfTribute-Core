@@ -44,7 +44,7 @@ public class HeuristicBot : AI
     private HashSet<UniqueCard> cardsInHandAndOnBoard= new HashSet<UniqueCard>();
     private StringBuilder bugLog = new StringBuilder();
 
-    private List<CompletedAction> allCompletedActions = new List<CompletedAction>();
+    private int allCompletedActions;
 
     public class DuplicateKeyComparer<TKey>: IComparer<TKey> where TKey:IComparable
     {
@@ -133,11 +133,12 @@ public class HeuristicBot : AI
             SimpleCardMove move = m as SimpleCardMove;
             playableCard.Add(move.Card);
         }
-        int numberOfLastActions = gameState.CompletedActions.Count - allCompletedActions.Count;
+        int numberOfLastActions = gameState.CompletedActions.Count - allCompletedActions;
         List<CompletedAction> lastCompltedActions = gameState.CompletedActions.TakeLast(numberOfLastActions).ToList();
-        allCompletedActions = gameState.CompletedActions;
+        allCompletedActions = gameState.CompletedActions.Count;
         foreach (CompletedAction action in lastCompltedActions){
-            if ((action.Type == CompletedActionType.DESTROY_CARD || action.Type ==CompletedActionType.DISCARD) && action.TargetCard is not null){
+            //Console.WriteLine(action.ToString());
+            if ((action.Type == CompletedActionType.DESTROY_CARD || action.Type ==CompletedActionType.DISCARD || action.Type ==CompletedActionType.TOSS || action.Type ==CompletedActionType.REFRESH) && action.TargetCard is not null){
                 UniqueCard destroyedCard = action.TargetCard;
                 for (int i = 0; i < 4; i++)
                 {
@@ -697,12 +698,18 @@ public class HeuristicBot : AI
                 HandleCard(contractAgent.RepresentingCard);
                 cardsInHandAndOnBoard.Add(contractAgent.RepresentingCard);
             }
-            allCompletedActions = gameState.CompletedActions;
+            allCompletedActions = gameState.CompletedActions.Count;
+            //Console.WriteLine(gameState.CompletedActions.Count);
+            //Console.WriteLine("");
         }
         else{
+            //Console.WriteLine(allCompletedActions);
+            //Console.WriteLine(gameState.CompletedActions.Count);
+            //.WriteLine("Weszło");
             RemoveDestroyedCards(gameState, playCardMoves);
+            //Console.WriteLine(allCompletedActions);
+            //Console.WriteLine(System.Environment.NewLine);
         }
-
        
         if (playCardMoves.Count > 0){
             chosenCard = PlayCard();
@@ -710,6 +717,7 @@ public class HeuristicBot : AI
                 return Move.ActivateAgent(chosenCard);
             }
             return Move.PlayCard(chosenCard);
+            //playCardMoves.PickRandom(Rng);
         }
         if (gameState.EnemyPlayer.Power > 40 && gameState.CurrentPlayer.Power < gameState.EnemyPlayer.Power){
             if (possibleMoves.Contains(Move.CallPatron(PatronId.DUKE_OF_CROWS))){

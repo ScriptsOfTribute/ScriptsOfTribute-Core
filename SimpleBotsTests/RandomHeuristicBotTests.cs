@@ -20,12 +20,15 @@ public class RandomHeuristicBotTests
     [Fact]
     public void RandomHeuristicGameShouldEndWithoutErrors()
     {
+        AdjustParametersByEvolution ewo = new AdjustParametersByEvolution();
+        int[] genotype = ewo.Evolution(100, 1000, 2, -5000, 10000);
         const int testAmount = 1000;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
             var bot1 = new HeuristicBot();
+            bot1.SetGenotype(genotype);
             var bot2 = new RandomMaximizePrestigeBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
@@ -38,7 +41,7 @@ public class RandomHeuristicBotTests
             }
             
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
 
             counter.Add(endState);
 
