@@ -31,7 +31,7 @@ public class RandomBotWithRandomStateExploring : AI
         return possibleMoves.PickRandom(Rng);
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
     }
 }

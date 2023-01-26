@@ -22,7 +22,7 @@ public class DoEverythingBot : AI
         return movesWithoutEndTurn.PickRandom(Rng);
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
     }
 }

@@ -72,13 +72,13 @@ namespace TalesOfTribute
             _simulationState = !cheats;
         }
 
-        public static Tavern FromSerializedBoard(SerializedBoard serializedBoard)
+        public static Tavern FromSerializedBoard(FullGameState fullGameState)
         {
-            var tavernCards = new List<UniqueCard>(serializedBoard.TavernCards.Count);
-            tavernCards.AddRange(serializedBoard.TavernCards);
-            var tavernAvailableCards = new List<UniqueCard>(serializedBoard.TavernAvailableCards.Count);
-            tavernAvailableCards.AddRange(serializedBoard.TavernAvailableCards);
-            return new Tavern(tavernCards, tavernAvailableCards, serializedBoard.Cheats);
+            var tavernCards = new List<UniqueCard>(fullGameState.TavernCards.Count);
+            tavernCards.AddRange(fullGameState.TavernCards);
+            var tavernAvailableCards = new List<UniqueCard>(fullGameState.TavernAvailableCards.Count);
+            tavernAvailableCards.AddRange(fullGameState.TavernAvailableCards);
+            return new Tavern(tavernCards, tavernAvailableCards, fullGameState.Cheats);
         }
     }
 }

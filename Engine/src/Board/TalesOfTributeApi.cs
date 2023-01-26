@@ -50,7 +50,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     }
 
     // Serialization
-    public SerializedBoard GetSerializer()
+    public FullGameState GetFullGameState()
     {
         return _boardManager.SerializeBoard(_endGameState);
     }
@@ -229,7 +229,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _endGameState;
     }
 
-    public static ITalesOfTributeApi FromSerializedBoard(SerializedBoard board)
+    public static ITalesOfTributeApi FromSerializedBoard(FullGameState board)
     {
         return new TalesOfTributeApi(BoardManager.FromSerializedBoard(board));
     }

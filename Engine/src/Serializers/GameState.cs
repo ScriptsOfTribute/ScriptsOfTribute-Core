@@ -36,14 +36,14 @@ public class GameState
     // if turns changed.
     public SerializedChoice? PendingChoice => _endOfTurnHappened ? null : _board.PendingChoice;
 
-    private readonly SerializedBoard _board;
+    private readonly FullGameState _board;
     private readonly bool _endOfTurnHappened = false;
 
-    public GameState(SerializedBoard board) : this(board, board.CurrentPlayer, board.EnemyPlayer)
+    public GameState(FullGameState board) : this(board, board.CurrentPlayer, board.EnemyPlayer)
     {
     }
 
-    public GameState(SerializedBoard board, SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, bool endOfTurnHappened = false)
+    public GameState(FullGameState board, SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, bool endOfTurnHappened = false)
     {
         _board = board;
         CurrentPlayer = new FairSerializedPlayer(currentPlayer);

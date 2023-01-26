@@ -9,7 +9,7 @@ public class TalesOfTribute
     private AI[] _players = new AI[2];
 
     private TalesOfTributeGame? _game;
-    private ulong _seed = (ulong)Environment.TickCount;
+    private ulong _seed;
 
     public ulong Seed
     {
@@ -33,8 +33,7 @@ public class TalesOfTribute
         _players[1] = player2;
         player1.Id = PlayerEnum.PLAYER1;
         player2.Id = PlayerEnum.PLAYER2;
-        player1.Seed = Seed;
-        player2.Seed = Seed;
+        Seed = (ulong)Environment.TickCount;
     }
 
     private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
@@ -113,14 +112,14 @@ public class TalesOfTribute
         return null;
     }
 
-    public (EndGameState, SerializedBoard?) Play()
+    public (EndGameState, FullGameState?) Play()
     {
         var (endGameState, patrons) = PatronSelection();
 
         if (endGameState is not null)
         {
-            _players[0].GameEnd(endGameState);
-            _players[1].GameEnd(endGameState);
+            _players[0].GameEnd(endGameState, null);
+            _players[1].GameEnd(endGameState, null);
             return (endGameState, null);
         }
 

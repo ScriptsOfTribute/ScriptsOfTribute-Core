@@ -27,7 +27,7 @@ public class GameStateTests
             GlobalCardDatabase.Instance.GetCard(CardId.PROPHESY),
         };
         
-        var board = new GameState(new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new GameState(new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             tavernAvailableCards, tavernCards, 123));
 
         var (newState, possibleMoves) = board.ApplyState(Move.BuyCard(tavernAvailableCards[0]));
@@ -44,7 +44,7 @@ public class GameStateTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, enemyHand, new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new GameState(new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new GameState(new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123));
 
         var (newState, possibleMoves) = board.ApplyState(Move.EndTurn());
@@ -73,7 +73,7 @@ public class GameStateTests
             GlobalCardDatabase.Instance.GetCard(CardId.PROPHESY),
         };
         
-        var board = new GameState(new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new GameState(new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             tavernAvailableCards, tavernCards, 123));
 
         var (newState, possibleMoves) = board.ApplyState(Move.BuyCard(tavernAvailableCards[0]), 123);
@@ -90,7 +90,7 @@ public class GameStateTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, enemyHand, new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new GameState(new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new GameState(new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123));
 
         var (newState, possibleMoves) = board.ApplyState(Move.EndTurn(), 123);

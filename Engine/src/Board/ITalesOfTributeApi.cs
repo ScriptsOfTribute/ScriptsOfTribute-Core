@@ -13,7 +13,7 @@ public interface ITalesOfTributeApi
     PlayerEnum EnemyPlayerId { get; }
     public BoardState BoardState { get; }
     public SerializedChoice? PendingChoice { get; }
-    SerializedBoard GetSerializer();
+    FullGameState GetFullGameState();
     public Logger Logger { get; }
 
     public EndGameState? MakeChoice(List<UniqueCard> choices);

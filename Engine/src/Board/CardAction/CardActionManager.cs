@@ -200,39 +200,39 @@ public class CardActionManager
         return true;
     }
 
-    public static CardActionManager FromSerializedBoard(SerializedBoard serializedBoard, PlayerContext playerContext, ITavern tavern)
+    public static CardActionManager FromSerializedBoard(FullGameState fullGameState, PlayerContext playerContext, ITavern tavern)
     {
-        var comboContext = ComboContext.FromComboStates(serializedBoard.ComboStates);
+        var comboContext = ComboContext.FromComboStates(fullGameState.ComboStates);
 
         Choice? choiceForChain = null;
         Choice? patronChoice = null;
 
-        switch (serializedBoard.BoardState)
+        switch (fullGameState.BoardState)
         {
             case BoardState.NORMAL:
                 break;
             case BoardState.CHOICE_PENDING:
             case BoardState.START_OF_TURN_CHOICE_PENDING:
-                choiceForChain = serializedBoard.PendingChoice!.ToChoice();
+                choiceForChain = fullGameState.PendingChoice!.ToChoice();
                 break;
             case BoardState.PATRON_CHOICE_PENDING:
-                patronChoice = serializedBoard.PendingChoice!.ToChoice();
+                patronChoice = fullGameState.PendingChoice!.ToChoice();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
 
-        var chain = ExecutionChain.FromEffects(serializedBoard.UpcomingEffects, choiceForChain);
-        var startOfNextTurnEffects = new List<UniqueBaseEffect>(serializedBoard.StartOfNextTurnEffects.Count);
-        startOfNextTurnEffects.AddRange(serializedBoard.StartOfNextTurnEffects);
+        var chain = ExecutionChain.FromEffects(fullGameState.UpcomingEffects, choiceForChain);
+        var startOfNextTurnEffects = new List<UniqueBaseEffect>(fullGameState.StartOfNextTurnEffects.Count);
+        startOfNextTurnEffects.AddRange(fullGameState.StartOfNextTurnEffects);
 
-        var completedActions = new List<CompletedAction>(serializedBoard.CompletedActions.Count + 2);
-        completedActions.AddRange(serializedBoard.CompletedActions);
+        var completedActions = new List<CompletedAction>(fullGameState.CompletedActions.Count + 2);
+        completedActions.AddRange(fullGameState.CompletedActions);
 
         var result = new CardActionManager(playerContext, tavern)
         {
             StartOfNextTurnEffects = startOfNextTurnEffects,
-            State = serializedBoard.BoardState,
+            State = fullGameState.BoardState,
             _pendingExecutionChain = chain,
             _pendingPatronChoice = patronChoice,
             ComboContext = comboContext,
