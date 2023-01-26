@@ -33,8 +33,7 @@ public class TalesOfTribute
         _players[1] = player2;
         player1.Id = PlayerEnum.PLAYER1;
         player2.Id = PlayerEnum.PLAYER2;
-        player1.Seed = Seed;
-        player2.Seed = Seed;
+        Seed = (ulong)Environment.TickCount;
     }
 
     private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
