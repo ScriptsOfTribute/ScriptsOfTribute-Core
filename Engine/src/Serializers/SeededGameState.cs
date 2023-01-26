@@ -22,9 +22,9 @@ public class SeededGameState
     public ulong InitialSeed => _board.InitialSeed;
     public ulong CurrentSeed => _board.CurrentSeed;
 
-    private SerializedBoard _board;
+    private FullGameState _board;
 
-    public SeededGameState(SerializedBoard board, ulong seed)
+    public SeededGameState(FullGameState board, ulong seed)
     {
         var rng = new SeededRandom(seed);
 
@@ -35,12 +35,12 @@ public class SeededGameState
         // is that a problem? In theory it should work.
         var newTavernCards = board.TavernCards.OrderBy(_ => rng.Next()).ToList();
 
-        _board = new SerializedBoard(newCurrentPlayer, newEnemyPlayer, board.PatronStates, board.TavernAvailableCards,
+        _board = new FullGameState(newCurrentPlayer, newEnemyPlayer, board.PatronStates, board.TavernAvailableCards,
             newTavernCards, board.BoardState, board.PendingChoice, board.ComboStates, board.UpcomingEffects,
             board.StartOfNextTurnEffects, board.CompletedActions, board.GameEndState, seed, seed, true);
     }
 
-    public SeededGameState(SerializedBoard board)
+    public SeededGameState(FullGameState board)
     {
         _board = board;
     }

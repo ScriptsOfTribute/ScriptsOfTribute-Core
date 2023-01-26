@@ -67,7 +67,7 @@ public class RandomMaximizePrestigeBot : AI
         return bestMove;
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
         Log("Game ended : (");
     }

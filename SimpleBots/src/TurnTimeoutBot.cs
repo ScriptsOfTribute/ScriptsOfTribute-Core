@@ -24,7 +24,7 @@ public class TurnTimeoutBot : AI
         return possibleMoves[0];
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
     }
 }

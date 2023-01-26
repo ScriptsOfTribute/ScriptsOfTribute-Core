@@ -6,7 +6,7 @@ using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute
 {
-    public class SerializedBoard
+    public class FullGameState
     {
         /*
          * Class that is supposed to be representation of board
@@ -31,7 +31,7 @@ namespace TalesOfTribute
         public readonly ulong CurrentSeed;
         public readonly bool Cheats = false;
 
-        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
+        public FullGameState(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
         {
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
@@ -50,7 +50,7 @@ namespace TalesOfTribute
             Cheats = cheats;
         }
 
-        public SerializedBoard(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
+        public FullGameState(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
         {
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
@@ -67,7 +67,7 @@ namespace TalesOfTribute
             Cheats = cheats;
         }
 
-        public SerializedBoard(
+        public FullGameState(
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
             BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
@@ -94,7 +94,7 @@ namespace TalesOfTribute
         }
 
         // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).
-        public (SerializedBoard, List<Move>) ApplyState(Move move)
+        public (FullGameState, List<Move>) ApplyState(Move move)
         {
             var api = TalesOfTributeApi.FromSerializedBoard(this);
             var s = move as SimpleCardMove;
@@ -135,7 +135,7 @@ namespace TalesOfTribute
                     throw new ArgumentOutOfRangeException();
             }
 
-            return (api.GetSerializer(), api.GetListOfPossibleMoves());
+            return (api.GetFullGameState(), api.GetListOfPossibleMoves());
         }
 
         public override string ToString()

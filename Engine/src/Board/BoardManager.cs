@@ -140,9 +140,9 @@ namespace TalesOfTribute
             EnemyPlayer.Draw(5);
         }
         
-        public SerializedBoard SerializeBoard(EndGameState? endGameState)
+        public FullGameState SerializeBoard(EndGameState? endGameState)
         {
-            return new SerializedBoard(_rng, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
+            return new FullGameState(_rng, endGameState, CurrentPlayer, EnemyPlayer, Tavern, Patrons, CardActionManager.State, CardActionManager.PendingChoice,
                 CardActionManager.ComboContext, CardActionManager.PendingEffects, CardActionManager.StartOfNextTurnEffects, CardActionManager.CompletedActions, _cheats);
         }
 
@@ -224,14 +224,14 @@ namespace TalesOfTribute
             _cheats = cheats;
         }
 
-        public static BoardManager FromSerializedBoard(SerializedBoard serializedBoard)
+        public static BoardManager FromSerializedBoard(FullGameState fullGameState)
         {
-            var patrons = Patron.FromSerializedBoard(serializedBoard);
-            var tavern = Tavern.FromSerializedBoard(serializedBoard);
-            var rng = new SeededRandom(serializedBoard.InitialSeed, serializedBoard.CurrentSeed);
-            var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rng);
-            var cardActionManager = CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
-            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng, serializedBoard.Cheats);
+            var patrons = Patron.FromSerializedBoard(fullGameState);
+            var tavern = Tavern.FromSerializedBoard(fullGameState);
+            var rng = new SeededRandom(fullGameState.InitialSeed, fullGameState.CurrentSeed);
+            var playerContext = PlayerContext.FromSerializedBoard(fullGameState, rng);
+            var cardActionManager = CardActionManager.FromSerializedBoard(fullGameState, playerContext, tavern);
+            return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng, fullGameState.Cheats);
         }
     }
 }

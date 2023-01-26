@@ -67,7 +67,7 @@ namespace TalesOfTribute
             };
         }
 
-        public static List<Patron> FromSerializedBoard(SerializedBoard board)
+        public static List<Patron> FromSerializedBoard(FullGameState board)
         {
             var result = new List<Patron>();
             foreach (var (patronId, favor) in board.PatronStates.All)

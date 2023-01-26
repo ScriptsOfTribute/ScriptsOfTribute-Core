@@ -28,7 +28,7 @@ public class ComplexEffectExecutorTests
             GlobalCardDatabase.Instance.GetCard(CardId.GOLD),
         };
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             tavernAvailableCards, tavernCards, 123);
 
         var (newState, _) = board.ApplyState(Move.PlayCard(hand[0]));
