@@ -9,7 +9,7 @@ public class TalesOfTribute
     private AI[] _players = new AI[2];
 
     private TalesOfTributeGame? _game;
-    private ulong _seed = (ulong)Environment.TickCount;
+    private ulong _seed;
 
     public ulong Seed
     {
