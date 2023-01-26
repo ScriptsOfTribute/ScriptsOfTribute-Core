@@ -25,7 +25,7 @@ public class TalesOfTribute
     public TextWriter P2LogTarget { get; set; } = Console.Out;
     public bool P1LoggerEnabled { get; set; } = false;
     public bool P2LoggerEnabled { get; set; } = false;
-    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
+    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(60);
 
     public TalesOfTribute(AI player1, AI player2)
     {

@@ -20,6 +20,7 @@ namespace TalesOfTribute
 
         public BoardManager(PatronId[] patrons, ulong seed)
         {
+            //seed = 409233584;
             _rng = new SeededRandom(seed);
             this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
@@ -229,6 +230,7 @@ namespace TalesOfTribute
             var patrons = Patron.FromSerializedBoard(serializedBoard);
             var tavern = Tavern.FromSerializedBoard(serializedBoard);
             var rng = new SeededRandom(serializedBoard.InitialSeed, serializedBoard.CurrentSeed);
+            //Console.WriteLine("LOLOLOL " + serializedBoard.InitialSeed.ToString());
             var playerContext = PlayerContext.FromSerializedBoard(serializedBoard, rng);
             var cardActionManager = CardActionManager.FromSerializedBoard(serializedBoard, playerContext, tavern);
             return new BoardManager(patrons.ToArray(), tavern, playerContext, cardActionManager, rng, serializedBoard.Cheats);

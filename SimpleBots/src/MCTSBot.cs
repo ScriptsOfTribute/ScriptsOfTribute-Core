@@ -8,12 +8,12 @@ using System.Text;
 
 namespace SimpleBots;
 
-public class Node
+public class OldNode
 {
     static double C = Math.Sqrt(2);
 
-    public Node?[] childs;
-    public Node? father;
+    public List<OldNode>? childs;
+    public OldNode? father;
     
     public GameState gameState;
     public Move? prevMove;
@@ -25,24 +25,46 @@ public class Node
     public ulong visits;
     public int actChildExpanding;
 
-    // heuristic params
-    const int patronFavour = 200;
-    const int patronNeutral = 100;
-    const int patronUnfavour = -200;
-    const int coinsValue = 10;
-    const int powerValue = 400;
-    const int prestigeValue = 1000;
-    const int agentOnBoardValue = 125;
-    const int hpValue = 20;
-    const int opponentAgentsPenaltyValue = 40;
-    //was 20 xD
-    const int potentialComboValue = 2;
-    const int cardValue = 10;
-    const int penaltyForHighTierInTavern = 40;
-    const int numberOfDrawsValue = 35;
 
-    const double heuristicMax  = 101000;
-    const double heuristicMin = -700000;
+    // heuristic params
+    private int patronFavour ;//= 50;
+    private int patronNeutral ;//= 10;
+    private int patronUnfavour ;//= -50;
+    private int coinsValue ;//= 1;
+    private int powerValue ;//= 20;
+    private int prestigeValue ;//= 50;
+    private int agentOnBoardValue ;//= 30;
+    private int hpValue ;//= 3;
+    private int opponentAgentsPenaltyValue ;//= 40;
+    private int potentialComboValue ;//= 3;
+    private int cardValue ;//= 10;
+    private int penaltyForHighTierInTavern ;//= 2;
+    private int numberOfDrawsValue ;// 10;
+    private int enemyPotentialComboPenalty ;//= 1;
+    private int heuristicMax  ;//= 10000;
+    private int heuristicMin ;//= -4000;
+
+    public int[] GetGenotype(){
+        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue, enemyPotentialComboPenalty, heuristicMax, heuristicMin};
+    }
+    public void SetGenotype(int[] values){
+        patronFavour = values[0];
+        patronNeutral = values[1];
+        patronNeutral = values[2];
+        coinsValue = values[3];
+        powerValue = values[4];
+        prestigeValue = values[5]; 
+        agentOnBoardValue = values[6];
+        hpValue = values[7];
+        opponentAgentsPenaltyValue = values[8];
+        potentialComboValue = values[9];
+        cardValue = values[10];
+        penaltyForHighTierInTavern = values[11];
+        numberOfDrawsValue = values[12];
+        enemyPotentialComboPenalty = values[13];
+        heuristicMax = values[14];
+        heuristicMin = values[15];
+    }
 
     private List<Move> copyMoveList(List<Move> moves, GameState state) {
         List<Move> result = new List<Move>();
@@ -162,56 +184,18 @@ public class Node
     }
 
     private List<Move> clearMoves(List<Move> moves) {
-        List<int> indexesToRemove = new List<int>();
-
-        foreach (Move m in moves) {
-            File.AppendAllText("xd.txt", "BEFORE: " + m + Environment.NewLine);
-        }
-
         for (int i = 0; i < moves.Count; ++i) {
             if (moves[i].Command == CommandEnum.END_TURN) {
-                indexesToRemove.Add(i);
-            }
-
-            if
-            (
-                moves[i].Command == CommandEnum.PLAY_CARD ||
-                moves[i].Command == CommandEnum.ACTIVATE_AGENT ||
-                moves[i].Command == CommandEnum.BUY_CARD ||
-                moves[i].Command == CommandEnum.ATTACK
-            )
-            {
-                SimpleCardMove tmpMove = moves[i] as SimpleCardMove;
-
-                if (tmpMove.Card.CommonId == CardId.UNKNOWN) {
-                    indexesToRemove.Add(i);
-                }
-            }
-
-            if (moves[i].Command == CommandEnum.MAKE_CHOICE && this.gameState.PendingChoice.Context.ChoiceType == ChoiceType.CARD_EFFECT) {
-                MakeChoiceMove<UniqueCard> tmpMove = moves[i] as MakeChoiceMove<UniqueCard>;
-
-                foreach(UniqueCard tmpCard in tmpMove.Choices) {
-                    if (tmpCard.CommonId == CardId.UNKNOWN) {
-                        indexesToRemove.Add(i);
-                        break;
-                    }
-                }
+                moves.RemoveAt(i);
+                break;
             }
         }
-
-        foreach (int m in indexesToRemove) {
-            File.AppendAllText("xd.txt", "AFTER: " + m + Environment.NewLine);
-        }
-
-        for (int i = indexesToRemove.Count - 1; i >= 0; i--) {
-            moves.RemoveAt(indexesToRemove[i]);
-        }
-
+        
         return moves;
     }
 
-    public Node(GameState gameState, Move prevMoveOrig, Node? father, List<CompletedAction> startOfturnCompletedActions) {
+    public OldNode(GameState gameState, Move prevMoveOrig, OldNode? father, List<CompletedAction> startOfturnCompletedActions, int[] heuristicValues) {
+        this.SetGenotype(heuristicValues);
         Move prevMove = copyMove(prevMoveOrig, gameState);
 
         this.wins = 0;
@@ -229,12 +213,41 @@ public class Node
 
         this.father = father;
 
-        this.childs = new Node[possibleMovesSize];
+        this.childs = new List<OldNode>();
 
         this.startOfturnCompletedActions = startOfturnCompletedActions;
     }
 
-    public Node(GameState gameState, List<Move> possibleMovesOrig, Node? father, List<CompletedAction> startOfturnCompletedActions) {
+    public void UpdateChilds(List<Move> newPossibleMoves, GameState newGameState) {
+        List<Move> newPossibleMovesCopy = copyMoveList(newPossibleMoves, newGameState);
+        this.gameState = newGameState;
+        newPossibleMovesCopy = this.clearMoves(newPossibleMovesCopy);
+        List<Move> childsMoves = this.childs.Select(x => x.prevMove).ToList();
+        foreach(Move newMove in newPossibleMovesCopy) {
+            if (!childsMoves.Contains(newMove)) {
+                this.possibleMoves.Add(newMove);
+                this.possibleMovesSize++;
+                this.childs.Add(new OldNode(this.gameState, newMove, this, this.startOfturnCompletedActions, this.GetGenotype()));
+            }
+        }
+    }
+
+    public bool checkChagnedChilds(List<Move> newPossibleMoves, GameState newGameState) {
+        List<Move> newPossibleMovesCopy = copyMoveList(newPossibleMoves, newGameState);
+        this.gameState = newGameState;
+        newPossibleMovesCopy = this.clearMoves(newPossibleMovesCopy);
+        List<Move> childsMoves = this.childs.Select(x => x.prevMove).ToList();
+        foreach(Move newMove in newPossibleMovesCopy) {
+            if (!childsMoves.Contains(newMove)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public OldNode(GameState gameState, List<Move> possibleMovesOrig, OldNode? father, List<CompletedAction> startOfturnCompletedActions, int[] heuristicValues) {
+        this.SetGenotype(heuristicValues);
         List<Move> possibleMoves = copyMoveList(possibleMovesOrig, gameState);
 
         this.gameState = gameState;
@@ -251,7 +264,7 @@ public class Node
         this.possibleMoves = possibleMoves;
         this.father = father;
 
-        this.childs = new Node[possibleMovesSize];
+        this.childs = new List<OldNode>();
 
         this.startOfturnCompletedActions = startOfturnCompletedActions;
     }
@@ -260,7 +273,7 @@ public class Node
         return this.possibleMovesSize <= 0;
     }
 
-    public Node Expand() {
+    public OldNode Expand() {
         this.actChildExpanding++;
         this.childs[this.actChildExpanding - 1].CreateChilds();
 
@@ -268,20 +281,10 @@ public class Node
     }
 
     public void CreateChilds() {
-        File.AppendAllText("xd.txt", Environment.NewLine);
-
-        if (this.prevMove is not null) {
-            File.AppendAllText("xd.txt", "FATHERS MOVE: " + prevMove + Environment.NewLine);
-        } else {
-            File.AppendAllText("xd.txt", "I HAVE NO FATHER" + Environment.NewLine);
-        }
-
         for (int i = 0; i < this.possibleMovesSize; i++) {
             Move move = this.possibleMoves[i];
 
-            File.AppendAllText("xd.txt", "CHILD " + i + " MOVE: " + move + Environment.NewLine);
-
-            this.childs[i] = new Node(this.gameState, move, this, this.startOfturnCompletedActions);
+            this.childs.Add(new OldNode(this.gameState, move, this, this.startOfturnCompletedActions, this.GetGenotype()));
         }
     }
 
@@ -297,7 +300,7 @@ public class Node
         for (int i = 0; i < this.possibleMovesSize; i++) {
             double tmpWins = this.childs[i].wins;
             ulong tmpVisits = this.childs[i].visits;
-            double tmpScore = tmpVisits;// (tmpWins / tmpVisits) + C * Math.Sqrt( (2 * Math.Log(tmpVisits)) / tmpVisits); // TODO maybe just tmpVisits
+            double tmpScore = tmpWins;//(tmpWins / tmpVisits);// (tmpWins / tmpVisits) + C * Math.Sqrt( (2 * Math.Log(tmpVisits)) / tmpVisits); // TODO maybe just tmpVisits
 
             if (tmpScore >= bestScore) {
                 bestScore = tmpScore;
@@ -320,7 +323,7 @@ public class Node
         for (int i = 0; i < this.possibleMovesSize; i++) {
             double tmpWins = this.childs[i].wins;
             ulong tmpVisits = this.childs[i].visits;
-            double tmpScore = tmpVisits;// (tmpWins / tmpVisits) + C * Math.Sqrt( (2 * Math.Log(tmpVisits)) / tmpVisits); // TODO maybe just tmpVisits
+            double tmpScore = tmpWins;//(tmpWins / tmpVisits);// (tmpWins / tmpVisits) + C * Math.Sqrt( (2 * Math.Log(tmpVisits)) / tmpVisits); // TODO maybe just tmpVisits
 
             if (tmpScore >= bestScore) {
                 bestScore = tmpScore;
@@ -331,9 +334,12 @@ public class Node
         return bestIndex;
     } 
 
-    public Node BestChild() {
-        Node bestChild = childs[0];
+    public OldNode BestChild(SeededRandom rng) {
+        OldNode bestChild = childs[0];
         double bestScore = Double.NegativeInfinity;
+        
+        return childs[Extensions.RandomK(0,childs.Count, rng)];
+
         for (int i = 0; i < possibleMovesSize; i++) {
             double tmpWins = childs[i].wins;
             ulong tmpVisits = childs[i].visits;
@@ -368,18 +374,22 @@ public class Node
     }
 
     private double NormalizeHeuristic(int value) {
-        double normalizedValue = ((double)value - heuristicMin) / (heuristicMax - heuristicMin);
+        double normalizedValue = ((double)value - (double)heuristicMin) / ((double)heuristicMax - (double)heuristicMin);
 
         if (normalizedValue < 0){
             return 0.0;
         }
 
-        return Math.Min(1.0, normalizedValue);
+        return normalizedValue;
     }
 
     public double Heuristic(){
         int finalValue = 0;
+        int enemyPatronFavour = 0;
         foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All) {
+            if (entry.Key == PatronId.TREASURY){
+                continue;
+            }
             if (entry.Value == gameState.CurrentPlayer.PlayerID) {
                 finalValue += patronFavour;
             }
@@ -388,48 +398,84 @@ public class Node
             }
             else{
                 finalValue += patronUnfavour;
+                enemyPatronFavour += 1;
             }
         }
+        if (enemyPatronFavour>=2){
+            finalValue -= 100;
+        }
+        if (gameState.EnemyPlayer.Prestige >=20)
+        {
+            finalValue += gameState.CurrentPlayer.Power * powerValue;
+            finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
+        }
 
-        finalValue += gameState.CurrentPlayer.Coins * coinsValue;
-        finalValue += gameState.CurrentPlayer.Power * powerValue;
-        finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
+        if (gameState.CurrentPlayer.Prestige<30){
+            TierEnum tier = TierEnum.UNKNOWN;
+            foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
+                tier = CardTierList.GetCardTier(agent.RepresentingCard.Name);
+                finalValue += agentOnBoardValue * (int)tier + agent.CurrentHp * hpValue;
+            }
+
+            foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
+                tier = CardTierList.GetCardTier(agent.RepresentingCard.Name);
+                finalValue -= agentOnBoardValue * (int)tier + agent.CurrentHp * hpValue + opponentAgentsPenaltyValue;
+            }
+
+            List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
+            Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
+
+            foreach(Card card in allCards){
+                finalValue += (int)tier * cardValue;
+                if (card.Deck != PatronId.TREASURY){
+                    if (potentialComboNumber.ContainsKey(card.Deck)){
+                        potentialComboNumber[card.Deck] +=1;
+                    }
+                    else{
+                        potentialComboNumber[card.Deck] = 1;
+                    }
+                }
+            }
+
+            foreach(Card card in allCardsEnemy){
+                if (card.Deck != PatronId.TREASURY){
+                    if (potentialComboNumberEnemy.ContainsKey(card.Deck)){
+                        potentialComboNumberEnemy[card.Deck] +=1;
+                    }
+                    else{
+                        potentialComboNumberEnemy[card.Deck] = 1;
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<PatronId, int> entry in potentialComboNumber){
+                finalValue += (int)Math.Pow(entry.Value, potentialComboValue);
+            }
+            foreach(Card card in gameState.TavernAvailableCards){
+                tier = CardTierList.GetCardTier(card.Name);
+                finalValue -= penaltyForHighTierInTavern * (int)tier;
+                
+                if (potentialComboNumberEnemy.ContainsKey(card.Deck) && (potentialComboNumberEnemy[card.Deck]>4) && (tier > TierEnum.B)){
+                    finalValue -= enemyPotentialComboPenalty*(int)tier;
+                }
+                
+                
+            }
+
+            finalValue += CountNumberOfDrawsInTurn() * numberOfDrawsValue;
+        }
         
-        int tier = -10000;
-        foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
-            tier = (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
-            finalValue += agentOnBoardValue * tier + agent.CurrentHp * hpValue;
-        }
-
-        foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
-            tier = (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
-            finalValue -= agentOnBoardValue * tier + agent.CurrentHp * hpValue + opponentAgentsPenaltyValue;
-        }
-
-        List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
-        Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
-
-        foreach(Card card in allCards){
-            finalValue += (int)CardTierList.GetCardTier(card.Name) * cardValue;
-            if (card.Deck != PatronId.TREASURY){
-                if (potentialComboNumber.ContainsKey(card.Deck)){
-                    potentialComboNumber[card.Deck] +=1;
-                }
-                else{
-                    potentialComboNumber[card.Deck] = 1;
-                }
-            }
-        }
-        foreach (KeyValuePair<PatronId, int> entry in potentialComboNumber){
-            finalValue += (int)Math.Pow(entry.Value, potentialComboValue);
-        }
-        foreach(Card card in gameState.TavernCards){
-            finalValue -= penaltyForHighTierInTavern * (int)CardTierList.GetCardTier(card.Name);
-        }
-
-        finalValue += CountNumberOfDrawsInTurn() * numberOfDrawsValue;
-
+        //int finalValue = gameState.CurrentPlayer.Power + gameState.CurrentPlayer.Prestige;
         double normalizedValue = this.NormalizeHeuristic(finalValue);
+
+        var (newGameState, newMoves) = gameState.ApplyState(Move.EndTurn());
+
+        if (newGameState.GameEndState is not null)
+        {
+            return double.MaxValue;
+        }
 
         return normalizedValue;
     }
@@ -437,8 +483,6 @@ public class Node
     public double Simulate(SeededRandom rng) {
         GameState gameStateSave = this.gameState;
         List<Move> possibleMovesSave = copyMoveList(this.possibleMoves, this.gameState);
-
-        //Console.WriteLine("\nSTART");
 
         int possibleMovesSizeSave = this.possibleMovesSize;
 
@@ -454,35 +498,32 @@ public class Node
         int actChildExpandingSave = this.actChildExpanding;
         ulong visitsSave = this.visits;
 
-        /*
-        Console.WriteLine("\nSTART SIMULATION!");
-        Console.WriteLine();
-        Console.WriteLine("BEFORE MOVE: " + this.prevMove ?? "NULL MOVE");
-        Console.WriteLine("BEFORE GOLD: " + gameState.CurrentPlayer.Coins);
-        Console.WriteLine("BEFORE POWER: " + gameState.CurrentPlayer.Power);
-        Console.WriteLine("BEFORE PRESTIGE: " + gameState.CurrentPlayer.Prestige);
-        */
+        OldNode v = this.father;
+        //Console.WriteLine("\nSTART");
+        List<Move> prevMoves = new List<Move>();
+        prevMoves.Add(this.prevMove);
+        while (v is not null && v.prevMove is not null) {
+            prevMoves.Add(v.prevMove);
+            v=v.father;
+        }
+        
+        /*for (int i = prevMoves.Count-1; i >=0; i--) {
+            Console.WriteLine("PREV MOVE " + prevMoves[i]);
+        }*/
 
         while (!this.IsEnd()) {
             Move move = this.possibleMoves[SimpleBots.Extensions.RandomK(0, (int)this.possibleMovesSize, rng)];
-
+            //Console.WriteLine("SIMULATED MOVE " + move);
             this.prevMove = move;
 
             var (newGameState, newMoves) = gameState.ApplyState(move);
             this.gameState = newGameState;
             newMoves = clearMoves(newMoves);
 
-            /*
-            Console.WriteLine();
-            Console.WriteLine("MOVE: " + this.prevMove);
-            Console.WriteLine("GOLD: " + gameState.CurrentPlayer.Coins);
-            Console.WriteLine("POWER: " + gameState.CurrentPlayer.Power);
-            Console.WriteLine("PRESTIGE: " + gameState.CurrentPlayer.Prestige);
-            */
-
             this.possibleMoves = newMoves;
             this.possibleMovesSize = this.possibleMoves.Count;
         }
+        //Console.WriteLine("END\n");
 
         score = this.Heuristic();
 
@@ -506,11 +547,52 @@ public class Node
 
 public class MCTSBot : AI
 {
-    Node? actRoot;
-    Node? actNode;
+    OldNode? actRoot;
+    OldNode? OldactNode;
     bool startOfTurn;
 
     int possibleMovesSize;
+
+    // heuristic params
+    private int patronFavour = 50;
+    private int patronNeutral = 10;
+    private int patronUnfavour = -50;
+    private int coinsValue = 1;
+    private int powerValue = 20;
+    private int prestigeValue = 50;
+    private int agentOnBoardValue = 30;
+    private int hpValue = 3;
+    private int opponentAgentsPenaltyValue = 40;
+    private int potentialComboValue = 3;
+    private int cardValue = 10;
+    private int penaltyForHighTierInTavern = 2;
+    private int numberOfDrawsValue = 10;
+    private int enemyPotentialComboPenalty = 1;
+    private int heuristicMax  = 160;
+    private int heuristicMin = 0;
+
+    public int[] GetGenotype(){
+        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue, enemyPotentialComboPenalty, heuristicMax, heuristicMin};
+    }
+
+    public void SetGenotype(int[] values){
+        patronFavour = values[0];
+        patronNeutral = values[1];
+        patronNeutral = values[2];
+        coinsValue = values[3];
+        powerValue = values[4];
+        prestigeValue = values[5]; 
+        agentOnBoardValue = values[6];
+        hpValue = values[7];
+        opponentAgentsPenaltyValue = values[8];
+        potentialComboValue = values[9];
+        cardValue = values[10];
+        penaltyForHighTierInTavern = values[11];
+        numberOfDrawsValue = values[12];
+        enemyPotentialComboPenalty = values[13];
+        heuristicMax = values[14];
+        heuristicMin = values[15];
+    }
 
     public MCTSBot() {
         this.PrepareForGame();
@@ -518,80 +600,66 @@ public class MCTSBot : AI
 
     private void PrepareForGame() {
         actRoot = null;
-        actNode = null;
+        OldactNode = null;
 
         startOfTurn = true;
         possibleMovesSize = 0;
-
-        File.AppendAllText("xd.txt", "\n\n GAME STARTED!!!! \n" + Environment.NewLine);
     }
 
-    private Node TreePolicy(Node v) {
+    private OldNode TreePolicy(OldNode v, SeededRandom rng) {
+        int i = 0;
         while (!v.IsEnd()) {
             if (v.actChildExpanding < v.possibleMovesSize) {
                 return v.Expand();
             }
-
-            v = v.BestChild();
+            v = v.BestChild(rng);
         }
         return v;
     }
 
-    private void BackUp(Node? v, double delta) {
+    private void BackUp(OldNode? v, double delta) {
         while (v != null) {
             v.visits += 1;
 
-            v.wins += delta;
+            v.wins = Math.Max(delta, v.wins);
 
             v = v.father;
         }
     }
-
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        if (startOfTurn){
-            File.Delete("xd.txt");
-            File.AppendAllText("xd.txt", "NEW TURN" + Environment.NewLine);
-
-            foreach (Move m in possibleMoves) {
-                File.AppendAllText("xd.txt", "NEW TURN MOVE: " + m + Environment.NewLine);
-            }
-
-            actRoot = new Node(gameState, possibleMoves, null, gameState.CompletedActions);
+        if (true || startOfTurn || actRoot.checkChagnedChilds(possibleMoves, gameState)){
+            actRoot = new OldNode(gameState, possibleMoves, null, gameState.CompletedActions, this.GetGenotype());
             actRoot.CreateChilds();
 
             startOfTurn = false;
         }
-
-        foreach (Move m in possibleMoves) {
-            File.AppendAllText("xd.txt", "MOVE: " + m + Environment.NewLine);
+        else {
+            //actRoot.UpdateChilds(possibleMoves, gameState);
         }
-        foreach (Node c in actRoot.childs) {
-            File.AppendAllText("xd.txt", "CHILD: " + c.prevMove + Environment.NewLine);
-        }
-        File.AppendAllText("xd.txt", "ACT CHILD EXPANDING: " + actRoot.actChildExpanding + Environment.NewLine);
-        File.AppendAllText("xd.txt", "CHILDS LENGTH: " + actRoot.childs.Length + Environment.NewLine);
-        File.AppendAllText("xd.txt", "VISITS: " + actRoot.visits + Environment.NewLine);
-        File.AppendAllText("xd.txt", "POSSIBLE CHILDS: " + actRoot.possibleMovesSize + Environment.NewLine);
 
-        if (possibleMoves.Count == 1) {
+        if (possibleMoves.Count == 1 && possibleMoves[0].Command == CommandEnum.END_TURN) {
             startOfTurn = true;
+            //return Move.EndTurn();
         }
 
         actRoot.father = null;
 
         int actionCounter = 0;
 
+        //Console.WriteLine("POSSIBLE MOVES ");
+        //foreach (Move m in possibleMoves) {Console.WriteLine(m);}
+
         Stopwatch s = new Stopwatch();
         s.Start();
-        while (s.Elapsed < TimeSpan.FromSeconds(0.25)){
-            actNode = TreePolicy(actRoot);
-            double delta = actNode.Simulate(Rng);
-            BackUp(actNode, delta);
+        while (s.Elapsed < TimeSpan.FromSeconds(0.1)){
+            OldactNode = TreePolicy(actRoot, Rng);
+            double delta = OldactNode.Simulate(Rng);
+            BackUp(OldactNode, delta);
             actionCounter++;
         }
 
@@ -605,7 +673,7 @@ public class MCTSBot : AI
             return possibleMoves[bestIndex];
         }
 
-        Node tmpRoot = null;
+        OldNode tmpRoot = null;
 
         for (int i = 0; i < actRoot.possibleMovesSize; i++) {
             if (actRoot.childs[i].prevMove == move) {
@@ -622,7 +690,9 @@ public class MCTSBot : AI
             startOfTurn = true;
         }
 
-        File.AppendAllText("xd.txt", "SIMULATIONS COUNTER: " + actionCounter + Environment.NewLine);
+        //Console.WriteLine(move);
+        //if (move.Command == CommandEnum.END_TURN) Console.WriteLine();
+
         return move;
     }
 

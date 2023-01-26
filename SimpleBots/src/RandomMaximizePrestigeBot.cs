@@ -1,4 +1,4 @@
-﻿
+﻿/*
 
 using SimpleBots;
 using TalesOfTribute;
@@ -69,7 +69,7 @@ public class RandomMaximizePrestigeBot : AI
 
     public override void GameEnd(EndGameState state){}
 }
-/*
+*/
 using SimpleBots;
 using TalesOfTribute;
 using TalesOfTribute.AI;
@@ -81,7 +81,7 @@ namespace SimpleBotsTests;
 public class RandomMaximizePrestigeBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom();
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -134,7 +134,7 @@ public class RandomMaximizePrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            return possibleMoves.PickRandom();
+            return possibleMoves.PickRandom(Rng);
         }
 
         var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);
@@ -147,4 +147,3 @@ public class RandomMaximizePrestigeBot : AI
         Log("Game ended : (");
     }
 }
-*/

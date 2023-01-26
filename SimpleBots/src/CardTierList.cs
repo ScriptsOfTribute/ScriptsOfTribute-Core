@@ -3,11 +3,18 @@ using TalesOfTribute;
 namespace SimpleBots;
 
 public enum TierEnum{
+    /*
     S = 1000,
     A = 400,
     B = 200,
     C = 90,
     D = 40,
+    */
+    S = 50,
+    A = 25,
+    B = 10,
+    C = 5,
+    D = 1,
     UNKNOWN = 0,
 }
 
@@ -40,8 +47,8 @@ public class CardTierList{
         new CardTier("Midnight Raid", PatronId.RED_EAGLE, TierEnum.S),
         new CardTier("Blood Sacrifice", PatronId.RED_EAGLE, TierEnum.S),
         new CardTier("Bloody Offering", PatronId.RED_EAGLE, TierEnum.S),
-        new CardTier("Bonfire", PatronId.RED_EAGLE, TierEnum.A),
-        new CardTier("Briarheart Ritual", PatronId.RED_EAGLE, TierEnum.A),
+        new CardTier("Bonfire", PatronId.RED_EAGLE, TierEnum.C),
+        new CardTier("Briarheart Ritual", PatronId.RED_EAGLE, TierEnum.C),
         new CardTier("Clan-Witch", PatronId.RED_EAGLE, TierEnum.C),
         new CardTier("Elder Witch", PatronId.RED_EAGLE, TierEnum.B),
         new CardTier("Hagraven", PatronId.RED_EAGLE, TierEnum.B),
@@ -78,7 +85,7 @@ public class CardTierList{
         new CardTier("Prophesy", PatronId.PSIJIC, TierEnum.S),
         new CardTier("Scrying Globe", PatronId.PSIJIC, TierEnum.S),
         new CardTier("The Dreaming Cave", PatronId.PSIJIC, TierEnum.S),
-        new CardTier("Augur's Counsel", PatronId.PSIJIC, TierEnum.A),
+        new CardTier("Augur's Counsel", PatronId.PSIJIC, TierEnum.B),
         new CardTier("Psijic Relicmaster", PatronId.PSIJIC, TierEnum.A),
         new CardTier("Sage Counsel", PatronId.PSIJIC, TierEnum.A),
         new CardTier("Prescience", PatronId.PSIJIC, TierEnum.B),
@@ -115,7 +122,7 @@ public class CardTierList{
         new CardTier("Swipe", PatronId.RAJHIN, TierEnum.D),
         new CardTier("Twilight Revelry", PatronId.RAJHIN, TierEnum.S),
         new CardTier("Ghostscale Sea Serpent", PatronId.ORGNUM, TierEnum.B),
-        new CardTier("King Orgnum's Command", PatronId.ORGNUM, TierEnum.A),
+        new CardTier("King Orgnum's Command", PatronId.ORGNUM, TierEnum.C),
         new CardTier("Maormer Boarding Party", PatronId.ORGNUM, TierEnum.B),
         new CardTier("Maormer Cutter", PatronId.ORGNUM, TierEnum.B),
         new CardTier("Pyandonean War Fleet", PatronId.ORGNUM, TierEnum.B),
@@ -128,15 +135,15 @@ public class CardTierList{
         new CardTier("Storm Shark Wavecaller", PatronId.ORGNUM, TierEnum.B),
         new CardTier("Summerset Sacking", PatronId.ORGNUM, TierEnum.B),
         new CardTier("Ambush", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Barterer", PatronId.TREASURY, TierEnum.B),
+        new CardTier("Barterer", PatronId.TREASURY, TierEnum.C),
         new CardTier("Black Sacrament", PatronId.TREASURY, TierEnum.B),
         new CardTier("Blackmail", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Gold", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Harvest Season", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Imprisonment", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Ragpicker", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Tithe", PatronId.TREASURY, TierEnum.B),
-        new CardTier("Writ of Coin", PatronId.TREASURY, TierEnum.B),
+        new CardTier("Gold", PatronId.TREASURY, TierEnum.UNKNOWN),
+        new CardTier("Harvest Season", PatronId.TREASURY, TierEnum.C),
+        new CardTier("Imprisonment", PatronId.TREASURY, TierEnum.C),
+        new CardTier("Ragpicker", PatronId.TREASURY, TierEnum.C),
+        new CardTier("Tithe", PatronId.TREASURY, TierEnum.C),
+        new CardTier("Writ of Coin", PatronId.TREASURY, TierEnum.D),
         new CardTier("Unknown", PatronId.TREASURY, TierEnum.UNKNOWN)
     };
 

@@ -56,19 +56,19 @@ public class AdjustParametersByEvolution{
         HeuristicBot[] population = new HeuristicBot[sizeOfPopulation];
         for (int i=0; i < sizeOfPopulation; i++){
             HeuristicBot bot = new HeuristicBot();
-            bot.SetGenotype(GetRandomIndividual(9, minValue, maxValue));
+            bot.SetGenotype(GetRandomIndividual(16, minValue, maxValue));
             population[i] = bot;
         }
+        //RandomMaximizePrestigeBot prestige = new RandomMaximizePrestigeBot();
         HeuristicBot[] winners = new HeuristicBot[sizeOfPopulation/2];
         HeuristicBot[] children = new HeuristicBot[sizeOfPopulation/2];
         Task[] taskArray = new Task[5];
         for (int generation =0; generation < numberOfGenerations; generation++){
+            Console.WriteLine("generacja: " + generation.ToString());
             for (int j = 0; j< sizeOfPopulation; j+=10){
                 for (int i = 0; i < taskArray.Length; i++){
-                    Console.WriteLine("START: " + (j/2 + i).ToString() + " " + (i*2 + j).ToString());
                     taskArray[i] = Task.Factory.StartNew((thread_index_obj) => {
                         int thread_index = (int)thread_index_obj;
-                        Console.WriteLine((j/2 + thread_index).ToString() + " " + (thread_index*2 + j).ToString());
                         var game = new TalesOfTribute.AI.TalesOfTribute(population[thread_index*2 + j], population[thread_index*2 +1 +j]);
                         var (endState, endBoardState) = game.Play();
 

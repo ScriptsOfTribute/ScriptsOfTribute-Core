@@ -17,7 +17,7 @@ public class HeuristicBot : AI
 
     private int knockoutAgent = 6498;
 
-    private int heuristicPatronAmountCardValue = 7221;
+    private int heuristicPatronAmountCardValue = 2;
 
     private int heuristicConstAttackValue =3542;
 
@@ -25,15 +25,15 @@ public class HeuristicBot : AI
 
     private int heuristicValueOfPatronActivations = -2739;
 
-    private int bigHeuristicValue = 1987;
+    private int bigHeuristicValue = 5000;
 
     private int coinsNeed = 0;
 
     private int powerNeed = 0;
 
     private int coinsValue = 3928;
-    private int powerValue = 6763;
-    private int prestigeValue = 5876;
+    private int powerValue = 10;
+    private int prestigeValue = 3;
 
     private PatronId deckInPlay;
 
@@ -209,7 +209,7 @@ public class HeuristicBot : AI
         return 0;
     }
 
-    private UniqueCard BuyCard(List<UniqueCard> tavern, GameState gameState, List<Move> possibleMoves) {
+    private (UniqueCard, int) BuyCard(List<UniqueCard> tavern, GameState gameState, List<Move> possibleMoves) {
         List<UniqueCard> affordableCards = tavern.FindAll(x=> x.Cost<=gameState.CurrentPlayer.Coins);
         UniqueCard chosenCard = affordableCards[0];
         int bestHeuristicScore = 0;
@@ -223,6 +223,7 @@ public class HeuristicBot : AI
             switch (card.Deck) {
                 case PatronId.TREASURY:
                     int opponnetAgents = gameState.EnemyPlayer.Agents.Count;
+                    tier = 0;
                     // really situational deck, you don't want to waste money unless boardstate need that
                     switch (card.Name) {
                         case "Tithe":
@@ -261,7 +262,8 @@ public class HeuristicBot : AI
                             break;
 
                         default:
-                            continue; 
+                            cardHeuristicScore = 0;
+                            break;
                     }
                     break;
 
@@ -275,7 +277,7 @@ public class HeuristicBot : AI
                         }
                     }
 
-                    cardHeuristicScore = numberOfCardsOfThisPatron * heuristicPatronAmountCardValue + tier + combo - card.Cost; 
+                    cardHeuristicScore = (int)Math.Pow((double)numberOfCardsOfThisPatron, (double)heuristicPatronAmountCardValue) + tier + combo - card.Cost; 
                     break;    
             }
 
@@ -285,7 +287,7 @@ public class HeuristicBot : AI
             }
         }
         
-        return chosenCard;
+        return (chosenCard, bestHeuristicScore);
     }
 
     private UniqueCard PlayCard(){
@@ -425,11 +427,14 @@ public class HeuristicBot : AI
                 }
                 return 0;
             case PatronId.HLAALU:
+                if (gameState.CurrentPlayer.Prestige>30){
+                    return bigHeuristicValue;
+                }
                 int cardsValue = 0;
                 foreach(UniqueCard card in gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile).ToList()){
-                    cardsValue += card.Cost-1;
+                    cardsValue = Math.Max(cardsValue, card.Cost * 20 - (int)Math.Pow((double)numberOfPatronCards[card.Deck], (double)heuristicPatronAmountCardValue) - (int)CardTierList.GetCardTier(card.Name));
                 }
-                return heuristicValueOfPatronActivations * cardsValue;
+                return cardsValue;
             case PatronId.PELIN:
                 return gameState.CurrentPlayer.CooldownPile.FindAll(x => x.Type == CardType.AGENT).Count() * heuristicValueOfPatronActivations;
             case PatronId.RED_EAGLE:
@@ -456,9 +461,9 @@ public class HeuristicBot : AI
             patronMoves.Add(patronMove);
         }
         List<PatronId> patronThatCanBeActivated = patronMoves.Select(x => x.PatronId).ToList();
-        List<UniqueCard> coolDownPile = gameState.CurrentPlayer.Hand;
+        List<UniqueCard> coolDownPile = gameState.CurrentPlayer.CooldownPile;
         List<UniqueCard> played = gameState.CurrentPlayer.Played;
-        List<UniqueCard> cursed = coolDownPile.Concat(played).ToList().FindAll(card => card.Type==CardType.CURSE);
+        List<UniqueCard> cursed = gameState.CurrentPlayer.Played.FindAll(card => card.Type==CardType.CURSE);
         int numberOfPatronWhichFavoursMe = 0;
         int numberOfPatronWhichFavoursOpponent = 0;
         int myNumberOfPatronActivationToWin = 0;
@@ -503,11 +508,30 @@ public class HeuristicBot : AI
                 }
             }
         }
+
+        if (opppnentNumberOfPatronActivationToWin<= 2){
+            foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All){
+                if (entry.Value == gameState.EnemyPlayer.PlayerID && patronThatCanBeActivated.Contains(entry.Key)){
+                    if(entry.Key == PatronId.DUKE_OF_CROWS){
+                        if (opppnentNumberOfPatronActivationToWin==1){
+                            return entry.Key;
+                        }
+                    }
+                    else{
+                        return entry.Key;
+                    }
+                }
+            }
+        }
         
         if (cursed.Any() && patronThatCanBeActivated.Contains(PatronId.TREASURY)){
             chosenCard = cursed[0];
             return PatronId.TREASURY;
         }
+        /*
+        if (gameState.CurrentPlayer.Played.FindAll(x => x.Name== "Gold").Any() && patronThatCanBeActivated.Contains(PatronId.TREASURY)){
+            return PatronId.TREASURY;
+        }*/
 
         int maxHeuristicValueOfActivation = -10000;
         int patronHeuristicActivationValue;
@@ -534,12 +558,15 @@ public class HeuristicBot : AI
                     foreach (UniqueCard card in move.Choices){
                         if (card.Name == "Gold"){
                             cardValue[card] = 0;
+                            continue;
                         }
                         if (card.Type == CardType.CURSE){
                             cardValue[card] = -1000;
+                            continue;
                         }
                         else{
                             cardValue[card] = (int)CardTierList.GetCardTier(card.Name) + numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue;
+                            continue;
                         }
                     }
                 }
@@ -548,7 +575,12 @@ public class HeuristicBot : AI
                 foreach(Move m in possibleMoves){
                     MakeChoiceMove<UniqueCard> move = m as MakeChoiceMove<UniqueCard>;
                     foreach (UniqueCard card in move.Choices){
-                        cardValue[card] = card.Cost * 100 - numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue - (int)CardTierList.GetCardTier(card.Name);
+                        if (gameState.EnemyPlayer.Prestige >= gameState.CurrentPlayer.Prestige){
+                            cardValue[card] = card.Cost -1;
+                        }
+                        else{
+                            cardValue[card] = card.Cost * 20 - (int)Math.Pow((double)numberOfPatronCards[card.Deck], (double)heuristicPatronAmountCardValue) - (int)CardTierList.GetCardTier(card.Name);
+                        }
                     }
                 }
                 return cardValue.OrderBy(x => x.Value).Last().Key;
@@ -556,7 +588,7 @@ public class HeuristicBot : AI
                 foreach(Move m in possibleMoves){
                     MakeChoiceMove<UniqueCard> move = m as MakeChoiceMove<UniqueCard>;
                     foreach (UniqueCard card in move.Choices){
-                        cardValue[card] = numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue + (int)CardTierList.GetCardTier(card.Name);
+                        cardValue[card] = (int)Math.Pow((double)numberOfPatronCards[card.Deck], (double)heuristicPatronAmountCardValue) + (int)CardTierList.GetCardTier(card.Name);
                     }
                 }
                 return cardValue.OrderBy(x => x.Value).Last().Key;
@@ -584,15 +616,21 @@ public class HeuristicBot : AI
                         }
                     }
                 }
+                if (gameState.EnemyPlayer.Prestige <= 15){
+                    return bigHeuristicValue;
+                }
                 return counter*100;
             case EffectType.GAIN_POWER:
+                if (gameState.EnemyPlayer.Prestige>=25){
+                    return bigHeuristicValue;
+                }
                 return effect.Amount * powerValue;
             case EffectType.GAIN_PRESTIGE:
                 return effect.Amount * prestigeValue;
             case EffectType.ACQUIRE_TAVERN:
                 int maxHeuristicValue = -1;
                 foreach(UniqueCard card in gameState.TavernAvailableCards){
-                    maxHeuristicValue = Math.Max(maxHeuristicValue,  (int)CardTierList.GetCardTier(card.Name) + numberOfPatronCards[card.Deck] * heuristicPatronAmountCardValue);
+                    maxHeuristicValue = Math.Max(maxHeuristicValue,  (int)Math.Pow((double)numberOfPatronCards[card.Deck], (double)heuristicPatronAmountCardValue) + (int)CardTierList.GetCardTier(card.Name));
                 }
                 return maxHeuristicValue;
             case EffectType.OPP_LOSE_PRESTIGE:
@@ -625,11 +663,23 @@ public class HeuristicBot : AI
             case EffectType.RETURN_TOP:
                 int value = 0;
                 foreach (UniqueCard card in gameState.CurrentPlayer.CooldownPile.TakeLast(effect.Amount)){
-                    value += (int)CardTierList.GetCardTier(card.Name);
+                    value += (int)CardTierList.GetCardTier(card.Name)+ (int)Math.Pow((double)numberOfPatronCards[card.Deck], (double)heuristicPatronAmountCardValue);
                 }
                 return value;                       
             case EffectType.TOSS:
+                /*
+                foreach(ComboState comboState in gameState.ComboStates.All.Values){
+                    foreach(UniqueBaseEffect e in comboState.All){
+                        Console.WriteLine(e.ToString());
+                    }
+                    //Console.WriteLine('')
+                }
+                */
                 return 200 * gameState.CurrentPlayer.Hand.Count();
+            case EffectType.KNOCKOUT:
+            case EffectType.PATRON_CALL:
+            case EffectType.CREATE_BOARDINGPARTY:
+            //Heal
             default:
                 return 500;
         }
@@ -652,22 +702,49 @@ public class HeuristicBot : AI
     }
 
     private List<UniqueCard>? CardsSelection(GameState gameState){
+    /*
+        ENACT_CHOSEN_EFFECT,
+    
+    DISCARD_CARDS,
+    
+    TOSS_CARDS,
+    
+    COMPLETE_HLAALU,
+    
+    COMPLETE_TREASURY,
+    */
         switch (gameState.PendingChoice.ChoiceFollowUp){
             case ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN:
                 if (gameState.CurrentPlayer.Hand.Count()>=1){
                     return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
                 }
                 return SelectKBestCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
+            case ChoiceFollowUp.ENACT_CHOSEN_EFFECT:
+                Console.WriteLine(gameState.PendingChoice.Context.ToString());
+                return SelectKBestCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
+            case ChoiceFollowUp.COMPLETE_HLAALU:
+                UpdateAmountOfPatronsCards(gameState);
+                UniqueCard selectedCard = gameState.PendingChoice.PossibleCards[0];
+                int value = 1000000;
+                foreach(UniqueCard card in gameState.PendingChoice.PossibleCards){
+                    int v = (int)Math.Pow((double)numberOfPatronCards[card.Deck], (double)heuristicPatronAmountCardValue) + (int)CardTierList.GetCardTier(card.Name);
+                    if (v < value){
+                        value = v;
+                        selectedCard = card;
+                    }
+                }
+                return new List<UniqueCard> {selectedCard};
             case ChoiceFollowUp.ACQUIRE_CARDS:
             case ChoiceFollowUp.KNOCKOUT_AGENTS:
-            case ChoiceFollowUp.TOSS_CARDS:
+            case ChoiceFollowUp.COMPLETE_PSIJIC:
+            case ChoiceFollowUp.COMPLETE_PELLIN:
             case ChoiceFollowUp.REFRESH_CARDS:
                 return SelectKBestCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
             case ChoiceFollowUp.DESTROY_CARDS:
-                if (GetAllPlayerCards(gameState).Count <= 5){
+                if (GetAllPlayerCards(gameState).Count <= 10){
                     return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MinChoices);
                 }
-                return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
+                return SelectKWorstCards(gameState.PendingChoice.PossibleCards, Math.Min(gameState.PendingChoice.MaxChoices, 1));
             default:
                 return SelectKWorstCards(gameState.PendingChoice.PossibleCards, gameState.PendingChoice.MaxChoices);
         }
@@ -699,17 +776,18 @@ public class HeuristicBot : AI
                 cardsInHandAndOnBoard.Add(contractAgent.RepresentingCard);
             }
             allCompletedActions = gameState.CompletedActions.Count;
-            //Console.WriteLine(gameState.CompletedActions.Count);
-            //Console.WriteLine("");
         }
         else{
-            //Console.WriteLine(allCompletedActions);
-            //Console.WriteLine(gameState.CompletedActions.Count);
-            //.WriteLine("Weszło");
             RemoveDestroyedCards(gameState, playCardMoves);
-            //Console.WriteLine(allCompletedActions);
-            //Console.WriteLine(System.Environment.NewLine);
         }
+        /*
+        foreach(ComboState comboState in gameState.ComboStates.All.Values){
+            foreach(UniqueBaseEffect e in comboState.All){
+                Console.WriteLine(e.ToString());
+            }
+            //Console.WriteLine('')
+        }
+        */
        
         if (playCardMoves.Count > 0){
             chosenCard = PlayCard();
@@ -719,7 +797,7 @@ public class HeuristicBot : AI
             return Move.PlayCard(chosenCard);
             //playCardMoves.PickRandom(Rng);
         }
-        if (gameState.EnemyPlayer.Power > 40 && gameState.CurrentPlayer.Power < gameState.EnemyPlayer.Power){
+        if (gameState.EnemyPlayer.Prestige > 40 && gameState.CurrentPlayer.Prestige < gameState.EnemyPlayer.Prestige){
             if (possibleMoves.Contains(Move.CallPatron(PatronId.DUKE_OF_CROWS))){
                 return Move.CallPatron(PatronId.DUKE_OF_CROWS);
             }
@@ -729,7 +807,7 @@ public class HeuristicBot : AI
             List<Move> buyCardMoves = GetAllMoveOfType(possibleMoves, CommandEnum.BUY_CARD);
             foreach (Move m in buyCardMoves){
                 SimpleCardMove move = m as SimpleCardMove;
-                if (move.Card.Name == "Imprisonment"){
+                if (move.Card.Name == "Imprisonment" || move.Card.Name == "Blackmail"){
                     return m;
                 }
             }
@@ -738,8 +816,32 @@ public class HeuristicBot : AI
         if (coinsNeed == 1 && possibleMoves.Contains(Move.CallPatron(PatronId.ANSEI))){
             return Move.CallPatron(PatronId.ANSEI);
         }
+        /*
+        if (gameState.CurrentPlayer.Coins == 2 && possibleMoves.Contains(Move.CallPatron(PatronId.TREASURY))){
+            if (gameState.CurrentPlayer.Played.FindAll(x => x.Name =="Gold").Count>0 && gameState.CurrentPlayer.Prestige<20){
+                return Move.CallPatron(PatronId.TREASURY);
+            }
+        }
+        */
+        
         if (GetAllMoveOfType(possibleMoves, CommandEnum.BUY_CARD).Count > 0){
-            return Move.BuyCard(BuyCard(gameState.TavernAvailableCards, gameState, possibleMoves));
+            (UniqueCard card, int heuristicValue) = BuyCard(gameState.TavernAvailableCards, gameState, possibleMoves);
+            if (heuristicValue>0){
+                if (CardTierList.GetCardTier(card.Name) <= TierEnum.B && numberOfPatronCards[card.Deck]<3){
+                    if (possibleMoves.Contains(Move.CallPatron(PatronId.ORGNUM))){
+                        return Move.CallPatron(PatronId.ORGNUM);
+                    }
+                    if (possibleMoves.Contains(Move.CallPatron(PatronId.RAJHIN))){
+                        return Move.CallPatron(PatronId.RAJHIN);
+                    }
+                    else{
+                        return Move.BuyCard(card);
+                    }
+                }
+                else{
+                    return Move.BuyCard(card);
+                }
+            }
         }
         if (GetAllMoveOfType(possibleMoves, CommandEnum.CALL_PATRON).Count>0){
             return Move.CallPatron(ActivatePatron(gameState, possibleMoves));
@@ -764,6 +866,7 @@ public class HeuristicBot : AI
                     }
                     return selectedMove;
                 case ChoiceType.PATRON_ACTIVATION:
+                    //Console.WriteLine("weszło");
                     UniqueCard selectedCard = PatronActivationMove(gameState, possibleMoves);
                     return Move.MakeChoice(new List<UniqueCard> {selectedCard});
             }

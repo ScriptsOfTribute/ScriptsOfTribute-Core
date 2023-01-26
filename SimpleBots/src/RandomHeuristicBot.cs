@@ -5,24 +5,26 @@ using TalesOfTribute.Serializers;
 using TalesOfTribute.Board.Cards;
 using System.Diagnostics;
 using System.Text;
+using TalesOfTribute.Board.CardAction;
 
 namespace SimpleBots;
 
 public class RandomHeuristicBot : AI
 {
-    private int patronFavour = 200;
-    private int patronNeutral = 100;
-    private int patronUnfavour = -200;
-    private int coinsValue = 10;
-    private int powerValue = 400;
-    private int prestigeValue = 1000;
-    private int agentOnBoardValue = 125;
-    private int hpValue = 20;
+    private int patronFavour = 50;
+    private int patronNeutral = 10;
+    private int patronUnfavour = -50;
+    private int coinsValue = 1;
+    private int powerValue = 40;
+    private int prestigeValue = 50;
+    private int agentOnBoardValue = 30;
+    private int hpValue = 3;
     private int opponentAgentsPenaltyValue = 40;
-    private int potentialComboValue = 20;
+    private int potentialComboValue = 3;
     private int cardValue = 10;
-    private int penaltyForHighTierInTavern = 40;
-    private int numberOfDrawsValue = 35;
+    private int penaltyForHighTierInTavern = 2;
+    private int numberOfDrawsValue = 10;
+    private int enemyPotentialComboPenalty = 1;
     private List<Move> selectedTurnPlayout = new List<Move>();
     private bool newGenarate = true;
     private StringBuilder log = new StringBuilder();
@@ -36,9 +38,10 @@ public class RandomHeuristicBot : AI
     private Apriori apriori = new Apriori();
     private int support = 4;
     private double confidence = 0.3;
+    private int allCompletedActions;
    
     public int[] GetGenotype(){
-        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue};
+        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue, enemyPotentialComboPenalty};
     }
 
     public void SetGenotype(int[] values){
@@ -55,6 +58,7 @@ public class RandomHeuristicBot : AI
         cardValue = values[10];
         penaltyForHighTierInTavern = values[11];
         numberOfDrawsValue = values[12];
+        enemyPotentialComboPenalty = values[13];
     }
 
     private int CountNumberOfDrawsInTurn(List<CompletedAction> startOfTurnCompletedActions, List<CompletedAction> completedActions){
@@ -70,13 +74,18 @@ public class RandomHeuristicBot : AI
     }
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round){
-        PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
-        return selectedPatron ?? availablePatrons.PickRandom(Rng);
+        //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
+        //return selectedPatron ?? availablePatrons.PickRandom(Rng);
+        return availablePatrons.PickRandom(Rng);
     }
 
     private int BoardStateHeuristicValueEndTurn(GameState gameState, List<CompletedAction> startOfturnCompletedActions){
         int finalValue = 0;
+        int enemyPatronFavour = 0;
         foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All) {
+            if (entry.Key == PatronId.TREASURY){
+                continue;
+            }
             if (entry.Value == gameState.CurrentPlayer.PlayerID) {
                 finalValue += patronFavour;
             }
@@ -85,46 +94,73 @@ public class RandomHeuristicBot : AI
             }
             else{
                 finalValue += patronUnfavour;
+                enemyPatronFavour += 1;
             }
         }
-
-        finalValue += gameState.CurrentPlayer.Coins * coinsValue;
-        finalValue += gameState.CurrentPlayer.Power * powerValue;
-        finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
-        
-        int tier = -10000;
-        foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
-            tier = (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
-            finalValue += agentOnBoardValue * tier + agent.CurrentHp * hpValue;
+        if (enemyPatronFavour>=2){
+            finalValue -= 100;
+        }
+        if (gameState.EnemyPlayer.Prestige >=20)
+        {
+            finalValue += gameState.CurrentPlayer.Power * powerValue;
+            finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
         }
 
-        foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
-            tier = (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
-            finalValue -= agentOnBoardValue * tier + agent.CurrentHp * hpValue + opponentAgentsPenaltyValue;
-        }
+        if (gameState.CurrentPlayer.Prestige<30){
+            TierEnum tier = TierEnum.UNKNOWN;
+            foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
+                tier = CardTierList.GetCardTier(agent.RepresentingCard.Name);
+                finalValue += agentOnBoardValue * (int)tier + agent.CurrentHp * hpValue;
+            }
 
-        List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
-        Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
+            foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
+                tier = CardTierList.GetCardTier(agent.RepresentingCard.Name);
+                finalValue -= agentOnBoardValue * (int)tier + agent.CurrentHp * hpValue + opponentAgentsPenaltyValue;
+            }
 
-        foreach(Card card in allCards){
-            finalValue += (int)CardTierList.GetCardTier(card.Name) * cardValue;
-            if (card.Deck != PatronId.TREASURY){
-                if (potentialComboNumber.ContainsKey(card.Deck)){
-                    potentialComboNumber[card.Deck] +=1;
-                }
-                else{
-                    potentialComboNumber[card.Deck] = 1;
+            List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
+            Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
+
+            foreach(Card card in allCards){
+                finalValue += (int)tier * cardValue;
+                if (card.Deck != PatronId.TREASURY){
+                    if (potentialComboNumber.ContainsKey(card.Deck)){
+                        potentialComboNumber[card.Deck] +=1;
+                    }
+                    else{
+                        potentialComboNumber[card.Deck] = 1;
+                    }
                 }
             }
-        }
-        foreach (KeyValuePair<PatronId, int> entry in potentialComboNumber){
-            finalValue += (int)Math.Pow(entry.Value, potentialComboValue);
-        }
-        foreach(Card card in gameState.TavernCards){
-            finalValue -= penaltyForHighTierInTavern * (int)CardTierList.GetCardTier(card.Name);
-        }
 
-        finalValue += CountNumberOfDrawsInTurn(startOfturnCompletedActions, gameState.CompletedActions) * numberOfDrawsValue;
+            foreach(Card card in allCardsEnemy){
+                if (card.Deck != PatronId.TREASURY){
+                    if (potentialComboNumberEnemy.ContainsKey(card.Deck)){
+                        potentialComboNumberEnemy[card.Deck] +=1;
+                    }
+                    else{
+                        potentialComboNumberEnemy[card.Deck] = 1;
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<PatronId, int> entry in potentialComboNumber){
+                finalValue += (int)Math.Pow(entry.Value, potentialComboValue);
+            }
+            foreach(Card card in gameState.TavernAvailableCards){
+                tier = CardTierList.GetCardTier(card.Name);
+                finalValue -= penaltyForHighTierInTavern * (int)tier;
+                /*
+                if (potentialComboNumberEnemy.ContainsKey(card.Deck) && (potentialComboNumberEnemy[card.Deck]>4) && (tier > TierEnum.B)){
+                    finalValue -= enemyPotentialComboPenalty*(int)tier;
+                }
+                */
+            }
+
+            finalValue += CountNumberOfDrawsInTurn(startOfturnCompletedActions, gameState.CompletedActions) * numberOfDrawsValue;
+        }
         return finalValue;
     }
 
@@ -136,24 +172,49 @@ public class RandomHeuristicBot : AI
         List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(possibleMoves);
         List<Move> movesOrder = new List<Move>();
         while (notEndTurnPossibleMoves.Count != 0){
-            Move chosenMove = notEndTurnPossibleMoves.PickRandom(Rng);
+            Move chosenMove;
+            if ((gameState.BoardState == BoardState.NORMAL) && (SimpleBots.Extensions.RandomK(0, 10000, Rng)==0)){
+                chosenMove = Move.EndTurn();
+            }
+            else{
+                chosenMove = notEndTurnPossibleMoves.PickRandom(Rng);
+            }
             movesOrder.Add(chosenMove);
-            (gameState, List<Move> newPossibleMoves) = gameState.ApplyState(chosenMove);
+            
+            if (chosenMove.Command == CommandEnum.END_TURN){
+                break;
+                //return (movesOrder, gameState);
+            }
+            (GameState newGameState, List<Move> newPossibleMoves) = gameState.ApplyState(chosenMove);
+            if (newGameState.GameEndState?.Winner == myID)
+            {
+                return (movesOrder, newGameState);
+            }
             notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
+            //possibleMoves = newPossibleMoves;
+            gameState = newGameState;
+            //notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
         }
         return (movesOrder, gameState);
     }
 
-    private List<Move> GenerateKTurnGamesAndSelectBest(GameState gameState, List<Move> possibleMoves){
+    private List<Move> GenerateKTurnGamesAndSelectBest(GameState? gameState, List<Move> possibleMoves){
         List<Move> bestPlayout = new List<Move>();
         int highestHeuristicValue = -100000000;
         int heuristicValue = 0;
         int howManySimulation = 0;
         Stopwatch s = new Stopwatch();
         s.Start();
-        while (s.Elapsed < TimeSpan.FromSeconds(0.01)){
+
+        while (s.Elapsed < TimeSpan.FromSeconds(1)){
             (List<Move> generatedPlayout, GameState endTurnBoard)= GenerateRandomTurnMoves(gameState, possibleMoves);
+            if (endTurnBoard.GameEndState?.Winner == myID){
+                Console.WriteLine("HELLO");
+                return generatedPlayout;
+            }
+
             heuristicValue = BoardStateHeuristicValueEndTurn(endTurnBoard, gameState.CompletedActions);
+
             if (highestHeuristicValue < heuristicValue){
                 bestPlayout = generatedPlayout;
                 highestHeuristicValue = heuristicValue;
@@ -162,7 +223,7 @@ public class RandomHeuristicBot : AI
         }
         log.Append(howManySimulation.ToString()+ System.Environment.NewLine);
         totalNumberOfSimulationInGame += howManySimulation;
-        totalNumberOfSimulationInTurn += howManySimulation;
+
         return bestPlayout;
     }
 
@@ -170,17 +231,28 @@ public class RandomHeuristicBot : AI
     {
         if (startOfGame){
             myID = gameState.CurrentPlayer.PlayerID;
+            allCompletedActions = gameState.CompletedActions.Count;
             patrons = string.Join(",", gameState.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
             startOfGame = false;
         }
+        int numberOfLastActions = gameState.CompletedActions.Count - allCompletedActions;
+        List<CompletedAction> lastCompltedActions = gameState.CompletedActions.TakeLast(numberOfLastActions).ToList();
+        allCompletedActions = gameState.CompletedActions.Count;
+        foreach (CompletedAction action in lastCompltedActions){
+            if(action.Type == CompletedActionType.DRAW){
+                newGenarate = true;
+            }
+        }
         if (newGenarate){
             selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
+
             newGenarate = false;
         }
         if (selectedTurnPlayout.Count != 0){
             Move move = selectedTurnPlayout[0];
             selectedTurnPlayout.RemoveAt(0);
             if (!possibleMoves.Contains(move)){
+                Console.WriteLine("Weszło tu");
                 selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
                 newGenarate = false;
                 move = selectedTurnPlayout[0];
@@ -201,6 +273,7 @@ public class RandomHeuristicBot : AI
 
     public override void GameEnd(EndGameState state)
     {
+        Console.WriteLine("END GAME");
         if (state.Winner == myID){
             File.AppendAllText(patronLogPath, patrons + System.Environment.NewLine);
         }

@@ -20,23 +20,27 @@ public class RandomHeuristicBotTests
     [Fact]
     public void RandomHeuristicGameShouldEndWithoutErrors()
     {
-        AdjustParametersByEvolution ewo = new AdjustParametersByEvolution();
-        int[] genotype = ewo.Evolution(100, 1000, 2, -5000, 10000);
-        const int testAmount = 1000;
+        //AdjustParametersByEvolution ewo = new AdjustParametersByEvolution();
+        //int[] genotype = ewo.Evolution(100, 1000, 1, -100, 100);
+        //int[] genotype = new int[]{17,77,77,18,87,22,15,25,99,4,23,34,19};
+        const int testAmount = 100;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new HeuristicBot();
-            bot1.SetGenotype(genotype);
+            var bot1 = new NewMCTSBot();
+            //bot1.SetGenotype(genotype);
             var bot2 = new RandomMaximizePrestigeBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
-
+            //Console.WriteLine(endState.Reason.ToString());
+            //Console.WriteLine(endState.Winner.ToString());
             
-            if (endState.Reason == GameEndReason.INCORRECT_MOVE)
+            if (endState.Reason == GameEndReason.INCORRECT_MOVE || endState.Reason == GameEndReason.INTERNAL_ERROR || endState.Reason == GameEndReason.BOT_EXCEPTION)
             {
+                Console.WriteLine(endState.AdditionalContext);
+                //Console.WriteLine(endBoardState.)
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             
@@ -48,6 +52,7 @@ public class RandomHeuristicBotTests
             //_testOutputHelper.WriteLine(string.Join('\n', endBoardState.CompletedActions.Select(a => a.ToString())));
         }
         Console.WriteLine(counter.ToString());
+        //Console.WriteLine("[{0}]", string.Join(", ", genotype));
         //ClashEveryBotTogether clash = new ClashEveryBotTogether();
         //clash.BotClash();
         //log.Append(counter.ToString() + System.Environment.NewLine);
