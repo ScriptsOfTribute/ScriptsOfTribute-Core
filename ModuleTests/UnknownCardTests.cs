@@ -27,7 +27,7 @@ public class UnknownCardTests
             GlobalCardDatabase.Instance.GetCard(CardId.PROPHESY),
         };
         
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             tavernAvailableCards, tavernCards, 123);
 
         var (newState, possibleMoves) = board.ApplyState(Move.BuyCard(tavernAvailableCards[0]));
@@ -58,7 +58,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(harvestSeason));
@@ -110,7 +110,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(helShiraHerald));
@@ -158,7 +158,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(noShiraPoet));
@@ -213,7 +213,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(scryingGlobe1));
@@ -272,7 +272,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newState, possibleMoves) = board.ApplyState(Move.PlayCard(helShiraHerald));
@@ -314,7 +314,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newBoard, _) = board.ApplyState(Move.PlayCard(harvestSeason1));
@@ -355,7 +355,7 @@ public class UnknownCardTests
         var enemyPlayer = new SerializedPlayer(PlayerEnum.PLAYER2, new List<UniqueCard>(), new List<UniqueCard>(),
             new List<UniqueCard>(), new List<UniqueCard>(), new List<SerializedAgent>(), 0, 0, 0, 0);
 
-        var board = new SerializedBoard(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
+        var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123);
 
         var (newBoard, _) = board.ApplyState(Move.PlayCard(scryingGlobe1));

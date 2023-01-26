@@ -43,7 +43,7 @@ public class TalesOfTributeGame
 
     private (EndGameState?, Move?) PlayWithTimeout()
     {
-        var board = _api.GetSerializer();
+        var board = _api.GetFullGameState();
         var state = new GameState(board);
         var moves = _api.GetListOfPossibleMoves();
 
@@ -77,7 +77,7 @@ public class TalesOfTributeGame
         return (new EndGameState(_api.EnemyPlayerId, GameEndReason.TURN_TIMEOUT), null);
     }
     
-    public (EndGameState, SerializedBoard) Play()
+    public (EndGameState, FullGameState) Play()
     {
         CurrentPlayer.LogMessages.ForEach(m => _api.Logger.Log(CurrentPlayer.Id, m.Item2));
         EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
@@ -311,7 +311,7 @@ public class TalesOfTributeGame
         return null;
     }
 
-    private (EndGameState, SerializedBoard) EndGame(EndGameState state)
+    private (EndGameState, FullGameState) EndGame(EndGameState state)
     {
         state.AdditionalContext +=
             $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
@@ -321,6 +321,6 @@ public class TalesOfTributeGame
         EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
         EndGameState = state;
         _api.Logger.Flush();
-        return (state, _api.GetSerializer());
+        return (state, _api.GetFullGameState());
     }
 }

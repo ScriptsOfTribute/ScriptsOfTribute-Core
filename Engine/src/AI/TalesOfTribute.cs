@@ -113,7 +113,7 @@ public class TalesOfTribute
         return null;
     }
 
-    public (EndGameState, SerializedBoard?) Play()
+    public (EndGameState, FullGameState?) Play()
     {
         var (endGameState, patrons) = PatronSelection();
 

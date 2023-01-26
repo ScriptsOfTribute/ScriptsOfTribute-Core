@@ -30,24 +30,24 @@ public class PlayerContext : IReadOnlyPlayerContext
         (CurrentPlayerId, EnemyPlayerId) = (EnemyPlayerId, CurrentPlayerId);
     }
 
-    public static PlayerContext FromSerializedBoard(SerializedBoard serializedBoard, SeededRandom rnd)
+    public static PlayerContext FromSerializedBoard(FullGameState fullGameState, SeededRandom rnd)
     {
-        var p1 = Player.FromSerializedPlayer(serializedBoard.CurrentPlayer, rnd, serializedBoard.Cheats);
-        var p2 = Player.FromSerializedPlayer(serializedBoard.EnemyPlayer, rnd, serializedBoard.Cheats);
+        var p1 = Player.FromSerializedPlayer(fullGameState.CurrentPlayer, rnd, fullGameState.Cheats);
+        var p2 = Player.FromSerializedPlayer(fullGameState.EnemyPlayer, rnd, fullGameState.Cheats);
         if (p1.ID == PlayerEnum.PLAYER1)
         {
             return new PlayerContext(p1, p2)
             {
-                CurrentPlayerId = serializedBoard.CurrentPlayer.PlayerID,
-                EnemyPlayerId = serializedBoard.EnemyPlayer.PlayerID,
+                CurrentPlayerId = fullGameState.CurrentPlayer.PlayerID,
+                EnemyPlayerId = fullGameState.EnemyPlayer.PlayerID,
             };   
         }
         else
         {
             return new PlayerContext(p2, p1)
             {
-                CurrentPlayerId = serializedBoard.CurrentPlayer.PlayerID,
-                EnemyPlayerId = serializedBoard.EnemyPlayer.PlayerID,
+                CurrentPlayerId = fullGameState.CurrentPlayer.PlayerID,
+                EnemyPlayerId = fullGameState.EnemyPlayer.PlayerID,
             };
         }
     }
