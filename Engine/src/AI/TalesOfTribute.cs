@@ -119,8 +119,8 @@ public class TalesOfTribute
 
         if (endGameState is not null)
         {
-            _players[0].GameEnd(endGameState);
-            _players[1].GameEnd(endGameState);
+            _players[0].GameEnd(endGameState, null);
+            _players[1].GameEnd(endGameState, null);
             return (endGameState, null);
         }
 

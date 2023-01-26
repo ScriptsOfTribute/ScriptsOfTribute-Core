@@ -315,9 +315,9 @@ public class TalesOfTributeGame
     {
         state.AdditionalContext +=
             $"\nLast few moves for context:\n{string.Join('\n', _moveHistory.TakeLast(5).Select(m => m.ToString()))}";
-        CurrentPlayer.GameEnd(state);
+        CurrentPlayer.GameEnd(state, _api.GetFullGameState());
         CurrentPlayer.LogMessages.ForEach(m => _api.Logger.Log(CurrentPlayer.Id, m.Item2));
-        EnemyPlayer.GameEnd(state);
+        EnemyPlayer.GameEnd(state, _api.GetFullGameState());
         EnemyPlayer.LogMessages.ForEach(m => _api.Logger.Log(EnemyPlayer.Id, m.Item2));
         EndGameState = state;
         _api.Logger.Flush();

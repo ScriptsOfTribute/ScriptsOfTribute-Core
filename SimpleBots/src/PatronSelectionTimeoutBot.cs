@@ -18,7 +18,7 @@ public class PatronSelectionTimeoutBot : AI
         throw new NotImplementedException();
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
     }
 }
