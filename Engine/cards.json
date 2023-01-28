@@ -9,7 +9,8 @@
     "Activation":"Coin 6 AND Remove 2",
     "Combo 2":"Patron 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":1,
@@ -21,7 +22,8 @@
     "Activation":"Coin 3",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":2,
@@ -33,7 +35,8 @@
     "Activation":"Coin 2",
     "Combo 2":"Acquire 6",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":3,
@@ -45,7 +48,8 @@
     "Activation":"Coin 2",
     "Combo 2":null,
     "Combo 3":"Coin 4",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":4,
@@ -58,7 +62,8 @@
     "Combo 2":"Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":5
+    "Family":5,
+    "Copies":1
   },
   {
     "id":5,
@@ -71,7 +76,9 @@
     "Combo 2":"Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":5
+    "Family":5,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":6,
@@ -84,7 +91,8 @@
     "Combo 2":"Acquire 7",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":7
+    "Family":7,
+    "Copies":1
   },
   {
     "id":7,
@@ -97,7 +105,9 @@
     "Combo 2":"Acquire 7",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":7
+    "Family":7,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":8,
@@ -109,7 +119,9 @@
     "Activation":"Coin 2",
     "Combo 2":null,
     "Combo 3":"Coin 3",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":9,
@@ -121,7 +133,9 @@
     "Activation":"Coin 2",
     "Combo 2":"Acquire 5",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":10,
@@ -133,7 +147,8 @@
     "Activation":"Power 1",
     "Combo 2":"Acquire 7",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":11,
@@ -145,7 +160,8 @@
     "Activation":"Acquire 5",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":12,
@@ -157,7 +173,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":13,
@@ -169,7 +186,8 @@
     "Activation":"Power 3",
     "Combo 2":"Power 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":14,
@@ -182,7 +200,8 @@
     "Combo 2":"Draw 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family": 15
+    "Family": 15,
+    "Copies":1
   },
   {
     "id":15,
@@ -195,7 +214,9 @@
     "Combo 2":"Draw 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":15
+    "Family":15,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":16,
@@ -207,7 +228,8 @@
     "Activation":"Destroy 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":17,
@@ -219,7 +241,8 @@
     "Activation":"Power 1 AND Destroy 2",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":18,
@@ -231,7 +254,9 @@
     "Activation":"Destroy 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":19,
@@ -243,7 +268,8 @@
     "Activation":"Destroy 1",
     "Combo 2":"Remove 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":20,
@@ -256,7 +282,9 @@
     "Combo 2":"Power 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":20
+    "Family":20,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":21,
@@ -269,7 +297,8 @@
     "Combo 2":"Power 3",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":20
+    "Family":20,
+    "Copies":1
   },
   {
     "id":22,
@@ -281,7 +310,8 @@
     "Activation":"Remove 2",
     "Combo 2":"Coin 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":23,
@@ -293,7 +323,9 @@
     "Activation":"Remove 2",
     "Combo 2":"Coin 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":24,
@@ -305,7 +337,8 @@
     "Activation":"Power 1",
     "Combo 2":"Destroy 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":25,
@@ -317,7 +350,8 @@
     "Activation":"Power 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":26,
@@ -330,7 +364,8 @@
     "Combo 2":null,
     "Combo 3":"Draw 1",
     "Combo 4":null,
-    "Family": 36
+    "Family": 36,
+    "Copies": 1
   },
   {
     "id":27,
@@ -342,7 +377,8 @@
     "Activation":"Draw 1",
     "Combo 2":"Draw 1",
     "Combo 3":null,
-    "Combo 4":"Draw 1"
+    "Combo 4":"Draw 1",
+    "Copies": 1
   },
   {
     "id":28,
@@ -354,7 +390,9 @@
     "Activation":"Coin 2",
     "Combo 2":"Draw 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies": 4,
+    "PostUpgradeCopies": 2
   },
   {
     "id":29,
@@ -366,7 +404,8 @@
     "Activation":"Coin 2",
     "Combo 2":"Draw 1",
     "Combo 3":"Coin 1",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies": 2
   },
   {
     "id":30,
@@ -379,7 +418,8 @@
     "Combo 2":"Coin 2 AND Power 2",
     "Combo 3":"Power 2",
     "Combo 4":null,
-    "Family":35
+    "Family":35,
+    "Copies": 2
   },
   {
     "id":31,
@@ -391,7 +431,9 @@
     "Activation":"Draw 1",
     "Combo 2":"Draw 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies": 2,
+    "PostUpgradeCopies": 1
   },
   {
     "id":32,
@@ -403,7 +445,8 @@
     "Activation":"Draw 1",
     "Combo 2":null,
     "Combo 3":"Draw 1",
-    "Combo 4":"Power 4"
+    "Combo 4":"Power 4",
+    "Copies": 2,
   },
   {
     "id":33,
@@ -415,7 +458,8 @@
     "Activation":"Draw 1",
     "Combo 2":null,
     "Combo 3":"Discard 1",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies": 2
   },
   {
     "id":34,
@@ -427,7 +471,9 @@
     "Activation":"Power 1",
     "Combo 2":"Draw 1",
     "Combo 3":null,
-    "Combo 4":"Coin 3"
+    "Combo 4":"Coin 3",
+    "Copies": 4,
+    "PostUpgradeCopies": 2
   },
   {
     "id":35,
@@ -440,7 +486,9 @@
     "Combo 2":"Coin 2 AND Power 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":35
+    "Family":35,
+    "Copies":4,
+    "PostUpgradeCopies":2
   },
   {
     "id":36,
@@ -453,7 +501,9 @@
     "Combo 2":null,
     "Combo 3":"Draw 1",
     "Combo 4":null,
-    "Family": 36
+    "Family": 36,
+    "Copies": 2,
+    "PostUpgradeCopies": 1
   },
   {
     "id":37,
@@ -465,7 +515,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":"Coin 2 AND Power 2",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies": 2
   },
   {
     "id":38,
@@ -477,7 +528,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":39,
@@ -489,7 +541,8 @@
     "Activation":"Power 3 OR Acquire 4",
     "Combo 2":"Power 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":40,
@@ -502,7 +555,8 @@
     "Combo 2":"Coin 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":48
+    "Family":48,
+    "Copies":2
   },
   {
     "id":41,
@@ -514,7 +568,8 @@
     "Activation":"Power 4 OR Return 3",
     "Combo 2":null,
     "Combo 3":"Power 3",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":42,
@@ -526,7 +581,8 @@
     "Activation":"Return 2",
     "Combo 2":"Power 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":43,
@@ -538,7 +594,9 @@
     "Activation":"Power 4 OR Return 3",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":44,
@@ -550,7 +608,8 @@
     "Activation":"Return 2 OR Acquire 5",
     "Combo 2":"Return 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":45,
@@ -562,7 +621,8 @@
     "Activation":"Power 3 OR Acquire 4",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":46,
@@ -575,7 +635,9 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":46
+    "Family":46,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":47,
@@ -588,7 +650,8 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":46
+    "Family":46,
+    "Copies":1
   },
   {
     "id":48,
@@ -601,7 +664,9 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":48
+    "Family":48,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":49,
@@ -613,7 +678,9 @@
     "Activation":"Return 1",
     "Combo 2":"Power 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":50,
@@ -625,7 +692,8 @@
     "Activation":"Power 1 OR Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":51,
@@ -637,7 +705,8 @@
     "Activation":"Coin 3 AND Remove 2",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":52,
@@ -649,7 +718,8 @@
     "Activation":"Coin 2 AND Toss 2",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":4
   },
   {
     "id":53,
@@ -661,7 +731,8 @@
     "Activation":"Draw 1 AND Toss 4",
     "Combo 2":"Power 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":54,
@@ -673,7 +744,8 @@
     "Activation":"Toss 3",
     "Combo 2":"Power 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":55,
@@ -686,7 +758,8 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":58
+    "Family":58,
+    "Copies":1
   },
   {
     "id":56,
@@ -698,7 +771,9 @@
     "Activation":"Toss 3",
     "Combo 2":"Power 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":57,
@@ -710,7 +785,9 @@
     "Activation":"Coin 3 AND Remove 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":58,
@@ -723,7 +800,9 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":58
+    "Family":58,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":59,
@@ -736,7 +815,8 @@
     "Combo 2":"Power 3",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":60
+    "Family":60,
+    "Copies":1
   },
   {
     "id":60,
@@ -749,7 +829,9 @@
     "Combo 2":"Power 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":60
+    "Family":60,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":61,
@@ -761,7 +843,8 @@
     "Activation":"Toss 4",
     "Combo 2":"Coin 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":62,
@@ -773,7 +856,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":63,
@@ -785,7 +869,8 @@
     "Activation":"Power 6",
     "Combo 2":"Draw 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":64,
@@ -797,7 +882,8 @@
     "Activation":"Power 4",
     "Combo 2":"Coin 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":65,
@@ -809,7 +895,8 @@
     "Activation":"Power 5 AND Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":66,
@@ -823,7 +910,9 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":66
+    "Family":66,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":67,
@@ -837,7 +926,8 @@
     "Combo 2":"Heal 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":66
+    "Family":66,
+    "Copies":1
   },
   {
     "id":68,
@@ -850,7 +940,9 @@
     "Combo 2":"Power 2",
     "Combo 3":"Power 1",
     "Combo 4":null,
-    "Family":68
+    "Family":68,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":69,
@@ -862,7 +954,9 @@
     "Activation":"Power 3",
     "Combo 2":"Coin 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":4,
+    "PostUpgradeCopies":2
   },
   {
     "id":70,
@@ -875,7 +969,8 @@
     "Combo 2":"Power 3",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":68
+    "Family":68,
+    "Copies":2
   },
   {
     "id":71,
@@ -888,7 +983,8 @@
     "Activation":"Power 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":72,
@@ -902,7 +998,9 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":72
+    "Family":72,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":73,
@@ -916,7 +1014,8 @@
     "Combo 2":"Power 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":72
+    "Family":72,
+    "Copies":1
   },
   {
     "id":74,
@@ -928,7 +1027,8 @@
     "Activation":"Power 2",
     "Combo 2":"Coin 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":75,
@@ -940,7 +1040,8 @@
     "Activation":"Power 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies": 1
   },
   {
     "id":76,
@@ -953,7 +1054,9 @@
     "Combo 2":"Draw 1",
     "Combo 3":"Discard 1",
     "Combo 4":null,
-    "Family":76
+    "Family":76,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":77,
@@ -965,7 +1068,8 @@
     "Activation":null,
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":0
   },
   {
     "id":78,
@@ -978,7 +1082,8 @@
     "Combo 2":"KnockOut 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":82
+    "Family":82,
+    "Copies":2
   },
   {
     "id":79,
@@ -990,7 +1095,9 @@
     "Activation":"KnockOut 2 AND Coin 1",
     "Combo 2":"Coin 3",
     "Combo 3":"Discard 1",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2,
+    "PostUpgradeCopies":1
   },
   {
     "id":80,
@@ -1002,7 +1109,9 @@
     "Activation":"Coin 1",
     "Combo 2":"OppLosePrestige 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":81,
@@ -1014,7 +1123,8 @@
     "Activation":"Destroy 1",
     "Combo 2":"OppLosePrestige 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":82,
@@ -1027,7 +1137,9 @@
     "Combo 2":"KnockOut 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":82
+    "Family":82,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":83,
@@ -1039,7 +1151,8 @@
     "Activation":"Coin 2",
     "Combo 2":"OppLosePrestige 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":84,
@@ -1052,7 +1165,8 @@
     "Combo 2":"Draw 1",
     "Combo 3":"Draw 1 AND Discard 1",
     "Combo 4":null,
-    "Family":76
+    "Family":76,
+    "Copies":1
   },
   {
     "id":85,
@@ -1064,7 +1178,8 @@
     "Activation":"KnockOut 2 AND Coin 1",
     "Combo 2":"Coin 4",
     "Combo 3":"Discard 1",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":86,
@@ -1076,7 +1191,8 @@
     "Activation":"Coin 2",
     "Combo 2":"Remove 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":87,
@@ -1088,7 +1204,8 @@
     "Activation":null,
     "Combo 2":"OppLosePrestige 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":88,
@@ -1100,7 +1217,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":89,
@@ -1112,7 +1230,8 @@
     "Activation":"Discard 1",
     "Combo 2":"Remove 3",
     "Combo 3":"OppLosePrestige 3",
-    "Combo 4":"Draw 3"
+    "Combo 4":"Draw 3",
+    "Copies":1
   },
   {
     "id":90,
@@ -1124,7 +1243,9 @@
     "Activation":"Coin 1 AND Prestige 1",
     "Combo 2":"Power 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":91,
@@ -1136,7 +1257,8 @@
     "Activation":"Patron 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":92,
@@ -1149,7 +1271,9 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":92
+    "Family":92,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":93,
@@ -1161,7 +1285,8 @@
     "Activation":"Power 1",
     "Combo 2":"Power 1",
     "Combo 3":"Power 2",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":94,
@@ -1173,7 +1298,8 @@
     "Activation":"Power 2",
     "Combo 2":null,
     "Combo 3":"Power 3",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":95,
@@ -1185,7 +1311,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":"Power 1",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":96,
@@ -1197,7 +1324,8 @@
     "Activation":"Prestige 1",
     "Combo 2":null,
     "Combo 3":"Prestige 3",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":97,
@@ -1209,7 +1337,8 @@
     "Activation":"Coin 1 AND Prestige 1",
     "Combo 2":"Power 2",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":98,
@@ -1222,7 +1351,8 @@
     "Combo 2":"Remove 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":101
+    "Family":101,
+    "Copies":2
   },
   {
     "id":99,
@@ -1234,7 +1364,9 @@
     "Activation":"Power 2",
     "Combo 2":null,
     "Combo 3":"Power 2",
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":100,
@@ -1246,7 +1378,8 @@
     "Activation":"Coin 1",
     "Combo 2":"Create 1",
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":101,
@@ -1259,7 +1392,9 @@
     "Combo 2":"Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":101
+    "Family":101,
+    "Copies":3,
+    "PostUpgradeCopies":1
   },
   {
     "id":102,
@@ -1272,7 +1407,8 @@
     "Combo 2":"Coin 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":92
+    "Family":92,
+    "Copies":2
   },
   {
     "id":103,
@@ -1284,7 +1420,8 @@
     "Activation":"KnockOut 2",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   },
   {
     "id":104,
@@ -1296,7 +1433,8 @@
     "Activation":"Remove 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":4
   },
   {
     "id":105,
@@ -1308,7 +1446,8 @@
     "Activation":"KnockOut 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":106,
@@ -1320,7 +1459,8 @@
     "Activation":"Power 2",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":107,
@@ -1332,7 +1472,8 @@
     "Activation":"Coin 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":6
   },
   {
     "id":108,
@@ -1344,7 +1485,8 @@
     "Activation":"Draw 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":109,
@@ -1356,7 +1498,8 @@
     "Activation":"Power 4",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":3
   },
   {
     "id":110,
@@ -1368,7 +1511,8 @@
     "Activation":"Destroy 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":111,
@@ -1380,7 +1524,8 @@
     "Activation":"Patron 1",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":2
   },
   {
     "id":112,
@@ -1392,6 +1537,7 @@
     "Activation":"Coin 2",
     "Combo 2":null,
     "Combo 3":null,
-    "Combo 4":null
+    "Combo 4":null,
+    "Copies":1
   }
 ]
