@@ -9,7 +9,7 @@ using TalesOfTribute.Board.CardAction;
 
 namespace SimpleBots;
 
-public class RandomHeuristicBot : AI
+public class RandomSimulationBot : AI
 {
     private int patronFavour = 50;
     private int patronNeutral = 10;
@@ -28,17 +28,20 @@ public class RandomHeuristicBot : AI
     private List<Move> selectedTurnPlayout = new List<Move>();
     private bool newGenarate = true;
     private StringBuilder log = new StringBuilder();
-    private string patrons;
-    private string patronLogPath = "patrons.txt";
-    private string logPath = "log.txt";
+    //private string logPath = "log.txt";
     private int totalNumberOfSimulationInGame = 0;
     private int totalNumberOfSimulationInTurn = 0;
     private bool startOfGame = true;
     private PlayerEnum myID;
+    private string patrons;
+    private string patronLogPath = "patronsRandomSimulationBot.txt";
     private Apriori apriori = new Apriori();
     private int support = 4;
     private double confidence = 0.3;
     private int allCompletedActions;
+    TimeSpan usedTimeInTurn = TimeSpan.FromSeconds(0);
+    TimeSpan timeForMoveComputation = TimeSpan.FromSeconds(0.5);
+    TimeSpan TurnTimeout = TimeSpan.FromSeconds(30);
    
     public int[] GetGenotype(){
         return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue, enemyPotentialComboPenalty};
@@ -182,34 +185,31 @@ public class RandomHeuristicBot : AI
             movesOrder.Add(chosenMove);
             
             if (chosenMove.Command == CommandEnum.END_TURN){
-                break;
-                //return (movesOrder, gameState);
+                return (movesOrder, gameState);
             }
+
             (GameState newGameState, List<Move> newPossibleMoves) = gameState.ApplyState(chosenMove);
             if (newGameState.GameEndState?.Winner == myID)
             {
                 return (movesOrder, newGameState);
             }
             notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
-            //possibleMoves = newPossibleMoves;
             gameState = newGameState;
-            //notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
         }
         return (movesOrder, gameState);
     }
 
     private List<Move> GenerateKTurnGamesAndSelectBest(GameState? gameState, List<Move> possibleMoves){
         List<Move> bestPlayout = new List<Move>();
-        int highestHeuristicValue = -100000000;
+        int highestHeuristicValue = int.MinValue;
         int heuristicValue = 0;
         int howManySimulation = 0;
         Stopwatch s = new Stopwatch();
         s.Start();
 
-        while (s.Elapsed < TimeSpan.FromSeconds(1)){
+        while (s.Elapsed < timeForMoveComputation){
             (List<Move> generatedPlayout, GameState endTurnBoard)= GenerateRandomTurnMoves(gameState, possibleMoves);
             if (endTurnBoard.GameEndState?.Winner == myID){
-                Console.WriteLine("HELLO");
                 return generatedPlayout;
             }
 
@@ -221,7 +221,6 @@ public class RandomHeuristicBot : AI
             }
             howManySimulation +=1;
         }
-        log.Append(howManySimulation.ToString()+ System.Environment.NewLine);
         totalNumberOfSimulationInGame += howManySimulation;
 
         return bestPlayout;
@@ -243,16 +242,22 @@ public class RandomHeuristicBot : AI
                 newGenarate = true;
             }
         }
-        if (newGenarate){
-            selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
 
+        if (newGenarate){
+            if (timeForMoveComputation + usedTimeInTurn >= TurnTimeout){
+                selectedTurnPlayout = new List<Move> {possibleMoves.PickRandom(Rng)};
+            }
+            else{
+                selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
+                usedTimeInTurn += timeForMoveComputation;
+            }
             newGenarate = false;
         }
+
         if (selectedTurnPlayout.Count != 0){
             Move move = selectedTurnPlayout[0];
             selectedTurnPlayout.RemoveAt(0);
             if (!possibleMoves.Contains(move)){
-                Console.WriteLine("Weszło tu");
                 selectedTurnPlayout = GenerateKTurnGamesAndSelectBest(gameState, possibleMoves);
                 newGenarate = false;
                 move = selectedTurnPlayout[0];
@@ -265,20 +270,16 @@ public class RandomHeuristicBot : AI
         }
         else{
             newGenarate = true;
-            log.Append("Total number of simulation in this turn: " + totalNumberOfSimulationInTurn.ToString()+ System.Environment.NewLine);
             totalNumberOfSimulationInTurn = 0;
+            usedTimeInTurn = TimeSpan.FromSeconds(0);
             return Move.EndTurn();
         }
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
-        Console.WriteLine("END GAME");
         if (state.Winner == myID){
             File.AppendAllText(patronLogPath, patrons + System.Environment.NewLine);
         }
-        log.Append("Total number of simulation in game: " + totalNumberOfSimulationInGame.ToString()+ System.Environment.NewLine);
-        File.AppendAllText(logPath, log.ToString());
-        log.Clear();
     }
 }

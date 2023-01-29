@@ -10,46 +10,96 @@ public class ClashEveryBotTogether{
     private StringBuilder log = new StringBuilder();
 
     private string loggerPath = "allBotsStatistics.txt";
+    private string matrixPath = "statisticInMatrix.txt";
 
-    private int numberOfTrials = 1000;
+    private int numberOfTrials = 100;
 
-    private AI[] bots = new AI[] {new RandomBot(), new DoEverythingBot(), new WinByPatronFavors(), new RandomMaximizePrestigeBot(), new MaximizeAgentsBot()};//, new SemiRandomBot()}; new RandomHeuristicBot()
+    private AI[] bots = new AI[] {new RandomBot(), new RandomWithoutEndTurnBot(), new PatronFavorsBot(), new MaxPrestigeBot(), new MaxAgentsBot(), new BeamSearchBot(), new MCTSBot(), new DecisionTreeBot(), new RandomSimulationBot()};
+    private double[] botsWinRatio = new double[9];
+    private int[] botsWinCounter = new int[9];
 
-    private double[] botsWinCounter = new double[5];
+    private (int, int)[, ] winMatrix = new (int, int)[9, 9];
 
     private void ClearBotsWinCounter(){
         for(int i=0; i< botsWinCounter.Length; i++){
             botsWinCounter[i] = 0;
         }
     }
-    public void BotClash(){
-        foreach (var bot in bots){
-            log.Append(bot.ToString() + ',');
+
+    private void ReadWinMatrix(string result, int k = 9){
+        string[] splittedResult = result.Split("#");
+        for(int i =0; i<k; i++){
+            for(int j=0; j<k; j++){
+                string cell = splittedResult[i*k +j];
+                int a = Int32.Parse(cell.Replace(@"(", "").Replace(@")", "").Split(",")[0]);
+                int b = Int32.Parse(cell.Replace(@"(", "").Replace(@")", "").Split(",")[1]);
+                winMatrix[i, j] = (a, b);
+            }
         }
-        log.Append(System.Environment.NewLine);
+    }
+    public void BotClash(){
+        string names = "";
+        foreach (var bot in bots){
+            names += bot.ToString() + ',';
+        }
+
+        names += System.Environment.NewLine;
+        File.AppendAllText(loggerPath, names);
+        int k = bots.Length;
+
+        try{
+            string oldMatrix = File.ReadAllText(matrixPath);
+            ReadWinMatrix(oldMatrix, k);
+            Console.WriteLine(winMatrix[0, 1]);
+        }
+        catch (Exception ex){
+            Console.WriteLine("Exception during reading from file, probably file does not exist");
+            for(int i =0; i<k; i++){
+                for(int j=0; j<k; j++){
+                    winMatrix[i, j] = (0, 0);
+                }
+            }
+        }
         
         ClearBotsWinCounter();
         for (int trial=0; trial < numberOfTrials; trial++){
-            for(int i = 0; i< bots.Length; i++){
-                for (int j=i+1; j< bots.Length; j++){
-                    var game = new TalesOfTribute.AI.TalesOfTribute(bots[i], bots[j]);
-                    var (endState, _) = game.Play();
-                    if (endState.Winner == PlayerEnum.PLAYER1){
-                        botsWinCounter[i] +=1.0;
-                    }
-                    else{
-                        botsWinCounter[j] +=1.0;
-                    }
+            Console.WriteLine("Iteration: " + trial.ToString());
+            for(int i = 0; i< k; i++){
+                Task[] taskArray = new Task[k-i-1];
+                Console.WriteLine("NEW " + i);
+                for (int j=i+1; j< k; j++){
+                    taskArray[j-(i+1)] = Task.Factory.StartNew((j_thread) => {
+                        Console.WriteLine("i: " + i + ", j: " + (int)j_thread);
+                        var game = new TalesOfTribute.AI.TalesOfTribute(bots[i], bots[(int)j_thread]);
+                        var (endState, _) = game.Play();
+                        if (endState.Winner == PlayerEnum.PLAYER1){
+                            Interlocked.Increment(ref botsWinCounter[i]);                           
+                            Interlocked.Increment(ref winMatrix[(int)j_thread, i].Item1);
+                            Interlocked.Increment(ref winMatrix[(int)j_thread, i].Item2);
+                            Interlocked.Increment(ref winMatrix[i, (int)j_thread].Item2);
+                        }
+                        if (endState.Winner == PlayerEnum.PLAYER2){
+                            Interlocked.Increment(ref botsWinCounter[(int)j_thread]);
+                            Interlocked.Increment(ref winMatrix[i, (int)j_thread].Item1);
+                            Interlocked.Increment(ref winMatrix[i, (int)j_thread].Item2);
+                            Interlocked.Increment(ref winMatrix[(int)j_thread, i].Item2);
+                        }
+                
+                    }, j);
                 }
+                Task.WaitAll(taskArray);
             }
             for(int i=0; i< botsWinCounter.Length; i++){
-                botsWinCounter[i] /= (double)(botsWinCounter.Length-1);
+                botsWinRatio[i] = (double)botsWinCounter[i]/(double)(botsWinCounter.Length-1);
             }
-            log.Append(string.Join(",", botsWinCounter));
-            log.Append(System.Environment.NewLine);
+            File.AppendAllText(loggerPath, string.Join(",", botsWinRatio) + System.Environment.NewLine);
+            string result = "";
+            foreach((int, int) x in winMatrix){
+                result += string.Join(",", x) + "#";
+            }
+            File.WriteAllText(matrixPath, result);
             ClearBotsWinCounter();
         }
-        File.AppendAllText(loggerPath, log.ToString());
     }
 
 }

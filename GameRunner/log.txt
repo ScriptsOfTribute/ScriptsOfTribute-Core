@@ -1,0 +1,9229 @@
+2726
+4520
+11365
+Total number of simulation in this turn: 0
+4044
+23059
+Total number of simulation in this turn: 0
+4268
+Total number of simulation in this turn: 0
+3929
+Total number of simulation in this turn: 0
+4348
+Total number of simulation in this turn: 0
+5679
+Total number of simulation in this turn: 0
+4252
+Total number of simulation in this turn: 0
+6574
+Total number of simulation in this turn: 0
+5585
+Total number of simulation in this turn: 0
+5342
+Total number of simulation in this turn: 0
+4765
+Total number of simulation in this turn: 0
+3598
+Total number of simulation in this turn: 0
+5415
+Total number of simulation in this turn: 0
+Total number of simulation in game: 99469
+2256
+4323
+17544
+Total number of simulation in this turn: 0
+5275
+Total number of simulation in this turn: 0
+4064
+Total number of simulation in this turn: 0
+3508
+8260
+Total number of simulation in this turn: 0
+5225
+Total number of simulation in this turn: 0
+5150
+Total number of simulation in this turn: 0
+6555
+Total number of simulation in this turn: 0
+4100
+5703
+Total number of simulation in this turn: 0
+5569
+Total number of simulation in this turn: 0
+5710
+Total number of simulation in this turn: 0
+4605
+Total number of simulation in this turn: 0
+5691
+Total number of simulation in this turn: 0
+5537
+Total number of simulation in this turn: 0
+Total number of simulation in game: 99075
+3262
+Total number of simulation in this turn: 0
+3839
+6477
+Total number of simulation in this turn: 0
+5584
+Total number of simulation in this turn: 0
+5114
+Total number of simulation in this turn: 0
+3919
+8459
+61024
+Total number of simulation in this turn: 0
+5790
+Total number of simulation in this turn: 0
+4670
+Total number of simulation in this turn: 0
+4659
+Total number of simulation in this turn: 0
+4878
+Total number of simulation in this turn: 0
+3660
+Total number of simulation in this turn: 0
+3916
+7283
+Total number of simulation in this turn: 0
+4776
+Total number of simulation in this turn: 0
+5129
+Total number of simulation in this turn: 0
+Total number of simulation in game: 142439
+2796
+3891
+Total number of simulation in this turn: 0
+3943
+Total number of simulation in this turn: 0
+3442
+6157
+Total number of simulation in this turn: 0
+2685
+Total number of simulation in this turn: 0
+3038
+5605
+5315
+7475
+68750
+Total number of simulation in this turn: 0
+4389
+Total number of simulation in this turn: 0
+3809
+3698
+Total number of simulation in this turn: 0
+3489
+Total number of simulation in this turn: 0
+2839
+15208
+Total number of simulation in this turn: 0
+4769
+Total number of simulation in this turn: 0
+3789
+1314223
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1469310
+3000
+8812
+12889
+18720
+Total number of simulation in this turn: 0
+5123
+7264
+Total number of simulation in this turn: 0
+4605
+Total number of simulation in this turn: 0
+2357
+4009
+Total number of simulation in this turn: 0
+4024
+Total number of simulation in this turn: 0
+4443
+Total number of simulation in this turn: 0
+2768
+3142
+10082
+16560
+Total number of simulation in this turn: 0
+3393
+Total number of simulation in this turn: 0
+4430
+Total number of simulation in this turn: 0
+3929
+Total number of simulation in this turn: 0
+Total number of simulation in game: 119550
+3519
+Total number of simulation in this turn: 0
+3794
+Total number of simulation in this turn: 0
+4250
+Total number of simulation in this turn: 0
+3911
+Total number of simulation in this turn: 0
+4362
+11224
+Total number of simulation in this turn: 0
+4349
+Total number of simulation in this turn: 0
+4967
+6729
+Total number of simulation in this turn: 0
+3308
+4125
+Total number of simulation in this turn: 0
+4075
+Total number of simulation in this turn: 0
+3139
+2995
+56158
+Total number of simulation in this turn: 0
+4140
+8437
+Total number of simulation in this turn: 0
+4102
+14845
+Total number of simulation in this turn: 0
+Total number of simulation in game: 152429
+4515
+59051
+Total number of simulation in this turn: 0
+5309
+Total number of simulation in this turn: 0
+2965
+Total number of simulation in this turn: 0
+4232
+Total number of simulation in this turn: 0
+4084
+7699
+Total number of simulation in this turn: 0
+4715
+5338
+Total number of simulation in this turn: 0
+3489
+7357
+Total number of simulation in this turn: 0
+3445
+Total number of simulation in this turn: 0
+3345
+Total number of simulation in this turn: 0
+3257
+Total number of simulation in this turn: 0
+3648
+Total number of simulation in this turn: 0
+2984
+4085
+Total number of simulation in this turn: 0
+5002
+Total number of simulation in this turn: 0
+6725
+Total number of simulation in this turn: 0
+Total number of simulation in game: 141245
+3589
+Total number of simulation in this turn: 0
+3256
+7940
+Total number of simulation in this turn: 0
+2328
+4818
+5525
+10591
+68009
+Total number of simulation in this turn: 0
+3702
+7562
+7480
+Total number of simulation in this turn: 0
+3280
+4433
+20744
+Total number of simulation in this turn: 0
+3102
+3128
+8466
+Total number of simulation in this turn: 0
+2929
+8613
+18101
+70880
+Total number of simulation in this turn: 0
+3103
+5954
+8539
+21517
+Total number of simulation in this turn: 0
+2792
+2925
+5730
+Total number of simulation in this turn: 0
+2266
+3640
+15640
+Total number of simulation in this turn: 0
+3212
+3688
+8219
+Total number of simulation in this turn: 0
+2292
+3659
+11180
+Total number of simulation in this turn: 0
+3553
+4128
+7868
+Total number of simulation in this turn: 0
+2971
+5694
+8015
+971393
+Total number of simulation in this turn: 0
+2692
+8442
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1387588
+4046
+Total number of simulation in this turn: 0
+3995
+8410
+8308
+Total number of simulation in this turn: 0
+2770
+5977
+10120
+Total number of simulation in this turn: 0
+3795
+3982
+Total number of simulation in this turn: 0
+2960
+Total number of simulation in this turn: 0
+2983
+2742
+5538
+Total number of simulation in this turn: 0
+3222
+54262
+Total number of simulation in this turn: 0
+3105
+4607
+5534
+13519
+44254
+Total number of simulation in this turn: 0
+1988
+3408
+5483
+8485
+Total number of simulation in this turn: 0
+2378
+2637
+6430
+6981
+46239
+Total number of simulation in this turn: 0
+2088
+3122
+3528
+54865
+Total number of simulation in this turn: 0
+3806
+Total number of simulation in this turn: 0
+Total number of simulation in game: 345567
+2831
+Total number of simulation in this turn: 0
+3459
+Total number of simulation in this turn: 0
+3553
+Total number of simulation in this turn: 0
+2276
+3379
+3217
+Total number of simulation in this turn: 0
+2503
+5538
+Total number of simulation in this turn: 0
+2813
+1880
+2932
+2137
+5144
+8371
+Total number of simulation in this turn: 0
+3892
+8650
+Total number of simulation in this turn: 0
+3880
+Total number of simulation in this turn: 0
+2269
+5603
+Total number of simulation in this turn: 0
+3244
+Total number of simulation in this turn: 0
+3346
+Total number of simulation in this turn: 0
+Total number of simulation in game: 80917
+3822
+6884
+Total number of simulation in this turn: 0
+3357
+8906
+22087
+Total number of simulation in this turn: 0
+3377
+4252
+8577
+Total number of simulation in this turn: 0
+4186
+Total number of simulation in this turn: 0
+4773
+Total number of simulation in this turn: 0
+4421
+4760
+61653
+Total number of simulation in this turn: 0
+3358
+6991
+9094
+Total number of simulation in this turn: 0
+5544
+Total number of simulation in this turn: 0
+5678
+Total number of simulation in this turn: 0
+4782
+7732
+Total number of simulation in this turn: 0
+4297
+16416
+Total number of simulation in this turn: 0
+Total number of simulation in game: 204947
+4265
+Total number of simulation in this turn: 0
+4586
+Total number of simulation in this turn: 0
+5141
+Total number of simulation in this turn: 0
+4909
+4725
+Total number of simulation in this turn: 0
+3180
+Total number of simulation in this turn: 0
+3997
+Total number of simulation in this turn: 0
+3836
+Total number of simulation in this turn: 0
+3574
+Total number of simulation in this turn: 0
+3740
+69102
+Total number of simulation in this turn: 0
+5100
+Total number of simulation in this turn: 0
+4700
+Total number of simulation in this turn: 0
+Total number of simulation in game: 120855
+4295
+Total number of simulation in this turn: 0
+3786
+80538
+Total number of simulation in this turn: 0
+3569
+3863
+Total number of simulation in this turn: 0
+4430
+Total number of simulation in this turn: 0
+3904
+Total number of simulation in this turn: 0
+3436
+3761
+2364
+3359
+6346
+14601
+Total number of simulation in this turn: 0
+3931
+Total number of simulation in this turn: 0
+6038
+7971
+Total number of simulation in this turn: 0
+3462
+4467
+Total number of simulation in this turn: 0
+4149
+6437
+Total number of simulation in this turn: 0
+2929
+4550
+Total number of simulation in this turn: 0
+Total number of simulation in game: 182186
+3979
+12551
+55847
+Total number of simulation in this turn: 0
+2706
+19577
+Total number of simulation in this turn: 0
+4195
+6151
+Total number of simulation in this turn: 0
+5068
+Total number of simulation in this turn: 0
+4159
+Total number of simulation in this turn: 0
+4422
+6777
+Total number of simulation in this turn: 0
+4079
+Total number of simulation in this turn: 0
+4109
+7177
+Total number of simulation in this turn: 0
+3701
+10476
+Total number of simulation in this turn: 0
+5566
+Total number of simulation in this turn: 0
+3770
+89549
+Total number of simulation in this turn: 0
+5305
+Total number of simulation in this turn: 0
+4065
+8267
+Total number of simulation in this turn: 0
+3707
+Total number of simulation in this turn: 0
+Total number of simulation in game: 275203
+5088
+Total number of simulation in this turn: 0
+3731
+Total number of simulation in this turn: 0
+6034
+Total number of simulation in this turn: 0
+4659
+Total number of simulation in this turn: 0
+4760
+Total number of simulation in this turn: 0
+3221
+5005
+10435
+16809
+Total number of simulation in this turn: 0
+2729
+3467
+5593
+12948
+Total number of simulation in this turn: 0
+3637
+Total number of simulation in this turn: 0
+3847
+Total number of simulation in this turn: 0
+5395
+Total number of simulation in this turn: 0
+4284
+Total number of simulation in this turn: 0
+3558
+Total number of simulation in this turn: 0
+Total number of simulation in game: 105200
+3586
+4882
+Total number of simulation in this turn: 0
+4265
+Total number of simulation in this turn: 0
+4142
+9847
+Total number of simulation in this turn: 0
+3692
+Total number of simulation in this turn: 0
+4200
+Total number of simulation in this turn: 0
+3688
+Total number of simulation in this turn: 0
+3644
+Total number of simulation in this turn: 0
+3834
+Total number of simulation in this turn: 0
+3269
+4889
+3470
+Total number of simulation in this turn: 0
+4061
+11131
+Total number of simulation in this turn: 0
+4957
+Total number of simulation in this turn: 0
+3522
+Total number of simulation in this turn: 0
+4518
+Total number of simulation in this turn: 0
+4535
+Total number of simulation in this turn: 0
+3987
+Total number of simulation in this turn: 0
+Total number of simulation in game: 94119
+3026
+6941
+8173
+Total number of simulation in this turn: 0
+3782
+Total number of simulation in this turn: 0
+3427
+Total number of simulation in this turn: 0
+2672
+3257
+3882
+5560
+Total number of simulation in this turn: 0
+3344
+7408
+Total number of simulation in this turn: 0
+2533
+4826
+Total number of simulation in this turn: 0
+2429
+Total number of simulation in this turn: 0
+2765
+4102
+14445
+Total number of simulation in this turn: 0
+4346
+8646
+Total number of simulation in this turn: 0
+5392
+Total number of simulation in this turn: 0
+Total number of simulation in game: 100956
+2942
+17752
+Total number of simulation in this turn: 0
+4457
+18423
+Total number of simulation in this turn: 0
+3675
+12507
+76738
+Total number of simulation in this turn: 0
+4128
+Total number of simulation in this turn: 0
+3537
+Total number of simulation in this turn: 0
+3852
+4459
+64432
+Total number of simulation in this turn: 0
+4087
+Total number of simulation in this turn: 0
+3430
+Total number of simulation in this turn: 0
+3103
+Total number of simulation in this turn: 0
+3225
+Total number of simulation in this turn: 0
+3325
+Total number of simulation in this turn: 0
+2997
+Total number of simulation in this turn: 0
+Total number of simulation in game: 237069
+4034
+Total number of simulation in this turn: 0
+3485
+64734
+Total number of simulation in this turn: 0
+3766
+9667
+Total number of simulation in this turn: 0
+3714
+Total number of simulation in this turn: 0
+4321
+47518
+Total number of simulation in this turn: 0
+3402
+3174
+3555
+Total number of simulation in this turn: 0
+3532
+3337
+10570
+Total number of simulation in this turn: 0
+4527
+Total number of simulation in this turn: 0
+3839
+Total number of simulation in this turn: 0
+4265
+Total number of simulation in this turn: 0
+6453
+Total number of simulation in this turn: 0
+Total number of simulation in game: 187893
+3134
+Total number of simulation in this turn: 0
+5435
+Total number of simulation in this turn: 0
+3054
+5260
+19238
+Total number of simulation in this turn: 0
+4703
+Total number of simulation in this turn: 0
+5751
+Total number of simulation in this turn: 0
+4058
+Total number of simulation in this turn: 0
+3452
+Total number of simulation in this turn: 0
+3872
+Total number of simulation in this turn: 0
+5213
+Total number of simulation in this turn: 0
+5656
+Total number of simulation in this turn: 0
+4474
+Total number of simulation in this turn: 0
+3840
+Total number of simulation in this turn: 0
+4366
+Total number of simulation in this turn: 0
+5266
+Total number of simulation in this turn: 0
+4531
+Total number of simulation in this turn: 0
+Total number of simulation in game: 91303
+3209
+5814
+54205
+Total number of simulation in this turn: 0
+3981
+Total number of simulation in this turn: 0
+4058
+74422
+Total number of simulation in this turn: 0
+5901
+Total number of simulation in this turn: 0
+4488
+5523
+Total number of simulation in this turn: 0
+4248
+Total number of simulation in this turn: 0
+3132
+Total number of simulation in this turn: 0
+3218
+Total number of simulation in this turn: 0
+2809
+6258
+Total number of simulation in this turn: 0
+4186
+6342
+Total number of simulation in this turn: 0
+4253
+Total number of simulation in this turn: 0
+Total number of simulation in game: 196047
+3930
+8183
+Total number of simulation in this turn: 0
+5468
+20142
+Total number of simulation in this turn: 0
+3949
+Total number of simulation in this turn: 0
+4223
+Total number of simulation in this turn: 0
+4409
+3163
+4720
+Total number of simulation in this turn: 0
+6130
+Total number of simulation in this turn: 0
+5186
+6464
+8345
+15125
+Total number of simulation in this turn: 0
+4036
+Total number of simulation in this turn: 0
+5878
+Total number of simulation in this turn: 0
+5164
+Total number of simulation in this turn: 0
+7569
+Total number of simulation in this turn: 0
+6097
+Total number of simulation in this turn: 0
+4885
+Total number of simulation in this turn: 0
+Total number of simulation in game: 133066
+3944
+8357
+Total number of simulation in this turn: 0
+4285
+84862
+Total number of simulation in this turn: 0
+2989
+6155
+Total number of simulation in this turn: 0
+3511
+7695
+Total number of simulation in this turn: 0
+3598
+7980
+Total number of simulation in this turn: 0
+4452
+6308
+63385
+Total number of simulation in this turn: 0
+2219
+3697
+3349
+4657
+4217
+4788
+4293
+Total number of simulation in this turn: 0
+3440
+3804
+Total number of simulation in this turn: 0
+2909
+11168
+49773
+Total number of simulation in this turn: 0
+3659
+1250629
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1560123
+4687
+Total number of simulation in this turn: 0
+4442
+Total number of simulation in this turn: 0
+4616
+Total number of simulation in this turn: 0
+4550
+Total number of simulation in this turn: 0
+2805
+5159
+Total number of simulation in this turn: 0
+3925
+Total number of simulation in this turn: 0
+4946
+Total number of simulation in this turn: 0
+5446
+Total number of simulation in this turn: 0
+5542
+Total number of simulation in this turn: 0
+Total number of simulation in game: 46118
+4826
+64622
+Total number of simulation in this turn: 0
+4842
+Total number of simulation in this turn: 0
+3661
+Total number of simulation in this turn: 0
+5537
+Total number of simulation in this turn: 0
+3254
+12355
+Total number of simulation in this turn: 0
+4619
+10627
+Total number of simulation in this turn: 0
+2760
+Total number of simulation in this turn: 0
+3385
+8916
+Total number of simulation in this turn: 0
+3306
+Total number of simulation in this turn: 0
+3470
+Total number of simulation in this turn: 0
+3503
+4419
+Total number of simulation in this turn: 0
+3019
+Total number of simulation in this turn: 0
+3595
+9466
+Total number of simulation in this turn: 0
+Total number of simulation in game: 160182
+2459
+5837
+63856
+Total number of simulation in this turn: 0
+2969
+4566
+7563
+7311
+Total number of simulation in this turn: 0
+3677
+Total number of simulation in this turn: 0
+3192
+4495
+82359
+Total number of simulation in this turn: 0
+4328
+62103
+Total number of simulation in this turn: 0
+3757
+Total number of simulation in this turn: 0
+3909
+7265
+Total number of simulation in this turn: 0
+4539
+Total number of simulation in this turn: 0
+4055
+6004
+Total number of simulation in this turn: 0
+3865
+Total number of simulation in this turn: 0
+4375
+1079269
+Total number of simulation in this turn: 0
+4246
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1375999
+3451
+Total number of simulation in this turn: 0
+3781
+80603
+Total number of simulation in this turn: 0
+3853
+Total number of simulation in this turn: 0
+3475
+17057
+Total number of simulation in this turn: 0
+3041
+Total number of simulation in this turn: 0
+3196
+Total number of simulation in this turn: 0
+2596
+3079
+4128
+Total number of simulation in this turn: 0
+3278
+13912
+Total number of simulation in this turn: 0
+4612
+Total number of simulation in this turn: 0
+5601
+7987
+93564
+Total number of simulation in this turn: 0
+5866
+Total number of simulation in this turn: 0
+4534
+Total number of simulation in this turn: 0
+5834
+Total number of simulation in this turn: 0
+4133
+Total number of simulation in this turn: 0
+Total number of simulation in game: 277581
+3701
+Total number of simulation in this turn: 0
+2623
+7376
+Total number of simulation in this turn: 0
+3002
+5169
+Total number of simulation in this turn: 0
+3776
+Total number of simulation in this turn: 0
+3759
+Total number of simulation in this turn: 0
+3550
+8208
+Total number of simulation in this turn: 0
+3288
+Total number of simulation in this turn: 0
+2662
+Total number of simulation in this turn: 0
+2719
+Total number of simulation in this turn: 0
+2755
+Total number of simulation in this turn: 0
+3480
+Total number of simulation in this turn: 0
+3233
+Total number of simulation in this turn: 0
+3190
+Total number of simulation in this turn: 0
+3147
+Total number of simulation in this turn: 0
+Total number of simulation in game: 65638
+3402
+6337
+Total number of simulation in this turn: 0
+3316
+Total number of simulation in this turn: 0
+3889
+Total number of simulation in this turn: 0
+3141
+4101
+Total number of simulation in this turn: 0
+2553
+51306
+Total number of simulation in this turn: 0
+3513
+Total number of simulation in this turn: 0
+3038
+5921
+Total number of simulation in this turn: 0
+3304
+Total number of simulation in this turn: 0
+2975
+Total number of simulation in this turn: 0
+2812
+5732
+Total number of simulation in this turn: 0
+4906
+Total number of simulation in this turn: 0
+3096
+5623
+Total number of simulation in this turn: 0
+3879
+Total number of simulation in this turn: 0
+Total number of simulation in game: 122844
+3946
+5878
+Total number of simulation in this turn: 0
+5064
+Total number of simulation in this turn: 0
+3192
+5379
+5202
+Total number of simulation in this turn: 0
+5537
+Total number of simulation in this turn: 0
+2884
+6064
+11791
+Total number of simulation in this turn: 0
+3277
+5334
+Total number of simulation in this turn: 0
+3903
+8549
+Total number of simulation in this turn: 0
+2161
+3357
+Total number of simulation in this turn: 0
+2517
+2658
+6190
+Total number of simulation in this turn: 0
+3901
+Total number of simulation in this turn: 0
+2453
+2294
+2696
+4072
+Total number of simulation in this turn: 0
+3682
+5988
+Total number of simulation in this turn: 0
+4142
+5098
+21587
+Total number of simulation in this turn: 0
+2760
+3370
+18040
+Total number of simulation in this turn: 0
+Total number of simulation in game: 172966
+4591
+Total number of simulation in this turn: 0
+5132
+Total number of simulation in this turn: 0
+5184
+Total number of simulation in this turn: 0
+5163
+Total number of simulation in this turn: 0
+3176
+6072
+Total number of simulation in this turn: 0
+4731
+54297
+Total number of simulation in this turn: 0
+5145
+Total number of simulation in this turn: 0
+5266
+Total number of simulation in this turn: 0
+2740
+10224
+Total number of simulation in this turn: 0
+Total number of simulation in game: 111721
+4529
+6261
+Total number of simulation in this turn: 0
+5944
+Total number of simulation in this turn: 0
+4711
+57534
+Total number of simulation in this turn: 0
+2091
+3018
+3832
+9719
+64117
+Total number of simulation in this turn: 0
+2319
+53704
+Total number of simulation in this turn: 0
+3396
+9670
+Total number of simulation in this turn: 0
+3004
+Total number of simulation in this turn: 0
+5445
+Total number of simulation in this turn: 0
+2564
+3409
+16939
+Total number of simulation in this turn: 0
+2553
+Total number of simulation in this turn: 0
+4714
+Total number of simulation in this turn: 0
+2307
+4535
+Total number of simulation in this turn: 0
+Total number of simulation in game: 276315
+2818
+Total number of simulation in this turn: 0
+3461
+6973
+76705
+Total number of simulation in this turn: 0
+2721
+6391
+Total number of simulation in this turn: 0
+4234
+85542
+Total number of simulation in this turn: 0
+3804
+56486
+Total number of simulation in this turn: 0
+3306
+11210
+Total number of simulation in this turn: 0
+4216
+Total number of simulation in this turn: 0
+3903
+Total number of simulation in this turn: 0
+4759
+Total number of simulation in this turn: 0
+4530
+Total number of simulation in this turn: 0
+Total number of simulation in game: 281059
+5152
+85087
+Total number of simulation in this turn: 0
+3657
+Total number of simulation in this turn: 0
+2554
+6669
+Total number of simulation in this turn: 0
+4738
+Total number of simulation in this turn: 0
+5341
+Total number of simulation in this turn: 0
+4044
+Total number of simulation in this turn: 0
+4038
+Total number of simulation in this turn: 0
+5351
+Total number of simulation in this turn: 0
+4633
+Total number of simulation in this turn: 0
+4775
+Total number of simulation in this turn: 0
+5404
+Total number of simulation in this turn: 0
+3792
+Total number of simulation in this turn: 0
+Total number of simulation in game: 145235
+3600
+23236
+Total number of simulation in this turn: 0
+3906
+Total number of simulation in this turn: 0
+4596
+6785
+Total number of simulation in this turn: 0
+3556
+Total number of simulation in this turn: 0
+3727
+Total number of simulation in this turn: 0
+3227
+5670
+Total number of simulation in this turn: 0
+4300
+9553
+Total number of simulation in this turn: 0
+2608
+7681
+Total number of simulation in this turn: 0
+2294
+38840
+Total number of simulation in this turn: 0
+4180
+Total number of simulation in this turn: 0
+3868
+5276
+8069
+35455
+Total number of simulation in this turn: 0
+Total number of simulation in game: 180427
+2188
+4072
+15165
+Total number of simulation in this turn: 0
+3577
+7723
+16866
+Total number of simulation in this turn: 0
+3150
+5164
+Total number of simulation in this turn: 0
+2787
+4186
+6689
+Total number of simulation in this turn: 0
+5215
+Total number of simulation in this turn: 0
+4281
+4298
+4120
+6071
+6466
+85054
+Total number of simulation in this turn: 0
+4103
+4777
+8392
+Total number of simulation in this turn: 0
+2823
+6904
+13370
+82815
+Total number of simulation in this turn: 0
+4109
+5298
+Total number of simulation in this turn: 0
+1912
+1899
+2672
+2216
+2325
+3496
+67758
+Total number of simulation in this turn: 0
+1764
+2054
+2724
+2703
+Total number of simulation in this turn: 0
+1305
+2047
+2232
+1805
+2341
+3380
+44568
+Total number of simulation in this turn: 0
+2945
+2816
+4388
+7425
+964101
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1450539
+4502
+8249
+Total number of simulation in this turn: 0
+4354
+Total number of simulation in this turn: 0
+2896
+10701
+Total number of simulation in this turn: 0
+4434
+21619
+Total number of simulation in this turn: 0
+4240
+78875
+Total number of simulation in this turn: 0
+4430
+9017
+Total number of simulation in this turn: 0
+4564
+Total number of simulation in this turn: 0
+3865
+Total number of simulation in this turn: 0
+3465
+4157
+7603
+37251
+Total number of simulation in this turn: 0
+Total number of simulation in game: 214222
+3351
+Total number of simulation in this turn: 0
+3846
+3744
+Total number of simulation in this turn: 0
+4778
+Total number of simulation in this turn: 0
+4428
+Total number of simulation in this turn: 0
+3277
+5188
+Total number of simulation in this turn: 0
+3907
+Total number of simulation in this turn: 0
+3464
+8605
+Total number of simulation in this turn: 0
+3582
+Total number of simulation in this turn: 0
+3478
+Total number of simulation in this turn: 0
+4095
+11989
+Total number of simulation in this turn: 0
+3169
+16199
+Total number of simulation in this turn: 0
+3761
+Total number of simulation in this turn: 0
+3378
+1068136
+Total number of simulation in this turn: 0
+4257
+5900
+Total number of simulation in this turn: 0
+3809
+30497
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1206838
+3458
+19837
+Total number of simulation in this turn: 0
+4526
+Total number of simulation in this turn: 0
+2951
+Total number of simulation in this turn: 0
+3622
+Total number of simulation in this turn: 0
+2258
+3684
+3360
+7013
+Total number of simulation in this turn: 0
+2701
+8575
+9348
+Total number of simulation in this turn: 0
+2734
+3869
+5802
+56569
+Total number of simulation in this turn: 0
+1995
+4321
+5790
+65741
+Total number of simulation in this turn: 0
+2547
+3178
+Total number of simulation in this turn: 0
+2398
+Total number of simulation in this turn: 0
+2987
+2846
+3697
+5010
+10072
+Total number of simulation in this turn: 0
+2090
+3166
+3274
+4445
+Total number of simulation in this turn: 0
+1815
+1994
+6184
+Total number of simulation in this turn: 0
+1427
+2042
+3347
+4090
+11155
+Total number of simulation in this turn: 0
+3225
+3457
+5392
+7781
+Total number of simulation in this turn: 0
+2948
+4440
+52967
+Total number of simulation in this turn: 0
+1980
+2217
+3799
+53359
+Total number of simulation in this turn: 0
+2236
+2477
+2040
+3135
+2799
+5482
+4852
+Total number of simulation in this turn: 0
+1300
+1489
+2055
+1747
+Total number of simulation in this turn: 0
+1382
+2160
+3300
+4346
+Total number of simulation in this turn: 0
+1819
+Total number of simulation in this turn: 0
+3460
+3551
+6600
+Total number of simulation in this turn: 0
+1700
+2852
+2577
+3269
+14160
+Total number of simulation in this turn: 0
+2018
+2522
+3849
+8826
+1305951
+Total number of simulation in this turn: 0
+2324
+2534
+5908
+Total number of simulation in this turn: 0
+3585
+4158
+5318
+13503
+Total number of simulation in this turn: 0
+2786
+2747
+4014
+8323
+12321
+1058948
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2967906
+3288
+4252
+Total number of simulation in this turn: 0
+3103
+5622
+Total number of simulation in this turn: 0
+4848
+Total number of simulation in this turn: 0
+3663
+14824
+Total number of simulation in this turn: 0
+3531
+Total number of simulation in this turn: 0
+2961
+3861
+7693
+Total number of simulation in this turn: 0
+2550
+17307
+Total number of simulation in this turn: 0
+2285
+4273
+8078
+9574
+Total number of simulation in this turn: 0
+3710
+Total number of simulation in this turn: 0
+3651
+3968
+4045
+Total number of simulation in this turn: 0
+4605
+5869
+Total number of simulation in this turn: 0
+Total number of simulation in game: 127561
+3768
+19029
+Total number of simulation in this turn: 0
+3494
+8793
+Total number of simulation in this turn: 0
+5440
+Total number of simulation in this turn: 0
+3915
+5412
+Total number of simulation in this turn: 0
+2652
+5322
+Total number of simulation in this turn: 0
+2487
+8649
+Total number of simulation in this turn: 0
+3077
+9202
+6175
+Total number of simulation in this turn: 0
+5434
+Total number of simulation in this turn: 0
+3193
+7405
+10405
+20856
+Total number of simulation in this turn: 0
+3045
+8800
+Total number of simulation in this turn: 0
+5024
+Total number of simulation in this turn: 0
+Total number of simulation in game: 151577
+2835
+5017
+Total number of simulation in this turn: 0
+3503
+Total number of simulation in this turn: 0
+2834
+5520
+8138
+9369
+60322
+Total number of simulation in this turn: 0
+4232
+Total number of simulation in this turn: 0
+3603
+6754
+Total number of simulation in this turn: 0
+3445
+Total number of simulation in this turn: 0
+3472
+Total number of simulation in this turn: 0
+4931
+Total number of simulation in this turn: 0
+3879
+4096
+Total number of simulation in this turn: 0
+6472
+Total number of simulation in this turn: 0
+Total number of simulation in game: 138422
+4148
+73446
+Total number of simulation in this turn: 0
+3879
+11180
+Total number of simulation in this turn: 0
+4144
+Total number of simulation in this turn: 0
+5413
+Total number of simulation in this turn: 0
+3635
+3526
+5610
+Total number of simulation in this turn: 0
+5202
+Total number of simulation in this turn: 0
+4165
+3362
+3276
+4145
+Total number of simulation in this turn: 0
+4152
+Total number of simulation in this turn: 0
+5364
+Total number of simulation in this turn: 0
+6289
+Total number of simulation in this turn: 0
+2873
+Total number of simulation in this turn: 0
+5736
+Total number of simulation in this turn: 0
+4965
+Total number of simulation in this turn: 0
+Total number of simulation in game: 164510
+5023
+Total number of simulation in this turn: 0
+4796
+6822
+Total number of simulation in this turn: 0
+3110
+2966
+6283
+Total number of simulation in this turn: 0
+4800
+Total number of simulation in this turn: 0
+2672
+3542
+3173
+6484
+Total number of simulation in this turn: 0
+2904
+4521
+13803
+69038
+Total number of simulation in this turn: 0
+3450
+3678
+Total number of simulation in this turn: 0
+3073
+7953
+Total number of simulation in this turn: 0
+1817
+3265
+4130
+4526
+3878
+6730
+62729
+Total number of simulation in this turn: 0
+1807
+4082
+16138
+Total number of simulation in this turn: 0
+2829
+2875
+3102
+55520
+Total number of simulation in this turn: 0
+2915
+3014
+3507
+7655
+36763
+Total number of simulation in this turn: 0
+Total number of simulation in game: 385373
+3917
+7612
+Total number of simulation in this turn: 0
+4404
+Total number of simulation in this turn: 0
+3344
+4293
+Total number of simulation in this turn: 0
+3519
+7129
+Total number of simulation in this turn: 0
+3476
+3705
+Total number of simulation in this turn: 0
+3484
+15039
+Total number of simulation in this turn: 0
+3380
+8946
+Total number of simulation in this turn: 0
+3710
+3823
+Total number of simulation in this turn: 0
+4437
+Total number of simulation in this turn: 0
+2708
+5348
+8085
+Total number of simulation in this turn: 0
+4682
+63774
+Total number of simulation in this turn: 0
+2959
+2791
+Total number of simulation in this turn: 0
+3646
+19560
+Total number of simulation in this turn: 0
+3851
+3857
+Total number of simulation in this turn: 0
+2994
+4789
+4471
+8292
+Total number of simulation in this turn: 0
+Total number of simulation in game: 226025
+2907
+84557
+Total number of simulation in this turn: 0
+5468
+6994
+Total number of simulation in this turn: 0
+5093
+14084
+Total number of simulation in this turn: 0
+3614
+2841
+4109
+4872
+18265
+74844
+Total number of simulation in this turn: 0
+3431
+Total number of simulation in this turn: 0
+3332
+3867
+7228
+23777
+Total number of simulation in this turn: 0
+4599
+Total number of simulation in this turn: 0
+3044
+7828
+Total number of simulation in this turn: 0
+4073
+Total number of simulation in this turn: 0
+4285
+29018
+Total number of simulation in this turn: 0
+4037
+14743
+Total number of simulation in this turn: 0
+4931
+Total number of simulation in this turn: 0
+Total number of simulation in game: 345841
+3352
+Total number of simulation in this turn: 0
+3997
+Total number of simulation in this turn: 0
+5279
+Total number of simulation in this turn: 0
+3496
+Total number of simulation in this turn: 0
+4003
+Total number of simulation in this turn: 0
+4223
+Total number of simulation in this turn: 0
+4119
+Total number of simulation in this turn: 0
+5160
+Total number of simulation in this turn: 0
+3852
+Total number of simulation in this turn: 0
+3727
+Total number of simulation in this turn: 0
+4030
+Total number of simulation in this turn: 0
+3228
+Total number of simulation in this turn: 0
+3812
+Total number of simulation in this turn: 0
+4167
+Total number of simulation in this turn: 0
+4320
+Total number of simulation in this turn: 0
+3545
+Total number of simulation in this turn: 0
+3868
+Total number of simulation in this turn: 0
+3753
+Total number of simulation in this turn: 0
+3750
+Total number of simulation in this turn: 0
+3955
+Total number of simulation in this turn: 0
+3679
+Total number of simulation in this turn: 0
+Total number of simulation in game: 83315
+2501
+7751
+Total number of simulation in this turn: 0
+4946
+Total number of simulation in this turn: 0
+4760
+15043
+Total number of simulation in this turn: 0
+3543
+Total number of simulation in this turn: 0
+3203
+4632
+15734
+Total number of simulation in this turn: 0
+3221
+6622
+44049
+Total number of simulation in this turn: 0
+4759
+Total number of simulation in this turn: 0
+3880
+4476
+Total number of simulation in this turn: 0
+2840
+17954
+Total number of simulation in this turn: 0
+4283
+Total number of simulation in this turn: 0
+3270
+5129
+Total number of simulation in this turn: 0
+2686
+4463
+7543
+Total number of simulation in this turn: 0
+5498
+7525
+Total number of simulation in this turn: 0
+3418
+5377
+Total number of simulation in this turn: 0
+Total number of simulation in game: 199106
+3490
+7431
+Total number of simulation in this turn: 0
+4793
+Total number of simulation in this turn: 0
+3329
+Total number of simulation in this turn: 0
+4420
+Total number of simulation in this turn: 0
+3695
+Total number of simulation in this turn: 0
+5601
+Total number of simulation in this turn: 0
+3611
+5715
+Total number of simulation in this turn: 0
+4132
+Total number of simulation in this turn: 0
+6381
+18773
+Total number of simulation in this turn: 0
+5571
+Total number of simulation in this turn: 0
+4514
+Total number of simulation in this turn: 0
+4618
+Total number of simulation in this turn: 0
+5293
+Total number of simulation in this turn: 0
+Total number of simulation in game: 91367
+3835
+5161
+Total number of simulation in this turn: 0
+3867
+22637
+Total number of simulation in this turn: 0
+2287
+3215
+9940
+Total number of simulation in this turn: 0
+3797
+Total number of simulation in this turn: 0
+2741
+6691
+Total number of simulation in this turn: 0
+4948
+13738
+Total number of simulation in this turn: 0
+3804
+7837
+Total number of simulation in this turn: 0
+5649
+64256
+Total number of simulation in this turn: 0
+4608
+Total number of simulation in this turn: 0
+3990
+5047
+5732
+Total number of simulation in this turn: 0
+5311
+974296
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1163387
+3874
+Total number of simulation in this turn: 0
+3374
+45417
+Total number of simulation in this turn: 0
+3287
+Total number of simulation in this turn: 0
+3301
+Total number of simulation in this turn: 0
+3708
+Total number of simulation in this turn: 0
+3642
+Total number of simulation in this turn: 0
+2874
+5171
+Total number of simulation in this turn: 0
+5825
+Total number of simulation in this turn: 0
+4150
+Total number of simulation in this turn: 0
+3493
+5019
+Total number of simulation in this turn: 0
+4268
+Total number of simulation in this turn: 0
+3671
+Total number of simulation in this turn: 0
+2470
+5712
+7716
+10967
+Total number of simulation in this turn: 0
+Total number of simulation in game: 127939
+3613
+Total number of simulation in this turn: 0
+2811
+4680
+Total number of simulation in this turn: 0
+3126
+8746
+9526
+18305
+Total number of simulation in this turn: 0
+1894
+2952
+3439
+2966
+2168
+3165
+5816
+13751
+Total number of simulation in this turn: 0
+4631
+4320
+Total number of simulation in this turn: 0
+2902
+2169
+2899
+5657
+Total number of simulation in this turn: 0
+2255
+3360
+66374
+Total number of simulation in this turn: 0
+3231
+7052
+Total number of simulation in this turn: 0
+2296
+3630
+6574
+68489
+Total number of simulation in this turn: 0
+4379
+Total number of simulation in this turn: 0
+2189
+3473
+3842
+4794
+Total number of simulation in this turn: 0
+3422
+923236
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1218132
+3357
+5486
+6017
+Total number of simulation in this turn: 0
+4144
+Total number of simulation in this turn: 0
+3289
+5425
+61615
+Total number of simulation in this turn: 0
+2677
+2626
+10908
+81074
+Total number of simulation in this turn: 0
+3407
+4831
+5004
+5344
+Total number of simulation in this turn: 0
+4204
+66433
+Total number of simulation in this turn: 0
+2168
+3200
+4566
+10994
+86217
+Total number of simulation in this turn: 0
+3963
+11950
+Total number of simulation in this turn: 0
+3570
+3185
+3701
+11587
+Total number of simulation in this turn: 0
+2887
+2844
+3518
+4158
+8216
+13628
+13600
+Total number of simulation in this turn: 0
+3431
+8477
+Total number of simulation in this turn: 0
+2830
+3957
+4068
+6380
+68126
+Total number of simulation in this turn: 0
+2874
+4605
+4340
+933110
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1511991
+3237
+Total number of simulation in this turn: 0
+4555
+Total number of simulation in this turn: 0
+3722
+Total number of simulation in this turn: 0
+2802
+Total number of simulation in this turn: 0
+3414
+6852
+Total number of simulation in this turn: 0
+3815
+4615
+Total number of simulation in this turn: 0
+4306
+Total number of simulation in this turn: 0
+3071
+4412
+3466
+Total number of simulation in this turn: 0
+3947
+Total number of simulation in this turn: 0
+3509
+Total number of simulation in this turn: 0
+2620
+5596
+1208321
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1272260
+4105
+5656
+Total number of simulation in this turn: 0
+3287
+Total number of simulation in this turn: 0
+1828
+3480
+4394
+2884
+5772
+Total number of simulation in this turn: 0
+2368
+5003
+10198
+Total number of simulation in this turn: 0
+2899
+8896
+11757
+15548
+60907
+Total number of simulation in this turn: 0
+2281
+2960
+5995
+3847
+7918
+8635
+20600
+Total number of simulation in this turn: 0
+2657
+2393
+3209
+4649
+5344
+6189
+63379
+Total number of simulation in this turn: 0
+3732
+3434
+7603
+Total number of simulation in this turn: 0
+2982
+2735
+3449
+Total number of simulation in this turn: 0
+3306
+6808
+Total number of simulation in this turn: 0
+2292
+6119
+5006
+8337
+32177
+Total number of simulation in this turn: 0
+3558
+17221
+Total number of simulation in this turn: 0
+1729
+2433
+2838
+3670
+5757
+12332
+Total number of simulation in this turn: 0
+2030
+1774
+3444
+3322
+3786
+5301
+6703
+44645
+Total number of simulation in this turn: 0
+1546
+2468
+2687
+3739
+3405
+2249
+3700
+4850
+5707
+12030
+Total number of simulation in this turn: 0
+1260
+1210
+1483
+1955
+1882
+62017
+Total number of simulation in this turn: 0
+1530
+2090
+2342
+3237
+Total number of simulation in this turn: 0
+1774
+3439
+3141
+5787
+7397
+Total number of simulation in this turn: 0
+1433
+2396
+11803
+39216
+Total number of simulation in this turn: 0
+2736
+3367
+Total number of simulation in this turn: 0
+1505
+1912
+2143
+2198
+2814
+3920
+2624
+7016
+15133
+37688
+Total number of simulation in this turn: 0
+1694
+2267
+1953
+1845
+1563
+1433
+1823
+2963
+1754
+2077
+2052
+3373
+Total number of simulation in this turn: 0
+976
+944
+1298
+1561
+1322
+2339
+1917
+2501
+3103
+6374
+Total number of simulation in this turn: 0
+658
+1204
+1641
+2153
+1830
+2033
+3349
+2474
+4664
+16952
+1103074
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1965554
+2877
+6774
+Total number of simulation in this turn: 0
+2538
+4107
+49542
+Total number of simulation in this turn: 0
+3506
+Total number of simulation in this turn: 0
+2991
+5982
+55525
+Total number of simulation in this turn: 0
+2780
+3544
+10054
+Total number of simulation in this turn: 0
+2601
+3376
+3670
+Total number of simulation in this turn: 0
+3338
+4964
+Total number of simulation in this turn: 0
+2103
+4122
+56614
+Total number of simulation in this turn: 0
+1708
+3025
+1891
+2126
+10946
+40309
+Total number of simulation in this turn: 0
+Total number of simulation in game: 291013
+2848
+72641
+Total number of simulation in this turn: 0
+3404
+6469
+85941
+Total number of simulation in this turn: 0
+3428
+5238
+22524
+Total number of simulation in this turn: 0
+6042
+Total number of simulation in this turn: 0
+3619
+5738
+9656
+8848
+101804
+Total number of simulation in this turn: 0
+3110
+3387
+5145
+6547
+Total number of simulation in this turn: 0
+5294
+Total number of simulation in this turn: 0
+3420
+6449
+18468
+Total number of simulation in this turn: 0
+3716
+Total number of simulation in this turn: 0
+3201
+9473
+Total number of simulation in this turn: 0
+5338
+Total number of simulation in this turn: 0
+2810
+9002
+Total number of simulation in this turn: 0
+4312
+5665
+Total number of simulation in this turn: 0
+Total number of simulation in game: 433537
+2587
+4617
+Total number of simulation in this turn: 0
+3434
+Total number of simulation in this turn: 0
+2523
+Total number of simulation in this turn: 0
+2348
+3137
+4142
+6346
+6947
+9393
+Total number of simulation in this turn: 0
+1754
+2430
+1950
+2490
+5974
+12207
+21273
+Total number of simulation in this turn: 0
+2405
+5229
+Total number of simulation in this turn: 0
+2986
+Total number of simulation in this turn: 0
+2094
+3073
+2765
+3460
+5197
+13627
+Total number of simulation in this turn: 0
+3045
+5525
+Total number of simulation in this turn: 0
+1889
+4303
+48727
+Total number of simulation in this turn: 0
+2459
+2467
+2645
+4175
+14871
+33667
+Total number of simulation in this turn: 0
+1639
+3204
+4042
+8992
+Total number of simulation in this turn: 0
+2152
+6438
+968855
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1253483
+2517
+5266
+6077
+7988
+Total number of simulation in this turn: 0
+3989
+Total number of simulation in this turn: 0
+4973
+Total number of simulation in this turn: 0
+2090
+2891
+3893
+Total number of simulation in this turn: 0
+3733
+Total number of simulation in this turn: 0
+4927
+Total number of simulation in this turn: 0
+3144
+Total number of simulation in this turn: 0
+1762
+3519
+63033
+Total number of simulation in this turn: 0
+3930
+Total number of simulation in this turn: 0
+2915
+Total number of simulation in this turn: 0
+4104
+Total number of simulation in this turn: 0
+2306
+3577
+1108837
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1245471
+3359
+6666
+Total number of simulation in this turn: 0
+4111
+4827
+7647
+Total number of simulation in this turn: 0
+2940
+6081
+Total number of simulation in this turn: 0
+5070
+Total number of simulation in this turn: 0
+2971
+Total number of simulation in this turn: 0
+3328
+75554
+Total number of simulation in this turn: 0
+5653
+Total number of simulation in this turn: 0
+4673
+13294
+Total number of simulation in this turn: 0
+4110
+5069
+Total number of simulation in this turn: 0
+2791
+3636
+53104
+Total number of simulation in this turn: 0
+3659
+55193
+Total number of simulation in this turn: 0
+6032
+Total number of simulation in this turn: 0
+4424
+30218
+Total number of simulation in this turn: 0
+Total number of simulation in game: 314410
+3230
+7357
+Total number of simulation in this turn: 0
+2351
+Total number of simulation in this turn: 0
+3196
+5249
+4189
+Total number of simulation in this turn: 0
+3515
+Total number of simulation in this turn: 0
+4864
+Total number of simulation in this turn: 0
+2306
+3060
+5010
+5185
+63412
+Total number of simulation in this turn: 0
+2048
+4124
+4941
+53004
+Total number of simulation in this turn: 0
+4092
+7661
+Total number of simulation in this turn: 0
+2820
+9608
+13991
+68604
+Total number of simulation in this turn: 0
+2579
+7557
+6748
+Total number of simulation in this turn: 0
+3302
+7767
+16421
+Total number of simulation in this turn: 0
+Total number of simulation in game: 328191
+3637
+Total number of simulation in this turn: 0
+3978
+Total number of simulation in this turn: 0
+3664
+7137
+6509
+Total number of simulation in this turn: 0
+4639
+Total number of simulation in this turn: 0
+3363
+8366
+Total number of simulation in this turn: 0
+3114
+Total number of simulation in this turn: 0
+4459
+Total number of simulation in this turn: 0
+3787
+Total number of simulation in this turn: 0
+5142
+Total number of simulation in this turn: 0
+3520
+4468
+6097
+Total number of simulation in this turn: 0
+Total number of simulation in game: 71880
+4071
+9530
+Total number of simulation in this turn: 0
+4821
+Total number of simulation in this turn: 0
+3604
+4844
+15336
+Total number of simulation in this turn: 0
+3498
+5078
+7474
+Total number of simulation in this turn: 0
+3549
+8656
+Total number of simulation in this turn: 0
+4023
+7726
+Total number of simulation in this turn: 0
+3375
+10631
+Total number of simulation in this turn: 0
+4629
+63908
+Total number of simulation in this turn: 0
+4000
+Total number of simulation in this turn: 0
+3057
+6322
+14989
+Total number of simulation in this turn: 0
+4046
+5293
+8125
+1000689
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1211274
+2854
+8331
+Total number of simulation in this turn: 0
+3349
+Total number of simulation in this turn: 0
+3483
+4833
+Total number of simulation in this turn: 0
+3063
+Total number of simulation in this turn: 0
+3393
+Total number of simulation in this turn: 0
+3932
+Total number of simulation in this turn: 0
+3906
+5335
+78428
+Total number of simulation in this turn: 0
+3088
+Total number of simulation in this turn: 0
+3742
+Total number of simulation in this turn: 0
+2581
+4495
+Total number of simulation in this turn: 0
+2695
+8767
+Total number of simulation in this turn: 0
+2924
+1106786
+Total number of simulation in this turn: 0
+2627
+4394
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1263006
+3415
+Total number of simulation in this turn: 0
+4181
+Total number of simulation in this turn: 0
+3633
+Total number of simulation in this turn: 0
+4637
+Total number of simulation in this turn: 0
+4117
+Total number of simulation in this turn: 0
+3852
+Total number of simulation in this turn: 0
+4126
+Total number of simulation in this turn: 0
+4274
+Total number of simulation in this turn: 0
+3504
+Total number of simulation in this turn: 0
+2763
+7912
+Total number of simulation in this turn: 0
+3131
+Total number of simulation in this turn: 0
+2158
+8638
+19287
+Total number of simulation in this turn: 0
+Total number of simulation in game: 79628
+3159
+59686
+Total number of simulation in this turn: 0
+4080
+16456
+Total number of simulation in this turn: 0
+3994
+Total number of simulation in this turn: 0
+2174
+2893
+6520
+49555
+Total number of simulation in this turn: 0
+3372
+3046
+4996
+Total number of simulation in this turn: 0
+2495
+61457
+Total number of simulation in this turn: 0
+4168
+74861
+Total number of simulation in this turn: 0
+4020
+Total number of simulation in this turn: 0
+2072
+3617
+42146
+Total number of simulation in this turn: 0
+3425
+3529
+Total number of simulation in this turn: 0
+3205
+3395
+6354
+Total number of simulation in this turn: 0
+2317
+3123
+3026
+Total number of simulation in this turn: 0
+3675
+Total number of simulation in this turn: 0
+2667
+9715
+Total number of simulation in this turn: 0
+2233
+3381
+5827
+Total number of simulation in this turn: 0
+Total number of simulation in game: 410639
+3448
+3200
+6708
+6415
+Total number of simulation in this turn: 0
+4102
+Total number of simulation in this turn: 0
+3061
+3343
+5169
+7159
+14671
+Total number of simulation in this turn: 0
+3414
+75764
+Total number of simulation in this turn: 0
+1586
+2262
+2980
+2980
+4592
+10819
+55233
+Total number of simulation in this turn: 0
+2514
+2573
+3126
+5038
+13114
+Total number of simulation in this turn: 0
+1890
+2584
+4247
+8463
+22518
+Total number of simulation in this turn: 0
+2132
+3070
+3694
+8640
+11233
+Total number of simulation in this turn: 0
+3313
+3237
+4079
+10106
+Total number of simulation in this turn: 0
+2474
+2724
+2385
+3143
+65107
+Total number of simulation in this turn: 0
+2033
+1893
+2790
+3667
+4275
+6511
+Total number of simulation in this turn: 0
+1672
+1824
+2365
+3193
+5350
+4886
+8909
+57021
+Total number of simulation in this turn: 0
+1444
+2036
+2839
+3555
+4106
+5722
+Total number of simulation in this turn: 0
+2653
+2440
+3576
+4116
+3884
+Total number of simulation in this turn: 0
+2593
+4413
+7805
+17074
+Total number of simulation in this turn: 0
+1821
+1998
+2552
+2651
+5594
+4834
+5432
+Total number of simulation in this turn: 0
+656
+649
+581
+484
+479
+705
+2223
+3060
+2513
+2697
+4126
+8732
+45425
+Total number of simulation in this turn: 0
+1839
+2934
+2955
+3150
+2887
+4953
+37145
+Total number of simulation in this turn: 0
+1142
+1441
+1154
+1850
+3071
+2822
+4168
+49192
+Total number of simulation in this turn: 0
+1254
+1386
+1377
+1958
+7674
+1348504
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2163023
+3365
+12005
+Total number of simulation in this turn: 0
+4161
+Total number of simulation in this turn: 0
+4479
+Total number of simulation in this turn: 0
+3407
+10462
+20681
+Total number of simulation in this turn: 0
+3943
+5894
+Total number of simulation in this turn: 0
+4685
+Total number of simulation in this turn: 0
+4234
+Total number of simulation in this turn: 0
+4837
+10688
+Total number of simulation in this turn: 0
+5142
+59181
+Total number of simulation in this turn: 0
+3800
+9509
+Total number of simulation in this turn: 0
+4626
+Total number of simulation in this turn: 0
+2728
+Total number of simulation in this turn: 0
+3092
+5352
+Total number of simulation in this turn: 0
+3741
+Total number of simulation in this turn: 0
+4578
+59227
+Total number of simulation in this turn: 0
+3874
+Total number of simulation in this turn: 0
+3264
+Total number of simulation in this turn: 0
+3718
+Total number of simulation in this turn: 0
+3262
+21685
+Total number of simulation in this turn: 0
+3391
+3704
+Total number of simulation in this turn: 0
+2246
+20956
+Total number of simulation in this turn: 0
+2714
+19433
+Total number of simulation in this turn: 0
+2879
+5385
+7766
+55430
+Total number of simulation in this turn: 0
+2588
+3297
+5719
+55847
+Total number of simulation in this turn: 0
+2324
+3204
+8711
+Total number of simulation in this turn: 0
+2867
+Total number of simulation in this turn: 0
+3112
+13509
+Total number of simulation in this turn: 0
+2197
+3287
+51910
+Total number of simulation in this turn: 0
+3277
+22469
+Total number of simulation in this turn: 0
+2699
+Total number of simulation in this turn: 0
+2223
+70420
+Total number of simulation in this turn: 0
+2566
+2626
+2619
+Total number of simulation in this turn: 0
+3013
+3502
+15719
+Total number of simulation in this turn: 0
+2876
+3297
+44454
+Total number of simulation in this turn: 0
+2008
+2128
+10341
+Total number of simulation in this turn: 0
+2340
+3130
+4081
+7290
+48480
+Total number of simulation in this turn: 0
+1651
+2092
+3663
+54720
+Total number of simulation in this turn: 0
+2026
+4666
+11089
+Total number of simulation in this turn: 0
+1854
+2057
+2975
+Total number of simulation in this turn: 0
+1342
+1173
+1364
+1963
+3904
+12237
+Total number of simulation in this turn: 0
+1691
+1692
+2242
+4916
+39772
+Total number of simulation in this turn: 0
+1518
+2091
+2114
+3448
+4517
+6643
+60585
+Total number of simulation in this turn: 0
+1623
+2400
+Total number of simulation in this turn: 0
+2799
+3008
+4472
+Total number of simulation in this turn: 0
+2511
+8541
+2613
+2449
+5624
+Total number of simulation in this turn: 0
+2803
+5018
+Total number of simulation in this turn: 0
+2194
+2097
+2664
+4850
+7854
+5725
+Total number of simulation in this turn: 0
+1749
+1831
+2418
+Total number of simulation in this turn: 0
+1388
+1449
+Total number of simulation in this turn: 0
+2102
+2586
+5744
+14666
+Total number of simulation in this turn: 0
+2328
+3848
+15133
+Total number of simulation in this turn: 0
+1963
+5286
+7859
+57047
+Total number of simulation in this turn: 0
+1667
+1914
+1856
+3095
+66720
+Total number of simulation in this turn: 0
+1681
+1579
+3286
+4258
+7239
+Total number of simulation in this turn: 0
+1327
+2339
+49801
+Total number of simulation in this turn: 0
+1011
+1288
+1447
+1835
+2373
+2713
+3267
+Total number of simulation in this turn: 0
+1015
+1189
+1544
+2053
+Total number of simulation in this turn: 0
+1079
+1591
+2442
+3392
+39533
+Total number of simulation in this turn: 0
+1222
+1337
+1564
+1741
+2024
+3688
+4471
+2887
+3892
+5323
+Total number of simulation in this turn: 0
+1469
+1954
+3064
+3134
+5938
+Total number of simulation in this turn: 0
+1487
+1548
+2904
+3088
+Total number of simulation in this turn: 0
+1033
+1436
+1707
+2608
+3819
+4387
+6099
+35581
+Total number of simulation in this turn: 0
+982
+893
+1304
+1518
+1997
+1964
+1880
+1948
+2141
+2494
+4693
+10069
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1626123
+2998
+7811
+Total number of simulation in this turn: 0
+3302
+Total number of simulation in this turn: 0
+3104
+Total number of simulation in this turn: 0
+3424
+Total number of simulation in this turn: 0
+3574
+51907
+Total number of simulation in this turn: 0
+4296
+Total number of simulation in this turn: 0
+4736
+Total number of simulation in this turn: 0
+4848
+Total number of simulation in this turn: 0
+3418
+Total number of simulation in this turn: 0
+5682
+Total number of simulation in this turn: 0
+4645
+Total number of simulation in this turn: 0
+5049
+Total number of simulation in this turn: 0
+Total number of simulation in game: 108794
+3662
+2827
+Total number of simulation in this turn: 0
+2451
+Total number of simulation in this turn: 0
+2594
+3608
+Total number of simulation in this turn: 0
+3461
+Total number of simulation in this turn: 0
+2595
+4463
+Total number of simulation in this turn: 0
+3906
+50693
+Total number of simulation in this turn: 0
+2670
+3866
+Total number of simulation in this turn: 0
+2795
+Total number of simulation in this turn: 0
+2385
+4617
+7518
+Total number of simulation in this turn: 0
+2476
+58337
+Total number of simulation in this turn: 0
+2951
+Total number of simulation in this turn: 0
+Total number of simulation in game: 167875
+3276
+Total number of simulation in this turn: 0
+2429
+2693
+6081
+Total number of simulation in this turn: 0
+5424
+Total number of simulation in this turn: 0
+2644
+4570
+15646
+Total number of simulation in this turn: 0
+3159
+Total number of simulation in this turn: 0
+2963
+Total number of simulation in this turn: 0
+2382
+2479
+4691
+5121
+5615
+8230
+51188
+Total number of simulation in this turn: 0
+3484
+Total number of simulation in this turn: 0
+2640
+5308
+16652
+Total number of simulation in this turn: 0
+3249
+3831
+Total number of simulation in this turn: 0
+2937
+2708
+7363
+53309
+Total number of simulation in this turn: 0
+3295
+8871
+9618
+Total number of simulation in this turn: 0
+5155
+Total number of simulation in this turn: 0
+Total number of simulation in game: 257011
+3680
+Total number of simulation in this turn: 0
+3947
+82092
+Total number of simulation in this turn: 0
+4508
+6285
+81833
+Total number of simulation in this turn: 0
+3976
+22917
+Total number of simulation in this turn: 0
+3535
+Total number of simulation in this turn: 0
+4935
+9301
+15694
+Total number of simulation in this turn: 0
+4166
+Total number of simulation in this turn: 0
+5130
+Total number of simulation in this turn: 0
+5231
+Total number of simulation in this turn: 0
+2840
+7333
+Total number of simulation in this turn: 0
+4009
+Total number of simulation in this turn: 0
+3479
+Total number of simulation in this turn: 0
+Total number of simulation in game: 274891
+3018
+6250
+Total number of simulation in this turn: 0
+3770
+Total number of simulation in this turn: 0
+4684
+Total number of simulation in this turn: 0
+2940
+6549
+53655
+Total number of simulation in this turn: 0
+3159
+4596
+Total number of simulation in this turn: 0
+3421
+3393
+5508
+Total number of simulation in this turn: 0
+3378
+3991
+Total number of simulation in this turn: 0
+3618
+Total number of simulation in this turn: 0
+3168
+3160
+Total number of simulation in this turn: 0
+2816
+3616
+6100
+68257
+Total number of simulation in this turn: 0
+4465
+4125
+9031
+Total number of simulation in this turn: 0
+4674
+7332
+Total number of simulation in this turn: 0
+4086
+11047
+Total number of simulation in this turn: 0
+4774
+18865
+Total number of simulation in this turn: 0
+4949
+Total number of simulation in this turn: 0
+Total number of simulation in game: 272395
+3473
+20353
+Total number of simulation in this turn: 0
+4823
+Total number of simulation in this turn: 0
+4801
+Total number of simulation in this turn: 0
+3019
+7676
+14050
+Total number of simulation in this turn: 0
+3980
+Total number of simulation in this turn: 0
+3388
+Total number of simulation in this turn: 0
+3779
+Total number of simulation in this turn: 0
+4510
+Total number of simulation in this turn: 0
+3745
+16690
+Total number of simulation in this turn: 0
+4562
+Total number of simulation in this turn: 0
+3673
+5493
+Total number of simulation in this turn: 0
+2854
+4773
+Total number of simulation in this turn: 0
+2112
+2957
+3705
+72474
+Total number of simulation in this turn: 0
+1769
+2356
+3395
+4158
+6663
+Total number of simulation in this turn: 0
+3474
+Total number of simulation in this turn: 0
+Total number of simulation in game: 218705
+4048
+7605
+Total number of simulation in this turn: 0
+3791
+Total number of simulation in this turn: 0
+3843
+23486
+Total number of simulation in this turn: 0
+4102
+Total number of simulation in this turn: 0
+3003
+67522
+Total number of simulation in this turn: 0
+4836
+Total number of simulation in this turn: 0
+4237
+Total number of simulation in this turn: 0
+2893
+4823
+5277
+12138
+Total number of simulation in this turn: 0
+5031
+Total number of simulation in this turn: 0
+6477
+Total number of simulation in this turn: 0
+3604
+3302
+4892
+7260
+Total number of simulation in this turn: 0
+5568
+Total number of simulation in this turn: 0
+2836
+9385
+23644
+Total number of simulation in this turn: 0
+Total number of simulation in game: 223603
+4326
+18564
+Total number of simulation in this turn: 0
+3482
+4737
+5082
+Total number of simulation in this turn: 0
+3110
+Total number of simulation in this turn: 0
+3220
+5959
+68240
+Total number of simulation in this turn: 0
+4160
+10986
+16356
+Total number of simulation in this turn: 0
+3428
+6125
+Total number of simulation in this turn: 0
+3542
+Total number of simulation in this turn: 0
+3208
+6426
+9568
+21656
+106417
+Total number of simulation in this turn: 0
+6388
+Total number of simulation in this turn: 0
+4217
+8733
+94097
+Total number of simulation in this turn: 0
+5645
+Total number of simulation in this turn: 0
+6942
+Total number of simulation in this turn: 0
+6067
+1662707
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2103388
+5439
+Total number of simulation in this turn: 0
+4735
+7478
+Total number of simulation in this turn: 0
+3280
+4654
+Total number of simulation in this turn: 0
+4483
+3778
+5607
+Total number of simulation in this turn: 0
+4341
+Total number of simulation in this turn: 0
+3307
+6416
+12701
+21040
+Total number of simulation in this turn: 0
+3563
+8094
+64417
+Total number of simulation in this turn: 0
+2801
+5677
+Total number of simulation in this turn: 0
+Total number of simulation in game: 171811
+3891
+Total number of simulation in this turn: 0
+3932
+11484
+58689
+Total number of simulation in this turn: 0
+3844
+65534
+Total number of simulation in this turn: 0
+4783
+Total number of simulation in this turn: 0
+4273
+Total number of simulation in this turn: 0
+3235
+Total number of simulation in this turn: 0
+3717
+Total number of simulation in this turn: 0
+3468
+Total number of simulation in this turn: 0
+3671
+Total number of simulation in this turn: 0
+2810
+4187
+7390
+Total number of simulation in this turn: 0
+3553
+8341
+72449
+Total number of simulation in this turn: 0
+3482
+13354
+Total number of simulation in this turn: 0
+3282
+Total number of simulation in this turn: 0
+2745
+4441
+Total number of simulation in this turn: 0
+3110
+Total number of simulation in this turn: 0
+4007
+7335
+Total number of simulation in this turn: 0
+3467
+59916
+Total number of simulation in this turn: 0
+3729
+Total number of simulation in this turn: 0
+2481
+Total number of simulation in this turn: 0
+2844
+22538
+Total number of simulation in this turn: 0
+3860
+Total number of simulation in this turn: 0
+3022
+4791
+17307
+88993
+Total number of simulation in this turn: 0
+2738
+5831
+Total number of simulation in this turn: 0
+2936
+3511
+Total number of simulation in this turn: 0
+3960
+5772
+11861
+6924
+20751
+66312
+Total number of simulation in this turn: 0
+2039
+2474
+4149
+4087
+8373
+81849
+Total number of simulation in this turn: 0
+2964
+6114
+13626
+Total number of simulation in this turn: 0
+2891
+4819
+7978
+13583
+Total number of simulation in this turn: 0
+2351
+3565
+6267
+11473
+34014
+Total number of simulation in this turn: 0
+Total number of simulation in game: 867167
+4503
+10372
+Total number of simulation in this turn: 0
+3698
+Total number of simulation in this turn: 0
+3854
+14092
+Total number of simulation in this turn: 0
+2316
+3216
+4310
+3908
+6258
+Total number of simulation in this turn: 0
+2885
+4573
+3920
+4731
+62384
+Total number of simulation in this turn: 0
+4162
+7075
+16363
+Total number of simulation in this turn: 0
+2224
+3314
+4199
+7319
+50064
+Total number of simulation in this turn: 0
+2018
+1906
+2244
+4185
+4929
+11203
+15334
+Total number of simulation in this turn: 0
+2818
+2909
+2274
+3168
+Total number of simulation in this turn: 0
+1319
+1698
+2124
+4302
+10497
+81097
+Total number of simulation in this turn: 0
+1681
+1604
+1660
+2207
+3186
+4619
+6123
+12173
+20856
+Total number of simulation in this turn: 0
+1803
+1757
+2309
+Total number of simulation in this turn: 0
+2756
+7076
+17515
+Total number of simulation in this turn: 0
+3768
+4604
+7747
+55891
+Total number of simulation in this turn: 0
+2508
+3386
+7898
+17906
+Total number of simulation in this turn: 0
+2305
+1943
+3062
+4747
+7474
+31911
+Total number of simulation in this turn: 0
+3255
+5158
+18535
+Total number of simulation in this turn: 0
+2874
+5946
+19568
+Total number of simulation in this turn: 0
+Total number of simulation in game: 681576
+4153
+82139
+Total number of simulation in this turn: 0
+5179
+Total number of simulation in this turn: 0
+2810
+12130
+68749
+Total number of simulation in this turn: 0
+4131
+Total number of simulation in this turn: 0
+5756
+Total number of simulation in this turn: 0
+4083
+6671
+7038
+21487
+Total number of simulation in this turn: 0
+5329
+64068
+Total number of simulation in this turn: 0
+3285
+7268
+Total number of simulation in this turn: 0
+5485
+Total number of simulation in this turn: 0
+3880
+4874
+Total number of simulation in this turn: 0
+4139
+6533
+7775
+Total number of simulation in this turn: 0
+4116
+6494
+1427350
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1774922
+5487
+Total number of simulation in this turn: 0
+5447
+10281
+Total number of simulation in this turn: 0
+5703
+97555
+Total number of simulation in this turn: 0
+6086
+Total number of simulation in this turn: 0
+5351
+18421
+Total number of simulation in this turn: 0
+5597
+102830
+Total number of simulation in this turn: 0
+4577
+7926
+15892
+Total number of simulation in this turn: 0
+4153
+5324
+Total number of simulation in this turn: 0
+5043
+Total number of simulation in this turn: 0
+4123
+Total number of simulation in this turn: 0
+4509
+Total number of simulation in this turn: 0
+5210
+Total number of simulation in this turn: 0
+5152
+Total number of simulation in this turn: 0
+Total number of simulation in game: 324667
+3980
+Total number of simulation in this turn: 0
+4467
+Total number of simulation in this turn: 0
+4427
+Total number of simulation in this turn: 0
+6275
+Total number of simulation in this turn: 0
+3746
+Total number of simulation in this turn: 0
+3239
+3506
+4404
+4002
+Total number of simulation in this turn: 0
+5952
+Total number of simulation in this turn: 0
+6123
+Total number of simulation in this turn: 0
+6001
+Total number of simulation in this turn: 0
+3636
+7044
+12710
+Total number of simulation in this turn: 0
+3661
+11702
+Total number of simulation in this turn: 0
+4253
+105116
+Total number of simulation in this turn: 0
+3881
+Total number of simulation in this turn: 0
+4076
+59432
+Total number of simulation in this turn: 0
+2829
+2963
+4328
+3557
+6552
+53144
+Total number of simulation in this turn: 0
+2453
+4205
+1684546
+Total number of simulation in this turn: 0
+2642
+2735
+5544
+7536
+1566366
+Total number of simulation in this turn: 0
+Total number of simulation in game: 3621033
+5881
+7047
+Total number of simulation in this turn: 0
+5785
+Total number of simulation in this turn: 0
+7268
+Total number of simulation in this turn: 0
+3800
+5169
+6271
+19668
+87903
+Total number of simulation in this turn: 0
+4588
+Total number of simulation in this turn: 0
+5037
+10982
+21391
+105842
+Total number of simulation in this turn: 0
+5849
+21992
+Total number of simulation in this turn: 0
+5245
+Total number of simulation in this turn: 0
+3578
+4820
+15937
+21783
+96150
+Total number of simulation in this turn: 0
+5844
+Total number of simulation in this turn: 0
+3758
+11727
+24004
+Total number of simulation in this turn: 0
+5932
+Total number of simulation in this turn: 0
+4996
+Total number of simulation in this turn: 0
+Total number of simulation in game: 528247
+5533
+9355
+80957
+Total number of simulation in this turn: 0
+5303
+8036
+Total number of simulation in this turn: 0
+6033
+Total number of simulation in this turn: 0
+4500
+6111
+Total number of simulation in this turn: 0
+5024
+11699
+Total number of simulation in this turn: 0
+4702
+9206
+Total number of simulation in this turn: 0
+3527
+8047
+14170
+Total number of simulation in this turn: 0
+3754
+5517
+Total number of simulation in this turn: 0
+3916
+Total number of simulation in this turn: 0
+2462
+2386
+4060
+3629
+56001
+Total number of simulation in this turn: 0
+4776
+5302
+68588
+Total number of simulation in this turn: 0
+3860
+4954
+5233
+Total number of simulation in this turn: 0
+2795
+5385
+13544
+Total number of simulation in this turn: 0
+2712
+2980
+5386
+Total number of simulation in this turn: 0
+Total number of simulation in game: 389443
+5192
+7545
+19021
+Total number of simulation in this turn: 0
+5234
+Total number of simulation in this turn: 0
+4812
+Total number of simulation in this turn: 0
+4287
+Total number of simulation in this turn: 0
+3322
+3787
+5892
+7911
+94469
+Total number of simulation in this turn: 0
+3635
+5170
+3693
+3178
+6362
+9334
+Total number of simulation in this turn: 0
+4404
+Total number of simulation in this turn: 0
+2611
+3505
+3528
+11653
+73100
+Total number of simulation in this turn: 0
+2967
+3320
+7645
+7966
+12750
+20470
+Total number of simulation in this turn: 0
+2501
+3712
+4006
+Total number of simulation in this turn: 0
+1888
+2152
+2540
+3658
+Total number of simulation in this turn: 0
+2981
+4215
+6414
+73939
+Total number of simulation in this turn: 0
+4220
+5031
+11558
+Total number of simulation in this turn: 0
+2472
+3205
+5389
+10001
+Total number of simulation in this turn: 0
+1709
+1837
+2408
+3441
+4020
+Total number of simulation in this turn: 0
+3213
+6404
+22127
+Total number of simulation in this turn: 0
+1781
+3574
+4349
+5793
+13418
+Total number of simulation in this turn: 0
+2474
+3183
+5036
+7994
+Total number of simulation in this turn: 0
+2298
+2530
+Total number of simulation in this turn: 0
+2739
+1580
+2499
+2494
+2054
+2044
+2718
+3379
+4272
+5259
+Total number of simulation in this turn: 0
+1915
+Total number of simulation in this turn: 0
+2710
+6824
+77440
+Total number of simulation in this turn: 0
+4770
+67589
+Total number of simulation in this turn: 0
+2025
+14872
+Total number of simulation in this turn: 0
+1760
+2497
+2869
+4666
+Total number of simulation in this turn: 0
+2049
+3054
+8361
+16680
+Total number of simulation in this turn: 0
+2674
+Total number of simulation in this turn: 0
+1891
+2006
+2119
+3097
+3213
+2743
+4436
+5189
+18704
+Total number of simulation in this turn: 0
+Total number of simulation in game: 889425
+4817
+79081
+Total number of simulation in this turn: 0
+5276
+Total number of simulation in this turn: 0
+5871
+Total number of simulation in this turn: 0
+3493
+3437
+6535
+79686
+Total number of simulation in this turn: 0
+4913
+9840
+24298
+Total number of simulation in this turn: 0
+2349
+4571
+7066
+10128
+Total number of simulation in this turn: 0
+3611
+4207
+14686
+Total number of simulation in this turn: 0
+2637
+59425
+Total number of simulation in this turn: 0
+1568
+2237
+2868
+2207
+2754
+7657
+10171
+Total number of simulation in this turn: 0
+3079
+2466
+3288
+4912
+9480
+56449
+Total number of simulation in this turn: 0
+2003
+2784
+2772
+2792
+5237
+6361
+6878
+15786
+1072553
+Total number of simulation in this turn: 0
+2927
+2616
+3233
+3679
+3049
+5488
+21333
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1604554
+4813
+Total number of simulation in this turn: 0
+5732
+Total number of simulation in this turn: 0
+6924
+8716
+Total number of simulation in this turn: 0
+5681
+5426
+124342
+Total number of simulation in this turn: 0
+5329
+Total number of simulation in this turn: 0
+4887
+7429
+24797
+Total number of simulation in this turn: 0
+3946
+11346
+Total number of simulation in this turn: 0
+5082
+Total number of simulation in this turn: 0
+4014
+Total number of simulation in this turn: 0
+5042
+Total number of simulation in this turn: 0
+4290
+Total number of simulation in this turn: 0
+5911
+Total number of simulation in this turn: 0
+4286
+Total number of simulation in this turn: 0
+5270
+Total number of simulation in this turn: 0
+6405
+Total number of simulation in this turn: 0
+Total number of simulation in game: 259668
+2544
+17931
+Total number of simulation in this turn: 0
+2816
+Total number of simulation in this turn: 0
+4747
+Total number of simulation in this turn: 0
+5193
+Total number of simulation in this turn: 0
+5490
+62522
+Total number of simulation in this turn: 0
+4434
+Total number of simulation in this turn: 0
+6016
+Total number of simulation in this turn: 0
+4264
+91090
+Total number of simulation in this turn: 0
+5312
+8328
+96446
+Total number of simulation in this turn: 0
+3408
+5037
+6460
+81243
+Total number of simulation in this turn: 0
+5416
+101234
+Total number of simulation in this turn: 0
+5060
+8413
+Total number of simulation in this turn: 0
+5199
+11758
+Total number of simulation in this turn: 0
+5973
+Total number of simulation in this turn: 0
+6099
+Total number of simulation in this turn: 0
+Total number of simulation in game: 562433
+3213
+6561
+Total number of simulation in this turn: 0
+6407
+11798
+24120
+Total number of simulation in this turn: 0
+4960
+6723
+11779
+103999
+Total number of simulation in this turn: 0
+5697
+6382
+7022
+Total number of simulation in this turn: 0
+5780
+6783
+12523
+Total number of simulation in this turn: 0
+7541
+Total number of simulation in this turn: 0
+4795
+5664
+6691
+100790
+Total number of simulation in this turn: 0
+4479
+Total number of simulation in this turn: 0
+4216
+3701
+5004
+7751
+30815
+101622
+Total number of simulation in this turn: 0
+4937
+4993
+10586
+Total number of simulation in this turn: 0
+7960
+Total number of simulation in this turn: 0
+6364
+9172
+Total number of simulation in this turn: 0
+6576
+Total number of simulation in this turn: 0
+Total number of simulation in game: 557404
+4930
+67059
+Total number of simulation in this turn: 0
+4505
+12440
+Total number of simulation in this turn: 0
+4072
+5920
+8750
+Total number of simulation in this turn: 0
+6431
+19355
+Total number of simulation in this turn: 0
+3310
+4655
+4536
+4633
+5999
+3882
+7527
+9518
+Total number of simulation in this turn: 0
+3436
+4292
+3926
+4513
+11024
+18155
+62556
+Total number of simulation in this turn: 0
+3410
+4712
+7517
+Total number of simulation in this turn: 0
+3618
+5396
+10810
+Total number of simulation in this turn: 0
+3137
+4798
+6584
+8667
+13241
+Total number of simulation in this turn: 0
+3630
+3860
+5987
+16467
+98985
+Total number of simulation in this turn: 0
+3392
+7380
+22912
+50940
+Total number of simulation in this turn: 0
+Total number of simulation in game: 570867
+6126
+Total number of simulation in this turn: 0
+5191
+7650
+Total number of simulation in this turn: 0
+5953
+Total number of simulation in this turn: 0
+5701
+6348
+6738
+Total number of simulation in this turn: 0
+4573
+9069
+Total number of simulation in this turn: 0
+4862
+28391
+Total number of simulation in this turn: 0
+4243
+Total number of simulation in this turn: 0
+4857
+7202
+95829
+Total number of simulation in this turn: 0
+4851
+8233
+Total number of simulation in this turn: 0
+Total number of simulation in game: 215817
+4390
+6614
+5926
+8247
+11444
+Total number of simulation in this turn: 0
+4783
+Total number of simulation in this turn: 0
+4053
+6351
+Total number of simulation in this turn: 0
+3868
+69430
+Total number of simulation in this turn: 0
+3555
+5240
+6828
+74742
+Total number of simulation in this turn: 0
+7633
+Total number of simulation in this turn: 0
+6997
+11865
+Total number of simulation in this turn: 0
+5034
+12995
+18086
+Total number of simulation in this turn: 0
+5541
+23671
+Total number of simulation in this turn: 0
+6436
+8468
+Total number of simulation in this turn: 0
+5550
+16865
+26510
+Total number of simulation in this turn: 0
+4746
+4715
+6736
+8884
+Total number of simulation in this turn: 0
+7923
+Total number of simulation in this turn: 0
+5432
+11921
+13969
+52752
+Total number of simulation in this turn: 0
+8168
+Total number of simulation in this turn: 0
+5549
+6799
+7760
+9910
+Total number of simulation in this turn: 0
+9734
+Total number of simulation in this turn: 0
+Total number of simulation in game: 536120
+5682
+Total number of simulation in this turn: 0
+5263
+16637
+Total number of simulation in this turn: 0
+5763
+Total number of simulation in this turn: 0
+5512
+Total number of simulation in this turn: 0
+4641
+Total number of simulation in this turn: 0
+4526
+18478
+Total number of simulation in this turn: 0
+3450
+4452
+6745
+9057
+81235
+Total number of simulation in this turn: 0
+2599
+9642
+25068
+79133
+Total number of simulation in this turn: 0
+4433
+5711
+Total number of simulation in this turn: 0
+3160
+5014
+7154
+71376
+Total number of simulation in this turn: 0
+3664
+7051
+6230
+Total number of simulation in this turn: 0
+2982
+3620
+6385
+5063
+7501
+55157
+Total number of simulation in this turn: 0
+2572
+55709
+Total number of simulation in this turn: 0
+3170
+5301
+20105
+51280
+Total number of simulation in this turn: 0
+5572
+Total number of simulation in this turn: 0
+3071
+3807
+4276
+4450
+13540
+29811
+Total number of simulation in this turn: 0
+4874
+11759
+Total number of simulation in this turn: 0
+2720
+8506
+Total number of simulation in this turn: 0
+5757
+Total number of simulation in this turn: 0
+4197
+15883
+Total number of simulation in this turn: 0
+4373
+15615
+Total number of simulation in this turn: 0
+5790
+Total number of simulation in this turn: 0
+3816
+6807
+Total number of simulation in this turn: 0
+3586
+4043
+6061
+8809
+19938
+1817341
+Total number of simulation in this turn: 0
+4435
+6673
+Total number of simulation in this turn: 0
+3568
+8128
+38540
+42954
+Total number of simulation in this turn: 0
+3797
+6240
+13323
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2762581
+7789
+Total number of simulation in this turn: 0
+10717
+Total number of simulation in this turn: 0
+6947
+11098
+12327
+Total number of simulation in this turn: 0
+10752
+Total number of simulation in this turn: 0
+7682
+26550
+Total number of simulation in this turn: 0
+8116
+Total number of simulation in this turn: 0
+6729
+12217
+Total number of simulation in this turn: 0
+7766
+Total number of simulation in this turn: 0
+5390
+6739
+7072
+6374
+5681
+6904
+10796
+12160
+Total number of simulation in this turn: 0
+6202
+9209
+34090
+Total number of simulation in this turn: 0
+9345
+Total number of simulation in this turn: 0
+7423
+12767
+Total number of simulation in this turn: 0
+8088
+35292
+Total number of simulation in this turn: 0
+7155
+14902
+16428
+Total number of simulation in this turn: 0
+Total number of simulation in game: 350707
+10454
+Total number of simulation in this turn: 0
+10224
+Total number of simulation in this turn: 0
+10236
+Total number of simulation in this turn: 0
+8886
+10276
+30415
+Total number of simulation in this turn: 0
+9312
+Total number of simulation in this turn: 0
+9423
+Total number of simulation in this turn: 0
+9641
+Total number of simulation in this turn: 0
+11069
+Total number of simulation in this turn: 0
+10704
+Total number of simulation in this turn: 0
+10411
+26549
+Total number of simulation in this turn: 0
+11724
+Total number of simulation in this turn: 0
+12205
+Total number of simulation in this turn: 0
+12094
+19957
+Total number of simulation in this turn: 0
+Total number of simulation in game: 223580
+6694
+10344
+23433
+49030
+Total number of simulation in this turn: 0
+8830
+10530
+Total number of simulation in this turn: 0
+11518
+Total number of simulation in this turn: 0
+9371
+17498
+Total number of simulation in this turn: 0
+10404
+22329
+Total number of simulation in this turn: 0
+8382
+11947
+Total number of simulation in this turn: 0
+9349
+14401
+Total number of simulation in this turn: 0
+9239
+12029
+16602
+Total number of simulation in this turn: 0
+7918
+9902
+13347
+Total number of simulation in this turn: 0
+6653
+7292
+7948
+10162
+30547
+Total number of simulation in this turn: 0
+9895
+15763
+Total number of simulation in this turn: 0
+9201
+8214
+Total number of simulation in this turn: 0
+5572
+6879
+7345
+9159
+11809
+32769
+2476903
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2949208
+8265
+15730
+50275
+153810
+Total number of simulation in this turn: 0
+9310
+11150
+Total number of simulation in this turn: 0
+10070
+Total number of simulation in this turn: 0
+8438
+10820
+Total number of simulation in this turn: 0
+8696
+15299
+152180
+Total number of simulation in this turn: 0
+7324
+9675
+160782
+Total number of simulation in this turn: 0
+10847
+Total number of simulation in this turn: 0
+9638
+15089
+Total number of simulation in this turn: 0
+9269
+13100
+157287
+Total number of simulation in this turn: 0
+6395
+5417
+13328
+19830
+Total number of simulation in this turn: 0
+10609
+Total number of simulation in this turn: 0
+9393
+14847
+Total number of simulation in this turn: 0
+4554
+5613
+7925
+7940
+9326
+16389
+38912
+Total number of simulation in this turn: 0
+5554
+9157
+39790
+Total number of simulation in this turn: 0
+5318
+6152
+6306
+7752
+8867
+13591
+33525
+Total number of simulation in this turn: 0
+5115
+7300
+11051
+25609
+Total number of simulation in this turn: 0
+8207
+17798
+37995
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1266619
+8877
+150639
+Total number of simulation in this turn: 0
+9457
+49916
+Total number of simulation in this turn: 0
+10175
+153652
+Total number of simulation in this turn: 0
+10172
+Total number of simulation in this turn: 0
+7360
+12531
+Total number of simulation in this turn: 0
+11456
+20268
+Total number of simulation in this turn: 0
+8913
+12767
+Total number of simulation in this turn: 0
+9512
+22303
+Total number of simulation in this turn: 0
+8050
+12920
+28967
+Total number of simulation in this turn: 0
+10417
+28886
+Total number of simulation in this turn: 0
+Total number of simulation in game: 587238
+8522
+Total number of simulation in this turn: 0
+8191
+145117
+Total number of simulation in this turn: 0
+8874
+15841
+Total number of simulation in this turn: 0
+10229
+Total number of simulation in this turn: 0
+9251
+13139
+Total number of simulation in this turn: 0
+10727
+Total number of simulation in this turn: 0
+10788
+Total number of simulation in this turn: 0
+7542
+20141
+Total number of simulation in this turn: 0
+10733
+Total number of simulation in this turn: 0
+11849
+Total number of simulation in this turn: 0
+6814
+10753
+15093
+Total number of simulation in this turn: 0
+13414
+Total number of simulation in this turn: 0
+11709
+Total number of simulation in this turn: 0
+8248
+17396
+Total number of simulation in this turn: 0
+11688
+Total number of simulation in this turn: 0
+12241
+Total number of simulation in this turn: 0
+7935
+23109
+Total number of simulation in this turn: 0
+11900
+Total number of simulation in this turn: 0
+8886
+46304
+Total number of simulation in this turn: 0
+11542
+Total number of simulation in this turn: 0
+8794
+14293
+Total number of simulation in this turn: 0
+Total number of simulation in game: 531063
+7883
+Total number of simulation in this turn: 0
+10948
+Total number of simulation in this turn: 0
+6829
+7601
+21217
+Total number of simulation in this turn: 0
+7676
+44906
+Total number of simulation in this turn: 0
+5331
+8410
+11826
+21502
+24862
+Total number of simulation in this turn: 0
+10133
+18027
+Total number of simulation in this turn: 0
+8019
+9457
+Total number of simulation in this turn: 0
+5010
+5647
+7151
+17515
+181639
+Total number of simulation in this turn: 0
+10602
+Total number of simulation in this turn: 0
+8348
+Total number of simulation in this turn: 0
+6411
+8433
+9858
+27547
+132414
+Total number of simulation in this turn: 0
+5084
+7486
+11264
+121168
+Total number of simulation in this turn: 0
+6742
+10012
+Total number of simulation in this turn: 0
+5358
+5514
+41072
+Total number of simulation in this turn: 0
+5533
+5732
+7966
+10606
+13033
+2426117
+Total number of simulation in this turn: 0
+7961
+12022
+20614
+77350
+Total number of simulation in this turn: 0
+Total number of simulation in game: 3445836
+2659
+13312
+Total number of simulation in this turn: 0
+3348
+Total number of simulation in this turn: 0
+3771
+Total number of simulation in this turn: 0
+4865
+18286
+Total number of simulation in this turn: 0
+3263
+5578
+Total number of simulation in this turn: 0
+3547
+Total number of simulation in this turn: 0
+3516
+6310
+Total number of simulation in this turn: 0
+2888
+67032
+Total number of simulation in this turn: 0
+2218
+5361
+Total number of simulation in this turn: 0
+4889
+Total number of simulation in this turn: 0
+2581
+7185
+Total number of simulation in this turn: 0
+Total number of simulation in game: 160609
+2699
+3899
+59610
+Total number of simulation in this turn: 0
+5263
+Total number of simulation in this turn: 0
+3614
+5492
+Total number of simulation in this turn: 0
+4196
+10804
+Total number of simulation in this turn: 0
+4060
+Total number of simulation in this turn: 0
+3951
+Total number of simulation in this turn: 0
+3940
+Total number of simulation in this turn: 0
+3905
+Total number of simulation in this turn: 0
+3452
+Total number of simulation in this turn: 0
+2851
+Total number of simulation in this turn: 0
+2756
+4764
+7093
+Total number of simulation in this turn: 0
+2753
+Total number of simulation in this turn: 0
+2861
+Total number of simulation in this turn: 0
+3206
+Total number of simulation in this turn: 0
+3604
+5704
+Total number of simulation in this turn: 0
+Total number of simulation in game: 150477
+2758
+Total number of simulation in this turn: 0
+2031
+3011
+3839
+Total number of simulation in this turn: 0
+4290
+Total number of simulation in this turn: 0
+4332
+9417
+Total number of simulation in this turn: 0
+3733
+Total number of simulation in this turn: 0
+3806
+5184
+128472
+Total number of simulation in this turn: 0
+3494
+7655
+Total number of simulation in this turn: 0
+4600
+4467
+22217
+Total number of simulation in this turn: 0
+2845
+77396
+Total number of simulation in this turn: 0
+3051
+10835
+17729
+Total number of simulation in this turn: 0
+4187
+Total number of simulation in this turn: 0
+3612
+Total number of simulation in this turn: 0
+4415
+Total number of simulation in this turn: 0
+3951
+7094
+Total number of simulation in this turn: 0
+4897
+Total number of simulation in this turn: 0
+3643
+Total number of simulation in this turn: 0
+3782
+Total number of simulation in this turn: 0
+3733
+Total number of simulation in this turn: 0
+4600
+Total number of simulation in this turn: 0
+Total number of simulation in game: 369076
+2122
+8850
+Total number of simulation in this turn: 0
+2660
+4024
+Total number of simulation in this turn: 0
+4156
+24576
+Total number of simulation in this turn: 0
+4306
+Total number of simulation in this turn: 0
+4591
+61292
+Total number of simulation in this turn: 0
+4333
+5683
+Total number of simulation in this turn: 0
+4847
+Total number of simulation in this turn: 0
+4300
+5824
+Total number of simulation in this turn: 0
+3526
+4792
+8180
+Total number of simulation in this turn: 0
+4721
+Total number of simulation in this turn: 0
+4344
+Total number of simulation in this turn: 0
+2484
+2924
+3793
+3696
+4519
+7828
+9192
+Total number of simulation in this turn: 0
+2637
+4662
+7137
+Total number of simulation in this turn: 0
+3648
+Total number of simulation in this turn: 0
+4811
+15599
+Total number of simulation in this turn: 0
+Total number of simulation in game: 240057
+2872
+Total number of simulation in this turn: 0
+2377
+3422
+Total number of simulation in this turn: 0
+3550
+5222
+5004
+6494
+86374
+Total number of simulation in this turn: 0
+5046
+5214
+10632
+Total number of simulation in this turn: 0
+3803
+6158
+73321
+Total number of simulation in this turn: 0
+3775
+Total number of simulation in this turn: 0
+4148
+7140
+Total number of simulation in this turn: 0
+3828
+3820
+3936
+11699
+Total number of simulation in this turn: 0
+2614
+21409
+17317
+Total number of simulation in this turn: 0
+2566
+3807
+3697
+12298
+21802
+65371
+Total number of simulation in this turn: 0
+2748
+4613
+7937
+Total number of simulation in this turn: 0
+2960
+21526
+85054
+Total number of simulation in this turn: 0
+Total number of simulation in game: 533554
+2766
+6438
+Total number of simulation in this turn: 0
+4159
+Total number of simulation in this turn: 0
+4174
+Total number of simulation in this turn: 0
+3274
+13536
+Total number of simulation in this turn: 0
+4193
+68392
+Total number of simulation in this turn: 0
+3438
+Total number of simulation in this turn: 0
+3492
+Total number of simulation in this turn: 0
+2703
+5124
+Total number of simulation in this turn: 0
+5080
+Total number of simulation in this turn: 0
+5237
+Total number of simulation in this turn: 0
+Total number of simulation in game: 132006
+2996
+4988
+62723
+Total number of simulation in this turn: 0
+4497
+68176
+Total number of simulation in this turn: 0
+2776
+3185
+6592
+Total number of simulation in this turn: 0
+2359
+3607
+6598
+10730
+Total number of simulation in this turn: 0
+3948
+Total number of simulation in this turn: 0
+4126
+5630
+Total number of simulation in this turn: 0
+3690
+5738
+4052
+68207
+Total number of simulation in this turn: 0
+4078
+16742
+Total number of simulation in this turn: 0
+4861
+7021
+Total number of simulation in this turn: 0
+4647
+4314
+8066
+Total number of simulation in this turn: 0
+6040
+Total number of simulation in this turn: 0
+5117
+19861
+Total number of simulation in this turn: 0
+Total number of simulation in game: 355365
+2849
+56389
+Total number of simulation in this turn: 0
+3471
+12215
+Total number of simulation in this turn: 0
+3016
+Total number of simulation in this turn: 0
+5107
+Total number of simulation in this turn: 0
+2626
+3161
+4070
+Total number of simulation in this turn: 0
+4645
+Total number of simulation in this turn: 0
+3408
+Total number of simulation in this turn: 0
+3219
+Total number of simulation in this turn: 0
+2124
+2896
+Total number of simulation in this turn: 0
+3356
+Total number of simulation in this turn: 0
+1482
+5013
+Total number of simulation in this turn: 0
+2211
+4047
+2260
+3505
+4012
+5401
+Total number of simulation in this turn: 0
+Total number of simulation in game: 140483
+3797
+Total number of simulation in this turn: 0
+4024
+63377
+Total number of simulation in this turn: 0
+3984
+7134
+15269
+Total number of simulation in this turn: 0
+4734
+Total number of simulation in this turn: 0
+3235
+4325
+9721
+Total number of simulation in this turn: 0
+3658
+3435
+56924
+Total number of simulation in this turn: 0
+3606
+4659
+8346
+Total number of simulation in this turn: 0
+3790
+80362
+Total number of simulation in this turn: 0
+2902
+2586
+2797
+3553
+Total number of simulation in this turn: 0
+1908
+5568
+5002
+7047
+Total number of simulation in this turn: 0
+4172
+7121
+18070
+Total number of simulation in this turn: 0
+3095
+2307
+3221
+3556
+Total number of simulation in this turn: 0
+Total number of simulation in game: 357285
+4321
+22151
+Total number of simulation in this turn: 0
+3216
+8289
+Total number of simulation in this turn: 0
+4215
+75823
+Total number of simulation in this turn: 0
+4349
+5074
+Total number of simulation in this turn: 0
+3066
+5331
+Total number of simulation in this turn: 0
+2960
+4594
+Total number of simulation in this turn: 0
+2387
+4646
+Total number of simulation in this turn: 0
+3300
+7740
+10848
+52721
+Total number of simulation in this turn: 0
+2198
+3565
+Total number of simulation in this turn: 0
+3507
+Total number of simulation in this turn: 0
+2395
+2927
+2630
+3594
+10059
+Total number of simulation in this turn: 0
+5250
+Total number of simulation in this turn: 0
+Total number of simulation in game: 261156
+2289
+6156
+6120
+Total number of simulation in this turn: 0
+3589
+4762
+Total number of simulation in this turn: 0
+3763
+Total number of simulation in this turn: 0
+3972
+Total number of simulation in this turn: 0
+2873
+4681
+Total number of simulation in this turn: 0
+2388
+2404
+3806
+11977
+Total number of simulation in this turn: 0
+3995
+Total number of simulation in this turn: 0
+4402
+Total number of simulation in this turn: 0
+3327
+2269
+4615
+42015
+Total number of simulation in this turn: 0
+4080
+Total number of simulation in this turn: 0
+4537
+4394
+Total number of simulation in this turn: 0
+Total number of simulation in game: 132414
+4315
+Total number of simulation in this turn: 0
+2869
+6765
+Total number of simulation in this turn: 0
+3207
+Total number of simulation in this turn: 0
+3102
+6086
+Total number of simulation in this turn: 0
+3518
+4621
+Total number of simulation in this turn: 0
+3655
+5453
+6970
+Total number of simulation in this turn: 0
+2918
+4400
+16898
+Total number of simulation in this turn: 0
+3081
+5489
+Total number of simulation in this turn: 0
+2996
+4941
+Total number of simulation in this turn: 0
+2386
+4420
+44395
+Total number of simulation in this turn: 0
+2829
+Total number of simulation in this turn: 0
+Total number of simulation in game: 145314
+3526
+Total number of simulation in this turn: 0
+3313
+79861
+Total number of simulation in this turn: 0
+3293
+Total number of simulation in this turn: 0
+5880
+21701
+Total number of simulation in this turn: 0
+5943
+Total number of simulation in this turn: 0
+3352
+6352
+Total number of simulation in this turn: 0
+3911
+11633
+Total number of simulation in this turn: 0
+3177
+7873
+Total number of simulation in this turn: 0
+4124
+Total number of simulation in this turn: 0
+4292
+Total number of simulation in this turn: 0
+3387
+9320
+Total number of simulation in this turn: 0
+4189
+Total number of simulation in this turn: 0
+5349
+Total number of simulation in this turn: 0
+3156
+9055
+Total number of simulation in this turn: 0
+5297
+Total number of simulation in this turn: 0
+3122
+9753
+Total number of simulation in this turn: 0
+Total number of simulation in game: 220859
+4306
+Total number of simulation in this turn: 0
+2871
+19625
+Total number of simulation in this turn: 0
+5026
+55880
+Total number of simulation in this turn: 0
+2583
+74032
+Total number of simulation in this turn: 0
+4507
+55281
+Total number of simulation in this turn: 0
+2967
+4677
+Total number of simulation in this turn: 0
+2239
+4366
+5334
+61867
+Total number of simulation in this turn: 0
+3316
+9629
+Total number of simulation in this turn: 0
+4576
+Total number of simulation in this turn: 0
+1790
+2433
+2182
+2697
+Total number of simulation in this turn: 0
+3293
+Total number of simulation in this turn: 0
+4751
+Total number of simulation in this turn: 0
+2688
+5062
+8536
+Total number of simulation in this turn: 0
+Total number of simulation in game: 356514
+3074
+3279
+4720
+5322
+20930
+Total number of simulation in this turn: 0
+4967
+Total number of simulation in this turn: 0
+3448
+7632
+Total number of simulation in this turn: 0
+2813
+Total number of simulation in this turn: 0
+3421
+Total number of simulation in this turn: 0
+3776
+4029
+12641
+Total number of simulation in this turn: 0
+2634
+12070
+Total number of simulation in this turn: 0
+3621
+4904
+Total number of simulation in this turn: 0
+3962
+Total number of simulation in this turn: 0
+3152
+4495
+Total number of simulation in this turn: 0
+2431
+5348
+7392
+Total number of simulation in this turn: 0
+3727
+6183
+Total number of simulation in this turn: 0
+4597
+6350
+Total number of simulation in this turn: 0
+Total number of simulation in game: 150918
+4101
+18819
+Total number of simulation in this turn: 0
+2618
+4565
+70863
+Total number of simulation in this turn: 0
+3077
+Total number of simulation in this turn: 0
+3779
+Total number of simulation in this turn: 0
+2573
+4550
+2435
+4901
+3356
+8516
+9590
+13761
+Total number of simulation in this turn: 0
+2568
+6903
+Total number of simulation in this turn: 0
+2955
+2978
+3187
+3820
+10525
+Total number of simulation in this turn: 0
+3007
+4747
+4171
+9046
+Total number of simulation in this turn: 0
+3997
+Total number of simulation in this turn: 0
+3143
+Total number of simulation in this turn: 0
+4709
+6253
+Total number of simulation in this turn: 0
+2977
+4826
+Total number of simulation in this turn: 0
+4975
+Total number of simulation in this turn: 0
+Total number of simulation in game: 242291
+5056
+Total number of simulation in this turn: 0
+4323
+Total number of simulation in this turn: 0
+3555
+3248
+Total number of simulation in this turn: 0
+5530
+Total number of simulation in this turn: 0
+4355
+10519
+25344
+Total number of simulation in this turn: 0
+3471
+3162
+71186
+Total number of simulation in this turn: 0
+4001
+61519
+Total number of simulation in this turn: 0
+2552
+3189
+4253
+Total number of simulation in this turn: 0
+3584
+Total number of simulation in this turn: 0
+3927
+Total number of simulation in this turn: 0
+2778
+1797
+3470
+7584
+1140093
+Total number of simulation in this turn: 0
+2595
+14466
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1395557
+3372
+10077
+20486
+Total number of simulation in this turn: 0
+5234
+Total number of simulation in this turn: 0
+3364
+3403
+4275
+4964
+18479
+Total number of simulation in this turn: 0
+3222
+16558
+Total number of simulation in this turn: 0
+3421
+8021
+Total number of simulation in this turn: 0
+3378
+Total number of simulation in this turn: 0
+4109
+Total number of simulation in this turn: 0
+3240
+Total number of simulation in this turn: 0
+3528
+Total number of simulation in this turn: 0
+3813
+Total number of simulation in this turn: 0
+3757
+Total number of simulation in this turn: 0
+3069
+Total number of simulation in this turn: 0
+Total number of simulation in game: 129770
+4622
+Total number of simulation in this turn: 0
+4362
+Total number of simulation in this turn: 0
+4829
+Total number of simulation in this turn: 0
+4498
+10143
+Total number of simulation in this turn: 0
+4009
+Total number of simulation in this turn: 0
+3356
+Total number of simulation in this turn: 0
+3624
+3742
+6742
+Total number of simulation in this turn: 0
+3454
+5693
+Total number of simulation in this turn: 0
+3792
+Total number of simulation in this turn: 0
+4157
+Total number of simulation in this turn: 0
+2703
+8706
+Total number of simulation in this turn: 0
+2474
+Total number of simulation in this turn: 0
+3273
+9180
+Total number of simulation in this turn: 0
+4644
+Total number of simulation in this turn: 0
+4129
+Total number of simulation in this turn: 0
+3036
+Total number of simulation in this turn: 0
+1767
+2092
+11947
+Total number of simulation in this turn: 0
+4035
+6247
+Total number of simulation in this turn: 0
+2475
+3522
+4163
+8932
+Total number of simulation in this turn: 0
+4338
+7320
+7800
+Total number of simulation in this turn: 0
+2803
+2385
+3556
+8898
+Total number of simulation in this turn: 0
+2715
+4035
+13457
+28910
+Total number of simulation in this turn: 0
+3717
+9047
+Total number of simulation in this turn: 0
+3948
+13066
+Total number of simulation in this turn: 0
+Total number of simulation in game: 266343
+4095
+Total number of simulation in this turn: 0
+2782
+Total number of simulation in this turn: 0
+4361
+7556
+Total number of simulation in this turn: 0
+4807
+10978
+Total number of simulation in this turn: 0
+3788
+Total number of simulation in this turn: 0
+3011
+18907
+Total number of simulation in this turn: 0
+5092
+Total number of simulation in this turn: 0
+4083
+19958
+Total number of simulation in this turn: 0
+3465
+Total number of simulation in this turn: 0
+4131
+41169
+Total number of simulation in this turn: 0
+2678
+16146
+Total number of simulation in this turn: 0
+2255
+Total number of simulation in this turn: 0
+2496
+9495
+Total number of simulation in this turn: 0
+2104
+2827
+2522
+9286
+Total number of simulation in this turn: 0
+1506
+3156
+4138
+3407
+11820
+Total number of simulation in this turn: 0
+2880
+3750
+Total number of simulation in this turn: 0
+1670
+2935
+8450
+Total number of simulation in this turn: 0
+2128
+4789
+Total number of simulation in this turn: 0
+2318
+2482
+3290
+Total number of simulation in this turn: 0
+2012
+3642
+2593
+4776
+1489008
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1748742
+3807
+7295
+69973
+Total number of simulation in this turn: 0
+3647
+16075
+Total number of simulation in this turn: 0
+4465
+Total number of simulation in this turn: 0
+3319
+15793
+Total number of simulation in this turn: 0
+3651
+12783
+Total number of simulation in this turn: 0
+5255
+Total number of simulation in this turn: 0
+5547
+Total number of simulation in this turn: 0
+6098
+5414
+Total number of simulation in this turn: 0
+4130
+14080
+Total number of simulation in this turn: 0
+4674
+Total number of simulation in this turn: 0
+5448
+18816
+Total number of simulation in this turn: 0
+Total number of simulation in game: 210270
+3030
+17332
+Total number of simulation in this turn: 0
+4488
+Total number of simulation in this turn: 0
+2857
+Total number of simulation in this turn: 0
+2800
+Total number of simulation in this turn: 0
+3397
+46776
+Total number of simulation in this turn: 0
+3606
+15813
+Total number of simulation in this turn: 0
+2230
+7919
+44779
+Total number of simulation in this turn: 0
+2612
+50236
+Total number of simulation in this turn: 0
+2211
+4271
+Total number of simulation in this turn: 0
+2164
+3303
+18335
+Total number of simulation in this turn: 0
+2529
+Total number of simulation in this turn: 0
+2874
+4257
+Total number of simulation in this turn: 0
+3311
+6719
+Total number of simulation in this turn: 0
+2862
+Total number of simulation in this turn: 0
+3199
+6789
+Total number of simulation in this turn: 0
+Total number of simulation in game: 270699
+2868
+4203
+6720
+Total number of simulation in this turn: 0
+5268
+Total number of simulation in this turn: 0
+4205
+4444
+Total number of simulation in this turn: 0
+3674
+59811
+Total number of simulation in this turn: 0
+2280
+2949
+4249
+58868
+Total number of simulation in this turn: 0
+Total number of simulation in game: 159539
+4430
+Total number of simulation in this turn: 0
+3745
+5401
+Total number of simulation in this turn: 0
+2355
+2859
+16833
+Total number of simulation in this turn: 0
+2421
+Total number of simulation in this turn: 0
+2716
+2774
+2720
+4960
+7146
+Total number of simulation in this turn: 0
+3348
+Total number of simulation in this turn: 0
+2409
+2943
+5452
+Total number of simulation in this turn: 0
+2655
+3290
+10171
+15884
+Total number of simulation in this turn: 0
+3392
+7999
+10281
+Total number of simulation in this turn: 0
+2219
+2500
+3523
+7739
+Total number of simulation in this turn: 0
+3031
+4050
+8479
+Total number of simulation in this turn: 0
+Total number of simulation in game: 157725
+3304
+6660
+Total number of simulation in this turn: 0
+3837
+Total number of simulation in this turn: 0
+4202
+Total number of simulation in this turn: 0
+4730
+4855
+5580
+Total number of simulation in this turn: 0
+4422
+6543
+56676
+Total number of simulation in this turn: 0
+2879
+Total number of simulation in this turn: 0
+2206
+3903
+11339
+65039
+Total number of simulation in this turn: 0
+4442
+4254
+Total number of simulation in this turn: 0
+3878
+Total number of simulation in this turn: 0
+3280
+8701
+18513
+Total number of simulation in this turn: 0
+3941
+6894
+11595
+Total number of simulation in this turn: 0
+4190
+6982
+Total number of simulation in this turn: 0
+5245
+Total number of simulation in this turn: 0
+4404
+4576
+6943
+23171
+Total number of simulation in this turn: 0
+Total number of simulation in game: 307184
+3766
+Total number of simulation in this turn: 0
+5681
+Total number of simulation in this turn: 0
+3592
+Total number of simulation in this turn: 0
+3441
+7795
+Total number of simulation in this turn: 0
+4493
+Total number of simulation in this turn: 0
+5344
+5817
+Total number of simulation in this turn: 0
+4099
+4846
+8347
+19322
+Total number of simulation in this turn: 0
+3260
+7667
+Total number of simulation in this turn: 0
+4232
+4758
+13692
+81021
+Total number of simulation in this turn: 0
+2991
+3795
+5446
+11579
+Total number of simulation in this turn: 0
+3955
+51702
+Total number of simulation in this turn: 0
+Total number of simulation in game: 270641
+3637
+19650
+Total number of simulation in this turn: 0
+3840
+7441
+Total number of simulation in this turn: 0
+3504
+9733
+Total number of simulation in this turn: 0
+4626
+Total number of simulation in this turn: 0
+3978
+Total number of simulation in this turn: 0
+4476
+11055
+Total number of simulation in this turn: 0
+5638
+Total number of simulation in this turn: 0
+4304
+12879
+Total number of simulation in this turn: 0
+5227
+10376
+Total number of simulation in this turn: 0
+4945
+Total number of simulation in this turn: 0
+4399
+10824
+Total number of simulation in this turn: 0
+Total number of simulation in game: 130532
+2646
+3559
+4054
+7794
+Total number of simulation in this turn: 0
+3392
+23959
+Total number of simulation in this turn: 0
+2387
+3801
+5770
+Total number of simulation in this turn: 0
+5020
+6462
+Total number of simulation in this turn: 0
+4116
+6895
+10192
+Total number of simulation in this turn: 0
+4065
+6940
+Total number of simulation in this turn: 0
+2597
+4993
+19467
+Total number of simulation in this turn: 0
+3110
+Total number of simulation in this turn: 0
+3247
+3090
+5492
+Total number of simulation in this turn: 0
+3874
+9206
+Total number of simulation in this turn: 0
+3776
+5925
+5035
+Total number of simulation in this turn: 0
+Total number of simulation in game: 170864
+5204
+Total number of simulation in this turn: 0
+4618
+8032
+Total number of simulation in this turn: 0
+3416
+Total number of simulation in this turn: 0
+4110
+86017
+Total number of simulation in this turn: 0
+3632
+4021
+11116
+69450
+Total number of simulation in this turn: 0
+4195
+20593
+Total number of simulation in this turn: 0
+3156
+Total number of simulation in this turn: 0
+3363
+70551
+Total number of simulation in this turn: 0
+2655
+5003
+14593
+Total number of simulation in this turn: 0
+3916
+4427
+Total number of simulation in this turn: 0
+5018
+10710
+Total number of simulation in this turn: 0
+3497
+Total number of simulation in this turn: 0
+Total number of simulation in game: 351293
+4090
+Total number of simulation in this turn: 0
+2651
+53521
+Total number of simulation in this turn: 0
+2862
+6270
+Total number of simulation in this turn: 0
+4933
+Total number of simulation in this turn: 0
+4148
+Total number of simulation in this turn: 0
+5587
+13488
+Total number of simulation in this turn: 0
+4749
+Total number of simulation in this turn: 0
+4487
+Total number of simulation in this turn: 0
+4587
+Total number of simulation in this turn: 0
+3945
+Total number of simulation in this turn: 0
+4293
+Total number of simulation in this turn: 0
+3853
+Total number of simulation in this turn: 0
+5779
+Total number of simulation in this turn: 0
+4335
+Total number of simulation in this turn: 0
+Total number of simulation in game: 133578
+4569
+Total number of simulation in this turn: 0
+3287
+86940
+Total number of simulation in this turn: 0
+6148
+Total number of simulation in this turn: 0
+5601
+Total number of simulation in this turn: 0
+4341
+15887
+Total number of simulation in this turn: 0
+5326
+Total number of simulation in this turn: 0
+4665
+Total number of simulation in this turn: 0
+5028
+8570
+Total number of simulation in this turn: 0
+5298
+Total number of simulation in this turn: 0
+4323
+Total number of simulation in this turn: 0
+5672
+Total number of simulation in this turn: 0
+Total number of simulation in game: 165655
+3020
+Total number of simulation in this turn: 0
+4451
+Total number of simulation in this turn: 0
+4450
+18165
+Total number of simulation in this turn: 0
+3278
+7771
+5578
+Total number of simulation in this turn: 0
+3279
+Total number of simulation in this turn: 0
+3584
+4688
+Total number of simulation in this turn: 0
+2550
+54238
+Total number of simulation in this turn: 0
+6341
+5965
+Total number of simulation in this turn: 0
+3667
+Total number of simulation in this turn: 0
+5334
+Total number of simulation in this turn: 0
+3583
+Total number of simulation in this turn: 0
+4605
+4698
+6571
+Total number of simulation in this turn: 0
+3917
+Total number of simulation in this turn: 0
+3918
+Total number of simulation in this turn: 0
+Total number of simulation in game: 163651
+5118
+Total number of simulation in this turn: 0
+3414
+Total number of simulation in this turn: 0
+4894
+67533
+Total number of simulation in this turn: 0
+3840
+8836
+Total number of simulation in this turn: 0
+3480
+Total number of simulation in this turn: 0
+4313
+Total number of simulation in this turn: 0
+4144
+Total number of simulation in this turn: 0
+3998
+61876
+Total number of simulation in this turn: 0
+3917
+4765
+Total number of simulation in this turn: 0
+2500
+5864
+Total number of simulation in this turn: 0
+Total number of simulation in game: 188492
+3074
+Total number of simulation in this turn: 0
+4145
+Total number of simulation in this turn: 0
+3586
+Total number of simulation in this turn: 0
+3647
+Total number of simulation in this turn: 0
+3901
+Total number of simulation in this turn: 0
+3762
+5862
+88740
+Total number of simulation in this turn: 0
+4350
+Total number of simulation in this turn: 0
+4822
+4439
+Total number of simulation in this turn: 0
+4104
+Total number of simulation in this turn: 0
+3138
+5033
+20669
+Total number of simulation in this turn: 0
+5398
+Total number of simulation in this turn: 0
+4638
+Total number of simulation in this turn: 0
+2900
+Total number of simulation in this turn: 0
+3216
+Total number of simulation in this turn: 0
+5026
+Total number of simulation in this turn: 0
+4933
+6916
+31732
+Total number of simulation in this turn: 0
+3727
+Total number of simulation in this turn: 0
+Total number of simulation in game: 231758
+3706
+Total number of simulation in this turn: 0
+3275
+3639
+Total number of simulation in this turn: 0
+3494
+6230
+9926
+Total number of simulation in this turn: 0
+4962
+Total number of simulation in this turn: 0
+3772
+Total number of simulation in this turn: 0
+3257
+61606
+Total number of simulation in this turn: 0
+3632
+67997
+Total number of simulation in this turn: 0
+3311
+5537
+15767
+Total number of simulation in this turn: 0
+4408
+4401
+6323
+Total number of simulation in this turn: 0
+3907
+6026
+Total number of simulation in this turn: 0
+3523
+47076
+Total number of simulation in this turn: 0
+3923
+7366
+Total number of simulation in this turn: 0
+3235
+6135
+Total number of simulation in this turn: 0
+3110
+1283818
+Total number of simulation in this turn: 0
+3094
+5413
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1591869
+4253
+16766
+Total number of simulation in this turn: 0
+4782
+Total number of simulation in this turn: 0
+3044
+Total number of simulation in this turn: 0
+4695
+Total number of simulation in this turn: 0
+3675
+Total number of simulation in this turn: 0
+5541
+Total number of simulation in this turn: 0
+4273
+Total number of simulation in this turn: 0
+4172
+Total number of simulation in this turn: 0
+5195
+Total number of simulation in this turn: 0
+4964
+Total number of simulation in this turn: 0
+4508
+Total number of simulation in this turn: 0
+5325
+Total number of simulation in this turn: 0
+5862
+Total number of simulation in this turn: 0
+3911
+Total number of simulation in this turn: 0
+Total number of simulation in game: 80966
+4131
+Total number of simulation in this turn: 0
+3675
+54442
+Total number of simulation in this turn: 0
+4172
+Total number of simulation in this turn: 0
+2996
+68664
+Total number of simulation in this turn: 0
+2795
+2956
+6687
+Total number of simulation in this turn: 0
+3062
+Total number of simulation in this turn: 0
+2966
+Total number of simulation in this turn: 0
+2694
+6197
+9199
+Total number of simulation in this turn: 0
+3740
+77959
+Total number of simulation in this turn: 0
+3908
+Total number of simulation in this turn: 0
+3852
+Total number of simulation in this turn: 0
+2662
+18458
+Total number of simulation in this turn: 0
+4270
+Total number of simulation in this turn: 0
+3970
+Total number of simulation in this turn: 0
+Total number of simulation in game: 293455
+3894
+5501
+Total number of simulation in this turn: 0
+4223
+Total number of simulation in this turn: 0
+4142
+Total number of simulation in this turn: 0
+4957
+Total number of simulation in this turn: 0
+4773
+Total number of simulation in this turn: 0
+4743
+Total number of simulation in this turn: 0
+4091
+Total number of simulation in this turn: 0
+3311
+Total number of simulation in this turn: 0
+3659
+Total number of simulation in this turn: 0
+2981
+Total number of simulation in this turn: 0
+3335
+Total number of simulation in this turn: 0
+4250
+Total number of simulation in this turn: 0
+4620
+Total number of simulation in this turn: 0
+4481
+Total number of simulation in this turn: 0
+4274
+Total number of simulation in this turn: 0
+Total number of simulation in game: 67235
+3903
+9701
+Total number of simulation in this turn: 0
+4152
+Total number of simulation in this turn: 0
+3190
+5334
+9289
+67253
+Total number of simulation in this turn: 0
+2475
+3705
+Total number of simulation in this turn: 0
+2178
+2804
+2981
+4199
+7254
+Total number of simulation in this turn: 0
+3406
+Total number of simulation in this turn: 0
+2348
+5910
+54960
+Total number of simulation in this turn: 0
+2875
+8843
+Total number of simulation in this turn: 0
+2817
+Total number of simulation in this turn: 0
+3343
+Total number of simulation in this turn: 0
+4024
+Total number of simulation in this turn: 0
+2439
+3222
+6287
+9423
+6964
+Total number of simulation in this turn: 0
+2725
+3422
+4074
+Total number of simulation in this turn: 0
+2959
+3314
+4730
+Total number of simulation in this turn: 0
+2643
+6906
+Total number of simulation in this turn: 0
+Total number of simulation in game: 276052
+3404
+5092
+9578
+Total number of simulation in this turn: 0
+3222
+Total number of simulation in this turn: 0
+3037
+4296
+4119
+Total number of simulation in this turn: 0
+4440
+5701
+Total number of simulation in this turn: 0
+4250
+Total number of simulation in this turn: 0
+2411
+3357
+Total number of simulation in this turn: 0
+2684
+10007
+28851
+47826
+Total number of simulation in this turn: 0
+3014
+5441
+Total number of simulation in this turn: 0
+3767
+16567
+Total number of simulation in this turn: 0
+3516
+Total number of simulation in this turn: 0
+3983
+38240
+Total number of simulation in this turn: 0
+Total number of simulation in game: 216803
+2525
+5789
+61836
+Total number of simulation in this turn: 0
+4398
+Total number of simulation in this turn: 0
+3817
+Total number of simulation in this turn: 0
+3537
+5950
+83517
+Total number of simulation in this turn: 0
+4623
+8274
+63114
+Total number of simulation in this turn: 0
+5007
+Total number of simulation in this turn: 0
+5425
+Total number of simulation in this turn: 0
+3328
+Total number of simulation in this turn: 0
+4547
+Total number of simulation in this turn: 0
+3544
+Total number of simulation in this turn: 0
+4526
+Total number of simulation in this turn: 0
+3834
+Total number of simulation in this turn: 0
+4077
+Total number of simulation in this turn: 0
+4379
+Total number of simulation in this turn: 0
+Total number of simulation in game: 286047
+4446
+Total number of simulation in this turn: 0
+3128
+Total number of simulation in this turn: 0
+2963
+Total number of simulation in this turn: 0
+3652
+Total number of simulation in this turn: 0
+3292
+3717
+8328
+76087
+Total number of simulation in this turn: 0
+5249
+Total number of simulation in this turn: 0
+6015
+Total number of simulation in this turn: 0
+5306
+Total number of simulation in this turn: 0
+4762
+Total number of simulation in this turn: 0
+3603
+Total number of simulation in this turn: 0
+3706
+Total number of simulation in this turn: 0
+3006
+48047
+Total number of simulation in this turn: 0
+4652
+Total number of simulation in this turn: 0
+3729
+Total number of simulation in this turn: 0
+4296
+Total number of simulation in this turn: 0
+4664
+Total number of simulation in this turn: 0
+4200
+Total number of simulation in this turn: 0
+5168
+Total number of simulation in this turn: 0
+3629
+Total number of simulation in this turn: 0
+5063
+Total number of simulation in this turn: 0
+5045
+Total number of simulation in this turn: 0
+4791
+Total number of simulation in this turn: 0
+Total number of simulation in game: 230544
+3583
+8830
+Total number of simulation in this turn: 0
+3225
+Total number of simulation in this turn: 0
+4121
+13143
+Total number of simulation in this turn: 0
+4221
+75920
+Total number of simulation in this turn: 0
+5074
+19776
+Total number of simulation in this turn: 0
+4186
+18489
+Total number of simulation in this turn: 0
+4963
+Total number of simulation in this turn: 0
+4313
+Total number of simulation in this turn: 0
+3975
+Total number of simulation in this turn: 0
+5225
+Total number of simulation in this turn: 0
+4178
+Total number of simulation in this turn: 0
+3839
+Total number of simulation in this turn: 0
+Total number of simulation in game: 187061
+4302
+16972
+Total number of simulation in this turn: 0
+3535
+Total number of simulation in this turn: 0
+2021
+3379
+10839
+Total number of simulation in this turn: 0
+3178
+Total number of simulation in this turn: 0
+3502
+Total number of simulation in this turn: 0
+3129
+Total number of simulation in this turn: 0
+3078
+6202
+Total number of simulation in this turn: 0
+3573
+3647
+14153
+Total number of simulation in this turn: 0
+2009
+2257
+3287
+3568
+5031
+68498
+Total number of simulation in this turn: 0
+2946
+3695
+Total number of simulation in this turn: 0
+2528
+2790
+5672
+Total number of simulation in this turn: 0
+3205
+3395
+6666
+19521
+Total number of simulation in this turn: 0
+1673
+2636
+4311
+7271
+Total number of simulation in this turn: 0
+3405
+2920
+5173
+Total number of simulation in this turn: 0
+2002
+3165
+5228
+55896
+Total number of simulation in this turn: 0
+1833
+1928
+2431
+3658
+3878
+13321
+Total number of simulation in this turn: 0
+1549
+1773
+2399
+1931
+4363
+8220
+6621
+41932
+Total number of simulation in this turn: 0
+3182
+3825
+22943
+Total number of simulation in this turn: 0
+4169
+12021
+50259
+Total number of simulation in this turn: 0
+1720
+2215
+2576
+2247
+9368
+46043
+Total number of simulation in this turn: 0
+1090
+1561
+1578
+1996
+2308
+3216
+2273
+3582
+4004
+73238
+Total number of simulation in this turn: 0
+1328
+1409
+1325
+1613
+1790
+2213
+2124
+2965
+2996
+Total number of simulation in this turn: 0
+1433
+2772
+4676
+30486
+Total number of simulation in this turn: 0
+Total number of simulation in game: 718639
+5779
+Total number of simulation in this turn: 0
+4257
+5194
+Total number of simulation in this turn: 0
+2179
+5105
+17986
+58432
+Total number of simulation in this turn: 0
+4410
+6588
+Total number of simulation in this turn: 0
+2543
+7969
+8878
+10809
+11815
+85517
+Total number of simulation in this turn: 0
+5406
+61080
+Total number of simulation in this turn: 0
+4829
+Total number of simulation in this turn: 0
+3665
+3061
+3710
+6395
+Total number of simulation in this turn: 0
+3946
+4465
+6723
+9726
+Total number of simulation in this turn: 0
+3339
+6478
+Total number of simulation in this turn: 0
+3486
+7376
+1094424
+Total number of simulation in this turn: 0
+5866
+Total number of simulation in this turn: 0
+6454
+Total number of simulation in this turn: 0
+4222
+7669
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1489781
+3046
+Total number of simulation in this turn: 0
+2994
+5276
+Total number of simulation in this turn: 0
+3794
+4657
+12040
+Total number of simulation in this turn: 0
+3007
+3848
+3328
+51403
+Total number of simulation in this turn: 0
+4377
+5988
+64419
+Total number of simulation in this turn: 0
+2921
+7074
+11950
+Total number of simulation in this turn: 0
+2101
+3413
+3013
+9386
+Total number of simulation in this turn: 0
+3570
+3847
+4334
+65703
+Total number of simulation in this turn: 0
+2432
+2695
+4623
+5246
+8669
+66417
+Total number of simulation in this turn: 0
+2310
+Total number of simulation in this turn: 0
+1852
+1925
+2769
+3762
+2917
+4278
+4714
+6270
+15209
+53365
+Total number of simulation in this turn: 0
+2009
+2492
+3426
+15248
+36355
+Total number of simulation in this turn: 0
+1986
+2244
+2803
+6150
+1330715
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1878370
+3348
+Total number of simulation in this turn: 0
+3136
+68981
+Total number of simulation in this turn: 0
+3359
+Total number of simulation in this turn: 0
+2458
+14286
+Total number of simulation in this turn: 0
+2911
+60890
+Total number of simulation in this turn: 0
+2665
+3020
+3611
+5197
+Total number of simulation in this turn: 0
+3053
+6876
+Total number of simulation in this turn: 0
+2106
+2736
+2751
+3529
+3428
+5105
+4365
+54814
+Total number of simulation in this turn: 0
+2830
+6888
+Total number of simulation in this turn: 0
+3031
+4488
+Total number of simulation in this turn: 0
+3003
+3717
+5095
+6543
+14442
+Total number of simulation in this turn: 0
+2488
+3341
+7091
+9156
+1076253
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1410991
+3914
+Total number of simulation in this turn: 0
+2600
+Total number of simulation in this turn: 0
+3258
+4482
+Total number of simulation in this turn: 0
+3279
+5296
+Total number of simulation in this turn: 0
+3550
+Total number of simulation in this turn: 0
+2985
+Total number of simulation in this turn: 0
+2669
+2484
+4083
+8585
+Total number of simulation in this turn: 0
+3014
+6779
+Total number of simulation in this turn: 0
+2903
+Total number of simulation in this turn: 0
+2450
+2733
+3786
+4388
+Total number of simulation in this turn: 0
+2269
+4936
+12561
+Total number of simulation in this turn: 0
+1944
+8880
+Total number of simulation in this turn: 0
+2694
+3128
+7877
+Total number of simulation in this turn: 0
+2051
+2902
+3782
+3210
+4623
+Total number of simulation in this turn: 0
+Total number of simulation in game: 134095
+3625
+24026
+Total number of simulation in this turn: 0
+4178
+Total number of simulation in this turn: 0
+4016
+Total number of simulation in this turn: 0
+3579
+Total number of simulation in this turn: 0
+3842
+Total number of simulation in this turn: 0
+4768
+Total number of simulation in this turn: 0
+4648
+Total number of simulation in this turn: 0
+4135
+Total number of simulation in this turn: 0
+4607
+Total number of simulation in this turn: 0
+4828
+Total number of simulation in this turn: 0
+4850
+Total number of simulation in this turn: 0
+4778
+Total number of simulation in this turn: 0
+4864
+Total number of simulation in this turn: 0
+Total number of simulation in game: 80744
+3305
+Total number of simulation in this turn: 0
+3624
+Total number of simulation in this turn: 0
+3688
+Total number of simulation in this turn: 0
+3311
+Total number of simulation in this turn: 0
+3233
+5887
+Total number of simulation in this turn: 0
+3250
+18057
+Total number of simulation in this turn: 0
+5966
+Total number of simulation in this turn: 0
+4867
+Total number of simulation in this turn: 0
+3272
+5294
+76820
+Total number of simulation in this turn: 0
+4487
+Total number of simulation in this turn: 0
+5233
+Total number of simulation in this turn: 0
+5336
+12120
+Total number of simulation in this turn: 0
+4944
+Total number of simulation in this turn: 0
+4744
+13061
+Total number of simulation in this turn: 0
+3782
+8928
+Total number of simulation in this turn: 0
+Total number of simulation in game: 203209
+4151
+6286
+Total number of simulation in this turn: 0
+4184
+Total number of simulation in this turn: 0
+4304
+7791
+79502
+Total number of simulation in this turn: 0
+4240
+81399
+Total number of simulation in this turn: 0
+4237
+5940
+Total number of simulation in this turn: 0
+4038
+10455
+Total number of simulation in this turn: 0
+4165
+83491
+Total number of simulation in this turn: 0
+3495
+6070
+Total number of simulation in this turn: 0
+3380
+2893
+6800
+Total number of simulation in this turn: 0
+4392
+Total number of simulation in this turn: 0
+2627
+4660
+Total number of simulation in this turn: 0
+2630
+5489
+Total number of simulation in this turn: 0
+1978
+2416
+3560
+3751
+4904
+8802
+Total number of simulation in this turn: 0
+2432
+9781
+16926
+Total number of simulation in this turn: 0
+2573
+4650
+6988
+Total number of simulation in this turn: 0
+Total number of simulation in game: 415380
+2970
+7459
+Total number of simulation in this turn: 0
+2849
+3801
+Total number of simulation in this turn: 0
+3367
+Total number of simulation in this turn: 0
+3967
+5219
+Total number of simulation in this turn: 0
+4540
+Total number of simulation in this turn: 0
+4495
+Total number of simulation in this turn: 0
+4047
+Total number of simulation in this turn: 0
+5220
+Total number of simulation in this turn: 0
+4325
+Total number of simulation in this turn: 0
+5327
+Total number of simulation in this turn: 0
+3403
+Total number of simulation in this turn: 0
+3658
+Total number of simulation in this turn: 0
+4077
+Total number of simulation in this turn: 0
+4363
+Total number of simulation in this turn: 0
+6256
+Total number of simulation in this turn: 0
+5117
+7104
+Total number of simulation in this turn: 0
+Total number of simulation in game: 91564
+4290
+Total number of simulation in this turn: 0
+2976
+4434
+Total number of simulation in this turn: 0
+3959
+Total number of simulation in this turn: 0
+3389
+4365
+5192
+3893
+10456
+Total number of simulation in this turn: 0
+4233
+Total number of simulation in this turn: 0
+2281
+2547
+9481
+14919
+53374
+Total number of simulation in this turn: 0
+2668
+Total number of simulation in this turn: 0
+2960
+5086
+7898
+Total number of simulation in this turn: 0
+3855
+22992
+Total number of simulation in this turn: 0
+2578
+4284
+3923
+5566
+Total number of simulation in this turn: 0
+2721
+3442
+Total number of simulation in this turn: 0
+2973
+7388
+Total number of simulation in this turn: 0
+Total number of simulation in game: 208123
+2829
+6039
+15399
+Total number of simulation in this turn: 0
+3759
+Total number of simulation in this turn: 0
+3109
+14567
+Total number of simulation in this turn: 0
+3750
+5423
+71009
+Total number of simulation in this turn: 0
+3211
+10390
+17249
+Total number of simulation in this turn: 0
+4417
+Total number of simulation in this turn: 0
+3977
+Total number of simulation in this turn: 0
+3232
+4027
+17947
+Total number of simulation in this turn: 0
+3552
+Total number of simulation in this turn: 0
+3633
+Total number of simulation in this turn: 0
+4476
+Total number of simulation in this turn: 0
+3310
+Total number of simulation in this turn: 0
+4149
+Total number of simulation in this turn: 0
+4254
+Total number of simulation in this turn: 0
+3713
+Total number of simulation in this turn: 0
+4960
+Total number of simulation in this turn: 0
+3541
+Total number of simulation in this turn: 0
+3540
+Total number of simulation in this turn: 0
+4081
+Total number of simulation in this turn: 0
+Total number of simulation in game: 233543
+3728
+9004
+Total number of simulation in this turn: 0
+4608
+12834
+Total number of simulation in this turn: 0
+4026
+Total number of simulation in this turn: 0
+4010
+14868
+Total number of simulation in this turn: 0
+4135
+23353
+Total number of simulation in this turn: 0
+4388
+7221
+Total number of simulation in this turn: 0
+4362
+11646
+20455
+Total number of simulation in this turn: 0
+4916
+8138
+Total number of simulation in this turn: 0
+4035
+Total number of simulation in this turn: 0
+3364
+4486
+Total number of simulation in this turn: 0
+4591
+1506822
+Total number of simulation in this turn: 0
+5062
+29282
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1699334
+3702
+Total number of simulation in this turn: 0
+4117
+Total number of simulation in this turn: 0
+3575
+Total number of simulation in this turn: 0
+3792
+3732
+68776
+Total number of simulation in this turn: 0
+2613
+76991
+Total number of simulation in this turn: 0
+4438
+Total number of simulation in this turn: 0
+4063
+Total number of simulation in this turn: 0
+5004
+6238
+Total number of simulation in this turn: 0
+5354
+Total number of simulation in this turn: 0
+4070
+4493
+9368
+Total number of simulation in this turn: 0
+Total number of simulation in game: 210326
+3844
+Total number of simulation in this turn: 0
+3871
+16964
+Total number of simulation in this turn: 0
+3507
+Total number of simulation in this turn: 0
+4275
+Total number of simulation in this turn: 0
+4063
+5088
+Total number of simulation in this turn: 0
+4967
+Total number of simulation in this turn: 0
+4563
+4492
+3764
+54109
+Total number of simulation in this turn: 0
+3907
+3652
+Total number of simulation in this turn: 0
+4563
+Total number of simulation in this turn: 0
+4144
+Total number of simulation in this turn: 0
+4093
+9795
+Total number of simulation in this turn: 0
+4329
+71178
+Total number of simulation in this turn: 0
+6262
+Total number of simulation in this turn: 0
+4213
+4307
+Total number of simulation in this turn: 0
+Total number of simulation in game: 233950
+3755
+Total number of simulation in this turn: 0
+5547
+Total number of simulation in this turn: 0
+3462
+5629
+Total number of simulation in this turn: 0
+3002
+3888
+Total number of simulation in this turn: 0
+2577
+3678
+Total number of simulation in this turn: 0
+3456
+3723
+7647
+Total number of simulation in this turn: 0
+2269
+1903
+2591
+6129
+51977
+Total number of simulation in this turn: 0
+1775
+3319
+6205
+Total number of simulation in this turn: 0
+2649
+4155
+3681
+4298
+4462
+7891
+Total number of simulation in this turn: 0
+2892
+5923
+Total number of simulation in this turn: 0
+3044
+2588
+3220
+3760
+3315
+Total number of simulation in this turn: 0
+2872
+2231
+8802
+Total number of simulation in this turn: 0
+2363
+2892
+6345
+Total number of simulation in this turn: 0
+4010
+Total number of simulation in this turn: 0
+Total number of simulation in game: 203925
+3733
+6620
+19412
+Total number of simulation in this turn: 0
+4051
+Total number of simulation in this turn: 0
+3362
+5968
+8234
+Total number of simulation in this turn: 0
+3538
+15713
+Total number of simulation in this turn: 0
+3516
+Total number of simulation in this turn: 0
+3332
+Total number of simulation in this turn: 0
+3610
+58127
+Total number of simulation in this turn: 0
+3009
+Total number of simulation in this turn: 0
+2906
+Total number of simulation in this turn: 0
+4111
+5091
+Total number of simulation in this turn: 0
+3322
+Total number of simulation in this turn: 0
+3199
+Total number of simulation in this turn: 0
+3057
+Total number of simulation in this turn: 0
+Total number of simulation in game: 163911
+3168
+Total number of simulation in this turn: 0
+3402
+4432
+Total number of simulation in this turn: 0
+4038
+46975
+Total number of simulation in this turn: 0
+2225
+4668
+Total number of simulation in this turn: 0
+4308
+Total number of simulation in this turn: 0
+2436
+3423
+Total number of simulation in this turn: 0
+2449
+4883
+Total number of simulation in this turn: 0
+2656
+5167
+Total number of simulation in this turn: 0
+3537
+Total number of simulation in this turn: 0
+2464
+4260
+10988
+Total number of simulation in this turn: 0
+4491
+Total number of simulation in this turn: 0
+Total number of simulation in game: 119970
+4970
+Total number of simulation in this turn: 0
+3444
+6328
+Total number of simulation in this turn: 0
+2908
+3403
+78185
+Total number of simulation in this turn: 0
+2969
+16313
+Total number of simulation in this turn: 0
+3256
+3929
+5252
+7800
+Total number of simulation in this turn: 0
+2646
+5458
+6409
+Total number of simulation in this turn: 0
+3179
+3995
+Total number of simulation in this turn: 0
+4335
+8469
+Total number of simulation in this turn: 0
+3957
+5644
+Total number of simulation in this turn: 0
+3236
+Total number of simulation in this turn: 0
+3604
+47143
+Total number of simulation in this turn: 0
+1843
+2648
+3419
+Total number of simulation in this turn: 0
+3676
+Total number of simulation in this turn: 0
+Total number of simulation in game: 248418
+3767
+Total number of simulation in this turn: 0
+5624
+10035
+Total number of simulation in this turn: 0
+4005
+Total number of simulation in this turn: 0
+3731
+11517
+Total number of simulation in this turn: 0
+5131
+Total number of simulation in this turn: 0
+6025
+Total number of simulation in this turn: 0
+6020
+10185
+Total number of simulation in this turn: 0
+4895
+Total number of simulation in this turn: 0
+3906
+Total number of simulation in this turn: 0
+5507
+Total number of simulation in this turn: 0
+4548
+Total number of simulation in this turn: 0
+5367
+Total number of simulation in this turn: 0
+5628
+Total number of simulation in this turn: 0
+3911
+15022
+Total number of simulation in this turn: 0
+Total number of simulation in game: 114824
+3383
+Total number of simulation in this turn: 0
+4369
+5223
+Total number of simulation in this turn: 0
+2836
+6297
+9046
+11547
+60982
+Total number of simulation in this turn: 0
+3429
+16317
+77998
+Total number of simulation in this turn: 0
+3814
+7799
+Total number of simulation in this turn: 0
+3431
+7888
+Total number of simulation in this turn: 0
+3550
+81465
+Total number of simulation in this turn: 0
+3598
+69400
+Total number of simulation in this turn: 0
+2989
+13898
+Total number of simulation in this turn: 0
+3510
+1351308
+Total number of simulation in this turn: 0
+3953
+8629
+Total number of simulation in this turn: 0
+4426
+7087
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1778172
+3497
+Total number of simulation in this turn: 0
+4492
+9363
+Total number of simulation in this turn: 0
+4355
+4276
+Total number of simulation in this turn: 0
+3797
+Total number of simulation in this turn: 0
+3587
+5437
+20896
+Total number of simulation in this turn: 0
+2630
+4409
+Total number of simulation in this turn: 0
+4082
+50674
+Total number of simulation in this turn: 0
+2870
+63298
+Total number of simulation in this turn: 0
+3660
+6569
+Total number of simulation in this turn: 0
+3967
+5970
+Total number of simulation in this turn: 0
+2509
+2357
+3055
+4854
+7186
+16516
+34684
+Total number of simulation in this turn: 0
+3834
+Total number of simulation in this turn: 0
+3873
+Total number of simulation in this turn: 0
+4535
+21004
+Total number of simulation in this turn: 0
+Total number of simulation in game: 312236
+3305
+Total number of simulation in this turn: 0
+3800
+Total number of simulation in this turn: 0
+3840
+Total number of simulation in this turn: 0
+4951
+Total number of simulation in this turn: 0
+4345
+Total number of simulation in this turn: 0
+4082
+Total number of simulation in this turn: 0
+4896
+Total number of simulation in this turn: 0
+3829
+15112
+Total number of simulation in this turn: 0
+4399
+Total number of simulation in this turn: 0
+4058
+Total number of simulation in this turn: 0
+4064
+Total number of simulation in this turn: 0
+6667
+Total number of simulation in this turn: 0
+6104
+Total number of simulation in this turn: 0
+Total number of simulation in game: 73452
+4004
+Total number of simulation in this turn: 0
+2989
+5511
+6565
+Total number of simulation in this turn: 0
+4505
+Total number of simulation in this turn: 0
+4728
+Total number of simulation in this turn: 0
+5428
+Total number of simulation in this turn: 0
+3455
+4060
+9650
+Total number of simulation in this turn: 0
+2825
+3446
+18152
+54684
+Total number of simulation in this turn: 0
+2820
+74890
+Total number of simulation in this turn: 0
+3809
+Total number of simulation in this turn: 0
+2511
+5261
+Total number of simulation in this turn: 0
+4931
+Total number of simulation in this turn: 0
+5014
+Total number of simulation in this turn: 0
+Total number of simulation in game: 229238
+3717
+7746
+Total number of simulation in this turn: 0
+3833
+Total number of simulation in this turn: 0
+4310
+Total number of simulation in this turn: 0
+3755
+3775
+11158
+Total number of simulation in this turn: 0
+3618
+Total number of simulation in this turn: 0
+3252
+2855
+4563
+12718
+Total number of simulation in this turn: 0
+3040
+Total number of simulation in this turn: 0
+3048
+5590
+Total number of simulation in this turn: 0
+2935
+2408
+2986
+7053
+Total number of simulation in this turn: 0
+3514
+Total number of simulation in this turn: 0
+3382
+Total number of simulation in this turn: 0
+2830
+3002
+Total number of simulation in this turn: 0
+3107
+4765
+7278
+1078006
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1198244
+2504
+55958
+Total number of simulation in this turn: 0
+4250
+74550
+Total number of simulation in this turn: 0
+3558
+14640
+26749
+Total number of simulation in this turn: 0
+3409
+6042
+11768
+67186
+Total number of simulation in this turn: 0
+3385
+5413
+Total number of simulation in this turn: 0
+3295
+5465
+12592
+Total number of simulation in this turn: 0
+4058
+5079
+16122
+Total number of simulation in this turn: 0
+3003
+5214
+71156
+Total number of simulation in this turn: 0
+3921
+5705
+Total number of simulation in this turn: 0
+3243
+3481
+10440
+Total number of simulation in this turn: 0
+2744
+3750
+16164
+Total number of simulation in this turn: 0
+3683
+94609
+Total number of simulation in this turn: 0
+3954
+4122
+5374
+13154
+84458
+Total number of simulation in this turn: 0
+2711
+5686
+16525
+85409
+Total number of simulation in this turn: 0
+1824
+3216
+2806
+3575
+4297
+Total number of simulation in this turn: 0
+1858
+1773
+3334
+4100
+45408
+Total number of simulation in this turn: 0
+1779
+2978
+4251
+8063
+32670
+Total number of simulation in this turn: 0
+Total number of simulation in game: 896461
+5189
+Total number of simulation in this turn: 0
+3794
+17449
+Total number of simulation in this turn: 0
+3710
+5698
+Total number of simulation in this turn: 0
+3409
+Total number of simulation in this turn: 0
+3457
+4736
+71655
+Total number of simulation in this turn: 0
+4780
+Total number of simulation in this turn: 0
+4060
+Total number of simulation in this turn: 0
+4218
+Total number of simulation in this turn: 0
+2860
+10403
+Total number of simulation in this turn: 0
+5641
+Total number of simulation in this turn: 0
+5291
+Total number of simulation in this turn: 0
+Total number of simulation in game: 156350
+3375
+6671
+6885
+8227
+7877
+Total number of simulation in this turn: 0
+3689
+Total number of simulation in this turn: 0
+2634
+3281
+8102
+Total number of simulation in this turn: 0
+2222
+15181
+Total number of simulation in this turn: 0
+2980
+4120
+6027
+Total number of simulation in this turn: 0
+2110
+3087
+3392
+3202
+3776
+3159
+8501
+4911
+6757
+13116
+56491
+Total number of simulation in this turn: 0
+1958
+2860
+4549
+9247
+Total number of simulation in this turn: 0
+2253
+2689
+5010
+Total number of simulation in this turn: 0
+2310
+2114
+2434
+3089
+6267
+4931
+85971
+Total number of simulation in this turn: 0
+Total number of simulation in game: 325455
+3206
+3995
+7196
+16258
+Total number of simulation in this turn: 0
+4484
+Total number of simulation in this turn: 0
+3089
+3422
+Total number of simulation in this turn: 0
+4637
+20362
+Total number of simulation in this turn: 0
+3320
+4153
+6946
+Total number of simulation in this turn: 0
+2261
+4788
+53208
+Total number of simulation in this turn: 0
+2986
+5279
+15790
+Total number of simulation in this turn: 0
+3288
+13638
+Total number of simulation in this turn: 0
+1822
+2924
+6295
+9904
+Total number of simulation in this turn: 0
+2377
+2321
+2732
+44728
+Total number of simulation in this turn: 0
+2176
+10005
+44317
+Total number of simulation in this turn: 0
+2314
+6294
+6843
+11168
+31564
+Total number of simulation in this turn: 0
+Total number of simulation in game: 370090
+3045
+Total number of simulation in this turn: 0
+3363
+5682
+Total number of simulation in this turn: 0
+2206
+3176
+6730
+83458
+Total number of simulation in this turn: 0
+2872
+4908
+Total number of simulation in this turn: 0
+3110
+3134
+4214
+13836
+Total number of simulation in this turn: 0
+2859
+Total number of simulation in this turn: 0
+3188
+5661
+Total number of simulation in this turn: 0
+3994
+59481
+Total number of simulation in this turn: 0
+4418
+Total number of simulation in this turn: 0
+4257
+3802
+Total number of simulation in this turn: 0
+2488
+Total number of simulation in this turn: 0
+4512
+Total number of simulation in this turn: 0
+2912
+3687
+16544
+1384742
+Total number of simulation in this turn: 0
+2738
+4339
+4851
+1093467
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2747674
+2715
+4417
+9637
+Total number of simulation in this turn: 0
+3698
+Total number of simulation in this turn: 0
+3284
+3852
+5442
+Total number of simulation in this turn: 0
+2983
+5265
+Total number of simulation in this turn: 0
+3237
+5655
+8748
+Total number of simulation in this turn: 0
+2496
+2855
+Total number of simulation in this turn: 0
+3047
+4881
+Total number of simulation in this turn: 0
+3428
+3029
+3246
+4534
+4480
+9064
+84711
+Total number of simulation in this turn: 0
+4243
+Total number of simulation in this turn: 0
+4065
+6928
+Total number of simulation in this turn: 0
+5424
+13034
+Total number of simulation in this turn: 0
+3633
+11471
+Total number of simulation in this turn: 0
+Total number of simulation in game: 233502
+2661
+8221
+Total number of simulation in this turn: 0
+3563
+64176
+Total number of simulation in this turn: 0
+3909
+62471
+Total number of simulation in this turn: 0
+4965
+Total number of simulation in this turn: 0
+3376
+18820
+Total number of simulation in this turn: 0
+4870
+Total number of simulation in this turn: 0
+2851
+47763
+Total number of simulation in this turn: 0
+3433
+Total number of simulation in this turn: 0
+3831
+66738
+Total number of simulation in this turn: 0
+4435
+Total number of simulation in this turn: 0
+3513
+29571
+Total number of simulation in this turn: 0
+Total number of simulation in game: 339167
+3921
+14484
+Total number of simulation in this turn: 0
+3371
+4312
+4773
+71201
+Total number of simulation in this turn: 0
+5520
+Total number of simulation in this turn: 0
+4947
+Total number of simulation in this turn: 0
+4358
+Total number of simulation in this turn: 0
+4399
+9884
+Total number of simulation in this turn: 0
+4717
+54564
+Total number of simulation in this turn: 0
+3170
+5245
+6427
+7857
+Total number of simulation in this turn: 0
+3700
+5340
+12050
+Total number of simulation in this turn: 0
+3192
+3409
+5152
+13656
+Total number of simulation in this turn: 0
+2861
+3529
+4931
+6984
+Total number of simulation in this turn: 0
+3293
+4671
+Total number of simulation in this turn: 0
+2636
+4656
+17295
+Total number of simulation in this turn: 0
+4018
+8681
+Total number of simulation in this turn: 0
+3664
+7299
+13206
+Total number of simulation in this turn: 0
+2834
+3980
+Total number of simulation in this turn: 0
+2803
+Total number of simulation in this turn: 0
+Total number of simulation in game: 356990
+3373
+Total number of simulation in this turn: 0
+3936
+13497
+Total number of simulation in this turn: 0
+3656
+Total number of simulation in this turn: 0
+3540
+8742
+Total number of simulation in this turn: 0
+2240
+3423
+4536
+14797
+Total number of simulation in this turn: 0
+3248
+8032
+Total number of simulation in this turn: 0
+2558
+2274
+14508
+Total number of simulation in this turn: 0
+2464
+3047
+6930
+10202
+Total number of simulation in this turn: 0
+2546
+Total number of simulation in this turn: 0
+2287
+2880
+3800
+Total number of simulation in this turn: 0
+2951
+5150
+Total number of simulation in this turn: 0
+1497
+1380
+2374
+2587
+3954
+4232
+13547
+Total number of simulation in this turn: 0
+2010
+2440
+2855
+3731
+11659
+Total number of simulation in this turn: 0
+1272
+2848
+4802
+7286
+Total number of simulation in this turn: 0
+1783
+1509
+3395
+3916
+Total number of simulation in this turn: 0
+1862
+2618
+Total number of simulation in this turn: 0
+2314
+7062
+13943
+Total number of simulation in this turn: 0
+1781
+2466
+Total number of simulation in this turn: 0
+2080
+2461
+2538
+3689
+Total number of simulation in this turn: 0
+1721
+1988
+3459
+Total number of simulation in this turn: 0
+Total number of simulation in game: 263676
+4075
+58144
+Total number of simulation in this turn: 0
+3907
+Total number of simulation in this turn: 0
+3941
+Total number of simulation in this turn: 0
+2749
+50735
+Total number of simulation in this turn: 0
+3842
+Total number of simulation in this turn: 0
+3835
+9273
+Total number of simulation in this turn: 0
+4960
+7754
+Total number of simulation in this turn: 0
+4087
+3273
+50447
+Total number of simulation in this turn: 0
+2170
+2991
+7279
+Total number of simulation in this turn: 0
+3113
+2768
+3139
+5313
+Total number of simulation in this turn: 0
+3557
+Total number of simulation in this turn: 0
+3592
+Total number of simulation in this turn: 0
+2545
+2745
+2726
+3641
+Total number of simulation in this turn: 0
+Total number of simulation in game: 256601
+4151
+Total number of simulation in this turn: 0
+3545
+5745
+Total number of simulation in this turn: 0
+2461
+3996
+4232
+5729
+58141
+Total number of simulation in this turn: 0
+2964
+2389
+6975
+Total number of simulation in this turn: 0
+1723
+2123
+1930
+1996
+2108
+2010
+2105
+3015
+3086
+3276
+5146
+9783
+Total number of simulation in this turn: 0
+3635
+4871
+46696
+Total number of simulation in this turn: 0
+2095
+2654
+4064
+6495
+9593
+70424
+Total number of simulation in this turn: 0
+1893
+1539
+2031
+2995
+5513
+5338
+6883
+Total number of simulation in this turn: 0
+1910
+2297
+2823
+3389
+5016
+Total number of simulation in this turn: 0
+3195
+4019
+6407
+Total number of simulation in this turn: 0
+3601
+4293
+12018
+Total number of simulation in this turn: 0
+2503
+5510
+52086
+Total number of simulation in this turn: 0
+1578
+1841
+1747
+1838
+1603
+1476
+2459
+2866
+4369
+4490
+4789
+62516
+Total number of simulation in this turn: 0
+2305
+2146
+2307
+2087
+3343
+7399
+1026778
+Total number of simulation in this turn: 0
+1807
+4134
+5389
+10892
+1144790
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2729364
+4179
+Total number of simulation in this turn: 0
+3944
+5604
+7600
+Total number of simulation in this turn: 0
+3961
+5656
+58368
+Total number of simulation in this turn: 0
+2723
+3637
+9799
+57820
+Total number of simulation in this turn: 0
+1934
+3106
+4392
+3434
+Total number of simulation in this turn: 0
+2800
+Total number of simulation in this turn: 0
+2107
+2245
+2383
+2658
+2839
+5700
+14038
+Total number of simulation in this turn: 0
+3995
+3538
+Total number of simulation in this turn: 0
+2958
+2892
+2527
+2962
+54025
+Total number of simulation in this turn: 0
+2110
+3163
+3130
+4311
+65842
+Total number of simulation in this turn: 0
+2299
+2100
+2680
+2164
+3094
+3732
+9064
+58436
+Total number of simulation in this turn: 0
+2906
+2642
+2635
+2916
+Total number of simulation in this turn: 0
+2395
+2135
+5360
+58935
+Total number of simulation in this turn: 0
+2543
+2443
+5200
+5217
+12680
+44893
+Total number of simulation in this turn: 0
+1915
+2647
+3310
+3748
+3301
+55961
+Total number of simulation in this turn: 0
+708
+1117
+1153
+851
+989
+1746
+1556
+2616
+2007
+3172
+3976
+Total number of simulation in this turn: 0
+1369
+1745
+1452
+3066
+6746
+34952
+Total number of simulation in this turn: 0
+1408
+1494
+1468
+1782
+2071
+1608
+2072
+2245
+2663
+3152
+7482
+36092
+Total number of simulation in this turn: 0
+1712
+1937
+1999
+2159
+2071
+2943
+5529
+12799
+32334
+1146856
+Total number of simulation in this turn: 0
+1955
+3784
+5373
+1160754
+Total number of simulation in this turn: 0
+1995
+3128
+3668
+3977
+4309
+6617
+27068
+Total number of simulation in this turn: 0
+2019
+1498
+2333
+2323
+3667
+8714
+16495
+1258489
+Total number of simulation in this turn: 0
+1868
+2143
+3079
+4138
+9562
+1092043
+Total number of simulation in this turn: 0
+1287
+1123
+1097
+1598
+1965
+2615
+12836
+1112735
+Total number of simulation in this turn: 0
+Total number of simulation in game: 6779083
+2851
+3829
+9319
+18705
+Total number of simulation in this turn: 0
+3489
+9319
+12204
+116018
+Total number of simulation in this turn: 0
+4381
+101223
+Total number of simulation in this turn: 0
+3851
+10907
+Total number of simulation in this turn: 0
+5225
+12365
+Total number of simulation in this turn: 0
+5024
+13461
+Total number of simulation in this turn: 0
+3382
+7818
+85842
+Total number of simulation in this turn: 0
+3112
+9019
+Total number of simulation in this turn: 0
+2659
+3402
+65550
+Total number of simulation in this turn: 0
+2543
+21901
+Total number of simulation in this turn: 0
+3164
+Total number of simulation in this turn: 0
+2066
+2114
+8542
+Total number of simulation in this turn: 0
+2212
+2903
+3085
+60517
+Total number of simulation in this turn: 0
+1972
+2581
+3098
+2729
+Total number of simulation in this turn: 0
+1516
+2351
+2193
+3045
+3742
+10489
+Total number of simulation in this turn: 0
+1251
+1638
+1425
+1615
+1453
+1379
+2293
+2252
+2689
+3390
+4701
+Total number of simulation in this turn: 0
+1251
+1768
+2673
+3345
+3766
+5844
+16833
+Total number of simulation in this turn: 0
+1083
+1013
+1607
+1748
+1615
+2422
+1831
+2991
+5120
+8564
+Total number of simulation in this turn: 0
+1008
+1215
+1387
+1800
+1833
+2384
+6960
+2978
+2979
+5057
+Total number of simulation in this turn: 0
+1157
+992
+Total number of simulation in this turn: 0
+1487
+1414
+1863
+1423
+1133
+1217
+1527
+1714
+1557
+1756
+1901
+1724
+2369
+2077
+2854
+7829
+7291
+917579
+Total number of simulation in this turn: 0
+1305
+1877
+2240
+3136
+3293
+6538
+13556
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1763688
+3547
+6060
+74400
+Total number of simulation in this turn: 0
+3079
+4604
+7009
+Total number of simulation in this turn: 0
+3507
+Total number of simulation in this turn: 0
+2432
+3887
+7675
+19671
+55519
+Total number of simulation in this turn: 0
+2451
+3787
+Total number of simulation in this turn: 0
+2268
+2662
+4503
+17667
+19573
+Total number of simulation in this turn: 0
+2102
+2279
+43002
+Total number of simulation in this turn: 0
+1726
+2565
+2430
+14726
+Total number of simulation in this turn: 0
+2105
+4523
+57758
+Total number of simulation in this turn: 0
+2249
+2308
+3035
+5397
+6469
+Total number of simulation in this turn: 0
+1686
+2832
+2996
+Total number of simulation in this turn: 0
+1998
+4868
+4647
+71908
+Total number of simulation in this turn: 0
+3364
+15991
+Total number of simulation in this turn: 0
+2535
+2192
+4462
+4972
+1205862
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1727288
+2788
+15033
+Total number of simulation in this turn: 0
+4053
+59444
+Total number of simulation in this turn: 0
+3786
+20491
+Total number of simulation in this turn: 0
+5112
+Total number of simulation in this turn: 0
+4420
+Total number of simulation in this turn: 0
+5067
+Total number of simulation in this turn: 0
+5017
+Total number of simulation in this turn: 0
+4157
+Total number of simulation in this turn: 0
+2991
+Total number of simulation in this turn: 0
+5203
+Total number of simulation in this turn: 0
+3903
+Total number of simulation in this turn: 0
+Total number of simulation in game: 141465
+3714
+Total number of simulation in this turn: 0
+3580
+4960
+65962
+Total number of simulation in this turn: 0
+5468
+Total number of simulation in this turn: 0
+3641
+3515
+11695
+Total number of simulation in this turn: 0
+2573
+7564
+17980
+Total number of simulation in this turn: 0
+3263
+Total number of simulation in this turn: 0
+3946
+Total number of simulation in this turn: 0
+2587
+Total number of simulation in this turn: 0
+3479
+11030
+Total number of simulation in this turn: 0
+3319
+4584
+6416
+Total number of simulation in this turn: 0
+2026
+11016
+Total number of simulation in this turn: 0
+2468
+7295
+Total number of simulation in this turn: 0
+4125
+Total number of simulation in this turn: 0
+2616
+Total number of simulation in this turn: 0
+2924
+3892
+5614
+9518
+Total number of simulation in this turn: 0
+2465
+3692
+Total number of simulation in this turn: 0
+3656
+Total number of simulation in this turn: 0
+1755
+2321
+3483
+6286
+Total number of simulation in this turn: 0
+2194
+Total number of simulation in this turn: 0
+3040
+3295
+6938
+Total number of simulation in this turn: 0
+2639
+5310
+Total number of simulation in this turn: 0
+1779
+2620
+47506
+Total number of simulation in this turn: 0
+2669
+4855
+7052
+49725
+Total number of simulation in this turn: 0
+1436
+1636
+1787
+2016
+Total number of simulation in this turn: 0
+1498
+1848
+1969
+2660
+3388
+16465
+Total number of simulation in this turn: 0
+2942
+3361
+48714
+Total number of simulation in this turn: 0
+2193
+32160
+Total number of simulation in this turn: 0
+1396
+2012
+2126
+4336
+5589
+13788
+Total number of simulation in this turn: 0
+1386
+1933
+1804
+4454
+48955
+Total number of simulation in this turn: 0
+1552
+3624
+5053
+5340
+12589
+Total number of simulation in this turn: 0
+1875
+2287
+3866
+2991
+3437
+8336
+4447
+21740
+Total number of simulation in this turn: 0
+1500
+2255
+5561
+1410550
+Total number of simulation in this turn: 0
+1792
+2340
+3284
+5430
+Total number of simulation in this turn: 0
+1889
+3053
+6542
+8813
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2126048
+5111
+12344
+Total number of simulation in this turn: 0
+4897
+Total number of simulation in this turn: 0
+4243
+Total number of simulation in this turn: 0
+4338
+Total number of simulation in this turn: 0
+3892
+Total number of simulation in this turn: 0
+3900
+Total number of simulation in this turn: 0
+3620
+Total number of simulation in this turn: 0
+4008
+Total number of simulation in this turn: 0
+3092
+Total number of simulation in this turn: 0
+4282
+Total number of simulation in this turn: 0
+4057
+Total number of simulation in this turn: 0
+4666
+Total number of simulation in this turn: 0
+5233
+Total number of simulation in this turn: 0
+4944
+Total number of simulation in this turn: 0
+3765
+Total number of simulation in this turn: 0
+3941
+Total number of simulation in this turn: 0
+3741
+Total number of simulation in this turn: 0
+Total number of simulation in game: 84074
+5151
+Total number of simulation in this turn: 0
+4012
+8165
+Total number of simulation in this turn: 0
+4221
+15534
+Total number of simulation in this turn: 0
+3663
+Total number of simulation in this turn: 0
+3219
+Total number of simulation in this turn: 0
+2939
+3020
+3866
+3945
+6908
+8653
+Total number of simulation in this turn: 0
+3778
+4931
+Total number of simulation in this turn: 0
+4064
+12452
+Total number of simulation in this turn: 0
+3396
+4343
+Total number of simulation in this turn: 0
+3897
+Total number of simulation in this turn: 0
+Total number of simulation in game: 110157
+4083
+Total number of simulation in this turn: 0
+3594
+5043
+Total number of simulation in this turn: 0
+3118
+Total number of simulation in this turn: 0
+3173
+71134
+Total number of simulation in this turn: 0
+3006
+5849
+63122
+Total number of simulation in this turn: 0
+3704
+Total number of simulation in this turn: 0
+2961
+4799
+5216
+16526
+Total number of simulation in this turn: 0
+3921
+Total number of simulation in this turn: 0
+2926
+5038
+10830
+Total number of simulation in this turn: 0
+4094
+Total number of simulation in this turn: 0
+4415
+Total number of simulation in this turn: 0
+5733
+Total number of simulation in this turn: 0
+4615
+Total number of simulation in this turn: 0
+3302
+Total number of simulation in this turn: 0
+Total number of simulation in game: 240202
+4249
+8002
+Total number of simulation in this turn: 0
+3136
+7173
+Total number of simulation in this turn: 0
+4028
+Total number of simulation in this turn: 0
+2865
+4487
+66365
+Total number of simulation in this turn: 0
+4922
+Total number of simulation in this turn: 0
+3112
+16554
+Total number of simulation in this turn: 0
+3713
+4276
+74177
+Total number of simulation in this turn: 0
+3429
+4652
+4788
+Total number of simulation in this turn: 0
+2633
+61247
+Total number of simulation in this turn: 0
+2352
+13376
+Total number of simulation in this turn: 0
+3873
+76014
+Total number of simulation in this turn: 0
+4893
+Total number of simulation in this turn: 0
+3365
+12097
+Total number of simulation in this turn: 0
+Total number of simulation in game: 399778
+3687
+22909
+Total number of simulation in this turn: 0
+3691
+6690
+Total number of simulation in this turn: 0
+4971
+7891
+Total number of simulation in this turn: 0
+5257
+Total number of simulation in this turn: 0
+3658
+3465
+4238
+Total number of simulation in this turn: 0
+3815
+11756
+Total number of simulation in this turn: 0
+4600
+Total number of simulation in this turn: 0
+4066
+10799
+Total number of simulation in this turn: 0
+2890
+6273
+19994
+Total number of simulation in this turn: 0
+4092
+Total number of simulation in this turn: 0
+4587
+3724
+Total number of simulation in this turn: 0
+4294
+Total number of simulation in this turn: 0
+Total number of simulation in game: 147347
+3658
+Total number of simulation in this turn: 0
+3213
+6901
+Total number of simulation in this turn: 0
+4724
+10562
+16657
+Total number of simulation in this turn: 0
+3792
+7414
+Total number of simulation in this turn: 0
+3963
+Total number of simulation in this turn: 0
+3829
+10798
+85559
+Total number of simulation in this turn: 0
+2910
+3482
+5832
+48209
+Total number of simulation in this turn: 0
+3873
+6292
+12900
+25603
+59295
+Total number of simulation in this turn: 0
+3638
+64832
+Total number of simulation in this turn: 0
+2561
+2865
+2968
+3455
+Total number of simulation in this turn: 0
+3157
+5229
+Total number of simulation in this turn: 0
+2863
+2926
+15030
+Total number of simulation in this turn: 0
+3225
+32427
+Total number of simulation in this turn: 0
+Total number of simulation in game: 474642
+5094
+Total number of simulation in this turn: 0
+4740
+Total number of simulation in this turn: 0
+4416
+Total number of simulation in this turn: 0
+4874
+Total number of simulation in this turn: 0
+5364
+5979
+Total number of simulation in this turn: 0
+4043
+Total number of simulation in this turn: 0
+5575
+Total number of simulation in this turn: 0
+4624
+4947
+Total number of simulation in this turn: 0
+4174
+7797
+Total number of simulation in this turn: 0
+5736
+Total number of simulation in this turn: 0
+4619
+Total number of simulation in this turn: 0
+Total number of simulation in game: 71982
+3597
+Total number of simulation in this turn: 0
+4192
+4418
+Total number of simulation in this turn: 0
+3746
+Total number of simulation in this turn: 0
+3803
+16112
+Total number of simulation in this turn: 0
+2758
+81654
+Total number of simulation in this turn: 0
+4300
+8287
+Total number of simulation in this turn: 0
+3831
+3761
+10863
+Total number of simulation in this turn: 0
+2838
+Total number of simulation in this turn: 0
+4102
+4184
+3842
+9268
+Total number of simulation in this turn: 0
+3872
+6760
+5267
+Total number of simulation in this turn: 0
+2947
+4137
+6079
+10197
+75314
+Total number of simulation in this turn: 0
+4602
+36459
+Total number of simulation in this turn: 0
+Total number of simulation in game: 331190
+4010
+5339
+Total number of simulation in this turn: 0
+4629
+Total number of simulation in this turn: 0
+4086
+7934
+Total number of simulation in this turn: 0
+3944
+49821
+Total number of simulation in this turn: 0
+3504
+10474
+45203
+Total number of simulation in this turn: 0
+2542
+3806
+Total number of simulation in this turn: 0
+3145
+8308
+Total number of simulation in this turn: 0
+2857
+4544
+55541
+Total number of simulation in this turn: 0
+2829
+3886
+Total number of simulation in this turn: 0
+3210
+5144
+7183
+Total number of simulation in this turn: 0
+3496
+15062
+Total number of simulation in this turn: 0
+3652
+1497432
+Total number of simulation in this turn: 0
+3644
+8944
+Total number of simulation in this turn: 0
+Total number of simulation in game: 1774169
+3796
+Total number of simulation in this turn: 0
+4140
+11424
+Total number of simulation in this turn: 0
+3158
+4290
+11256
+22570
+68460
+Total number of simulation in this turn: 0
+4161
+7303
+Total number of simulation in this turn: 0
+3713
+5005
+Total number of simulation in this turn: 0
+2153
+2819
+3184
+3934
+2997
+4640
+5322
+6609
+8836
+8417
+Total number of simulation in this turn: 0
+2761
+Total number of simulation in this turn: 0
+2933
+9935
+15001
+59698
+Total number of simulation in this turn: 0
+2445
+6201
+10126
+22516
+72203
+Total number of simulation in this turn: 0
+3866
+4492
+4784
+20121
+Total number of simulation in this turn: 0
+3006
+4168
+3352
+6408
+13600
+21768
+Total number of simulation in this turn: 0
+3633
+4800
+5561
+12928
+9148
+69359
+Total number of simulation in this turn: 0
+3497
+6459
+9543
+13953
+Total number of simulation in this turn: 0
+2950
+4714
+7152
+6894
+4876
+7768
+Total number of simulation in game: 660806
+3781
+6114
+10395
+107720
+Total number of simulation in this turn: 0
+4605
+Total number of simulation in this turn: 0
+5728
+Total number of simulation in this turn: 0
+3931
+Total number of simulation in this turn: 0
+4975
+Total number of simulation in this turn: 0
+4538
+Total number of simulation in this turn: 0
+3619
+Total number of simulation in this turn: 0
+5149
+Total number of simulation in this turn: 0
+5637
+Total number of simulation in this turn: 0
+5991
+Total number of simulation in this turn: 0
+5815
+Total number of simulation in this turn: 0
+4452
+Total number of simulation in this turn: 0
+Total number of simulation in game: 182450
+3401
+Total number of simulation in this turn: 0
+5518
+Total number of simulation in this turn: 0
+3982
+100960
+Total number of simulation in this turn: 0
+5990
+Total number of simulation in this turn: 0
+3213
+11574
+Total number of simulation in this turn: 0
+2819
+Total number of simulation in this turn: 0
+3188
+86615
+Total number of simulation in this turn: 0
+2925
+10381
+Total number of simulation in this turn: 0
+2627
+Total number of simulation in this turn: 0
+3532
+5205
+5219
+Total number of simulation in this turn: 0
+4689
+71958
+Total number of simulation in this turn: 0
+4321
+9303
+Total number of simulation in this turn: 0
+6397
+Total number of simulation in this turn: 0
+5968
+10630
+Total number of simulation in this turn: 0
+Total number of simulation in game: 370415
+3794
+Total number of simulation in this turn: 0
+5245
+Total number of simulation in this turn: 0
+5706
+Total number of simulation in this turn: 0
+5426
+10578
+Total number of simulation in this turn: 0
+4161
+4668
+Total number of simulation in this turn: 0
+6274
+Total number of simulation in this turn: 0
+5192
+10872
+Total number of simulation in this turn: 0
+4300
+8375
+Total number of simulation in this turn: 0
+5743
+Total number of simulation in this turn: 0
+7356
+Total number of simulation in this turn: 0
+6660
+Total number of simulation in this turn: 0
+4058
+6898
+Total number of simulation in this turn: 0
+Total number of simulation in game: 105306
+3842
+5216
+Total number of simulation in this turn: 0
+4355
+Total number of simulation in this turn: 0
+2399
+5599
+17634
+Total number of simulation in this turn: 0
+3828
+14199
+Total number of simulation in this turn: 0
+3572
+Total number of simulation in this turn: 0
+2429
+3662
+56348
+Total number of simulation in this turn: 0
+3454
+Total number of simulation in this turn: 0
+2399
+3664
+3655
+3394
+6421
+Total number of simulation in this turn: 0
+2940
+Total number of simulation in this turn: 0
+2224
+12725
+Total number of simulation in this turn: 0
+5393
+6259
+Total number of simulation in this turn: 0
+2401
+3625
+6785
+21605
+Total number of simulation in this turn: 0
+2293
+2809
+3302
+4878
+7155
+Total number of simulation in this turn: 0
+3574
+3659
+3918
+Total number of simulation in this turn: 0
+2748
+7106
+Total number of simulation in this turn: 0
+3339
+3854
+27000
+Total number of simulation in this turn: 0
+3098
+4885
+8397
+Total number of simulation in this turn: 0
+2592
+2921
+6274
+75857
+Total number of simulation in this turn: 0
+2133
+2202
+2897
+6232
+5635
+Total number of simulation in this turn: 0
+2923
+3576
+3595
+5862
+5504
+11191
+Total number of simulation in this turn: 0
+3274
+4523
+5707
+83131
+Total number of simulation in this turn: 0
+3298
+4578
+Total number of simulation in this turn: 0
+3125
+5004
+4773
+8376
+18082
+Total number of simulation in this turn: 0
+3907
+5890
+14276
+Total number of simulation in this turn: 0
+4555
+5861
+9647
+6595
+2161353
+Total number of simulation in this turn: 0
+Total number of simulation in game: 2797391
+4434
+Total number of simulation in this turn: 0
+5755
+Total number of simulation in this turn: 0
+5319
+Total number of simulation in this turn: 0
+6342
+11085
+Total number of simulation in this turn: 0
+4768
+8229
+87248
+Total number of simulation in this turn: 0
+6455
+19381
+Total number of simulation in this turn: 0
+4437
+8210
+Total number of simulation in this turn: 0
+4823
+Total number of simulation in this turn: 0
+4849
+93328
+Total number of simulation in this turn: 0
+4520
+4641
+13697
+Total number of simulation in this turn: 0
+3700
+16033
+Total number of simulation in this turn: 0
+5909
+7997
+Total number of simulation in this turn: 0
+3943
+6747
+84971
+Total number of simulation in this turn: 0
+4254
+6761
+21132
+Total number of simulation in this turn: 0
+3026
+3586
+5175
+10966
+Total number of simulation in this turn: 0
+3326
+5481
+8471
+Total number of simulation in this turn: 0
+3672
+5257
+5445
+Total number of simulation in this turn: 0
+2753
+3172
+4087
+10398
+83487
+Total number of simulation in this turn: 0
+3711
+11876
+Total number of simulation in this turn: 0
+4481
+7132
+11200
+29241
+Total number of simulation in this turn: 0
+4824
+9107
+12239
+14993
+Total number of simulation in this turn: 0
+Total number of simulation in game: 726074
+7536
+Total number of simulation in this turn: 0
+9233
+Total number of simulation in this turn: 0
+9640
+169271
+Total number of simulation in this turn: 0
+8561
+15371
+46723
+Total number of simulation in this turn: 0
+11828
+Total number of simulation in this turn: 0
+10138
+11232
+28182
+Total number of simulation in this turn: 0
+8001
+Total number of simulation in this turn: 0
+8754
+Total number of simulation in this turn: 0
+8490
+Total number of simulation in this turn: 0
+6362
+15505
+Total number of simulation in this turn: 0
+7871
+23054
+Total number of simulation in this turn: 0
+9076
+156815
+Total number of simulation in this turn: 0
+12721
+Total number of simulation in this turn: 0
+13248
+Total number of simulation in this turn: 0
+Total number of simulation in game: 597612
+10562
+45573
+Total number of simulation in this turn: 0
+10275
+Total number of simulation in this turn: 0
+10940
+Total number of simulation in this turn: 0
+11601
+Total number of simulation in this turn: 0
+11998
+Total number of simulation in this turn: 0
+12317
+Total number of simulation in this turn: 0
+11535
+Total number of simulation in this turn: 0
+11587
+Total number of simulation in this turn: 0
+11768
+Total number of simulation in this turn: 0
+11886
+Total number of simulation in this turn: 0
+11353
+Total number of simulation in this turn: 0
+13119
+Total number of simulation in this turn: 0
+Total number of simulation in game: 184514

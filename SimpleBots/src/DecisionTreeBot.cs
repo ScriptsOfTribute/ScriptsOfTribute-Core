@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SimpleBots;
 
-public class HeuristicBot : AI
+public class DecisionTreeBot : AI
 {
     Random random = new Random(); 
 
@@ -15,25 +15,18 @@ public class HeuristicBot : AI
 
     private bool startOfTurn = true;
 
-    private int knockoutAgent = 6498;
-
     private int heuristicPatronAmountCardValue = 2;
 
-    private int heuristicConstAttackValue =3542;
-
-    private int heuristicWinMoveValue = -2254;
-
-    private int heuristicValueOfPatronActivations = -2739;
+    private int heuristicConstAttackValue = 3;
 
     private int bigHeuristicValue = 5000;
 
     private int coinsNeed = 0;
 
     private int powerNeed = 0;
-
-    private int coinsValue = 3928;
-    private int powerValue = 10;
-    private int prestigeValue = 3;
+    private int powerValue = 5;
+    private int prestigeValue = 10;
+    private int maxGoldInTurn = 0;
 
     private PatronId deckInPlay;
 
@@ -45,6 +38,12 @@ public class HeuristicBot : AI
     private StringBuilder bugLog = new StringBuilder();
 
     private int allCompletedActions;
+    private string patronLogPath = "patronsDecisionTreeBot.txt";
+    private Apriori apriori = new Apriori();
+    private int support = 4;
+    private double confidence = 0.3;
+    private PlayerEnum myID;
+    private string patrons;
 
     public class DuplicateKeyComparer<TKey>: IComparer<TKey> where TKey:IComparable
     {
@@ -62,19 +61,15 @@ public class HeuristicBot : AI
     }
 
     public int[] GetGenotype(){
-        return new int[] {knockoutAgent, heuristicPatronAmountCardValue, heuristicConstAttackValue, heuristicWinMoveValue, heuristicValueOfPatronActivations, bigHeuristicValue, coinsValue, powerValue, prestigeValue};
+        return new int[] {heuristicPatronAmountCardValue, heuristicConstAttackValue, bigHeuristicValue, powerValue, prestigeValue};
     }
 
     public void SetGenotype(int[] values){
-        knockoutAgent = values[0];
-        heuristicPatronAmountCardValue = values[1];
-        heuristicConstAttackValue = values[2];
-        heuristicWinMoveValue = values[3];
-        heuristicValueOfPatronActivations = values[4];
-        bigHeuristicValue = values[5]; 
-        coinsValue = values[6];
-        powerValue = values[7];
-        prestigeValue = values[8];
+        heuristicPatronAmountCardValue = values[0];
+        heuristicConstAttackValue = values[1];
+        bigHeuristicValue = values[2]; 
+        powerValue = values[3];
+        prestigeValue = values[4];
     }
 
     public class PatronDeckCards{
@@ -241,7 +236,7 @@ public class HeuristicBot : AI
                             }
 
                             if (numberOfPatronWhichFavoursMe + gameState.CurrentPlayer.PatronCalls + 1 == 4) {
-                                cardHeuristicScore = heuristicWinMoveValue;
+                                cardHeuristicScore = bigHeuristicValue;
                             }
                             break;
 
@@ -391,21 +386,19 @@ public class HeuristicBot : AI
         List<UniqueCard> handCards = gameState.CurrentPlayer.Hand;
         List<UniqueCard> playedCards = gameState.CurrentPlayer.Played;
         List<UniqueCard> coolDownPileCards = gameState.CurrentPlayer.CooldownPile;
-
+        int agentsTierValue = 0;
 
         switch (patron){
             case PatronId.ANSEI:
-                if (coinsNeed > 0){
+                if (coinsNeed > 0 || maxGoldInTurn <= 6){
                     return bigHeuristicValue;
                 }
-                else{
-                    return 0;
-                }
+                return 0;
             case PatronId.DUKE_OF_CROWS:
                 if (gameState.CurrentPlayer.Coins>=10){
-                    return (gameState.CurrentPlayer.Coins/gameState.CurrentPlayer.Prestige) * bigHeuristicValue;
+                    return (gameState.CurrentPlayer.Prestige/gameState.CurrentPlayer.Coins) * bigHeuristicValue;
                 }
-                if (gameState.CurrentPlayer.Coins-1+gameState.CurrentPlayer.Prestige>40){
+                if (gameState.CurrentPlayer.Coins-1+gameState.CurrentPlayer.Prestige>=40){
                     return bigHeuristicValue;
                 }
                 return 0;
@@ -414,18 +407,17 @@ public class HeuristicBot : AI
                 if (opponentNumberOfCards == 0){
                     return 0;
                 }
-                return bigHeuristicValue * (5/opponentNumberOfCards);
+                return 5/opponentNumberOfCards;
             case PatronId.PSIJIC:
-                int agentsTierValue = 0;
                 foreach (SerializedAgent agent in gameState.EnemyPlayer.Agents){
                     agentsTierValue += (int)CardTierList.GetCardTier(agent.RepresentingCard.Name);
                 }
-                return agentsTierValue * heuristicValueOfPatronActivations;
+                return agentsTierValue;
             case PatronId.ORGNUM:
                 if (powerNeed > 0){
-                    return heuristicValueOfPatronActivations * powerNeed * GetAllPlayerCards(gameState).Count;
+                    return powerNeed * (GetAllPlayerCards(gameState).Count/5);
                 }
-                return 0;
+                return (GetAllPlayerCards(gameState).Count/5) * 2;
             case PatronId.HLAALU:
                 if (gameState.CurrentPlayer.Prestige>30){
                     return bigHeuristicValue;
@@ -436,17 +428,16 @@ public class HeuristicBot : AI
                 }
                 return cardsValue;
             case PatronId.PELIN:
-                return gameState.CurrentPlayer.CooldownPile.FindAll(x => x.Type == CardType.AGENT).Count() * heuristicValueOfPatronActivations;
+                foreach (UniqueCard agent in gameState.CurrentPlayer.CooldownPile.FindAll(x => x.Type == CardType.AGENT)){
+                    agentsTierValue += (int)CardTierList.GetCardTier(agent.Name);
+                }
+                return agentsTierValue;
             case PatronId.RED_EAGLE:
-                return heuristicValueOfPatronActivations*5;
+                return 0;
             case PatronId.TREASURY:
-                int dTierCardsAmount = playedCards.Concat(coolDownPileCards).ToList().FindAll(x => x.Name != "Gold" && CardTierList.GetCardTier(x.Name) == TierEnum.D).Count * 2;
-                dTierCardsAmount += drawPileCards.Concat(handCards).ToList().FindAll(x => x.Name != "Gold" && CardTierList.GetCardTier(x.Name) == TierEnum.D).Count;
-
-                int goldCardsAmount = playedCards.Concat(coolDownPileCards).ToList().FindAll(x => x.Name == "Gold").Count * 2;
-                goldCardsAmount += drawPileCards.Concat(handCards).ToList().FindAll(x => x.Name == "Gold").Count;
-                
-                return (dTierCardsAmount + goldCardsAmount)* heuristicValueOfPatronActivations;
+                int weakCards = playedCards.FindAll(x => CardTierList.GetCardTier(x.Name) <= TierEnum.D).Count;
+                int cursedCards = playedCards.FindAll(x => x.Type == CardType.CURSE).Count;
+                return weakCards + cursedCards*3;
             default:
                 return 0;
         }
@@ -533,7 +524,7 @@ public class HeuristicBot : AI
             return PatronId.TREASURY;
         }*/
 
-        int maxHeuristicValueOfActivation = -10000;
+        int maxHeuristicValueOfActivation = int.MinValue;
         int patronHeuristicActivationValue;
         PatronId selectedPatron = patronThatCanBeActivated[0];
         List<PatronId> allPatrons = gameState.PatronStates.All.Keys.ToList();
@@ -702,17 +693,6 @@ public class HeuristicBot : AI
     }
 
     private List<UniqueCard>? CardsSelection(GameState gameState){
-    /*
-        ENACT_CHOSEN_EFFECT,
-    
-    DISCARD_CARDS,
-    
-    TOSS_CARDS,
-    
-    COMPLETE_HLAALU,
-    
-    COMPLETE_TREASURY,
-    */
         switch (gameState.PendingChoice.ChoiceFollowUp){
             case ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN:
                 if (gameState.CurrentPlayer.Hand.Count()>=1){
@@ -751,14 +731,18 @@ public class HeuristicBot : AI
     }
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round){
+        //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
+        //return selectedPatron ?? availablePatrons.PickRandom(Rng);
         return availablePatrons[random.Next(availablePatrons.Count)];
     }
 
     public override Move Play(GameState gameState, List<Move> possibleMoves){
 
         if (startOfGame){
-            startOfGame = false;
+            myID = gameState.CurrentPlayer.PlayerID;
+            patrons = string.Join(",", gameState.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
             HandleStartOfGame(gameState.PatronStates.All.Keys.ToList());
+            startOfGame = false;
         }
 
         List<Move> playCardMoves = possibleMoves.FindAll(x => x.Command ==CommandEnum.PLAY_CARD || x.Command ==CommandEnum.ACTIVATE_AGENT);
@@ -766,9 +750,15 @@ public class HeuristicBot : AI
 
         if (startOfTurn){
             startOfTurn = false;
-            deckInPlay = PatronId.TREASURY;
+            if (gameState.Patrons.Contains(PatronId.PSIJIC)){
+                deckInPlay = PatronId.PSIJIC;
+            }
+            else{
+                deckInPlay = PatronId.TREASURY;
+            }
             coinsNeed = 0;
             powerNeed = 0;
+            maxGoldInTurn = 0;
 
             List<SerializedAgent> contractAgents = gameState.CurrentPlayer.Agents.FindAll(agent => agent.RepresentingCard.Type == CardType.CONTRACT_AGENT);
             foreach (SerializedAgent contractAgent in contractAgents){
@@ -780,6 +770,7 @@ public class HeuristicBot : AI
         else{
             RemoveDestroyedCards(gameState, playCardMoves);
         }
+        maxGoldInTurn = Math.Max(gameState.CurrentPlayer.Coins, maxGoldInTurn);
         /*
         foreach(ComboState comboState in gameState.ComboStates.All.Values){
             foreach(UniqueBaseEffect e in comboState.All){
@@ -877,7 +868,10 @@ public class HeuristicBot : AI
         return Move.EndTurn();
     }
 
-    public override void GameEnd(EndGameState state){
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState){
+        if (state.Winner == myID){
+            File.AppendAllText(patronLogPath, patrons + System.Environment.NewLine);
+        }
         startOfGame = true;
     }
 }

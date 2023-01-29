@@ -15,15 +15,15 @@ public class ComplicatedBotsTest
     }
     
     [Fact]
-    public void RandomHeuristicBotTests()
+    public void RandomSimulationBotTests()
     {
         const int testAmount = 10;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new RandomHeuristicBot();
-            var bot2 = new DoEverythingBot();
+            var bot1 = new RandomSimulationBot();
+            var bot2 = new RandomWithoutEndTurnBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
@@ -33,7 +33,6 @@ public class ComplicatedBotsTest
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
@@ -45,14 +44,14 @@ public class ComplicatedBotsTest
     
     
     [Fact]
-    public void HeuristicBotTests()
+    public void DecisionTreeBotTests()
     {
         const int testAmount = 1000;
         GameEndStatsCounter counter = new();
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new HeuristicBot();
+            var bot1 = new DecisionTreeBot();
             var bot2 = new RandomBotWithRandomStateExploring();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
@@ -63,7 +62,6 @@ public class ComplicatedBotsTest
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
@@ -82,7 +80,7 @@ public class ComplicatedBotsTest
         for (var i = 0; i < testAmount; i++)
         {
             var bot1 = new MCTSBot();
-            var bot2 = new DoEverythingBot();
+            var bot2 = new RandomWithoutEndTurnBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
@@ -92,7 +90,34 @@ public class ComplicatedBotsTest
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
+            Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
+
+            counter.Add(endState);
+        }
+
+        _testOutputHelper.WriteLine(counter.ToString());
+    }
+
+    [Fact]
+    public void BeamSearchBot()
+    {
+        const int testAmount = 10;
+        GameEndStatsCounter counter = new();
+
+        for (var i = 0; i < testAmount; i++)
+        {
+            var bot1 = new BeamSearchBot();
+            var bot2 = new RandomWithoutEndTurnBot();
+
+            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var (endState, _) = game.Play();
+
+            if (endState.Reason == GameEndReason.INCORRECT_MOVE)
+            {
+                _testOutputHelper.WriteLine(endState.AdditionalContext);
+            }
+            Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
             Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 

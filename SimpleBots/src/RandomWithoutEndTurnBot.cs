@@ -6,7 +6,7 @@ using TalesOfTribute.Serializers;
 namespace SimpleBots;
 
 // Bot that plays all available cards before ending turn.
-public class DoEverythingBot : AI
+public class RandomWithoutEndTurnBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom(Rng);

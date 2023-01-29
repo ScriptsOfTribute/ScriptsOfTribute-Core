@@ -5,7 +5,7 @@ using TalesOfTribute.Serializers;
 
 namespace SimpleBots;
 
-public class WinByPatronFavors : AI
+public class PatronFavorsBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom(Rng);
@@ -52,7 +52,7 @@ public class WinByPatronFavors : AI
         return movesWithoutEndTurn.PickRandom(Rng);
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
     }
 }

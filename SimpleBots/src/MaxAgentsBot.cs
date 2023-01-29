@@ -6,7 +6,7 @@ using TalesOfTribute.Serializers;
 
 namespace SimpleBots;
 
-public class MaximizeAgentsBot : AI
+public class MaxAgentsBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom(Rng);
@@ -62,7 +62,7 @@ public class MaximizeAgentsBot : AI
         return movesWithoutEndTurn.PickRandom(Rng);
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
     }
 }

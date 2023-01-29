@@ -1,389 +1,159 @@
-﻿using TalesOfTribute;
+using TalesOfTribute;
 using TalesOfTribute.AI;
 using TalesOfTribute.Board;
 using TalesOfTribute.Serializers;
-using TalesOfTribute.Board.Cards;
 using System.Diagnostics;
-using System.Text;
+using TalesOfTribute.Board.CardAction;
+using TalesOfTribute.Board.Cards;
 
 namespace SimpleBots;
 
-public class OldNode
-{
-    static double C = Math.Sqrt(2);
+public class Node{
 
-    public List<OldNode>? childs;
-    public OldNode? father;
+    private int patronFavour = 50;
+    private int patronNeutral = 10;
+    private int patronUnfavour = -50;
+    private int coinsValue = 1;
+    private int powerValue = 40;
+    private int prestigeValue = 50;
+    private int agentOnBoardValue = 30;
+    private int hpValue = 3;
+    private int opponentAgentsPenaltyValue = 40;
+    private int potentialComboValue = 3;
+    private int cardValue = 10;
+    private int penaltyForHighTierInTavern = 2;
+    private int numberOfDrawsValue = 10;
+    private int enemyPotentialComboPenalty = 1;
+    static double c = Math.Sqrt(2);
+    public List<Node>? childs;
+    public Node? father;
     
-    public GameState gameState;
-    public Move? prevMove;
+    public GameState nodeGameState;
+    public Move? move;
     public List<Move> possibleMoves;
-    public List<CompletedAction> startOfturnCompletedActions;
     
-    public int possibleMovesSize;
     public double wins;
     public ulong visits;
-    public int actChildExpanding;
 
+    private int heuristicMax = 40000; //160
+    private int heuristicMin  = -10000;//00
+    private ulong botSeed = 42;
 
-    // heuristic params
-    private int patronFavour ;//= 50;
-    private int patronNeutral ;//= 10;
-    private int patronUnfavour ;//= -50;
-    private int coinsValue ;//= 1;
-    private int powerValue ;//= 20;
-    private int prestigeValue ;//= 50;
-    private int agentOnBoardValue ;//= 30;
-    private int hpValue ;//= 3;
-    private int opponentAgentsPenaltyValue ;//= 40;
-    private int potentialComboValue ;//= 3;
-    private int cardValue ;//= 10;
-    private int penaltyForHighTierInTavern ;//= 2;
-    private int numberOfDrawsValue ;// 10;
-    private int enemyPotentialComboPenalty ;//= 1;
-    private int heuristicMax  ;//= 10000;
-    private int heuristicMin ;//= -4000;
-
-    public int[] GetGenotype(){
-        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue, enemyPotentialComboPenalty, heuristicMax, heuristicMin};
-    }
-    public void SetGenotype(int[] values){
-        patronFavour = values[0];
-        patronNeutral = values[1];
-        patronNeutral = values[2];
-        coinsValue = values[3];
-        powerValue = values[4];
-        prestigeValue = values[5]; 
-        agentOnBoardValue = values[6];
-        hpValue = values[7];
-        opponentAgentsPenaltyValue = values[8];
-        potentialComboValue = values[9];
-        cardValue = values[10];
-        penaltyForHighTierInTavern = values[11];
-        numberOfDrawsValue = values[12];
-        enemyPotentialComboPenalty = values[13];
-        heuristicMax = values[14];
-        heuristicMin = values[15];
-    }
-
-    private List<Move> copyMoveList(List<Move> moves, GameState state) {
-        List<Move> result = new List<Move>();
-
-        SimpleCardMove simpleCardMove;
-        SimplePatronMove simplePatronMove;
-
-        foreach (Move move in moves) {
-            switch (move.Command) {
-                case CommandEnum.ACTIVATE_AGENT:
-                    simpleCardMove = move as SimpleCardMove;
-                    result.Add(Move.ActivateAgent(simpleCardMove.Card));
-                    break;
-
-                case CommandEnum.ATTACK:
-                    simpleCardMove = move as SimpleCardMove;
-                    result.Add(Move.Attack(simpleCardMove.Card));
-                    break;
-
-                case CommandEnum.BUY_CARD:
-                    simpleCardMove = move as SimpleCardMove;
-                    result.Add(Move.BuyCard(simpleCardMove.Card));
-                    break;
-
-                case CommandEnum.CALL_PATRON:
-                    simplePatronMove = move as SimplePatronMove;
-                    result.Add(Move.CallPatron(simplePatronMove.PatronId));
-                    break;
-                
-                case CommandEnum.END_TURN:
-                    result.Add(Move.EndTurn());
-                    break;
-
-                case CommandEnum.PLAY_CARD:
-                    simpleCardMove = move as SimpleCardMove;
-                    result.Add(Move.PlayCard(simpleCardMove.Card));
-                    break;
-
-                case CommandEnum.MAKE_CHOICE:
-                    switch (state.PendingChoice.Context.ChoiceType){
-                        case ChoiceType.CARD_EFFECT:
-                            MakeChoiceMove<UniqueCard> tmpMove = move as MakeChoiceMove<UniqueCard>;
-                            result.Add(Move.MakeChoice(tmpMove.Choices));
-                            break;
-                        case ChoiceType.EFFECT_CHOICE:
-                            MakeChoiceMove<UniqueEffect> tmpMove_2 = move as MakeChoiceMove<UniqueEffect>;
-                            result.Add(Move.MakeChoice(tmpMove_2.Choices));
-                            break;
-                        case ChoiceType.PATRON_ACTIVATION:
-                            MakeChoiceMove<UniqueCard> tmpMove_3 = move as MakeChoiceMove<UniqueCard>;
-                            result.Add(Move.MakeChoice(tmpMove_3.Choices));
-                            break;
-                    }
-                    break;
-            }
-        }
-
-        return result;
-    }
-
-    private Move copyMove(Move move, GameState state) {
-        Move result = Move.EndTurn();
-
-        SimpleCardMove simpleCardMove;
-        SimplePatronMove simplePatronMove;
-
-        switch (move.Command) {
-            case CommandEnum.ACTIVATE_AGENT:
-                simpleCardMove = move as SimpleCardMove;
-                result = Move.ActivateAgent(simpleCardMove.Card);
-                break;
-
-            case CommandEnum.ATTACK:
-                simpleCardMove = move as SimpleCardMove;
-                result = Move.Attack(simpleCardMove.Card);
-                break;
-
-            case CommandEnum.BUY_CARD:
-                simpleCardMove = move as SimpleCardMove;
-                result = Move.BuyCard(simpleCardMove.Card);
-                break;
-
-            case CommandEnum.CALL_PATRON:
-                simplePatronMove = move as SimplePatronMove;
-                result = Move.CallPatron(simplePatronMove.PatronId);
-                break;
-            
-            case CommandEnum.END_TURN:
-                result = Move.EndTurn();
-                break;
-
-            case CommandEnum.PLAY_CARD:
-                simpleCardMove = move as SimpleCardMove;
-                result = Move.PlayCard(simpleCardMove.Card);
-                break;
-
-            case CommandEnum.MAKE_CHOICE:
-                switch (state.PendingChoice.Context.ChoiceType){
-                    case ChoiceType.CARD_EFFECT:
-                        MakeChoiceMove<UniqueCard> tmpMove = move as MakeChoiceMove<UniqueCard>;
-                        result = Move.MakeChoice(tmpMove.Choices);
-                        break;
-                    case ChoiceType.EFFECT_CHOICE:
-                        MakeChoiceMove<UniqueEffect> tmpMove_2 = move as MakeChoiceMove<UniqueEffect>;
-                        result = Move.MakeChoice(tmpMove_2.Choices);
-                        break;
-                    case ChoiceType.PATRON_ACTIVATION:
-                        MakeChoiceMove<UniqueCard> tmpMove_3 = move as MakeChoiceMove<UniqueCard>;
-                        result = Move.MakeChoice(tmpMove_3.Choices);
-                        break;
-                }
-                break;
-        }
-        
-
-        return result;
-    }
-
-    private List<Move> clearMoves(List<Move> moves) {
-        for (int i = 0; i < moves.Count; ++i) {
-            if (moves[i].Command == CommandEnum.END_TURN) {
-                moves.RemoveAt(i);
-                break;
-            }
-        }
-        
-        return moves;
-    }
-
-    public OldNode(GameState gameState, Move prevMoveOrig, OldNode? father, List<CompletedAction> startOfturnCompletedActions, int[] heuristicValues) {
-        this.SetGenotype(heuristicValues);
-        Move prevMove = copyMove(prevMoveOrig, gameState);
-
+    public Node(GameState fatherGameState, Move? nodeMove, Node? fatherOrig, List<Move> possibleMoves = null){
         this.wins = 0;
         this.visits = 0;
-        this.actChildExpanding = 0;
-
-        this.prevMove = prevMove;
-        var (newGameState, newMoves) = gameState.ApplyState(prevMove);
-        this.gameState = newGameState;
-
-        newMoves = this.clearMoves(newMoves);
         
-        this.possibleMovesSize = newMoves.Count;
-        this.possibleMoves = newMoves;
-
-        this.father = father;
-
-        this.childs = new List<OldNode>();
-
-        this.startOfturnCompletedActions = startOfturnCompletedActions;
-    }
-
-    public void UpdateChilds(List<Move> newPossibleMoves, GameState newGameState) {
-        List<Move> newPossibleMovesCopy = copyMoveList(newPossibleMoves, newGameState);
-        this.gameState = newGameState;
-        newPossibleMovesCopy = this.clearMoves(newPossibleMovesCopy);
-        List<Move> childsMoves = this.childs.Select(x => x.prevMove).ToList();
-        foreach(Move newMove in newPossibleMovesCopy) {
-            if (!childsMoves.Contains(newMove)) {
-                this.possibleMoves.Add(newMove);
-                this.possibleMovesSize++;
-                this.childs.Add(new OldNode(this.gameState, newMove, this, this.startOfturnCompletedActions, this.GetGenotype()));
-            }
+        this.move = nodeMove;
+        if (nodeMove is not null && nodeMove.Command != CommandEnum.END_TURN){
+            var (newGameState, newMoves) = fatherGameState.ApplyState(nodeMove);
+            this.nodeGameState = newGameState;
+            this.possibleMoves = newMoves;
         }
-    }
-
-    public bool checkChagnedChilds(List<Move> newPossibleMoves, GameState newGameState) {
-        List<Move> newPossibleMovesCopy = copyMoveList(newPossibleMoves, newGameState);
-        this.gameState = newGameState;
-        newPossibleMovesCopy = this.clearMoves(newPossibleMovesCopy);
-        List<Move> childsMoves = this.childs.Select(x => x.prevMove).ToList();
-        foreach(Move newMove in newPossibleMovesCopy) {
-            if (!childsMoves.Contains(newMove)) {
-                return true;
-            }
+        else{
+            this.nodeGameState = fatherGameState;
+            this.possibleMoves = possibleMoves;
         }
 
-        return false;
-    }
+        this.father = fatherOrig;
 
-    public OldNode(GameState gameState, List<Move> possibleMovesOrig, OldNode? father, List<CompletedAction> startOfturnCompletedActions, int[] heuristicValues) {
-        this.SetGenotype(heuristicValues);
-        List<Move> possibleMoves = copyMoveList(possibleMovesOrig, gameState);
-
-        this.gameState = gameState;
-        possibleMoves = this.clearMoves(possibleMoves);
-
-        this.wins = 0;
-        this.visits = 0;
-        this.actChildExpanding = 0;
-
-        this.prevMove = null;
-        
-        this.possibleMovesSize = possibleMoves.Count;
-
-        this.possibleMoves = possibleMoves;
-        this.father = father;
-
-        this.childs = new List<OldNode>();
-
-        this.startOfturnCompletedActions = startOfturnCompletedActions;
-    }
-
-    public bool IsEnd() {
-        return this.possibleMovesSize <= 0;
-    }
-
-    public OldNode Expand() {
-        this.actChildExpanding++;
-        this.childs[this.actChildExpanding - 1].CreateChilds();
-
-        return this.childs[this.actChildExpanding - 1];
+        this.childs = new List<Node>();
     }
 
     public void CreateChilds() {
-        for (int i = 0; i < this.possibleMovesSize; i++) {
-            Move move = this.possibleMoves[i];
-
-            this.childs.Add(new OldNode(this.gameState, move, this, this.startOfturnCompletedActions, this.GetGenotype()));
+        foreach(Move childMove in this.possibleMoves){
+            this.childs.Add(new Node(this.nodeGameState, childMove, this));
         }
     }
 
-    public Move BestChildMove() {
-        if (this.possibleMovesSize == 0) {
-            return Move.EndTurn();
+    public double UCBscore(){
+        if (this.visits < 1){
+            return int.MaxValue;
         }
+        double tmpWins = this.wins;
+        ulong tmpVisits = this.visits;
 
-        Move bestChildMove = this.childs[0].prevMove;
+        if (this.father is not null){
+           return tmpWins + c*Math.Sqrt((Math.Log(this.father.visits))/tmpVisits);
+        }
+        else{
+            return tmpWins + c*Math.Sqrt((Math.Log(tmpVisits))/tmpVisits);
+        }
+    }
+
+    public Node SelectBestChild() {
+        Node bestChild = this.childs[0];
 
         double bestScore = 0;
         
-        for (int i = 0; i < this.possibleMovesSize; i++) {
-            double tmpWins = this.childs[i].wins;
-            ulong tmpVisits = this.childs[i].visits;
-            double tmpScore = tmpWins;//(tmpWins / tmpVisits);// (tmpWins / tmpVisits) + C * Math.Sqrt( (2 * Math.Log(tmpVisits)) / tmpVisits); // TODO maybe just tmpVisits
+        foreach(Node child in this.childs){
+            double tmpWins = child.wins;
+            ulong tmpVisits = child.visits;
+            double tmpScore = tmpWins; //+ c*Math.Sqrt((Math.Log(this.visits))/tmpVisits);
 
-            if (tmpScore >= bestScore) {
+            if (tmpScore >= bestScore){
                 bestScore = tmpScore;
-                bestChildMove = this.childs[i].prevMove;
-            }    
-        }
-
-        return bestChildMove;
-    } 
-
-    public int BestChildIndex() {
-        if (this.possibleMovesSize == 0) {
-            return -1;
-        }
-
-        int bestIndex = 0;
-
-        double bestScore = 0;
-        
-        for (int i = 0; i < this.possibleMovesSize; i++) {
-            double tmpWins = this.childs[i].wins;
-            ulong tmpVisits = this.childs[i].visits;
-            double tmpScore = tmpWins;//(tmpWins / tmpVisits);// (tmpWins / tmpVisits) + C * Math.Sqrt( (2 * Math.Log(tmpVisits)) / tmpVisits); // TODO maybe just tmpVisits
-
-            if (tmpScore >= bestScore) {
-                bestScore = tmpScore;
-                bestIndex = i;
-            }    
-        }
-
-        return bestIndex;
-    } 
-
-    public OldNode BestChild(SeededRandom rng) {
-        OldNode bestChild = childs[0];
-        double bestScore = Double.NegativeInfinity;
-        
-        return childs[Extensions.RandomK(0,childs.Count, rng)];
-
-        for (int i = 0; i < possibleMovesSize; i++) {
-            double tmpWins = childs[i].wins;
-            ulong tmpVisits = childs[i].visits;
-
-            double tmpScore = 0;
-
-            if (tmpVisits > 0 && visits > 0) {
-                tmpScore = (tmpWins / tmpVisits) + C * Math.Sqrt( (Math.Log(visits)) / tmpVisits);
-            }
-
-            if (tmpScore >= bestScore) {
-                bestScore = tmpScore;
-                bestChild = childs[i];
+                bestChild = child;
             }
         }
-
         return bestChild;
+    } 
+
+    private List<Move> NotEndTurnPossibleMoves(List<Move> possibleMoves){
+        return possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
     }
 
-    private int CountNumberOfDrawsInTurn(){
-        List<CompletedAction> completedActions = this.gameState.CompletedActions;
-
-        int numberOfLastActions = completedActions.Count - this.startOfturnCompletedActions.Count;
-        List<CompletedAction> lastCompltedActions = completedActions.TakeLast(numberOfLastActions).ToList();
-        int counter = 0;
-        foreach (CompletedAction action in lastCompltedActions){
-            if (action.Type == CompletedActionType.DRAW){
-                counter += 1;
+    private Move DrawNextMove(List<Move> possibleMoves, SeededGameState gameState, SeededRandom rng){
+        Move nextMove;
+        List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(possibleMoves);
+        if (notEndTurnPossibleMoves.Count > 0){
+            if ((gameState.BoardState == BoardState.NORMAL) && (SimpleBots.Extensions.RandomK(0, 10000, rng)==0)){
+                nextMove = Move.EndTurn();
+            }
+            else{
+                nextMove = notEndTurnPossibleMoves.PickRandom(rng);
             }
         }
-        return counter;
+        else{
+            nextMove = Move.EndTurn();
+        }
+        return nextMove;
     }
 
-    private double NormalizeHeuristic(int value) {
-        double normalizedValue = ((double)value - (double)heuristicMin) / ((double)heuristicMax - (double)heuristicMin);
-
-        if (normalizedValue < 0){
-            return 0.0;
+    public double Simulate(SeededRandom rng) {
+        
+        if (this.move.Command == CommandEnum.END_TURN){
+            return Heuristic(this.nodeGameState);
         }
 
-        return normalizedValue;
+        List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(this.possibleMoves);
+        Move nextMove;
+        if (notEndTurnPossibleMoves.Count > 0){
+            if ((this.nodeGameState.BoardState == BoardState.NORMAL) && (SimpleBots.Extensions.RandomK(0, 100000, rng)==0)){
+                nextMove = Move.EndTurn();
+            }
+            else{
+                nextMove = notEndTurnPossibleMoves.PickRandom(rng);
+            }
+        }
+        else{
+            nextMove = Move.EndTurn();
+        }
+        
+        GameState gameState = this.nodeGameState;
+        var (seedGameState, newMoves) = gameState.ApplyState(nextMove, botSeed);
+        nextMove = DrawNextMove(newMoves, seedGameState, rng);
+
+        while (nextMove.Command != CommandEnum.END_TURN) {
+
+            var (newSeedGameState, newPossibleMoves) = seedGameState.ApplyState(nextMove);
+            nextMove = DrawNextMove(newPossibleMoves, newSeedGameState, rng);
+            seedGameState = newSeedGameState;
+        }
+
+        return Heuristic(gameState);
     }
 
-    public double Heuristic(){
+    public double Heuristic(GameState gameState){
         int finalValue = 0;
         int enemyPatronFavour = 0;
         foreach (KeyValuePair<PatronId, PlayerEnum> entry in gameState.PatronStates.All) {
@@ -404,14 +174,14 @@ public class OldNode
         if (enemyPatronFavour>=2){
             finalValue -= 100;
         }
-        if (gameState.EnemyPlayer.Prestige >=20)
-        {
-            finalValue += gameState.CurrentPlayer.Power * powerValue;
-            finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
-        }
 
+        finalValue += gameState.CurrentPlayer.Power * powerValue;
+        finalValue += gameState.CurrentPlayer.Prestige * prestigeValue;
+        //finalValue += gameState.CurrentPlayer.Coins * coinsValue;
+        
         if (gameState.CurrentPlayer.Prestige<30){
             TierEnum tier = TierEnum.UNKNOWN;
+            
             foreach (SerializedAgent agent in gameState.CurrentPlayer.Agents){
                 tier = CardTierList.GetCardTier(agent.RepresentingCard.Name);
                 finalValue += agentOnBoardValue * (int)tier + agent.CurrentHp * hpValue;
@@ -421,13 +191,14 @@ public class OldNode
                 tier = CardTierList.GetCardTier(agent.RepresentingCard.Name);
                 finalValue -= agentOnBoardValue * (int)tier + agent.CurrentHp * hpValue + opponentAgentsPenaltyValue;
             }
-
+            
             List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
             Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
             List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
             Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
 
-            foreach(Card card in allCards){
+            foreach(UniqueCard card in allCards){
+                tier = CardTierList.GetCardTier(card.Name);
                 finalValue += (int)tier * cardValue;
                 if (card.Deck != PatronId.TREASURY){
                     if (potentialComboNumber.ContainsKey(card.Deck)){
@@ -439,7 +210,7 @@ public class OldNode
                 }
             }
 
-            foreach(Card card in allCardsEnemy){
+            foreach(UniqueCard card in allCardsEnemy){
                 if (card.Deck != PatronId.TREASURY){
                     if (potentialComboNumberEnemy.ContainsKey(card.Deck)){
                         potentialComboNumberEnemy[card.Deck] +=1;
@@ -453,146 +224,90 @@ public class OldNode
             foreach (KeyValuePair<PatronId, int> entry in potentialComboNumber){
                 finalValue += (int)Math.Pow(entry.Value, potentialComboValue);
             }
+            
             foreach(Card card in gameState.TavernAvailableCards){
                 tier = CardTierList.GetCardTier(card.Name);
                 finalValue -= penaltyForHighTierInTavern * (int)tier;
-                
+                /*
                 if (potentialComboNumberEnemy.ContainsKey(card.Deck) && (potentialComboNumberEnemy[card.Deck]>4) && (tier > TierEnum.B)){
                     finalValue -= enemyPotentialComboPenalty*(int)tier;
                 }
-                
-                
+                */
             }
-
-            finalValue += CountNumberOfDrawsInTurn() * numberOfDrawsValue;
+            
         }
         
         //int finalValue = gameState.CurrentPlayer.Power + gameState.CurrentPlayer.Prestige;
-        double normalizedValue = this.NormalizeHeuristic(finalValue);
+        double normalizedValue = NormalizeHeuristic(finalValue);
 
-        var (newGameState, newMoves) = gameState.ApplyState(Move.EndTurn());
+        return normalizedValue;
+    }
 
-        if (newGameState.GameEndState is not null)
-        {
-            return double.MaxValue;
+    private double NormalizeHeuristic(int value) {
+        double normalizedValue = ((double)value - (double)heuristicMin) / ((double)heuristicMax - (double)heuristicMin);
+
+        if (normalizedValue < 0){
+            return 0.0;
         }
 
         return normalizedValue;
     }
 
-    public double Simulate(SeededRandom rng) {
-        GameState gameStateSave = this.gameState;
-        List<Move> possibleMovesSave = copyMoveList(this.possibleMoves, this.gameState);
-
-        int possibleMovesSizeSave = this.possibleMovesSize;
-
-        Move prevMoveSave = Move.EndTurn();
-
-        if (this.prevMove is not null && this.father is not null) {
-            prevMoveSave = copyMove(this.prevMove, this.father.gameState);
+    public void UpdateAllPossibleMoves(){   
+        foreach(Node child in this.childs){
+            if (child.move.Command == CommandEnum.END_TURN) {
+                continue;
+            }
+            
+            (child.nodeGameState, child.possibleMoves) = this.nodeGameState.ApplyState(child.move);
+            
+            if (child.childs.Count>0){
+                child.UpdateAllPossibleMoves();
+            }
         }
 
-        double score;
-        double winsSave = this.wins;
-
-        int actChildExpandingSave = this.actChildExpanding;
-        ulong visitsSave = this.visits;
-
-        OldNode v = this.father;
-        //Console.WriteLine("\nSTART");
-        List<Move> prevMoves = new List<Move>();
-        prevMoves.Add(this.prevMove);
-        while (v is not null && v.prevMove is not null) {
-            prevMoves.Add(v.prevMove);
-            v=v.father;
-        }
-        
-        /*for (int i = prevMoves.Count-1; i >=0; i--) {
-            Console.WriteLine("PREV MOVE " + prevMoves[i]);
-        }*/
-
-        while (!this.IsEnd()) {
-            Move move = this.possibleMoves[SimpleBots.Extensions.RandomK(0, (int)this.possibleMovesSize, rng)];
-            //Console.WriteLine("SIMULATED MOVE " + move);
-            this.prevMove = move;
-
-            var (newGameState, newMoves) = gameState.ApplyState(move);
-            this.gameState = newGameState;
-            newMoves = clearMoves(newMoves);
-
-            this.possibleMoves = newMoves;
-            this.possibleMovesSize = this.possibleMoves.Count;
-        }
-        //Console.WriteLine("END\n");
-
-        score = this.Heuristic();
-
-        this.gameState = gameStateSave;
-        this.possibleMoves = possibleMovesSave;
-
-        this.possibleMovesSize = possibleMovesSizeSave;
-
-        if (this.prevMove is not null && this.father is not null) {
-            this.prevMove = prevMoveSave;
+        List<Move> childsMoves = new List<Move>();
+        foreach(Node child in this.childs) {
+            childsMoves.Add(child.move);
         }
 
-        this.wins = winsSave;
+        List<Move> moveToRemove = new List<Move>();
+        foreach(Move childMove in childsMoves){
+            if (!possibleMoves.Contains(childMove)){
+                moveToRemove.Add(childMove);
+            }
+        }
 
-        this.actChildExpanding = actChildExpandingSave;
-        this.visits = visitsSave;
-
-        return score;
+        foreach(Move possibleMove in this.possibleMoves) {
+            if (!childsMoves.Contains(possibleMove)) {
+                this.childs.Add(new Node(this.nodeGameState, possibleMove, this));
+            }
+        }
+        foreach (Move removeMove in moveToRemove){
+            this.childs = this.childs.Where(x=>x.move != removeMove).ToList();
+        }
     }
 }
 
-public class MCTSBot : AI
-{
-    OldNode? actRoot;
-    OldNode? OldactNode;
+public class MCTSBot : AI{
+
+    Node? actRoot;
+    Node? actNode;
     bool startOfTurn;
+    TimeSpan usedTimeInTurn = TimeSpan.FromSeconds(0);
+    TimeSpan timeForMoveComputation = TimeSpan.FromSeconds(0.3);
+    TimeSpan TurnTimeout = TimeSpan.FromSeconds(29.9);
+    Move endTurnMove = Move.EndTurn();
+    Move move;
+    private int botSeed =42;
+    private string patronLogPath = "patronsMCTSBot.txt";
+    private Apriori apriori = new Apriori();
+    private int support = 4;
+    private double confidence = 0.3;
+    private PlayerEnum myID;
+    private string patrons;
+    private bool startOfGame = true;
 
-    int possibleMovesSize;
-
-    // heuristic params
-    private int patronFavour = 50;
-    private int patronNeutral = 10;
-    private int patronUnfavour = -50;
-    private int coinsValue = 1;
-    private int powerValue = 20;
-    private int prestigeValue = 50;
-    private int agentOnBoardValue = 30;
-    private int hpValue = 3;
-    private int opponentAgentsPenaltyValue = 40;
-    private int potentialComboValue = 3;
-    private int cardValue = 10;
-    private int penaltyForHighTierInTavern = 2;
-    private int numberOfDrawsValue = 10;
-    private int enemyPotentialComboPenalty = 1;
-    private int heuristicMax  = 160;
-    private int heuristicMin = 0;
-
-    public int[] GetGenotype(){
-        return new int[] {patronFavour, patronNeutral, patronNeutral, coinsValue, powerValue, prestigeValue, agentOnBoardValue, hpValue, opponentAgentsPenaltyValue, potentialComboValue, cardValue, penaltyForHighTierInTavern, numberOfDrawsValue, enemyPotentialComboPenalty, heuristicMax, heuristicMin};
-    }
-
-    public void SetGenotype(int[] values){
-        patronFavour = values[0];
-        patronNeutral = values[1];
-        patronNeutral = values[2];
-        coinsValue = values[3];
-        powerValue = values[4];
-        prestigeValue = values[5]; 
-        agentOnBoardValue = values[6];
-        hpValue = values[7];
-        opponentAgentsPenaltyValue = values[8];
-        potentialComboValue = values[9];
-        cardValue = values[10];
-        penaltyForHighTierInTavern = values[11];
-        numberOfDrawsValue = values[12];
-        enemyPotentialComboPenalty = values[13];
-        heuristicMax = values[14];
-        heuristicMin = values[15];
-    }
 
     public MCTSBot() {
         this.PrepareForGame();
@@ -600,104 +315,133 @@ public class MCTSBot : AI
 
     private void PrepareForGame() {
         actRoot = null;
-        OldactNode = null;
-
+        actNode = null;
+        startOfGame = true;
         startOfTurn = true;
-        possibleMovesSize = 0;
     }
 
-    private OldNode TreePolicy(OldNode v, SeededRandom rng) {
-        int i = 0;
-        while (!v.IsEnd()) {
-            if (v.actChildExpanding < v.possibleMovesSize) {
-                return v.Expand();
-            }
-            v = v.BestChild(rng);
+    private bool CheckIfPossibleMovesAreTheSame(List<Move> possibleMoves1, List<Move> possibleMoves2){
+        if (possibleMoves1.Count != possibleMoves2.Count){
+            return false;
         }
+        foreach(Move move in possibleMoves1){
+            if(! possibleMoves2.Contains(move)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Node TreePolicy(Node v, SeededRandom rng) {
+        if (v.childs.Count()>0){
+            double maxValue = double.MinValue;
+            int selectedChild = 0;
+            int index = 0;
+            foreach(Node childNode in v.childs){
+                if (childNode.UCBscore()>maxValue){
+                    maxValue = childNode.UCBscore();
+                    selectedChild = index;
+                }
+                index++;
+            }
+            return TreePolicy(v.childs[selectedChild], rng);
+        }
+        
+        if (v.move.Command==CommandEnum.END_TURN){
+            return v;
+        }
+        v.CreateChilds();
         return v;
     }
 
-    private void BackUp(OldNode? v, double delta) {
-        while (v != null) {
+    private void BackUp(Node? v, double delta) {
+        if (v is not null) {
             v.visits += 1;
 
-            v.wins = Math.Max(delta, v.wins);
+            v.wins = Math.Max(delta, v.wins);//delta;//
 
-            v = v.father;
+            BackUp(v.father, delta);
         }
     }
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
+        //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
+        //return selectedPatron ?? availablePatrons.PickRandom(Rng);
         => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        if (true || startOfTurn || actRoot.checkChagnedChilds(possibleMoves, gameState)){
-            actRoot = new OldNode(gameState, possibleMoves, null, gameState.CompletedActions, this.GetGenotype());
-            actRoot.CreateChilds();
+        if (startOfGame){
+            myID = gameState.CurrentPlayer.PlayerID;
+            patrons = string.Join(",", gameState.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
+            startOfGame = false;
+        }
 
+        if (startOfTurn){
+            actRoot = new Node(gameState, null, null, possibleMoves);
+            actRoot.CreateChilds();
             startOfTurn = false;
+            usedTimeInTurn = TimeSpan.FromSeconds(0);
         }
         else {
-            //actRoot.UpdateChilds(possibleMoves, gameState);
+            if (!CheckIfPossibleMovesAreTheSame(actRoot.possibleMoves, possibleMoves)){
+                /*
+                actRoot.nodeGameState = gameState;
+                
+                foreach (Move possibleMove in possibleMoves) {
+                    if (!actRoot.possibleMoves.Contains(possibleMove)) {
+                        actRoot.possibleMoves.Add(possibleMove);
+                    }
+                }
+                
+                actRoot.possibleMoves = possibleMoves;
+                actRoot.UpdateAllPossibleMoves();
+                */
+                actRoot = new Node(gameState, null, null, possibleMoves);
+                actRoot.CreateChilds();
+            }
         }
 
         if (possibleMoves.Count == 1 && possibleMoves[0].Command == CommandEnum.END_TURN) {
             startOfTurn = true;
-            //return Move.EndTurn();
+            usedTimeInTurn = TimeSpan.FromSeconds(0);
+            return endTurnMove;
         }
 
-        actRoot.father = null;
-
-        int actionCounter = 0;
-
-        //Console.WriteLine("POSSIBLE MOVES ");
-        //foreach (Move m in possibleMoves) {Console.WriteLine(m);}
-
-        Stopwatch s = new Stopwatch();
-        s.Start();
-        while (s.Elapsed < TimeSpan.FromSeconds(0.1)){
-            OldactNode = TreePolicy(actRoot, Rng);
-            double delta = OldactNode.Simulate(Rng);
-            BackUp(OldactNode, delta);
-            actionCounter++;
+        if (usedTimeInTurn + timeForMoveComputation >= TurnTimeout){
+            move = possibleMoves.PickRandom(Rng);
         }
+        else{
 
-        Move move = actRoot.BestChildMove();
-
-        if (!possibleMoves.Contains(move)) {
-            int bestIndex = actRoot.BestChildIndex();
+            actRoot.father = null;
             
-            startOfTurn = true;
-
-            return possibleMoves[bestIndex];
-        }
-
-        OldNode tmpRoot = null;
-
-        for (int i = 0; i < actRoot.possibleMovesSize; i++) {
-            if (actRoot.childs[i].prevMove == move) {
-                tmpRoot = actRoot.childs[i];
+            int actionCounter = 0;
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            while (s.Elapsed < timeForMoveComputation){
+                actNode = TreePolicy(actRoot, Rng);
+                double delta = actNode.Simulate(Rng);
+                BackUp(actNode, delta);
+                actionCounter++;
             }
-            else {
-                actRoot.childs[i] = null;
-            }
+            usedTimeInTurn += timeForMoveComputation;
+            
+            actRoot = actRoot.SelectBestChild();
+            move = actRoot.move;
         }
-
-        actRoot = tmpRoot;
 
         if (move.Command == CommandEnum.END_TURN) {
             startOfTurn = true;
+            usedTimeInTurn = TimeSpan.FromSeconds(0);
         }
-
-        //Console.WriteLine(move);
-        //if (move.Command == CommandEnum.END_TURN) Console.WriteLine();
-
         return move;
     }
 
-    public override void GameEnd(EndGameState state)
+    public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
         this.PrepareForGame();
+        if (state.Winner == myID){
+            File.AppendAllText(patronLogPath, patrons + System.Environment.NewLine);
+        }
     }
 }

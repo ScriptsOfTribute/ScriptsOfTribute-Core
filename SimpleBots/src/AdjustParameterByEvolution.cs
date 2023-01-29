@@ -1,8 +1,7 @@
 using SimpleBots;
 using TalesOfTribute;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using TalesOfTribute.AI;
 
 namespace SimpleBotsTests;
 
@@ -11,7 +10,7 @@ public class AdjustParametersByEvolution{
     private Random rnd = new Random();
     private StringBuilder evolutionLogger = new StringBuilder();
 
-    private string evolutionLoggerPath = "evolution_HeuristicBot.txt";
+    private string evolutionLoggerPath = "evolution_DecisionTreeBot.txt";
 
     private int[] GetRandomIndividual(int length, int minValue, int maxValue){
         int[] genotype = new int[length]; 
@@ -49,22 +48,19 @@ public class AdjustParametersByEvolution{
         }
         return (child1, child2);
     }
-    //TODO zrobić to dla dowolnego bota
+    //TODO zrobić to dla dowolnego bota - problem z tworzeniem tablic dowolnego typu, musiałabym to robić na switchu
     public int[] Evolution(int sizeOfPopulation, int numberOfGenerations, int mutationRate, int minValue, int maxValue){
-        //var t = Type.GetType(strFullyQualifiedName).Dump();
-        //var res = Activator.CreateInstance(t);
-        HeuristicBot[] population = new HeuristicBot[sizeOfPopulation];
+        DecisionTreeBot[] population = new DecisionTreeBot[sizeOfPopulation];
         for (int i=0; i < sizeOfPopulation; i++){
-            HeuristicBot bot = new HeuristicBot();
-            bot.SetGenotype(GetRandomIndividual(16, minValue, maxValue));
+            var bot = new DecisionTreeBot();
+            bot.SetGenotype(GetRandomIndividual(5, minValue, maxValue));
             population[i] = bot;
         }
-        //RandomMaximizePrestigeBot prestige = new RandomMaximizePrestigeBot();
-        HeuristicBot[] winners = new HeuristicBot[sizeOfPopulation/2];
-        HeuristicBot[] children = new HeuristicBot[sizeOfPopulation/2];
+        DecisionTreeBot[] winners = new DecisionTreeBot[sizeOfPopulation/2];
+        DecisionTreeBot[] children = new DecisionTreeBot[sizeOfPopulation/2];
         Task[] taskArray = new Task[5];
         for (int generation =0; generation < numberOfGenerations; generation++){
-            Console.WriteLine("generacja: " + generation.ToString());
+            //Console.WriteLine("generacja: " + generation.ToString());
             for (int j = 0; j< sizeOfPopulation; j+=10){
                 for (int i = 0; i < taskArray.Length; i++){
                     taskArray[i] = Task.Factory.StartNew((thread_index_obj) => {
@@ -86,8 +82,8 @@ public class AdjustParametersByEvolution{
                 (int[] genotype1, int[] genotype2) = Inheritence(winners[j].GetGenotype(), winners[j+1].GetGenotype());
                 genotype1 = Mutation(genotype1, mutationRate, minValue, maxValue);
                 genotype2 = Mutation(genotype1, mutationRate, minValue, maxValue);
-                children[j] = new HeuristicBot();
-                children[j+1] = new HeuristicBot();
+                children[j] = new DecisionTreeBot();
+                children[j+1] = new DecisionTreeBot();
                 children[j].SetGenotype(genotype1);
                 children[j+1].SetGenotype(genotype2);
             }
