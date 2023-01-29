@@ -31,15 +31,17 @@ public class MaxPrestigeBot : AI
         var movesToCheck = possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
         if (movesToCheck.Count == 0)
         {
+            Log(Move.EndTurn().ToString());
             return Move.EndTurn();
         }
 
         Dictionary<int, List<Move>> prestigeToMove = new();
         foreach (var move in movesToCheck)
         {
-            var (newState, newPossibleMoves) = gameState.ApplyState(move);
+            var (newState, newPossibleMoves) = gameState.ApplyState(move, Seed);
             if (newState.GameEndState?.Winner == Id)
             {
+                Log(move.ToString());
                 return move;
             }
 
@@ -60,6 +62,7 @@ public class MaxPrestigeBot : AI
                 var (newestState, _) = newState.ApplyState(newMove);
                 if (newestState.GameEndState?.Winner == Id)
                 {
+                    Log(move.ToString());
                     return move;
                 }
 
@@ -77,7 +80,9 @@ public class MaxPrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            return possibleMoves.PickRandom(Rng);
+            var finalMove = possibleMoves.PickRandom(Rng);
+            Log(finalMove.ToString());
+            return finalMove;
         }
 
         var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);

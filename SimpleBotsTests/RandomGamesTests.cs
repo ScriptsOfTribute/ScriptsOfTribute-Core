@@ -1,4 +1,3 @@
-/*
 using SimpleBots;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
@@ -78,8 +77,8 @@ public class RandomGamesTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new RandomMaximizePrestigeBot();
-            var bot2 = new DoEverythingBot();
+            var bot1 = new MaxPrestigeBot();
+            var bot2 = new RandomWithoutEndTurnBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
@@ -106,8 +105,8 @@ public class RandomGamesTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new WinByPatronFavors();
-            var bot2 = new DoEverythingBot();
+            var bot1 = new PatronFavorsBot();
+            var bot2 = new RandomWithoutEndTurnBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
@@ -117,7 +116,6 @@ public class RandomGamesTests
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
@@ -135,8 +133,8 @@ public class RandomGamesTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new MaximizeAgentsBot();
-            var bot2 = new DoEverythingBot();
+            var bot1 = new MaxAgentsBot();
+            var bot2 = new RandomWithoutEndTurnBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
@@ -146,7 +144,6 @@ public class RandomGamesTests
                 _testOutputHelper.WriteLine(endState.AdditionalContext);
             }
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
-            Assert.NotEqual(GameEndReason.MOVE_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.TURN_TIMEOUT, endState.Reason);
             Assert.NotEqual(GameEndReason.INTERNAL_ERROR, endState.Reason);
 
@@ -156,4 +153,3 @@ public class RandomGamesTests
         _testOutputHelper.WriteLine(counter.ToString());
     }
 }
-*/

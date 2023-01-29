@@ -1,4 +1,3 @@
-/*
 using SimpleBots;
 using TalesOfTribute.Board;
 using Xunit.Abstractions;
@@ -127,4 +126,3 @@ public class ComplicatedBotsTest
         _testOutputHelper.WriteLine(counter.ToString());
     }
 }
-*/

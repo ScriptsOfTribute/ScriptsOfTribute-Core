@@ -20,7 +20,6 @@ namespace TalesOfTribute
 
         public BoardManager(PatronId[] patrons, ulong seed)
         {
-            //seed = 409233584;
             _rng = new SeededRandom(seed);
             this.Patrons = GetPatrons(patrons);
             // TODO: This is actually not correct, as some cards should have multiple copies.
