@@ -2,7 +2,8 @@ using TalesOfTribute;
 
 namespace SimpleBots;
 
-public enum TierEnum{
+public enum TierEnum
+{
     /*
     S = 1000,
     A = 400,
@@ -18,18 +19,21 @@ public enum TierEnum{
     UNKNOWN = 0,
 }
 
-public class CardTier{
+public class CardTier
+{
     public string Name;
     public PatronId Deck;
     public TierEnum Tier;
 
-    public CardTier(string name, PatronId deck, TierEnum tier){
+    public CardTier(string name, PatronId deck, TierEnum tier)
+    {
         Name = name;
         Deck = deck;
         Tier = tier;
     }
 }
-public class CardTierList{
+public class CardTierList
+{
     private static CardTier[] CardTierArray = {
         new CardTier("Currency Exchange", PatronId.HLAALU, TierEnum.S),
         new CardTier("Luxury Exports", PatronId.HLAALU, TierEnum.S),
@@ -147,7 +151,8 @@ public class CardTierList{
         new CardTier("Unknown", PatronId.TREASURY, TierEnum.UNKNOWN)
     };
 
-    public static TierEnum GetCardTier(string cardName){
+    public static TierEnum GetCardTier(string cardName)
+    {
         return Array.Find(CardTierArray, x => x.Name == cardName).Tier;
     }
 }

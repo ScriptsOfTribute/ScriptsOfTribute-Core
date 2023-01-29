@@ -17,7 +17,7 @@ public class RandomBotWithRandomStateExploring : AI
         {
             var (newState1, newMoves1) = gameState.ApplyState(possibleMoves.PickRandom(Rng));
             var (newState2, newMoves2) = gameState.ApplyState(possibleMoves.PickRandom(Rng));
-            
+
             if (newMoves2.Count > 0)
                 (newState2, newMoves2) = newState2.ApplyState(newMoves2.PickRandom(Rng));
             if (newMoves1.Count > 0)

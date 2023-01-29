@@ -22,7 +22,8 @@ public class MaxPrestigeBot : AI
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        if (startOfGame){
+        if (startOfGame)
+        {
             myID = gameState.CurrentPlayer.PlayerID;
             patrons = string.Join(",", gameState.Patrons.FindAll(x => x != PatronId.TREASURY).Select(n => n.ToString()).ToArray());
             startOfGame = false;
@@ -46,12 +47,15 @@ public class MaxPrestigeBot : AI
             }
 
             var newMovesToCheck = newPossibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
-            if (newMovesToCheck.Count == 0){
+            if (newMovesToCheck.Count == 0)
+            {
                 var val = newState.CurrentPlayer.Prestige + newState.CurrentPlayer.Power;
-                if (prestigeToMove.ContainsKey(val)){
+                if (prestigeToMove.ContainsKey(val))
+                {
                     prestigeToMove[val].Add(move);
                 }
-                else{
+                else
+                {
                     prestigeToMove.Add(val, new List<Move> { move });
                 }
                 continue;
@@ -93,7 +97,8 @@ public class MaxPrestigeBot : AI
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
         Log("Game ended : (");
-        if (state.Winner == myID){
+        if (state.Winner == myID)
+        {
             File.AppendAllText(patronLogPath, patrons + System.Environment.NewLine);
         }
         startOfGame = true;
