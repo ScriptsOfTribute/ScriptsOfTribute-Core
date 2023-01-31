@@ -6,7 +6,6 @@ public class CardDatabase
 {
     private List<Card> _allCards;
     public List<UniqueCard> AllCards => _allCards.Select(card => card.CreateUniqueCopy()).ToList();
-    public List<UniqueCard> AllCardsWithoutUpgrades => FilterOutPreUpgradeCards(_allCards).Select(card => card.CreateUniqueCopy()).ToList();
 
     public CardDatabase(IEnumerable<Card> cards)
     {
@@ -14,7 +13,7 @@ public class CardDatabase
         _allCards = cardsEnumerable.ToList();
         if (!_allCards.Select(c => c.CommonId).Contains(CardId.UNKNOWN))
         {
-            _allCards.Add(new Card("Unknown", PatronId.TREASURY, CardId.UNKNOWN, 0, CardType.ACTION, -1, new ComplexEffect? []{ null, null, null, null }, 0, null, false));
+            _allCards.Add(new Card("Unknown", PatronId.TREASURY, CardId.UNKNOWN, 0, CardType.ACTION, -1, new ComplexEffect? []{ null, null, null, null }, 0, null, false, 1));
         }
     }
 
@@ -26,26 +25,11 @@ public class CardDatabase
 
     public List<UniqueCard> GetCardsByPatron(PatronId[] patrons)
     {
-        List<UniqueCard> cardsFromDeck = (
-            from card in AllCardsWithoutUpgrades
-            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE && card.CommonId != CardId.UNKNOWN
-            select card.CreateUniqueCopy()
-        ).ToList();
-        return cardsFromDeck;
-    }
+        var allCardsGrouped = from card in _allCards
+            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE &&
+                  card.CommonId != CardId.UNKNOWN
+            select Enumerable.Range(0, card.Copies).Select(_ => card.CreateUniqueCopy()).ToList();
 
-    // TODO: Add ability for user to configure which card he wants to keep.
-    // For now, we will keep cards after upgrade.
-    private static IEnumerable<Card> FilterOutPreUpgradeCards(IEnumerable<Card> cards)
-    {
-        var cardsEnumerable = cards.ToList();
-        var families = cardsEnumerable
-            .Where(card => card.Family != null)
-            .Select(card => card.Family)
-            .Distinct();
-        // Pre-upgrade cards have the same ID as the family they are in.
-        return from card in cardsEnumerable
-               where !families.Contains(card.CommonId)
-               select card;
+        return allCardsGrouped.SelectMany(c => c).ToList();
     }
 }

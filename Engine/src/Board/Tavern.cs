@@ -61,8 +61,8 @@ namespace TalesOfTribute
             else
             {
                 AvailableCards.Insert(index, this.Cards.First());
+                Cards.RemoveAt(0);
             }
-            Cards.RemoveAt(0);
         }
 
         private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards, bool cheats)

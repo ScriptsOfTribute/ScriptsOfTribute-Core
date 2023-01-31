@@ -40,7 +40,18 @@ namespace TalesOfTribute
             combo = card["Combo 4"]?.ToObject<string>();
             effects[3] = ParseEffect(combo, 4);
 
-            return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt);
+            // TODO: Add ability for user to configure if he wants upgraded or basic cards only.
+            // For now, we add upgraded cards.
+            // That is why Copies are replaced by PostUpgradeCopies if the card is upgradeable and has this field.
+            var copies = card["Copies"]?.ToObject<int>() ?? throw new Exception(InvalidJsonMessage);
+            var postUpgradeCopies = card["PostUpgradeCopies"]?.ToObject<int>();
+
+            if (postUpgradeCopies is { } notNullPostUpgradeCopies)
+            {
+                copies = notNullPostUpgradeCopies;
+            }
+
+            return new Card(name, deck, id, cost, type, hp, effects, -1, family, taunt, copies);
         }
 
         private ComplexEffect? ParseEffect(string? effectToParse, int combo)

@@ -295,7 +295,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
         threads.SelectMany(t => t.Result).ToList().ForEach(r => counter.Add(r));
         
         Console.WriteLine($"\nInitial seed used: {actualSeed}");
-        Console.WriteLine($"\nTotal time taken: {timeTaken}ms");
+        Console.WriteLine($"Total time taken: {timeTaken}ms");
         Console.WriteLine("\nStats from the games played:");
         Console.WriteLine(counter.ToString());
     }

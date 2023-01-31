@@ -22,8 +22,9 @@ public class Card
     public readonly int Hash;
     public readonly CardId? Family;
     public readonly bool Taunt;
+    public readonly int Copies;
 
-    public Card(string name, PatronId deck, CardId commonId, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt)
+    public Card(string name, PatronId deck, CardId commonId, int cost, CardType type, int hp, ComplexEffect?[] effects, int hash, CardId? family, bool taunt, int copies)
     {
         Name = name;
         Deck = deck;
@@ -36,6 +37,7 @@ public class Card
         Hash = hash;
         Family = family;
         Taunt = taunt;
+        Copies = copies;
     }
 
     public UniqueCard CreateUniqueCopy()
@@ -43,6 +45,6 @@ public class Card
         var uniqueId = UniqueId.Create();
         return new UniqueCard(Name, Deck, CommonId, Cost, Type, HP,
             Effects,
-            Hash, Family, Taunt, uniqueId);
+            Hash, Family, Taunt, uniqueId, Copies);
     }
 }
