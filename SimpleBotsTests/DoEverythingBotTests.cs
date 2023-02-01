@@ -1,5 +1,4 @@
-﻿using TalesOfTribute;
-using TalesOfTribute.Board;
+﻿using TalesOfTribute.Board;
 using Xunit.Abstractions;
 
 namespace SimpleBotsTests;
@@ -21,7 +20,7 @@ public class DoEverythingBotTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new SimpleBots.DoEverythingBot();
+            var bot1 = new SimpleBots.RandomWithoutEndTurnBot();
             var bot2 = new SimpleBots.RandomBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
@@ -45,8 +44,8 @@ public class DoEverythingBotTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new SimpleBots.DoEverythingBot();
-            var bot2 = new SimpleBots.DoEverythingBot();
+            var bot1 = new SimpleBots.RandomWithoutEndTurnBot();
+            var bot2 = new SimpleBots.RandomWithoutEndTurnBot();
 
             var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
             var (endState, _) = game.Play();

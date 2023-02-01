@@ -6,7 +6,7 @@ namespace SimpleBotsTests;
 
 public class TimeoutTests
 {
-    
+
     [Fact]
     void TurnShouldCorrectlyTimeout()
     {
@@ -21,11 +21,11 @@ public class TimeoutTests
         };
 
         var (result, _) = game.Play();
-        
+
         Assert.Equal(GameEndReason.TURN_TIMEOUT, result.Reason);
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
     }
-    
+
     [Fact]
     void PatronShouldCorrectlyTimeout()
     {
@@ -37,7 +37,7 @@ public class TimeoutTests
         };
 
         var (result, _) = game.Play();
-        
+
         Assert.Equal(GameEndReason.PATRON_SELECTION_TIMEOUT, result.Reason);
         Assert.Equal(PlayerEnum.PLAYER1, result.Winner);
     }
