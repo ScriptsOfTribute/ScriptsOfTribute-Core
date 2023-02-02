@@ -1,7 +1,7 @@
-﻿using TalesOfTribute.Board;
-using TalesOfTribute.Board.Cards;
+﻿using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Board.Cards;
 
-namespace TalesOfTribute
+namespace ScriptsOfTribute
 {
     public class Treasury : Patron
     {

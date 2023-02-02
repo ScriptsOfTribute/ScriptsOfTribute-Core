@@ -1,15 +1,15 @@
 ﻿using Moq;
-using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
+using ScriptsOfTribute;
+using ScriptsOfTribute.AI;
+using ScriptsOfTribute.Board;
 
 namespace Tests.AI;
 
 public class TalesOfTributeGameTests
 {
     private readonly Mock<ITalesOfTributeApi> _api = new();
-    private readonly Mock<TalesOfTribute.AI.AI> _player1 = new();
-    private readonly Mock<TalesOfTribute.AI.AI> _player2 = new();
+    private readonly Mock<ScriptsOfTribute.AI.AI> _player1 = new();
+    private readonly Mock<ScriptsOfTribute.AI.AI> _player2 = new();
     private readonly Mock<Patron> _patron = new(); // empty value so we can pass with tests
 
     [Fact]

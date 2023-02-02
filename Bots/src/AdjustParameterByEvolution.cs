@@ -1,9 +1,9 @@
 using SimpleBots;
-using TalesOfTribute;
+using ScriptsOfTribute;
 using System.Text;
-using TalesOfTribute.AI;
+using ScriptsOfTribute.AI;
 
-namespace SimpleBotsTests;
+namespace Bots;
 
 public class AdjustParametersByEvolution
 {
@@ -80,7 +80,7 @@ public class AdjustParametersByEvolution
                     taskArray[i] = Task.Factory.StartNew((thread_index_obj) =>
                     {
                         int thread_index = (int)thread_index_obj;
-                        var game = new TalesOfTribute.AI.ScriptsOfTribute(population[thread_index * 2 + j], population[thread_index * 2 + 1 + j]);
+                        var game = new ScriptsOfTribute.AI.ScriptsOfTribute(population[thread_index * 2 + j], population[thread_index * 2 + 1 + j]);
                         var (endState, endBoardState) = game.Play();
 
                         if (endState.Winner == PlayerEnum.PLAYER1)

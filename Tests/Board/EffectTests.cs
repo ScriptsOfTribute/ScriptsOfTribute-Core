@@ -1,5 +1,5 @@
 ﻿using Moq;
-using TalesOfTribute;
+using ScriptsOfTribute;
 
 namespace Tests.Board;
 

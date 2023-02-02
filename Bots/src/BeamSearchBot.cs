@@ -1,11 +1,11 @@
-using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
-using TalesOfTribute.Board.Cards;
+using ScriptsOfTribute;
+using ScriptsOfTribute.AI;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Serializers;
+using ScriptsOfTribute.Board.Cards;
 using System.Diagnostics;
 using System.Text;
-using TalesOfTribute.Board.CardAction;
+using ScriptsOfTribute.Board.CardAction;
 
 namespace SimpleBots;
 

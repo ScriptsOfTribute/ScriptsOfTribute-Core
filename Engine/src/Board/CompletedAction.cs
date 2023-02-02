@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using TalesOfTribute.Board.Cards;
+using ScriptsOfTribute.Board.Cards;
 
-namespace TalesOfTribute.Board;
+namespace ScriptsOfTribute.Board;
 
 public enum CompletedActionType
 {

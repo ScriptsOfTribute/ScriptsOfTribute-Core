@@ -1,4 +1,4 @@
-﻿using TalesOfTribute;
+﻿using ScriptsOfTribute;
 using Xunit.Abstractions;
 
 namespace Tests.Board;

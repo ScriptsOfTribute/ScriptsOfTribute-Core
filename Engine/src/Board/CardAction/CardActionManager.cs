@@ -1,7 +1,7 @@
-﻿using TalesOfTribute.Board.Cards;
-using TalesOfTribute.Serializers;
+﻿using ScriptsOfTribute.Board.Cards;
+using ScriptsOfTribute.Serializers;
 
-namespace TalesOfTribute.Board.CardAction;
+namespace ScriptsOfTribute.Board.CardAction;
 
 public enum BoardState
 {

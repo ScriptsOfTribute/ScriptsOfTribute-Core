@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SimpleBots\SimpleBots.csproj" />
+      <ProjectReference Include="..\Bots\Bots.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
-﻿using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
-using TalesOfTribute.utils;
+﻿using ScriptsOfTribute.Board;
+using ScriptsOfTribute.utils;
+using ScriptsOfTribute.Serializers;
 
-namespace TalesOfTribute.AI;
+namespace ScriptsOfTribute.AI;
 
 public class ScriptsOfTribute
 {

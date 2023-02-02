@@ -1,7 +1,7 @@
-using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
+using ScriptsOfTribute;
+using ScriptsOfTribute.AI;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Serializers;
 
 namespace SimpleBots;
 

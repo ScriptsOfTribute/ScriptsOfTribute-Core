@@ -1,6 +1,6 @@
-﻿using TalesOfTribute.Board.Cards;
+﻿using ScriptsOfTribute.Board.Cards;
 
-namespace TalesOfTribute.Board.CardAction;
+namespace ScriptsOfTribute.Board.CardAction;
 
 public class ComplexEffectExecutor
 {

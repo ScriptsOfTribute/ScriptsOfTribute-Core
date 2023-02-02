@@ -1,9 +1,9 @@
 using SimpleBots;
-using TalesOfTribute;
-using TalesOfTribute.AI;
+using ScriptsOfTribute;
+using ScriptsOfTribute.AI;
 using System.Text;
 
-namespace SimpleBotsTests;
+namespace Bots;
 
 public class ClashEveryBotTogether
 {
@@ -84,7 +84,7 @@ public class ClashEveryBotTogether
                     taskArray[j - (i + 1)] = Task.Factory.StartNew((j_thread) =>
                     {
                         var instance = (AI)Activator.CreateInstance(bots[i].GetType());
-                        var game = new TalesOfTribute.AI.ScriptsOfTribute(instance, bots[(int)j_thread]);
+                        var game = new ScriptsOfTribute.AI.ScriptsOfTribute(instance, bots[(int)j_thread]);
                         var (endState, _) = game.Play();
                         if (endState.Winner == PlayerEnum.PLAYER1)
                         {

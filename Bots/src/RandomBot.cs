@@ -1,21 +1,18 @@
-﻿using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
+﻿using ScriptsOfTribute;
+using ScriptsOfTribute.AI;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Serializers;
 
 namespace SimpleBots;
 
-public class PatronSelectionTimeoutBot : AI
+public class RandomBot : AI
 {
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-    {
-        Task.Delay(TimeSpan.FromSeconds(3)).Wait();
-        return availablePatrons[0];
-    }
+        => availablePatrons.PickRandom(Rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
-        throw new NotImplementedException();
+        return possibleMoves.PickRandom(Rng);
     }
 
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)

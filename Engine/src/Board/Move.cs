@@ -1,6 +1,6 @@
-using TalesOfTribute.Board.Cards;
+using ScriptsOfTribute.Board.Cards;
 
-namespace TalesOfTribute
+namespace ScriptsOfTribute
 {
     public enum CommandEnum
     {

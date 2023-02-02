@@ -1,6 +1,6 @@
-﻿using TalesOfTribute.Board;
+﻿using ScriptsOfTribute.Board;
 
-namespace TalesOfTribute
+namespace ScriptsOfTribute
 {
     public class Hlaalu : Patron
     {

@@ -1,9 +1,9 @@
-﻿using TalesOfTribute.Board.CardAction;
-using TalesOfTribute.Board.Cards;
-using TalesOfTribute.Serializers;
-using TalesOfTribute.utils;
+﻿using ScriptsOfTribute.Board.CardAction;
+using ScriptsOfTribute.Board.Cards;
+using ScriptsOfTribute.Serializers;
+using ScriptsOfTribute.utils;
 
-namespace TalesOfTribute.Board;
+namespace ScriptsOfTribute.Board;
 
 public interface IScriptsOfTributeApi
 {

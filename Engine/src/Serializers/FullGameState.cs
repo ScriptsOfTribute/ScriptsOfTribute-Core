@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using TalesOfTribute.Board;
-using TalesOfTribute.Board.CardAction;
-using TalesOfTribute.Board.Cards;
-using TalesOfTribute.Serializers;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Board.CardAction;
+using ScriptsOfTribute.Board.Cards;
+using ScriptsOfTribute.Serializers;
 
-namespace TalesOfTribute
+namespace ScriptsOfTribute
 {
     public class FullGameState
     {

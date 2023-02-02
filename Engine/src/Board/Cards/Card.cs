@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute.Board.Cards;
+﻿namespace ScriptsOfTribute.Board.Cards;
 
 public enum CardType
 {

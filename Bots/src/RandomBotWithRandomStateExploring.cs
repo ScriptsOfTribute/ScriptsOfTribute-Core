@@ -1,10 +1,10 @@
 ﻿using SimpleBots;
-using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
+using ScriptsOfTribute;
+using ScriptsOfTribute.AI;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Serializers;
 
-namespace SimpleBotsTests;
+namespace Bots;
 
 public class RandomBotWithRandomStateExploring : AI
 {

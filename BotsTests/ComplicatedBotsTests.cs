@@ -1,8 +1,9 @@
+using Bots;
 using SimpleBots;
-using TalesOfTribute.Board;
+using ScriptsOfTribute.Board;
 using Xunit.Abstractions;
 
-namespace SimpleBotsTests;
+namespace BotsTests;
 
 public class ComplicatedBotsTest
 {
@@ -24,7 +25,7 @@ public class ComplicatedBotsTest
             var bot1 = new RandomSimulationBot();
             var bot2 = new RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
+            var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -53,7 +54,7 @@ public class ComplicatedBotsTest
             var bot1 = new DecisionTreeBot();
             var bot2 = new RandomBotWithRandomStateExploring();
 
-            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
+            var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -81,7 +82,7 @@ public class ComplicatedBotsTest
             var bot1 = new MCTSBot();
             var bot2 = new RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
+            var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -109,7 +110,7 @@ public class ComplicatedBotsTest
             var bot1 = new BeamSearchBot();
             var bot2 = new RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
+            var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)

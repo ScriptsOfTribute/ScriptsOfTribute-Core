@@ -3,12 +3,10 @@ using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 using GameRunner;
-using SimpleBotsTests;
-using TalesOfTribute;
-using TalesOfTribute.AI;
-using TalesOfTribute.Board;
+using Bots;
+using ScriptsOfTribute.AI;
+using ScriptsOfTribute.Board;
 
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
@@ -144,9 +142,9 @@ var mainCommand = new RootCommand("A game runner for bots.")
     bot2NameArgument,
 };
 
-TalesOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider)
+ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider)
 {
-    var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1!, bot2!);
+    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1!, bot2!);
     switch (enableLogs)
     {
         case LogsEnabled.P1:

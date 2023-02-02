@@ -1,7 +1,7 @@
-﻿using TalesOfTribute.Board;
-using TalesOfTribute.Serializers;
+﻿using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Serializers;
 
-namespace TalesOfTribute.AI;
+namespace ScriptsOfTribute.AI;
 
 public abstract class AI
 {

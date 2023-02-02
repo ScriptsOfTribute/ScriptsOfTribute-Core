@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute.Board.Cards;
+﻿namespace ScriptsOfTribute.Board.Cards;
 
 public class UniqueCard : Card
 {

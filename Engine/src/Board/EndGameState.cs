@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute.Board;
+﻿namespace ScriptsOfTribute.Board;
 
 public class EndGameState
 {

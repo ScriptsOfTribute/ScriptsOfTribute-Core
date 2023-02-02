@@ -1,4 +1,4 @@
-using TalesOfTribute;
+using ScriptsOfTribute;
 
 namespace SimpleBots;
 
