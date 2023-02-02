@@ -15,7 +15,7 @@ public class TimeoutTests
         // That means he can make 3 moves, but in the first turn there are always 5 possible cards to play,
         // and he tries to make all the moves before ending turn.
         var bot2 = new TurnTimeoutBot();
-        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2)
+        var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2)
         {
             Timeout = TimeSpan.FromSeconds(3)
         };
@@ -31,7 +31,7 @@ public class TimeoutTests
     {
         var bot1 = new RandomBot();
         var bot2 = new PatronSelectionTimeoutBot();
-        var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2)
+        var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2)
         {
             Timeout = TimeSpan.FromSeconds(3)
         };

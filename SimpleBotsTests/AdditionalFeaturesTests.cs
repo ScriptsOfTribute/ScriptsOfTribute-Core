@@ -28,7 +28,7 @@ public class AdditionalFeaturesTests
             bot1.SetGenotype(genotype);
             var bot2 = new RandomBotWithRandomStateExploring();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)

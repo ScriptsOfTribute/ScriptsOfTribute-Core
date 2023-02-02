@@ -6,11 +6,11 @@ using TalesOfTribute.Serializers;
 
 namespace TalesOfTribute.AI;
 
-public class TalesOfTributeGame
+public class ScriptsOfTributeGame
 {
     public const int TurnLimit = 500;
 
-    private ITalesOfTributeApi _api;
+    private IScriptsOfTributeApi _api;
     private AI[] _players = new AI[2];
     private TimeSpan _currentTurnTimeElapsed = TimeSpan.Zero;
     public EndGameState? EndGameState { get; private set; }
@@ -20,7 +20,7 @@ public class TalesOfTributeGame
     private TimeSpan CurrentTurnTimeRemaining => _timeout - _currentTurnTimeElapsed;
     private List<Move> _moveHistory = new();
 
-    public TalesOfTributeGame(AI[] players, ITalesOfTributeApi api, TimeSpan timeout)
+    public ScriptsOfTributeGame(AI[] players, IScriptsOfTributeApi api, TimeSpan timeout)
     {
         _api = api;
         _timeout = timeout;

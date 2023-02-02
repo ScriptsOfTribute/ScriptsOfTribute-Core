@@ -5,7 +5,7 @@ using TalesOfTribute.utils;
 
 namespace TalesOfTribute.Board;
 
-public class TalesOfTributeApi : ITalesOfTributeApi
+public class ScriptsOfTributeApi : IScriptsOfTributeApi
 {
     public ulong Seed { get; }
     public int TurnCount => _turnCount;
@@ -22,12 +22,12 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     public Logger Logger { get; } = new();
 
     // Constructors
-    public TalesOfTributeApi(BoardManager boardManager)
+    public ScriptsOfTributeApi(BoardManager boardManager)
     {
         _boardManager = boardManager;
     }
 
-    public TalesOfTributeApi(PatronId[] patrons) : this(patrons, (ulong)Environment.TickCount)
+    public ScriptsOfTributeApi(PatronId[] patrons) : this(patrons, (ulong)Environment.TickCount)
     {
     }
 
@@ -35,7 +35,7 @@ public class TalesOfTributeApi : ITalesOfTributeApi
     /// Initialize board with selected patrons. patrons argument should contain PatronId.TREASURY
     /// but it handles situation when user doesn't put it.
     /// </summary>
-    public TalesOfTributeApi(PatronId[] patrons, ulong seed)
+    public ScriptsOfTributeApi(PatronId[] patrons, ulong seed)
     {
         if (!Array.Exists(patrons, p => p == PatronId.TREASURY))
         {
@@ -229,9 +229,9 @@ public class TalesOfTributeApi : ITalesOfTributeApi
         return _endGameState;
     }
 
-    public static ITalesOfTributeApi FromSerializedBoard(FullGameState board)
+    public static IScriptsOfTributeApi FromSerializedBoard(FullGameState board)
     {
-        return new TalesOfTributeApi(BoardManager.FromSerializedBoard(board));
+        return new ScriptsOfTributeApi(BoardManager.FromSerializedBoard(board));
     }
 
     public bool CanPatronBeActivated(PatronId patronId)

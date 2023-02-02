@@ -24,7 +24,7 @@ public class RandomGamesTests
             var bot1 = new RandomBot();
             var bot2 = new RandomBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, endBoardState) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -53,7 +53,7 @@ public class RandomGamesTests
             var bot1 = new RandomBotWithRandomStateExploring();
             var bot2 = new RandomBotWithRandomStateExploring();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -80,7 +80,7 @@ public class RandomGamesTests
             var bot1 = new MaxPrestigeBot();
             var bot2 = new RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -108,7 +108,7 @@ public class RandomGamesTests
             var bot1 = new PatronFavorsBot();
             var bot2 = new RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)
@@ -136,7 +136,7 @@ public class RandomGamesTests
             var bot1 = new MaxAgentsBot();
             var bot2 = new RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             if (endState.Reason == GameEndReason.INCORRECT_MOVE)

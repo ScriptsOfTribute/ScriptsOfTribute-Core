@@ -144,9 +144,9 @@ var mainCommand = new RootCommand("A game runner for bots.")
     bot2NameArgument,
 };
 
-TalesOfTribute.AI.TalesOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider)
+TalesOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider)
 {
-    var game = new TalesOfTribute.AI.TalesOfTribute(bot1!, bot2!);
+    var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1!, bot2!);
     switch (enableLogs)
     {
         case LogsEnabled.P1:

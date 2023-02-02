@@ -5,7 +5,7 @@ using TalesOfTribute.utils;
 
 namespace TalesOfTribute.Board;
 
-public interface ITalesOfTributeApi
+public interface IScriptsOfTributeApi
 {
     int TurnCount { get; }
     public int TurnMoveCount { get; }

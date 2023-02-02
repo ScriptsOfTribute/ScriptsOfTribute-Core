@@ -23,7 +23,7 @@ public class DoEverythingBotTests
             var bot1 = new SimpleBots.RandomWithoutEndTurnBot();
             var bot2 = new SimpleBots.RandomBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);
@@ -47,7 +47,7 @@ public class DoEverythingBotTests
             var bot1 = new SimpleBots.RandomWithoutEndTurnBot();
             var bot2 = new SimpleBots.RandomWithoutEndTurnBot();
 
-            var game = new TalesOfTribute.AI.TalesOfTribute(bot1, bot2);
+            var game = new TalesOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
 
             Assert.NotEqual(GameEndReason.INCORRECT_MOVE, endState.Reason);

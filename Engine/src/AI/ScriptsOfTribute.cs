@@ -4,11 +4,11 @@ using TalesOfTribute.utils;
 
 namespace TalesOfTribute.AI;
 
-public class TalesOfTribute
+public class ScriptsOfTribute
 {
     private AI[] _players = new AI[2];
 
-    private TalesOfTributeGame? _game;
+    private ScriptsOfTributeGame? _game;
     private ulong _seed;
 
     public ulong Seed
@@ -27,7 +27,7 @@ public class TalesOfTribute
     public bool P2LoggerEnabled { get; set; } = false;
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
-    public TalesOfTribute(AI player1, AI player2)
+    public ScriptsOfTribute(AI player1, AI player2)
     {
         _players[0] = player1;
         _players[1] = player2;
@@ -123,7 +123,7 @@ public class TalesOfTribute
             return (endGameState, null);
         }
 
-        var api = new TalesOfTributeApi(patrons!, Seed)
+        var api = new ScriptsOfTributeApi(patrons!, Seed)
         {
             Logger =
             {
@@ -133,7 +133,7 @@ public class TalesOfTribute
                 P2LogTarget = P2LogTarget
             }
         };
-        _game = new TalesOfTributeGame(_players, api, Timeout);
+        _game = new ScriptsOfTributeGame(_players, api, Timeout);
 
         var r = _game!.Play();
 
