@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using TalesOfTribute;
-using TalesOfTribute.Board;
+using ScriptsOfTribute;
+using ScriptsOfTribute.Board;
 
-namespace SimpleBotsTests;
+namespace Bots;
 
 public class GameEndStatsCounter
 {

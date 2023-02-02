@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute.Serializers;
+﻿namespace ScriptsOfTribute.Serializers;
 
 public class PatronStates
 {

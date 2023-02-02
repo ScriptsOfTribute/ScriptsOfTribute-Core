@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute;
+﻿namespace ScriptsOfTribute;
 
 public static class Extensions
 {

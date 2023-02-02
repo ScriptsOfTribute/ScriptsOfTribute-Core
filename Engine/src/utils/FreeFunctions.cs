@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace TalesOfTribute.utils;
+namespace ScriptsOfTribute.utils;
 
 public static class FreeFunctions
 {

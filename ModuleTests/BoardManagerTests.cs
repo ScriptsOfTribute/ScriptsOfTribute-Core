@@ -1,6 +1,6 @@
-using TalesOfTribute;
-using TalesOfTribute.Board;
-using TalesOfTribute.Board.Cards;
+using ScriptsOfTribute;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Board.Cards;
 
 namespace ModuleTests;
 

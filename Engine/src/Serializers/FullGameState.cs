@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using TalesOfTribute.Board;
-using TalesOfTribute.Board.CardAction;
-using TalesOfTribute.Board.Cards;
-using TalesOfTribute.Serializers;
+using ScriptsOfTribute.Board;
+using ScriptsOfTribute.Board.CardAction;
+using ScriptsOfTribute.Board.Cards;
+using ScriptsOfTribute.Serializers;
 
-namespace TalesOfTribute
+namespace ScriptsOfTribute
 {
     public class FullGameState
     {
@@ -96,7 +96,7 @@ namespace TalesOfTribute
         // TODO: Add EndGameState and exception handling, because now incorrect moves crash (also, what happens if player tries to make move on already ended game? Handle this edge case).
         public (FullGameState, List<Move>) ApplyState(Move move)
         {
-            var api = TalesOfTributeApi.FromSerializedBoard(this);
+            var api = ScriptsOfTributeApi.FromSerializedBoard(this);
             var s = move as SimpleCardMove;
             switch (move.Command)
             {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
-using TalesOfTribute.Board.Cards;
+using ScriptsOfTribute.Board.Cards;
 
-namespace TalesOfTribute
+namespace ScriptsOfTribute
 {
     public class Parser
     {

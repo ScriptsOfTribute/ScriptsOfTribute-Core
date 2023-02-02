@@ -1,4 +1,4 @@
-﻿namespace TalesOfTribute;
+﻿namespace ScriptsOfTribute;
 
 public readonly struct UniqueId
 {

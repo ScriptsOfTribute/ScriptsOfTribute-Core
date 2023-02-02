@@ -1,6 +1,6 @@
-﻿using TalesOfTribute.Board.Cards;
+﻿using ScriptsOfTribute.Board.Cards;
 
-namespace TalesOfTribute.Serializers;
+namespace ScriptsOfTribute.Serializers;
 
 public class SerializedPlayer
 {

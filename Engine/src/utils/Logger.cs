@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace TalesOfTribute.utils;
+namespace ScriptsOfTribute.utils;
 
 public class Logger
 {

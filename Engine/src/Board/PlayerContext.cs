@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace TalesOfTribute.Board;
+namespace ScriptsOfTribute.Board;
 
 public interface IReadOnlyPlayerContext
 {
