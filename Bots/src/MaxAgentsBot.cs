@@ -4,7 +4,7 @@ using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Board.Cards;
 using ScriptsOfTribute.Serializers;
 
-namespace SimpleBots;
+namespace Bots;
 
 public class MaxAgentsBot : AI
 {

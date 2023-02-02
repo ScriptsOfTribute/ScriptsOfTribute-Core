@@ -1,5 +1,4 @@
 using Bots;
-using SimpleBots;
 using ScriptsOfTribute.Board;
 using Xunit.Abstractions;
 

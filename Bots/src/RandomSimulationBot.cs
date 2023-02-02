@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using ScriptsOfTribute.Board.CardAction;
 
-namespace SimpleBots;
+namespace Bots;
 
 public class RandomSimulationBot : AI
 {
@@ -205,7 +205,7 @@ public class RandomSimulationBot : AI
         while (notEndTurnPossibleMoves.Count != 0)
         {
             Move chosenMove;
-            if ((gameState.BoardState == BoardState.NORMAL) && (SimpleBots.Extensions.RandomK(0, 10000, Rng) == 0))
+            if ((gameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 10000, Rng) == 0))
             {
                 chosenMove = Move.EndTurn();
             }

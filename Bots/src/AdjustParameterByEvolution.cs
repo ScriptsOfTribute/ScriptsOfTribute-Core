@@ -1,4 +1,4 @@
-using SimpleBots;
+using Bots;
 using ScriptsOfTribute;
 using System.Text;
 using ScriptsOfTribute.AI;

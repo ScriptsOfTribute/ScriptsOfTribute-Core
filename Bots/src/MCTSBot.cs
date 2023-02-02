@@ -6,7 +6,7 @@ using System.Diagnostics;
 using ScriptsOfTribute.Board.CardAction;
 using ScriptsOfTribute.Board.Cards;
 
-namespace SimpleBots;
+namespace Bots;
 
 public class Node
 {
@@ -122,7 +122,7 @@ public class Node
         List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(possibleMoves);
         if (notEndTurnPossibleMoves.Count > 0)
         {
-            if ((gameState.BoardState == BoardState.NORMAL) && (SimpleBots.Extensions.RandomK(0, 10000, rng) == 0))
+            if ((gameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 10000, rng) == 0))
             {
                 nextMove = Move.EndTurn();
             }
@@ -150,7 +150,7 @@ public class Node
         Move nextMove;
         if (notEndTurnPossibleMoves.Count > 0)
         {
-            if ((this.nodeGameState.BoardState == BoardState.NORMAL) && (SimpleBots.Extensions.RandomK(0, 100000, rng) == 0))
+            if ((this.nodeGameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 100000, rng) == 0))
             {
                 nextMove = Move.EndTurn();
             }

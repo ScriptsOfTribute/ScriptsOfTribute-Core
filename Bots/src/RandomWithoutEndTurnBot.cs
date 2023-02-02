@@ -3,7 +3,7 @@ using ScriptsOfTribute.AI;
 using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Serializers;
 
-namespace SimpleBots;
+namespace Bots;
 
 // Bot that plays all available cards before ending turn.
 public class RandomWithoutEndTurnBot : AI

@@ -21,8 +21,8 @@ public class DoEverythingBotTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new SimpleBots.RandomWithoutEndTurnBot();
-            var bot2 = new SimpleBots.RandomBot();
+            var bot1 = new Bots.RandomWithoutEndTurnBot();
+            var bot2 = new Bots.RandomBot();
 
             var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();
@@ -45,8 +45,8 @@ public class DoEverythingBotTests
 
         for (var i = 0; i < testAmount; i++)
         {
-            var bot1 = new SimpleBots.RandomWithoutEndTurnBot();
-            var bot2 = new SimpleBots.RandomWithoutEndTurnBot();
+            var bot1 = new Bots.RandomWithoutEndTurnBot();
+            var bot2 = new Bots.RandomWithoutEndTurnBot();
 
             var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2);
             var (endState, _) = game.Play();

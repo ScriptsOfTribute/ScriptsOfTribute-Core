@@ -5,7 +5,7 @@ using ScriptsOfTribute.Serializers;
 using ScriptsOfTribute.Board.Cards;
 using System.Text;
 
-namespace SimpleBots;
+namespace Bots;
 
 public class DecisionTreeBot : AI
 {

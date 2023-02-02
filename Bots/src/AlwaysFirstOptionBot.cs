@@ -3,7 +3,7 @@ using ScriptsOfTribute.AI;
 using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Serializers;
 
-namespace SimpleBots;
+namespace Bots;
 
 public class AlwaysFirstOptionBot : AI
 {

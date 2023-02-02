@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using ScriptsOfTribute.Board.CardAction;
 
-namespace SimpleBots;
+namespace Bots;
 
 public class BeamSearchBot : AI
 {

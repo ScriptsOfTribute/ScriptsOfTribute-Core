@@ -1,6 +1,6 @@
 using ScriptsOfTribute;
 
-namespace SimpleBots;
+namespace Bots;
 
 public enum TierEnum
 {
