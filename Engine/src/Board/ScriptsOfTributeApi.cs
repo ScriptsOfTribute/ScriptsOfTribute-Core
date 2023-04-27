@@ -161,7 +161,6 @@ public class ScriptsOfTributeApi : IScriptsOfTributeApi
         var enemyPlayer = _boardManager.EnemyPlayer;
         var possibleMoves = currentPlayer
             .Hand
-            .Where(c => c.CommonId != CardId.UNKNOWN)
             .Select(Move.PlayCard)
             .Concat(from agent in currentPlayer.Agents
                 where !agent.Activated

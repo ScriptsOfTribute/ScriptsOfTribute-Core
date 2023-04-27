@@ -89,7 +89,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             {
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
                 return (new Choice(
-                    tavern.AvailableCards.Where(c => c.CommonId != CardId.UNKNOWN).ToList(),
+                    tavern.AvailableCards.ToList(),
                     ChoiceFollowUp.REPLACE_CARDS_IN_TAVERN,
                     context,
                     Amount
@@ -99,7 +99,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             {
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
                 return (new Choice(
-                    player.Hand.Concat(player.AgentCards).Where(c => c.CommonId != CardId.UNKNOWN).Concat(player.Played).ToList(),
+                    player.Hand.Concat(player.AgentCards).Concat(player.Played).ToList(),
                     ChoiceFollowUp.DESTROY_CARDS,
                     context,
                     Amount
@@ -124,7 +124,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                 context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
 
                 return (new Choice(
-                    player.Hand.Where(c => c.CommonId != CardId.UNKNOWN).ToList(),
+                    player.Hand.ToList(),
                     ChoiceFollowUp.DISCARD_CARDS,
                     context,
                     howManyToDiscard,

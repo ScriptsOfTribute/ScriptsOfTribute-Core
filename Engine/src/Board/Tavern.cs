@@ -6,7 +6,6 @@ namespace ScriptsOfTribute
     {
         public List<UniqueCard> Cards { get; set; }
         public List<UniqueCard> AvailableCards { get; set; }
-        private readonly bool _simulationState = false;
 
         public Tavern(List<UniqueCard> cards, SeededRandom rnd)
         {
@@ -27,7 +26,7 @@ namespace ScriptsOfTribute
 
         public List<UniqueCard> GetAffordableCards(int coin)
         {
-            return this.AvailableCards.Where(card => card.CommonId != CardId.UNKNOWN && card.Cost <= coin).ToList();
+            return this.AvailableCards.Where(card => card.Cost <= coin).ToList();
         }
 
         public void ReplaceCard(UniqueCard toReplace)
@@ -54,22 +53,14 @@ namespace ScriptsOfTribute
                 return;
             }
 
-            if (_simulationState && Cards.First().CommonId != CardId.UNKNOWN)
-            {
-                AvailableCards.Insert(index, GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
-            }
-            else
-            {
-                AvailableCards.Insert(index, this.Cards.First());
-                Cards.RemoveAt(0);
-            }
+            AvailableCards.Insert(index, this.Cards.First());
+            Cards.RemoveAt(0);
         }
 
-        private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards, bool cheats)
+        private Tavern(List<UniqueCard> cards, List<UniqueCard> availableCards)
         {
             Cards = cards;
             AvailableCards = availableCards;
-            _simulationState = !cheats;
         }
 
         public static Tavern FromSerializedBoard(FullGameState fullGameState)
@@ -78,7 +69,7 @@ namespace ScriptsOfTribute
             tavernCards.AddRange(fullGameState.TavernCards);
             var tavernAvailableCards = new List<UniqueCard>(fullGameState.TavernAvailableCards.Count);
             tavernAvailableCards.AddRange(fullGameState.TavernAvailableCards);
-            return new Tavern(tavernCards, tavernAvailableCards, fullGameState.Cheats);
+            return new Tavern(tavernCards, tavernAvailableCards);
         }
     }
 }
