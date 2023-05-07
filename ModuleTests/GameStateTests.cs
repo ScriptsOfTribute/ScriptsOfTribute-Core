@@ -18,8 +18,8 @@ public class GameStateTests
         var board = new GameState(new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             new List<UniqueCard>(), new List<UniqueCard>(), 123));
 
-        var (newState, possibleMoves) = board.ApplyState(Move.EndTurn(), 123);
-        (newState, possibleMoves) = newState.ApplyState(Move.PlayCard(enemyHand[0]));
+        var (newState, possibleMoves) = board.ApplyMove(Move.EndTurn(), 123);
+        (newState, possibleMoves) = newState.ApplyMove(Move.PlayCard(enemyHand[0]));
         Assert.Equal(1, newState.CurrentPlayer.Coins);
     }
 }

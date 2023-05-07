@@ -50,7 +50,7 @@ public class PatronFavorsBot : AI
                 SimpleCardMove move = m as SimpleCardMove;
                 if (move.Card.Name == "Tithe" && gameState.CurrentPlayer.PatronCalls <= 0)
                 {
-                    (var newGameState, List<Move> newPossibleMoves) = seededGameState.ApplyState(m);
+                    (var newGameState, List<Move> newPossibleMoves) = seededGameState.ApplyMove(m);
                     if (ActivatePatronWhichDoesntFavorMe(newGameState, newPossibleMoves) is not null)
                     {
                         return m;

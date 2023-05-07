@@ -69,7 +69,7 @@ public class SeededGameState
             player.Coins, player.Prestige);
     }
 
-    public (SeededGameState, List<Move>) ApplyState(Move move)
+    public (SeededGameState, List<Move>) ApplyMove(Move move)
     {
         var (newBoard, newMoves) = _board.ApplyState(move);
         return (new SeededGameState(newBoard), newMoves);

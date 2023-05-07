@@ -15,17 +15,17 @@ public class RandomBotWithRandomStateExploring : AI
     {
         for (int i = 0; i < 3; i++)
         {
-            var (newState1, newMoves1) = gameState.ApplyState(possibleMoves.PickRandom(Rng), 123);
-            var (newState2, newMoves2) = gameState.ApplyState(possibleMoves.PickRandom(Rng), 123);
+            var (newState1, newMoves1) = gameState.ApplyMove(possibleMoves.PickRandom(Rng), 123);
+            var (newState2, newMoves2) = gameState.ApplyMove(possibleMoves.PickRandom(Rng), 123);
 
             if (newMoves2.Count > 0)
-                (newState2, newMoves2) = newState2.ApplyState(newMoves2.PickRandom(Rng));
+                (newState2, newMoves2) = newState2.ApplyMove(newMoves2.PickRandom(Rng));
             if (newMoves1.Count > 0)
-                (newState1, newMoves1) = newState1.ApplyState(newMoves1.PickRandom(Rng));
+                (newState1, newMoves1) = newState1.ApplyMove(newMoves1.PickRandom(Rng));
             if (newMoves1.Count > 0)
-                (newState1, newMoves1) = newState1.ApplyState(newMoves1.PickRandom(Rng));
+                (newState1, newMoves1) = newState1.ApplyMove(newMoves1.PickRandom(Rng));
             if (newMoves2.Count > 0)
-                (newState2, newMoves2) = newState2.ApplyState(newMoves2.PickRandom(Rng));
+                (newState2, newMoves2) = newState2.ApplyMove(newMoves2.PickRandom(Rng));
         }
 
         return possibleMoves.PickRandom(Rng);

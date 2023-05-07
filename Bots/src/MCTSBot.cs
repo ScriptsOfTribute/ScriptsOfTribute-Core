@@ -48,7 +48,7 @@ public class Node
         this.move = nodeMove;
         if (nodeMove is not null && nodeMove.Command != CommandEnum.END_TURN)
         {
-            var (newGameState, newMoves) = fatherGameState.ApplyState(nodeMove);
+            var (newGameState, newMoves) = fatherGameState.ApplyMove(nodeMove);
             this.nodeGameState = newGameState;
             this.possibleMoves = newMoves;
         }
@@ -165,13 +165,13 @@ public class Node
         }
 
         var gameState = this.nodeGameState;
-        var (seedGameState, newMoves) = gameState.ApplyState(nextMove);
+        var (seedGameState, newMoves) = gameState.ApplyMove(nextMove);
         nextMove = DrawNextMove(newMoves, seedGameState, rng);
 
         while (nextMove.Command != CommandEnum.END_TURN)
         {
 
-            var (newSeedGameState, newPossibleMoves) = seedGameState.ApplyState(nextMove);
+            var (newSeedGameState, newPossibleMoves) = seedGameState.ApplyMove(nextMove);
             nextMove = DrawNextMove(newPossibleMoves, newSeedGameState, rng);
             seedGameState = newSeedGameState;
         }
@@ -310,7 +310,7 @@ public class Node
                 continue;
             }
 
-            (child.nodeGameState, child.possibleMoves) = this.nodeGameState.ApplyState(child.move);
+            (child.nodeGameState, child.possibleMoves) = this.nodeGameState.ApplyMove(child.move);
 
             if (child.childs.Count > 0)
             {

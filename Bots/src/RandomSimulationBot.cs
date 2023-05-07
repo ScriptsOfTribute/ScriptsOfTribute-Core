@@ -221,7 +221,7 @@ public class RandomSimulationBot : AI
                 return (movesOrder, seededGameState);
             }
 
-            (var newGameState, List<Move> newPossibleMoves) = seededGameState.ApplyState(chosenMove);
+            (var newGameState, List<Move> newPossibleMoves) = seededGameState.ApplyMove(chosenMove);
             if (newGameState.GameEndState?.Winner == myID)
             {
                 return (movesOrder, newGameState);

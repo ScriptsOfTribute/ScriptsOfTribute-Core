@@ -171,7 +171,7 @@ public class BeamSearchBot : AI
         {
             if (move.Command != CommandEnum.END_TURN)
             {
-                var (newGameState, newPossibleMoves) = gameState.ApplyState(move);
+                var (newGameState, newPossibleMoves) = gameState.ApplyMove(move);
                 allNodes.Add(new Node(move, newGameState, newPossibleMoves, Heuristic(newGameState)));
             }
             else
@@ -228,7 +228,7 @@ public class BeamSearchBot : AI
                 {
                     if (move.Command != CommandEnum.END_TURN)
                     {
-                        var (newGameState, newPossibleMoves) = node.nodeGameState.ApplyState(move);
+                        var (newGameState, newPossibleMoves) = node.nodeGameState.ApplyMove(move);
                         allNodes.Add(new Node(node.firstMove, newGameState, newPossibleMoves, Heuristic(newGameState)));
                     }
                     else
