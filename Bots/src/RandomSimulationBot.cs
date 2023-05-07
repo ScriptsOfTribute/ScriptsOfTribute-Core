@@ -88,7 +88,7 @@ public class RandomSimulationBot : AI
         return availablePatrons.PickRandom(Rng);
     }
 
-    private int BoardStateHeuristicValueEndTurn(GameState gameState, List<CompletedAction> startOfturnCompletedActions)
+    private int BoardStateHeuristicValueEndTurn(SeededGameState gameState, List<CompletedAction> startOfturnCompletedActions)
     {
         int finalValue = 0;
         int enemyPatronFavour = 0;
@@ -139,7 +139,7 @@ public class RandomSimulationBot : AI
 
             List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
             Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
-            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.Hand.Concat(gameState.EnemyPlayer.DrawPile).Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
             Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
 
             foreach (Card card in allCards)
@@ -198,14 +198,15 @@ public class RandomSimulationBot : AI
         return possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();
     }
 
-    private (List<Move>, GameState) GenerateRandomTurnMoves(GameState gameState, List<Move> possibleMoves)
+    private (List<Move>, SeededGameState) GenerateRandomTurnMoves(GameState gameState, List<Move> possibleMoves)
     {
         List<Move> notEndTurnPossibleMoves = NotEndTurnPossibleMoves(possibleMoves);
         List<Move> movesOrder = new List<Move>();
+        var seededGameState = gameState.ToSeededGameState(123);
         while (notEndTurnPossibleMoves.Count != 0)
         {
             Move chosenMove;
-            if ((gameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 10000, Rng) == 0))
+            if ((seededGameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 10000, Rng) == 0))
             {
                 chosenMove = Move.EndTurn();
             }
@@ -217,18 +218,18 @@ public class RandomSimulationBot : AI
 
             if (chosenMove.Command == CommandEnum.END_TURN)
             {
-                return (movesOrder, gameState);
+                return (movesOrder, seededGameState);
             }
 
-            (GameState newGameState, List<Move> newPossibleMoves) = gameState.ApplyState(chosenMove);
+            (var newGameState, List<Move> newPossibleMoves) = seededGameState.ApplyState(chosenMove);
             if (newGameState.GameEndState?.Winner == myID)
             {
                 return (movesOrder, newGameState);
             }
             notEndTurnPossibleMoves = NotEndTurnPossibleMoves(newPossibleMoves);
-            gameState = newGameState;
+            seededGameState = newGameState;
         }
-        return (movesOrder, gameState);
+        return (movesOrder, seededGameState);
     }
 
     private List<Move> GenerateKTurnGamesAndSelectBest(GameState? gameState, List<Move> possibleMoves)
@@ -242,7 +243,7 @@ public class RandomSimulationBot : AI
 
         while (s.Elapsed < timeForMoveComputation)
         {
-            (List<Move> generatedPlayout, GameState endTurnBoard) = GenerateRandomTurnMoves(gameState, possibleMoves);
+            (List<Move> generatedPlayout, var endTurnBoard) = GenerateRandomTurnMoves(gameState, possibleMoves);
             if (endTurnBoard.GameEndState?.Winner == myID)
             {
                 return generatedPlayout;

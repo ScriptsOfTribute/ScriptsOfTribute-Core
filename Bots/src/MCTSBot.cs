@@ -29,7 +29,7 @@ public class Node
     public List<Node>? childs;
     public Node? father;
 
-    public GameState nodeGameState;
+    public SeededGameState nodeGameState;
     public Move? move;
     public List<Move> possibleMoves;
 
@@ -40,7 +40,7 @@ public class Node
     private int heuristicMin = -10000;//00
     private ulong botSeed = 42;
 
-    public Node(GameState fatherGameState, Move? nodeMove, Node? fatherOrig, List<Move> possibleMoves = null)
+    public Node(SeededGameState fatherGameState, Move? nodeMove, Node? fatherOrig, List<Move> possibleMoves = null)
     {
         this.wins = 0;
         this.visits = 0;
@@ -164,8 +164,8 @@ public class Node
             nextMove = Move.EndTurn();
         }
 
-        GameState gameState = this.nodeGameState;
-        var (seedGameState, newMoves) = gameState.ApplyState(nextMove, botSeed);
+        var gameState = this.nodeGameState;
+        var (seedGameState, newMoves) = gameState.ApplyState(nextMove);
         nextMove = DrawNextMove(newMoves, seedGameState, rng);
 
         while (nextMove.Command != CommandEnum.END_TURN)
@@ -179,7 +179,7 @@ public class Node
         return Heuristic(gameState);
     }
 
-    public double Heuristic(GameState gameState)
+    public double Heuristic(SeededGameState gameState)
     {
         int finalValue = 0;
         int enemyPatronFavour = 0;
@@ -230,7 +230,7 @@ public class Node
 
             List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
             Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
-            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.Hand.Concat(gameState.EnemyPlayer.DrawPile).Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
             Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
 
             foreach (UniqueCard card in allCards)
@@ -358,7 +358,7 @@ public class MCTSBot : AI
     TimeSpan TurnTimeout = TimeSpan.FromSeconds(29.9);
     Move endTurnMove = Move.EndTurn();
     Move move;
-    private int botSeed = 42;
+    private ulong botSeed = 42;
     private string patronLogPath = "patronsMCTSBot.txt";
     private Apriori apriori = new Apriori();
     private int support = 4;
@@ -450,9 +450,10 @@ public class MCTSBot : AI
             startOfGame = false;
         }
 
+        var sgs = gameState.ToSeededGameState(botSeed);
         if (startOfTurn)
         {
-            actRoot = new Node(gameState, null, null, possibleMoves);
+            actRoot = new Node(sgs, null, null, possibleMoves);
             actRoot.CreateChilds();
             startOfTurn = false;
             usedTimeInTurn = TimeSpan.FromSeconds(0);
@@ -473,7 +474,7 @@ public class MCTSBot : AI
                 actRoot.possibleMoves = possibleMoves;
                 actRoot.UpdateAllPossibleMoves();
                 */
-                actRoot = new Node(gameState, null, null, possibleMoves);
+                actRoot = new Node(sgs, null, null, possibleMoves);
                 actRoot.CreateChilds();
             }
         }

@@ -10,7 +10,7 @@ public class PatronFavorsBot : AI
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom(Rng);
 
-    private Move? ActivatePatronWhichDoesntFavorMe(GameState gameState, List<Move> movesWithoutEndTurn)
+    private Move? ActivatePatronWhichDoesntFavorMe(SeededGameState gameState, List<Move> movesWithoutEndTurn)
     {
         Dictionary<PatronId, PlayerEnum> patronFavours = gameState.PatronStates.All;
 
@@ -36,7 +36,8 @@ public class PatronFavorsBot : AI
             return Move.EndTurn();
         }
 
-        Move? patronMove = ActivatePatronWhichDoesntFavorMe(gameState, movesWithoutEndTurn);
+        var seededGameState = gameState.ToSeededGameState(123);
+        Move? patronMove = ActivatePatronWhichDoesntFavorMe(seededGameState, movesWithoutEndTurn);
         if (patronMove is not null)
         {
             return patronMove;
@@ -49,7 +50,7 @@ public class PatronFavorsBot : AI
                 SimpleCardMove move = m as SimpleCardMove;
                 if (move.Card.Name == "Tithe" && gameState.CurrentPlayer.PatronCalls <= 0)
                 {
-                    (GameState newGameState, List<Move> newPossibleMoves) = gameState.ApplyState(m);
+                    (var newGameState, List<Move> newPossibleMoves) = seededGameState.ApplyState(m);
                     if (ActivatePatronWhichDoesntFavorMe(newGameState, newPossibleMoves) is not null)
                     {
                         return m;
