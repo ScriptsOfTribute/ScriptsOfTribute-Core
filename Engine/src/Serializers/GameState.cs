@@ -51,25 +51,6 @@ public class GameState
         _endOfTurnHappened = endOfTurnHappened;
     }
 
-    public (GameState, List<Move>) ApplyState(Move move)
-    {
-        if (_endOfTurnHappened)
-        {
-            throw new EngineException("You can't simulate any more moves as you've ended your turn.");
-        }
-        // This means bot wants to see what happens after end of this turn.
-        // This means CurrentPlayer would be the bots' enemy, so he should have severely limited visibility.
-        var (newBoard, newMoves) = _board.ApplyState(move);
-
-        if (move.Command == CommandEnum.END_TURN)
-        {
-            return (new GameState(newBoard, _board.EnemyPlayer, _board.CurrentPlayer, true),
-                new List<Move>());
-        }
-
-        return (new GameState(newBoard), newMoves);
-    }
-
     public (SeededGameState, List<Move>) ApplyState(Move move, ulong seed)
     {
         if (_endOfTurnHappened)
