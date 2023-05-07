@@ -35,11 +35,12 @@ public class BeamSearchBot : AI
     private PlayerEnum myID;
     private string patrons;
     private bool startOfGame = true;
+    private readonly SeededRandom rng = new(123);
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
     {
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        return availablePatrons.PickRandom(Rng);
+        return availablePatrons.PickRandom(rng);
     }
 
     private class Node

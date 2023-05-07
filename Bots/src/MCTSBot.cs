@@ -38,7 +38,7 @@ public class Node
 
     private int heuristicMax = 40000; //160
     private int heuristicMin = -10000;//00
-    private ulong botSeed = 42;
+    private const ulong botSeed = 42;
 
     public Node(SeededGameState fatherGameState, Move? nodeMove, Node? fatherOrig, List<Move> possibleMoves = null)
     {
@@ -358,7 +358,7 @@ public class MCTSBot : AI
     TimeSpan TurnTimeout = TimeSpan.FromSeconds(29.9);
     Move endTurnMove = Move.EndTurn();
     Move move;
-    private ulong botSeed = 42;
+    private const ulong botSeed = 42;
     private string patronLogPath = "patronsMCTSBot.txt";
     private Apriori apriori = new Apriori();
     private int support = 4;
@@ -366,7 +366,7 @@ public class MCTSBot : AI
     private PlayerEnum myID;
     private string patrons;
     private bool startOfGame = true;
-
+    private readonly SeededRandom rng = new(botSeed);
 
     public MCTSBot()
     {
@@ -439,7 +439,7 @@ public class MCTSBot : AI
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -488,7 +488,7 @@ public class MCTSBot : AI
 
         if (usedTimeInTurn + timeForMoveComputation >= TurnTimeout)
         {
-            move = possibleMoves.PickRandom(Rng);
+            move = possibleMoves.PickRandom(rng);
         }
         else
         {
@@ -500,8 +500,8 @@ public class MCTSBot : AI
             s.Start();
             while (s.Elapsed < timeForMoveComputation)
             {
-                actNode = TreePolicy(actRoot, Rng);
-                double delta = actNode.Simulate(Rng);
+                actNode = TreePolicy(actRoot, rng);
+                double delta = actNode.Simulate(rng);
                 BackUp(actNode, delta);
                 actionCounter++;
             }

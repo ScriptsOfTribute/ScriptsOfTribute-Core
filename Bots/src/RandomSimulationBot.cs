@@ -42,6 +42,7 @@ public class RandomSimulationBot : AI
     TimeSpan usedTimeInTurn = TimeSpan.FromSeconds(0);
     TimeSpan timeForMoveComputation = TimeSpan.FromSeconds(0.5);
     TimeSpan TurnTimeout = TimeSpan.FromSeconds(30);
+    private readonly SeededRandom rng = new(123);
 
     public int[] GetGenotype()
     {
@@ -85,7 +86,7 @@ public class RandomSimulationBot : AI
     {
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        return availablePatrons.PickRandom(Rng);
+        return availablePatrons.PickRandom(rng);
     }
 
     private int BoardStateHeuristicValueEndTurn(SeededGameState gameState, List<CompletedAction> startOfturnCompletedActions)
@@ -206,13 +207,13 @@ public class RandomSimulationBot : AI
         while (notEndTurnPossibleMoves.Count != 0)
         {
             Move chosenMove;
-            if ((seededGameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 10000, Rng) == 0))
+            if ((seededGameState.BoardState == BoardState.NORMAL) && (Extensions.RandomK(0, 10000, rng) == 0))
             {
                 chosenMove = Move.EndTurn();
             }
             else
             {
-                chosenMove = notEndTurnPossibleMoves.PickRandom(Rng);
+                chosenMove = notEndTurnPossibleMoves.PickRandom(rng);
             }
             movesOrder.Add(chosenMove);
 
@@ -287,7 +288,7 @@ public class RandomSimulationBot : AI
         {
             if (timeForMoveComputation + usedTimeInTurn >= TurnTimeout)
             {
-                selectedTurnPlayout = new List<Move> { possibleMoves.PickRandom(Rng) };
+                selectedTurnPlayout = new List<Move> { possibleMoves.PickRandom(rng) };
             }
             else
             {

@@ -17,8 +17,6 @@ public class ScriptsOfTribute
         set
         {
             _seed = value;
-            _players[0].Seed = FreeFunctions.ScrambleSeed(value);
-            _players[1].Seed = FreeFunctions.ScrambleSeed(value);
         }
     }
     public TextWriter P1LogTarget { get; set; } = Console.Out;

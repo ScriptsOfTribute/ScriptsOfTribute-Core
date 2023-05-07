@@ -15,10 +15,12 @@ public class MaxPrestigeBot : AI
     private PlayerEnum myID;
     private string patrons;
     private bool startOfGame = true;
+    private const ulong Seed = 123;
+    private readonly SeededRandom rng = new(Seed);
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -84,12 +86,12 @@ public class MaxPrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            var finalMove = possibleMoves.PickRandom(Rng);
+            var finalMove = possibleMoves.PickRandom(rng);
             Log(finalMove.ToString());
             return finalMove;
         }
 
-        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);
+        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(rng);
         Log(bestMove.ToString());
         return bestMove;
     }

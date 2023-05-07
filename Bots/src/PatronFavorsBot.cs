@@ -7,8 +7,10 @@ namespace Bots;
 
 public class PatronFavorsBot : AI
 {
+    private readonly SeededRandom rng = new(123);
+    
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     private Move? ActivatePatronWhichDoesntFavorMe(SeededGameState gameState, List<Move> movesWithoutEndTurn)
     {
@@ -59,7 +61,7 @@ public class PatronFavorsBot : AI
             }
         }
 
-        return movesWithoutEndTurn.PickRandom(Rng);
+        return movesWithoutEndTurn.PickRandom(rng);
     }
 
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
