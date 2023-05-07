@@ -51,6 +51,11 @@ public class GameState
         _endOfTurnHappened = endOfTurnHappened;
     }
 
+    public SeededGameState ToSeededGameState(ulong seed)
+    {
+        return new SeededGameState(_board, seed);
+    }
+
     public (SeededGameState, List<Move>) ApplyState(Move move, ulong seed)
     {
         if (_endOfTurnHappened)
