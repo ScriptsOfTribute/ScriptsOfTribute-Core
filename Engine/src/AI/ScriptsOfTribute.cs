@@ -60,7 +60,8 @@ public class ScriptsOfTribute
     private (EndGameState? ,PatronId[]?) PatronSelection()
     {
         List<PatronId> patrons = Enum.GetValues(typeof(PatronId)).Cast<PatronId>()
-            .Where(patronId => patronId != PatronId.TREASURY).ToList();
+            // TODO: Hardcoded banned patrons, improve this.
+            .Where(patronId => patronId != PatronId.TREASURY && patronId != PatronId.ORGNUM && patronId != PatronId.PSIJIC).ToList();
 
         List<PatronId> patronsSelected = new List<PatronId>();
         var (endGameState, patron) = SelectPatronWithTimeout(PlayerEnum.PLAYER2, _players[0], patrons, 1);
