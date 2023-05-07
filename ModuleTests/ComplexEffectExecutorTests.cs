@@ -31,8 +31,8 @@ public class ComplexEffectExecutorTests
         var board = new FullGameState(currentPlayer, enemyPlayer, new PatronStates(new List<Patron>()),
             tavernAvailableCards, tavernCards, 123);
 
-        var (newState, _) = board.ApplyState(Move.PlayCard(hand[0]));
-        (newState, _) = newState.ApplyState(Move.MakeChoice(new List<UniqueCard> { tavernAvailableCards[0] }));
+        var (newState, _) = board.ApplyMove(Move.PlayCard(hand[0]));
+        (newState, _) = newState.ApplyMove(Move.MakeChoice(new List<UniqueCard> { tavernAvailableCards[0] }));
         Assert.Contains(CardId.KWAMA_EGG_MINE, newState.TavernCards.Select(c => c.CommonId));
     }
 }

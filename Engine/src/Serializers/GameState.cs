@@ -56,7 +56,7 @@ public class GameState
 
     public (SeededGameState, List<Move>) ApplyMove(Move move, ulong seed)
     {
-        var (newBoard, newMoves) = _board.ApplyState(move);
+        var (newBoard, newMoves) = _board.ApplyMove(move);
 
         return (new SeededGameState(newBoard, seed), newMoves);
     }
