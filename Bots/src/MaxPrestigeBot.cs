@@ -15,10 +15,12 @@ public class MaxPrestigeBot : AI
     private PlayerEnum myID;
     private string patrons;
     private bool startOfGame = true;
+    private const ulong Seed = 123;
+    private readonly SeededRandom rng = new(Seed);
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -39,7 +41,7 @@ public class MaxPrestigeBot : AI
         Dictionary<int, List<Move>> prestigeToMove = new();
         foreach (var move in movesToCheck)
         {
-            var (newState, newPossibleMoves) = gameState.ApplyState(move, Seed);
+            var (newState, newPossibleMoves) = gameState.ApplyMove(move, Seed);
             if (newState.GameEndState?.Winner == Id)
             {
                 Log(move.ToString());
@@ -63,7 +65,7 @@ public class MaxPrestigeBot : AI
 
             foreach (var newMove in newMovesToCheck)
             {
-                var (newestState, _) = newState.ApplyState(newMove);
+                var (newestState, _) = newState.ApplyMove(newMove);
                 if (newestState.GameEndState?.Winner == Id)
                 {
                     Log(move.ToString());
@@ -84,12 +86,12 @@ public class MaxPrestigeBot : AI
 
         if (prestigeToMove.Keys.Count == 0)
         {
-            var finalMove = possibleMoves.PickRandom(Rng);
+            var finalMove = possibleMoves.PickRandom(rng);
             Log(finalMove.ToString());
             return finalMove;
         }
 
-        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(Rng);
+        var bestMove = prestigeToMove[prestigeToMove.Keys.Max()].PickRandom(rng);
         Log(bestMove.ToString());
         return bestMove;
     }

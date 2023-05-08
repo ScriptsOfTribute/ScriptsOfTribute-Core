@@ -8,8 +8,10 @@ namespace Bots;
 // Bot that plays all available cards before ending turn.
 public class RandomWithoutEndTurnBot : AI
 {
+    private readonly SeededRandom rng = new(123);
+
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -19,7 +21,7 @@ public class RandomWithoutEndTurnBot : AI
             return Move.EndTurn();
         }
 
-        return movesWithoutEndTurn.PickRandom(Rng);
+        return movesWithoutEndTurn.PickRandom(rng);
     }
 
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)

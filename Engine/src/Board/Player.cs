@@ -25,7 +25,6 @@ namespace ScriptsOfTribute
         public uint PatronCalls { get; set; }
         public int KnownUpcomingDrawsAmount { get; private set; } = 0;
         private readonly SeededRandom _rng;
-        private readonly bool _simulationMode = false;
 
         public Player(PlayerEnum iD, SeededRandom rng)
         {
@@ -45,10 +44,6 @@ namespace ScriptsOfTribute
         public void PlayCard(UniqueCard card)
         {
             AssertCardIn(card, Hand);
-            if (card.CommonId == CardId.UNKNOWN)
-            {
-                throw new EngineException("You can't play unknown cards.");
-            }
             Hand.Remove(card);
             if (card.Type == CardType.AGENT)
             {
@@ -99,11 +94,6 @@ namespace ScriptsOfTribute
                 ShuffleCooldownPileIntoDrawPile();
             }
 
-            if (_simulationMode)
-            {
-                ReplaceDrawPileWithUnknownCards();
-            }
-
             for (var i = 0; i < amount; i++)
             {
                 if (DrawPile.Count == 0)
@@ -128,29 +118,11 @@ namespace ScriptsOfTribute
                 ShuffleCooldownPileIntoDrawPile();
             }
 
-            if (!_simulationMode)
-            {
-                var result = DrawPile.Take(amount).ToList();
-                KnownUpcomingDrawsAmount = KnownUpcomingDrawsAmount > result.Count ? KnownUpcomingDrawsAmount : result.Count;
-                return result;
-            }
-            ReplaceDrawPileWithUnknownCards();
-
-            return DrawPile
-                .Where(c => c.CommonId != CardId.UNKNOWN)
-                .Take(amount).ToList();
+            var result = DrawPile.Take(amount).ToList();
+            KnownUpcomingDrawsAmount = KnownUpcomingDrawsAmount > result.Count ? KnownUpcomingDrawsAmount : result.Count;
+            return result;
         }
 
-        // In simulation - replace not-revealed cards with Unknown.
-        private void ReplaceDrawPileWithUnknownCards()
-        {
-            var knownCards = DrawPile.Take(KnownUpcomingDrawsAmount).ToList();
-            var unknownCards = DrawPile.Skip(KnownUpcomingDrawsAmount).Select(c => c.CommonId == CardId.UNKNOWN ? c : GlobalCardDatabase.Instance.GetCard(CardId.UNKNOWN));
-            knownCards.AddRange(unknownCards);
-            DrawPile = knownCards;
-        }
-
-        // TODO: Check in game if this is 100% correct
         private void ShuffleCooldownPileIntoDrawPile()
         {
             var cooldownShuffled = CooldownPile.OrderBy(_ => _rng.Next()).ToList();
@@ -291,7 +263,7 @@ namespace ScriptsOfTribute
             }
         }
 
-        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rng, int knownUpcomingDrawsAmount, bool cheats)
+        private Player(PlayerEnum id, int coinsAmount, int prestigeAmount, int powerAmount, List<UniqueCard> hand, List<UniqueCard> drawPile, List<UniqueCard> played, List<Agent> agents, List<UniqueCard> cooldownPile, uint patronCalls, SeededRandom rng, int knownUpcomingDrawsAmount)
         {
             ID = id;
             CoinsAmount = coinsAmount;
@@ -304,7 +276,6 @@ namespace ScriptsOfTribute
             CooldownPile = cooldownPile;
             PatronCalls = patronCalls;
             _rng = rng;
-            _simulationMode = !cheats;
             KnownUpcomingDrawsAmount = knownUpcomingDrawsAmount;
         }
 
@@ -321,7 +292,7 @@ namespace ScriptsOfTribute
             return new Player(player.PlayerID, player.Coins, player.Prestige, player.Power, hand,
                 drawPile, played,
                 player.Agents.Select(Agent.FromSerializedAgent).ToList(), cooldownPile,
-                player.PatronCalls, rnd, player.KnownUpcomingDraws.Count, cheats);
+                player.PatronCalls, rnd, player.KnownUpcomingDraws.Count);
         }
     }
 }

@@ -11,10 +11,6 @@ public class CardDatabase
     {
         var cardsEnumerable = cards as UniqueCard[] ?? cards.ToArray();
         _allCards = cardsEnumerable.ToList();
-        if (!_allCards.Select(c => c.CommonId).Contains(CardId.UNKNOWN))
-        {
-            _allCards.Add(new Card("Unknown", PatronId.TREASURY, CardId.UNKNOWN, 0, CardType.ACTION, -1, new ComplexEffect? []{ null, null, null, null }, 0, null, false, 1));
-        }
     }
 
     public UniqueCard GetCard(CardId cardId)
@@ -26,8 +22,7 @@ public class CardDatabase
     public List<UniqueCard> GetCardsByPatron(PatronId[] patrons)
     {
         var allCardsGrouped = from card in _allCards
-            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE &&
-                  card.CommonId != CardId.UNKNOWN
+            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
             select Enumerable.Range(0, card.Copies).Select(_ => card.CreateUniqueCopy()).ToList();
 
         return allCardsGrouped.SelectMany(c => c).ToList();

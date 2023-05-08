@@ -28,11 +28,8 @@ public class SeededGameState
     {
         var rng = new SeededRandom(seed);
 
-        var newCurrentPlayer = ScramblePlayerCards(rng, board.CurrentPlayer);
-        var newEnemyPlayer = ScramblePlayerCards(rng, board.EnemyPlayer);
-
-        // NOTE: What if player creates this class after simulating some moves? Then he can have unknown cards here,
-        // is that a problem? In theory it should work.
+        var newCurrentPlayer = ScrambleCurrentPlayerCards(rng, board.CurrentPlayer);
+        var newEnemyPlayer = ScrambleEnemyPlayerCards(rng, board.EnemyPlayer);
         var newTavernCards = board.TavernCards.OrderBy(_ => rng.Next()).ToList();
 
         _board = new FullGameState(newCurrentPlayer, newEnemyPlayer, board.PatronStates, board.TavernAvailableCards,
@@ -45,25 +42,36 @@ public class SeededGameState
         _board = board;
     }
 
-    private SerializedPlayer ScramblePlayerCards(SeededRandom rng, SerializedPlayer player)
+    private SerializedPlayer ScrambleCurrentPlayerCards(SeededRandom rng, SerializedPlayer player)
     {
         var newCooldown = player.CooldownPile.OrderBy(_ => rng.Next()).ToList();
         var knownUpcomingCardAmount = player.KnownUpcomingDraws.Count;
         var upcomingDraw = player.DrawPile.Take(knownUpcomingCardAmount);
         var restOfDraw = player.DrawPile.Skip(knownUpcomingCardAmount);
-        var handSize = player.Hand.Count;
-        var handAndDraw = player.Hand.Concat(restOfDraw).OrderBy(_ => rng.Next()).ToList();
-        var newHand = handAndDraw.Take(handSize).ToList();
-        var newDraw = upcomingDraw.Concat(handAndDraw.Skip(handSize)).ToList();
+        var newHand = player.Hand.ToList();
+        var newDraw = upcomingDraw.Concat(restOfDraw.OrderBy(_ => rng.Next())).ToList();
         return new SerializedPlayer(
             player.PlayerID, newHand, newDraw, newCooldown, player.Played, player.Agents, player.Power,
             player.PatronCalls,
             player.Coins, player.Prestige);
     }
 
-    public (SeededGameState, List<Move>) ApplyState(Move move)
+    private SerializedPlayer ScrambleEnemyPlayerCards(SeededRandom rng, SerializedPlayer player)
     {
-        var (newBoard, newMoves) = _board.ApplyState(move);
+        var newCooldown = player.CooldownPile.OrderBy(_ => rng.Next()).ToList();
+        var handSize = player.Hand.Count;
+        var handAndDraw = player.Hand.Concat(player.DrawPile).OrderBy(_ => rng.Next()).ToList();
+        var newHand = handAndDraw.Take(handSize).ToList();
+        var newDraw = handAndDraw.Skip(handSize).ToList();
+        return new SerializedPlayer(
+            player.PlayerID, newHand, newDraw, newCooldown, player.Played, player.Agents, player.Power,
+            player.PatronCalls,
+            player.Coins, player.Prestige);
+    }
+
+    public (SeededGameState, List<Move>) ApplyMove(Move move)
+    {
+        var (newBoard, newMoves) = _board.ApplyMove(move);
         return (new SeededGameState(newBoard), newMoves);
     }
 }

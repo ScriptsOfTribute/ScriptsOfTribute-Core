@@ -29,7 +29,7 @@ public class Node
     public List<Node>? childs;
     public Node? father;
 
-    public GameState nodeGameState;
+    public SeededGameState nodeGameState;
     public Move? move;
     public List<Move> possibleMoves;
 
@@ -38,9 +38,9 @@ public class Node
 
     private int heuristicMax = 40000; //160
     private int heuristicMin = -10000;//00
-    private ulong botSeed = 42;
+    private const ulong botSeed = 42;
 
-    public Node(GameState fatherGameState, Move? nodeMove, Node? fatherOrig, List<Move> possibleMoves = null)
+    public Node(SeededGameState fatherGameState, Move? nodeMove, Node? fatherOrig, List<Move> possibleMoves = null)
     {
         this.wins = 0;
         this.visits = 0;
@@ -48,7 +48,7 @@ public class Node
         this.move = nodeMove;
         if (nodeMove is not null && nodeMove.Command != CommandEnum.END_TURN)
         {
-            var (newGameState, newMoves) = fatherGameState.ApplyState(nodeMove);
+            var (newGameState, newMoves) = fatherGameState.ApplyMove(nodeMove);
             this.nodeGameState = newGameState;
             this.possibleMoves = newMoves;
         }
@@ -164,14 +164,14 @@ public class Node
             nextMove = Move.EndTurn();
         }
 
-        GameState gameState = this.nodeGameState;
-        var (seedGameState, newMoves) = gameState.ApplyState(nextMove, botSeed);
+        var gameState = this.nodeGameState;
+        var (seedGameState, newMoves) = gameState.ApplyMove(nextMove);
         nextMove = DrawNextMove(newMoves, seedGameState, rng);
 
         while (nextMove.Command != CommandEnum.END_TURN)
         {
 
-            var (newSeedGameState, newPossibleMoves) = seedGameState.ApplyState(nextMove);
+            var (newSeedGameState, newPossibleMoves) = seedGameState.ApplyMove(nextMove);
             nextMove = DrawNextMove(newPossibleMoves, newSeedGameState, rng);
             seedGameState = newSeedGameState;
         }
@@ -179,7 +179,7 @@ public class Node
         return Heuristic(gameState);
     }
 
-    public double Heuristic(GameState gameState)
+    public double Heuristic(SeededGameState gameState)
     {
         int finalValue = 0;
         int enemyPatronFavour = 0;
@@ -230,7 +230,7 @@ public class Node
 
             List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
             Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
-            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.Hand.Concat(gameState.EnemyPlayer.DrawPile).Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
             Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
 
             foreach (UniqueCard card in allCards)
@@ -310,7 +310,7 @@ public class Node
                 continue;
             }
 
-            (child.nodeGameState, child.possibleMoves) = this.nodeGameState.ApplyState(child.move);
+            (child.nodeGameState, child.possibleMoves) = this.nodeGameState.ApplyMove(child.move);
 
             if (child.childs.Count > 0)
             {
@@ -358,7 +358,7 @@ public class MCTSBot : AI
     TimeSpan TurnTimeout = TimeSpan.FromSeconds(29.9);
     Move endTurnMove = Move.EndTurn();
     Move move;
-    private int botSeed = 42;
+    private const ulong botSeed = 42;
     private string patronLogPath = "patronsMCTSBot.txt";
     private Apriori apriori = new Apriori();
     private int support = 4;
@@ -366,7 +366,7 @@ public class MCTSBot : AI
     private PlayerEnum myID;
     private string patrons;
     private bool startOfGame = true;
-
+    private readonly SeededRandom rng = new(botSeed);
 
     public MCTSBot()
     {
@@ -439,7 +439,7 @@ public class MCTSBot : AI
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     public override Move Play(GameState gameState, List<Move> possibleMoves)
     {
@@ -450,9 +450,10 @@ public class MCTSBot : AI
             startOfGame = false;
         }
 
+        var sgs = gameState.ToSeededGameState(botSeed);
         if (startOfTurn)
         {
-            actRoot = new Node(gameState, null, null, possibleMoves);
+            actRoot = new Node(sgs, null, null, possibleMoves);
             actRoot.CreateChilds();
             startOfTurn = false;
             usedTimeInTurn = TimeSpan.FromSeconds(0);
@@ -473,7 +474,7 @@ public class MCTSBot : AI
                 actRoot.possibleMoves = possibleMoves;
                 actRoot.UpdateAllPossibleMoves();
                 */
-                actRoot = new Node(gameState, null, null, possibleMoves);
+                actRoot = new Node(sgs, null, null, possibleMoves);
                 actRoot.CreateChilds();
             }
         }
@@ -487,7 +488,7 @@ public class MCTSBot : AI
 
         if (usedTimeInTurn + timeForMoveComputation >= TurnTimeout)
         {
-            move = possibleMoves.PickRandom(Rng);
+            move = possibleMoves.PickRandom(rng);
         }
         else
         {
@@ -499,8 +500,8 @@ public class MCTSBot : AI
             s.Start();
             while (s.Elapsed < timeForMoveComputation)
             {
-                actNode = TreePolicy(actRoot, Rng);
-                double delta = actNode.Simulate(Rng);
+                actNode = TreePolicy(actRoot, rng);
+                double delta = actNode.Simulate(rng);
                 BackUp(actNode, delta);
                 actionCounter++;
             }

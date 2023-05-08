@@ -35,21 +35,22 @@ public class BeamSearchBot : AI
     private PlayerEnum myID;
     private string patrons;
     private bool startOfGame = true;
+    private readonly SeededRandom rng = new(123);
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
     {
         //PatronId? selectedPatron = apriori.AprioriBestChoice(availablePatrons, patronLogPath, support, confidence);
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
-        return availablePatrons.PickRandom(Rng);
+        return availablePatrons.PickRandom(rng);
     }
 
     private class Node
     {
         public Move firstMove;
-        public GameState nodeGameState;
+        public SeededGameState nodeGameState;
         public List<Move>? possibleMoves;
         public int heuristicScore;
 
-        public Node(Move move, GameState gameState, List<Move>? moves, int score)
+        public Node(Move move, SeededGameState gameState, List<Move>? moves, int score)
         {
             this.firstMove = move;
             this.nodeGameState = gameState;
@@ -59,7 +60,7 @@ public class BeamSearchBot : AI
 
     }
 
-    private int Heuristic(GameState gameState)
+    private int Heuristic(SeededGameState gameState)
     {
         int finalValue = 0;
         int enemyPatronFavour = 0;
@@ -109,7 +110,7 @@ public class BeamSearchBot : AI
 
             List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
             Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
-            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.HandAndDraw.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.Hand.Concat(gameState.EnemyPlayer.DrawPile).Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
             Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
 
             foreach (UniqueCard card in allCards)
@@ -163,7 +164,7 @@ public class BeamSearchBot : AI
         //return gameState.CurrentPlayer.Power + gameState.CurrentPlayer.Prestige;
     }
 
-    private Move BeamSearch(GameState gameState, List<Move> possibleMoves, int k)
+    private Move BeamSearch(SeededGameState gameState, List<Move> possibleMoves, int k)
     {
         List<Node> allNodes = new List<Node>();
 
@@ -171,7 +172,7 @@ public class BeamSearchBot : AI
         {
             if (move.Command != CommandEnum.END_TURN)
             {
-                var (newGameState, newPossibleMoves) = gameState.ApplyState(move);
+                var (newGameState, newPossibleMoves) = gameState.ApplyMove(move);
                 allNodes.Add(new Node(move, newGameState, newPossibleMoves, Heuristic(newGameState)));
             }
             else
@@ -228,7 +229,7 @@ public class BeamSearchBot : AI
                 {
                     if (move.Command != CommandEnum.END_TURN)
                     {
-                        var (newGameState, newPossibleMoves) = node.nodeGameState.ApplyState(move);
+                        var (newGameState, newPossibleMoves) = node.nodeGameState.ApplyMove(move);
                         allNodes.Add(new Node(node.firstMove, newGameState, newPossibleMoves, Heuristic(newGameState)));
                     }
                     else
@@ -312,7 +313,7 @@ public class BeamSearchBot : AI
             return Move.EndTurn();
         }
 
-        return BeamSearch(gameState, possibleMoves, k);
+        return BeamSearch(gameState.ToSeededGameState(123), possibleMoves, k);
     }
 
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)

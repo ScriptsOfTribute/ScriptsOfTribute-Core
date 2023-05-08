@@ -47,11 +47,6 @@ namespace ScriptsOfTribute
 
         public void PlayCard(UniqueCard card)
         {
-            if (card.CommonId == CardId.UNKNOWN)
-            {
-                throw new EngineException("Can't play unknown cards.");
-            }
-
             CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
             CardActionManager.PlayCard(card);
@@ -59,11 +54,6 @@ namespace ScriptsOfTribute
 
         public void BuyCard(UniqueCard card)
         {
-            if (card.CommonId == CardId.UNKNOWN)
-            {
-                throw new EngineException("Can't buy unknown cards.");
-            }
-
             if (card.Cost > CurrentPlayer.CoinsAmount)
                 throw new EngineException($"You dont have enough coin to buy {card}");
             

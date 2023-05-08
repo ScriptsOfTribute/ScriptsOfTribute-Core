@@ -8,8 +8,9 @@ namespace Bots;
 
 public class MaxAgentsBot : AI
 {
+    private readonly SeededRandom rng = new(123);
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
-        => availablePatrons.PickRandom(Rng);
+        => availablePatrons.PickRandom(rng);
 
     private Move? BuyAgent(List<Move> movesWithoutEndTurn)
     {
@@ -61,7 +62,7 @@ public class MaxAgentsBot : AI
         List<Move> playCardMoves = movesWithoutEndTurn.FindAll(x => x.Command == CommandEnum.PLAY_CARD || x.Command == CommandEnum.ACTIVATE_AGENT);
         if (playCardMoves.Any())
         {
-            playCardMoves.PickRandom(Rng);
+            playCardMoves.PickRandom(rng);
         }
 
         Move? agentBuy = BuyAgent(movesWithoutEndTurn);
@@ -70,7 +71,7 @@ public class MaxAgentsBot : AI
             return agentBuy;
         }
 
-        return movesWithoutEndTurn.PickRandom(Rng);
+        return movesWithoutEndTurn.PickRandom(rng);
     }
 
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
