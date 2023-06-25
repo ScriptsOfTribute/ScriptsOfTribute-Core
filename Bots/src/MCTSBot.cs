@@ -230,7 +230,7 @@ public class Node
 
             List<UniqueCard> allCards = gameState.CurrentPlayer.Hand.Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile.Concat(gameState.CurrentPlayer.DrawPile))).ToList();
             Dictionary<PatronId, int> potentialComboNumber = new Dictionary<PatronId, int>();
-            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.Hand.Concat(gameState.EnemyPlayer.DrawPile).Concat(gameState.CurrentPlayer.Played.Concat(gameState.CurrentPlayer.CooldownPile)).ToList();
+            List<UniqueCard> allCardsEnemy = gameState.EnemyPlayer.Hand.Concat(gameState.EnemyPlayer.DrawPile).Concat(gameState.EnemyPlayer.Played.Concat(gameState.EnemyPlayer.CooldownPile)).ToList();
             Dictionary<PatronId, int> potentialComboNumberEnemy = new Dictionary<PatronId, int>();
 
             foreach (UniqueCard card in allCards)
