@@ -1,0 +1,8 @@
+/*.dll
+/*/Bot.csproj
+/*/bin
+/*/obj
+/cards.json
+/dotnet-install.sh
+/patron*.txt
+
