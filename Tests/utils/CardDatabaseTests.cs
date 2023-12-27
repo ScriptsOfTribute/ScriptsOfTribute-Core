@@ -13,7 +13,7 @@ public class CardDatabaseTests
         sut = new CardDatabase(parser.CreateAllCards());
 
         var cards = sut.GetCardsByPatron(new[] { PatronId.HLAALU });
-        Assert.Equal(3, cards.Count); // 3 items, but with copies we get 6 cards.
+        Assert.Equal(3, cards.Count);
         Assert.All(cards, card => Assert.Equal(PatronId.HLAALU, card.Deck));
     }
 

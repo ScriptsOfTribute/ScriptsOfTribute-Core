@@ -80,10 +80,19 @@ public class ExternalAIAdapter : AI
         if (tokens.Length < 2)
             return Move.EndTurn();
 
-        // We parse patron first since it's the only one with string args, rest uses integer values that represent UniqueId
+        // We parse patron here because it uses string value as arg
+        // Similar case with CHOICE which is choice of effect -> it has to be an OR so we can use args as LEFT or RIGHT to simplify things.
+        // TODO: Think if there's better way to parse effect choices
         if (tokens[0] == "PATRON" && tokens.Length == 2 && Enum.TryParse(tokens[1], out PatronId patron))
         {
             return Move.CallPatron(patron);
+        }
+        else if (tokens[0] == "CHOICE" && gameState.PendingChoice is not null && gameState.PendingChoice.Type == Choice.DataType.EFFECT)
+        {
+            var left = gameState.PendingChoice.PossibleEffects[0];
+            var right = gameState.PendingChoice.PossibleEffects[1];
+
+            return tokens[1] == "LEFT" ? Move.MakeChoice(left) : Move.MakeChoice(right);
         }
 
         List<UniqueId> args = new List<UniqueId>();
@@ -111,6 +120,11 @@ public class ExternalAIAdapter : AI
         {
             UniqueCard card = gameState.CurrentPlayer.Agents.First(c => c.RepresentingCard.UniqueId == args[0]).RepresentingCard;
             return Move.ActivateAgent(card);
+        }
+        else if (tokens[0] == "CHOICE" && gameState.PendingChoice is not null && gameState.PendingChoice.Type == Choice.DataType.CARD)
+        {
+            var cards = gameState.PendingChoice.PossibleCards.Where(c => args.Contains(c.UniqueId)).ToList();
+            return Move.MakeChoice(cards);
         }
         
         // In case of no match or something else treat it as giving up a turn.
