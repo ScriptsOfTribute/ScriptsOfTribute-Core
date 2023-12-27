@@ -68,6 +68,11 @@ public class Effect : ComplexEffect
             _ => throw new EngineException("Invalid effect type.")
         };
     }
+
+    public string ToSimpleString()
+    {
+        return $"{Type} {Amount}";
+    }
 }
 
 public class EffectOr : ComplexEffect
@@ -97,6 +102,11 @@ public class EffectOr : ComplexEffect
     {
         return $"{this._left} OR {this._right}";
     }
+
+    public string ToSimpleString()
+    {
+        return $"{this._left.ToSimpleString()} OR {this._right.ToSimpleString()}";
+    }
 }
 
 public class EffectComposite : ComplexEffect
@@ -122,5 +132,10 @@ public class EffectComposite : ComplexEffect
     public override string ToString()
     {
         return $"{this._left} AND {this._right}";
+    }
+
+    public string ToSimpleString()
+    {
+        return $"{this._left.ToSimpleString()} AND {this._right.ToSimpleString()}";
     }
 }

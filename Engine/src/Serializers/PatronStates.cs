@@ -1,4 +1,6 @@
-﻿namespace ScriptsOfTribute.Serializers;
+﻿using Newtonsoft.Json.Linq;
+
+namespace ScriptsOfTribute.Serializers;
 
 public class PatronStates
 {
@@ -18,5 +20,16 @@ public class PatronStates
         }
 
         return result;
+    }
+
+    public JObject SerializeObject()
+    {
+        JObject obj = new JObject();
+        foreach(var pair in All)
+        {
+            obj.Add(pair.Key.ToString(), pair.Value.ToString());
+        }
+
+        return obj;
     }
 }

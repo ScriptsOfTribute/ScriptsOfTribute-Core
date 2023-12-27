@@ -1,4 +1,6 @@
 ﻿using ScriptsOfTribute.Board.Cards;
+using ScriptsOfTribute.Serializers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ScriptsOfTribute;
 
@@ -43,5 +45,16 @@ public class ChoiceContext
         CardSource = card;
         ChoiceType = type;
         Combo = combo;
+    }
+
+    public override string ToString()
+    {
+        return ChoiceType switch
+        {
+            ChoiceType.PATRON_ACTIVATION => PatronSource!.ToString(),
+            ChoiceType.CARD_EFFECT => EffectSerializer.ParseEffectToString(CardSource!.Effects[Combo - 1]),
+            ChoiceType.EFFECT_CHOICE => ChoiceType.EFFECT_CHOICE.ToString(),
+            _ => "",
+        };
     }
 }

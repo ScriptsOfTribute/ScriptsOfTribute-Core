@@ -17,4 +17,9 @@ public class EndGameState
     {
         return $"Winner: {Winner.ToString()}, reason: {Reason.ToString()}{(AdditionalContext == "" ? "" : $"\n{AdditionalContext}")}";
     }
+
+    public string ToSimpleString()
+    {
+        return $"{Winner} {Reason} {AdditionalContext}";
+    }
 }

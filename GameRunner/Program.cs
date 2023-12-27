@@ -11,6 +11,7 @@ using ScriptsOfTribute.Board;
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
 var aiType = typeof(AI);
+var externalBotType = typeof(ExternalAIAdapter);
 var allDlls = currentDirectory.GetFiles("*.dll").ToList();
 List<Type> allBots = allDlls.Select(f => f.FullName)
     .Select(Assembly.LoadFile)
@@ -63,15 +64,25 @@ var logFileDestination = new Option<LogFileNameProvider?>(
 logFileDestination.AddAlias("-d");
 
 
-Type? cachedBot = null;
+BotInfo? cachedBot = null;
 
-Type? FindBot(string name, out string? errorMessage)
+BotInfo? FindBot(string name, out string? errorMessage)
 {
     errorMessage = null;
+    var botInfo = new BotInfo();
 
     bool findByFullName = name.Contains('.');
+    bool isPythonBot = name.EndsWith(".py");
 
-    if (cachedBot is not null && (findByFullName ? cachedBot.FullName : cachedBot.Name) == name)
+    if (isPythonBot)
+    {
+        botInfo.BotType = externalBotType;
+        botInfo.ProgramName = "python";
+        botInfo.FileName = name;
+        return botInfo;
+    }
+
+    if (cachedBot is not null && (findByFullName ? cachedBot.BotFullName : cachedBot.BotName) == name)
     {
         return cachedBot;
     }
@@ -100,9 +111,10 @@ Type? FindBot(string name, out string? errorMessage)
         return null;
     }
 
-    cachedBot = allBots.First(t => (findByFullName ? t.FullName : t.Name) == name);
+    botInfo.BotType = allBots.First(t => (findByFullName ? t.FullName : t.Name) == name);
+    cachedBot = botInfo;
 
-    if (cachedBot.GetConstructor(Type.EmptyTypes) is null)
+    if (cachedBot.BotType.GetConstructor(Type.EmptyTypes) is null)
     {
         errorMessage = $"Bot {name} bot can't be instantiated as it doesn't provide a parameterless constructor.";
     }
@@ -110,7 +122,7 @@ Type? FindBot(string name, out string? errorMessage)
     return cachedBot;
 }
 
-Type? ParseBotArg(ArgumentResult arg)
+BotInfo? ParseBotArg(ArgumentResult arg)
 {
     if (arg.Tokens.Count != 1)
     {
@@ -118,18 +130,18 @@ Type? ParseBotArg(ArgumentResult arg)
         return null;
     }
 
-    var botType = FindBot(arg.Tokens[0].Value, out var errorMessage);
+    var bot = FindBot(arg.Tokens[0].Value, out var errorMessage);
     if (errorMessage is not null)
     {
         arg.ErrorMessage = errorMessage;
         return null;
     }
 
-    return botType!;
+    return bot!;
 }
 
-var bot1NameArgument = new Argument<Type?>(name: "bot1Name", description: "Name of the first bot.", parse: ParseBotArg);
-var bot2NameArgument = new Argument<Type?>(name: "bot2Name", description: "Name of the second bot.", parse: ParseBotArg);
+var bot1NameArgument = new Argument<BotInfo?>(name: "bot1Name", description: "Name of the first bot.", parse: ParseBotArg);
+var bot2NameArgument = new Argument<BotInfo?>(name: "bot2Name", description: "Name of the second bot.", parse: ParseBotArg);
 
 var mainCommand = new RootCommand("A game runner for bots.")
 {
@@ -177,7 +189,7 @@ ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled e
 }
 
 var returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, maybeSeed, bot1Type, bot2Type) =>
+mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, maybeSeed, bot1Info, bot2Info) =>
 {
     if (noOfThreads < 1)
     {
@@ -197,7 +209,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
 
     if (noOfThreads == 1)
     {
-        Console.WriteLine($"Running {runs} games - {bot1Type!.Name} vs {bot2Type!.Name}");
+        Console.WriteLine($"Running {runs} games - {bot1Info!.BotType.Name} vs {bot2Info!.BotType.Name}");
 
         var counter = new GameEndStatsCounter();
 
@@ -205,10 +217,10 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
 
         var granularWatch = new Stopwatch();
         var currentSeed = actualSeed;
+        var bot1 = bot1Info.IsExternal ? (AI?)Activator.CreateInstance(bot1Info.BotType, bot1Info.ProgramName, bot1Info.FileName) : (AI?)Activator.CreateInstance(bot1Info.BotType);
+        var bot2 = bot2Info.IsExternal ? (AI?)Activator.CreateInstance(bot2Info.BotType, bot2Info.ProgramName, bot2Info.FileName) : (AI?)Activator.CreateInstance(bot2Info.BotType);
         for (var i = 0; i < runs; i++)
         {
-            var bot1 = (AI?)Activator.CreateInstance(bot1Type);
-            var bot2 = (AI?)Activator.CreateInstance(bot2Type);
             var game = PrepareGame(bot1!, bot2!, enableLogs, currentSeed, logFileNameProvider);
             currentSeed += 1;
 
@@ -247,15 +259,15 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
         var gamesPerThreadRemainder = runs % noOfThreads;
         var threads = new Task<List<EndGameState>>[noOfThreads];
         
-        List<EndGameState> PlayGames(int amount, Type bot1T, Type bot2T, int threadNo, ulong seed)
+        List<EndGameState> PlayGames(int amount, BotInfo bot1Info, BotInfo bot2Info, int threadNo, ulong seed)
         {
             var results = new EndGameState[amount];
             var timeMeasurements = new long[amount];
             var watch = new Stopwatch();
+            var bot1 = bot1Info.IsExternal ? (AI?)Activator.CreateInstance(bot1Info.BotType, bot1Info.ProgramName, bot1Info.FileName) : (AI?)Activator.CreateInstance(bot1Info.BotType);
+            var bot2 = bot2Info.IsExternal ? (AI?)Activator.CreateInstance(bot2Info.BotType, bot2Info.ProgramName, bot2Info.FileName) : (AI?)Activator.CreateInstance(bot2Info.BotType);
             for (var i = 0; i < amount; i++)
             {
-                var bot1 = (AI?)Activator.CreateInstance(bot1T);
-                var bot2 = (AI?)Activator.CreateInstance(bot2T);
                 var game = PrepareGame(bot1!, bot2!, enableLogs, seed, logFileNameProvider);
                 seed += 1;
 
@@ -282,7 +294,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
             Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
             var threadNo = i;
             var currentSeedCopy = currentSeed;
-            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Type!, bot2Type!, threadNo, currentSeedCopy));
+            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Info!, bot2Info!, threadNo, currentSeedCopy));
             currentSeed += (ulong)gamesToPlay;
         }
         Task.WaitAll(threads.ToArray<Task>());

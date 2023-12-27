@@ -1,4 +1,5 @@
-﻿using ScriptsOfTribute.Board.Cards;
+﻿using Newtonsoft.Json.Linq;
+using ScriptsOfTribute.Board.Cards;
 
 namespace ScriptsOfTribute.Serializers;
 
@@ -21,6 +22,23 @@ public class FairSerializedEnemyPlayer
     public FairSerializedEnemyPlayer(SerializedPlayer player)
     {
         _player = player;
+    }
+
+    public JObject SerializeObject()
+    {
+        JObject obj = new JObject
+        {
+            {"Player", PlayerID.ToString()},
+            {"Cooldown", new JArray(_player.CooldownPile.Select(card => card.SerializeObject()).ToList())},
+            {"Played", new JArray(_player.Played.Select(card => card.SerializeObject()).ToList())},
+            {"HandAndDraw", new JArray(HandAndDraw.Select(card => card.SerializeObject()).ToList())},
+            {"Agents", new JArray(_player.Agents.Select(agent => agent.SerializeObject()).ToList())},
+            {"Power", _player.Power},
+            {"Coins", _player.Coins},
+            {"Prestige", _player.Prestige},
+        };
+
+        return obj;
     }
 }
 
@@ -46,5 +64,25 @@ public class FairSerializedPlayer
     public FairSerializedPlayer(SerializedPlayer player)
     {
         _player = player;
+    }
+
+    public JObject SerializeObject()
+    {
+        JObject obj = new JObject
+        {
+            {"Player", PlayerID.ToString()},
+            {"Hand", new JArray(_player.Hand.Select(card => card.SerializeObject()).ToList())},
+            {"Cooldown", new JArray(_player.CooldownPile.Select(card => card.SerializeObject()).ToList())},
+            {"Played", new JArray(_player.Played.Select(card => card.SerializeObject()).ToList())},
+            {"KnownPile", new JArray(_player.KnownUpcomingDraws.Select(card => card.SerializeObject()).ToList())},
+            {"Agents", new JArray(_player.Agents.Select(agent => agent.SerializeObject()).ToList())},
+            {"Power", _player.Power},
+            {"PatronCalls", _player.PatronCalls},
+            {"Coins", _player.Coins},
+            {"Prestige", _player.Prestige},
+            {"DrawPile",  new JArray(_player.DrawPile.Select(card => card.SerializeObject()).ToList())}
+        };
+
+        return obj;
     }
 }

@@ -1,4 +1,5 @@
-﻿using ScriptsOfTribute.Board.Cards;
+﻿using Newtonsoft.Json.Linq;
+using ScriptsOfTribute.Board.Cards;
 
 namespace ScriptsOfTribute.Serializers;
 
@@ -57,5 +58,27 @@ public class SerializedChoice
             Choice.DataType.CARD => new Choice(PossibleCards, ChoiceFollowUp, Context, MaxChoices, MinChoices),
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    public JObject SerializeObject()
+    {
+        JObject json = new JObject(
+            new JProperty("MaxChoices", MaxChoices),
+            new JProperty("MinChoices", MinChoices),
+            new JProperty("Context", Context.ToString()),
+            new JProperty("ChoiceFollowUp", ChoiceFollowUp.ToString()),
+            new JProperty("Type", Type.ToString())
+        );
+
+        if (Type == Choice.DataType.CARD)
+        {
+            json.Add("PossibleCards", new JArray(_possibleCards.Select(card => card.SerializeObject()).ToList()));
+        }
+        else if (Type == Choice.DataType.EFFECT)
+        {
+            json.Add("PossibleEffects", new JArray(_possibleEffects.Select(effect => effect.ToSimpleString()).ToList()));
+        }
+
+        return json;
     }
 }
