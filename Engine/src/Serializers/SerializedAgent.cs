@@ -1,4 +1,5 @@
-﻿using ScriptsOfTribute.Board.Cards;
+﻿using Newtonsoft.Json.Linq;
+using ScriptsOfTribute.Board.Cards;
 
 namespace ScriptsOfTribute.Serializers;
 
@@ -18,5 +19,15 @@ public class SerializedAgent
     public override string ToString()
     {
         return $"{RepresentingCard.ToString()} CurrentHP: {CurrentHp} Activated: {Activated}";
+    }
+
+    public JObject SerializeObject()
+    {
+        return new JObject
+        {
+            {"CurrentHP", CurrentHp},
+            {"Card", RepresentingCard.SerializeObject()},
+            {"Activated", Activated}
+        };
     }
 }

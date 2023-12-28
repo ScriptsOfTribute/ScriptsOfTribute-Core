@@ -1,4 +1,7 @@
-﻿namespace ScriptsOfTribute.Board.Cards;
+﻿using Newtonsoft.Json.Linq;
+using ScriptsOfTribute.Serializers;
+
+namespace ScriptsOfTribute.Board.Cards;
 
 public class UniqueCard : Card
 {
@@ -49,5 +52,34 @@ public class UniqueCard : Card
     public override int GetHashCode()
     {
         return UniqueId.GetHashCode();
+    }
+
+    public JObject SerializeObject()
+    {
+        JObject obj = new JObject
+        {
+            {"name", this.Name },
+            {"deck", this.Deck.ToString()},
+            {"cost", this.Cost},
+            {"type", this.Type.ToString()},
+            {"HP", this.HP },
+            {"taunt", this.Taunt },
+            {"UniqueId", this.UniqueId.Value },
+        };
+        List<string> effects = new List<string>();
+        for(int i = 0; i < this.Effects.Length; i++)
+        {
+            if (Effects[i] is not null)
+            {
+                effects.Add(EffectSerializer.ParseEffectToString(Effects[i]!));
+            }
+            else
+            {
+                effects.Add("");
+            }
+                
+        }
+        obj.Add("effects", new JArray(effects));
+        return obj;
     }
 }

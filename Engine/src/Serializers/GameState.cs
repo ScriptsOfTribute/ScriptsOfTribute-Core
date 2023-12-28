@@ -1,4 +1,5 @@
-﻿using ScriptsOfTribute.Board;
+﻿using Newtonsoft.Json.Linq;
+using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Board.CardAction;
 using ScriptsOfTribute.Board.Cards;
 
@@ -10,7 +11,8 @@ public class GameState
     public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
     public List<UniqueCard> TavernAvailableCards => _board.TavernAvailableCards;
     public BoardState BoardState => _board.BoardState;
-    public ComboStates ComboStates => _board.ComboStates;
+    //Isn't it little cheating to share this? xd I think good bot should memorize and find combos on its own
+    public ComboStates ComboStates => _board.ComboStates; 
     public List<UniqueBaseEffect> UpcomingEffects => _board.UpcomingEffects;
     public List<UniqueBaseEffect> StartOfNextTurnEffects => _board.StartOfNextTurnEffects;
     public EndGameState? GameEndState => _board.GameEndState;
@@ -59,5 +61,29 @@ public class GameState
         var (newBoard, newMoves) = _board.ApplyMove(move);
 
         return (new SeededGameState(newBoard, seed), newMoves);
+    }
+
+    /// <summary>
+    /// Serialize GameState object to string that is converted JSON file, suited
+    /// for sharing GameState between processes made in different languages.
+    /// </summary>
+    public JObject SerializeGameState()
+    {
+        JObject jsonGameState = new JObject
+        {
+            {"PatronStates", _board.PatronStates.SerializeObject()},
+            {"TavernAvailableCards", new JArray(_board.TavernAvailableCards.Select(card => card.SerializeObject()).ToList())},
+            {"BoardState", _board.BoardState.ToString()},
+            {"UpcomingEffects", new JArray(_board.UpcomingEffects.Select(effect => EffectSerializer.ParseEffectToString(effect)).ToList())},
+            {"StartOfNextTurnEffects", new JArray(_board.StartOfNextTurnEffects.Select(effect => EffectSerializer.ParseEffectToString(effect)).ToList())},
+            {"GameEndState", _board.GameEndState is not null ? _board.GameEndState.ToSimpleString() : ""},
+            {"CurrentPlayer", CurrentPlayer.SerializeObject()},
+            {"EnemyPlayer", EnemyPlayer.SerializeObject()},
+            {"CompletedActions", new JArray(CompletedActions.Select(action => action.SimpleString()).ToList())},
+            {"TavernCards", new JArray(TavernCards.Select(card => card.SerializeObject()).ToList())},
+            {"PendingChoice", PendingChoice is not null ? PendingChoice.SerializeObject() : ""},
+        };
+
+        return jsonGameState;
     }
 }

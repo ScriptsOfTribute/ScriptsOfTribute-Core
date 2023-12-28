@@ -194,4 +194,60 @@ public class CompletedAction
 
         return sb.ToString();
     }
+
+    public string SimpleString()
+    {
+        var sb = new StringBuilder();
+        sb.Append(Type.ToString());
+
+        switch (Type)
+        {
+            case CompletedActionType.BUY_CARD:
+            case CompletedActionType.PLAY_CARD:
+            case CompletedActionType.ACTIVATE_AGENT:
+            case CompletedActionType.AGENT_DEATH:
+                sb.Append($"{TargetCard}");
+                break;
+            case CompletedActionType.ACQUIRE_CARD:
+                sb.Append($"{SourceCard}{SourcePatron} {TargetCard}");
+                break;
+            case CompletedActionType.ACTIVATE_PATRON:
+                sb.Append($"{SourcePatron}");
+                break;
+            case CompletedActionType.ATTACK_AGENT:
+                sb.Append($"{TargetCard} {Amount}");
+                break;
+            case CompletedActionType.GAIN_COIN:
+            case CompletedActionType.GAIN_POWER:
+            case CompletedActionType.GAIN_PRESTIGE:
+            case CompletedActionType.OPP_LOSE_PRESTIGE:
+            case CompletedActionType.DRAW:
+            case CompletedActionType.ADD_PATRON_CALLS:
+                sb.Append($"{SourceCard}{SourcePatron} {Amount}");
+                break;
+            case CompletedActionType.REPLACE_TAVERN:
+            case CompletedActionType.DESTROY_CARD:
+            case CompletedActionType.DISCARD:
+            case CompletedActionType.REFRESH:
+            case CompletedActionType.TOSS:
+            case CompletedActionType.KNOCKOUT:
+                sb.Append($"{SourceCard}{SourcePatron} {TargetCard}");
+                break;
+            case CompletedActionType.ADD_BOARDING_PARTY:
+            case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
+            case CompletedActionType.ADD_WRIT_OF_COIN:
+                sb.Append($"{SourceCard}{SourcePatron}");
+                break;
+            case CompletedActionType.HEAL_AGENT:
+                sb.Append($"{SourceCard}{SourcePatron} {TargetCard} {Amount}");
+                break;
+            case CompletedActionType.END_TURN:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        return sb.ToString();
+    }
+
 }

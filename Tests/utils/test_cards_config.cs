@@ -13,7 +13,8 @@ public class test_cards_config
        ""Activation"":""Coin 3"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Copies"":1
     },
     {
        ""id"":4,
@@ -26,7 +27,8 @@ public class test_cards_config
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":5
+       ""Family"":5,
+       ""Copies"":1
     },
     {
        ""id"":5,
@@ -39,7 +41,9 @@ public class test_cards_config
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":5
+       ""Family"":5,
+       ""Copies"":1,
+       ""PostUpgradeCopies"":1
     }
 ]";
 
@@ -54,7 +58,8 @@ public class test_cards_config
        ""Activation"":""Coin 3"",
        ""Combo 2"":null,
        ""Combo 3"":null,
-       ""Combo 4"":null
+       ""Combo 4"":null,
+       ""Copies"":1
     },
     {
        ""id"":4,
@@ -67,7 +72,8 @@ public class test_cards_config
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":5
+       ""Family"":5,
+       ""Copies"":1
     },
     {
        ""id"":5,
@@ -80,7 +86,8 @@ public class test_cards_config
        ""Combo 2"":""Remove 1"",
        ""Combo 3"":null,
        ""Combo 4"":null,
-       ""Family"":5
+       ""Family"":5,
+       ""Copies"":1
     }
 ]";
 }
