@@ -63,6 +63,12 @@ var logFileDestination = new Option<LogFileNameProvider?>(
 };
 logFileDestination.AddAlias("-d");
 
+var timeoutOption = new Option<int>(
+    name: "--timeout",
+    description: "Specify time limit in seconds that will be set for games. The default value is 30.",
+    getDefaultValue: () => 30);
+timeoutOption.AddAlias("-to");
+
 
 BotInfo? cachedBot = null;
 
@@ -150,13 +156,14 @@ var mainCommand = new RootCommand("A game runner for bots.")
     logsOption,
     logFileDestination,
     seedOption,
+    timeoutOption,
     bot1NameArgument,
     bot2NameArgument,
 };
 
-ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider)
+ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider, int timeout)
 {
-    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1!, bot2!);
+    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1!, bot2!, TimeSpan.FromSeconds(timeout));
     switch (enableLogs)
     {
         case LogsEnabled.P1:
@@ -189,11 +196,17 @@ ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled e
 }
 
 var returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, maybeSeed, bot1Info, bot2Info) =>
+mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, maybeSeed, timeout, bot1Info, bot2Info) =>
 {
     if (noOfThreads < 1)
     {
         Console.Error.WriteLine("ERROR: Can't use less than 1 thread.");
+        returnValue = -1;
+    }
+
+    if (timeout < 0)
+    {
+        Console.Error.WriteLine("ERROR: Time limit can't be negative.");
         returnValue = -1;
     }
 
@@ -221,7 +234,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
         var bot2 = bot2Info.IsExternal ? (AI?)Activator.CreateInstance(bot2Info.BotType, bot2Info.ProgramName, bot2Info.FileName) : (AI?)Activator.CreateInstance(bot2Info.BotType);
         for (var i = 0; i < runs; i++)
         {
-            var game = PrepareGame(bot1!, bot2!, enableLogs, currentSeed, logFileNameProvider);
+            var game = PrepareGame(bot1!, bot2!, enableLogs, currentSeed, logFileNameProvider, timeout);
             currentSeed += 1;
 
             granularWatch.Reset();
@@ -268,7 +281,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
             var bot2 = bot2Info.IsExternal ? (AI?)Activator.CreateInstance(bot2Info.BotType, bot2Info.ProgramName, bot2Info.FileName) : (AI?)Activator.CreateInstance(bot2Info.BotType);
             for (var i = 0; i < amount; i++)
             {
-                var game = PrepareGame(bot1!, bot2!, enableLogs, seed, logFileNameProvider);
+                var game = PrepareGame(bot1!, bot2!, enableLogs, seed, logFileNameProvider, timeout);
                 seed += 1;
 
                 watch.Reset();
@@ -309,7 +322,7 @@ mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, mayb
         Console.WriteLine("\nStats from the games played:");
         Console.WriteLine(counter.ToString());
     }
-}, noOfRunsOption, threadsOption, logsOption, logFileDestination, seedOption, bot1NameArgument, bot2NameArgument);
+}, noOfRunsOption, threadsOption, logsOption, logFileDestination, seedOption, timeoutOption, bot1NameArgument, bot2NameArgument);
 
 mainCommand.Invoke(args);
 

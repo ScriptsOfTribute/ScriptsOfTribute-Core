@@ -299,7 +299,7 @@ public class BeamSearchBot : AI
         return bestMove;
     }
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         if (startOfGame)
         {

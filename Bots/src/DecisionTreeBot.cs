@@ -878,7 +878,7 @@ public class DecisionTreeBot : AI
         return availablePatrons[random.Next(availablePatrons.Count)];
     }
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
 
         if (startOfGame)

@@ -264,7 +264,7 @@ public class RandomSimulationBot : AI
         return bestPlayout;
     }
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         if (startOfGame)
         {
