@@ -12,7 +12,7 @@ public class RandomBot : AI
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
         => availablePatrons.PickRandom(rng);
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         return possibleMoves.PickRandom(rng);
     }

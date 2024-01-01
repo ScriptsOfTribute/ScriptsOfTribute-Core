@@ -12,7 +12,7 @@ public class TurnTimeoutBot : AI
         return availablePatrons[0];
     }
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         Task.Delay(TimeSpan.FromSeconds(1)).Wait();
         var movesWithoutEndTurn = possibleMoves.Where(m => m.Command != CommandEnum.END_TURN).ToList();

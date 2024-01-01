@@ -52,7 +52,7 @@ public class ExternalAIAdapter : AI
         botProcess.WaitForExit();
     }
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         var obj = gameState.SerializeGameState();
         sw.WriteLine(obj.ToString());

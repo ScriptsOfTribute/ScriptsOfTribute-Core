@@ -51,7 +51,7 @@ public class MaxAgentsBot : AI
         return null;
     }
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         var movesWithoutEndTurn = possibleMoves.Where(move => move.Command != CommandEnum.END_TURN).ToList();
         if (movesWithoutEndTurn.Count == 0)

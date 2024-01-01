@@ -441,7 +441,7 @@ public class MCTSBot : AI
         //return selectedPatron ?? availablePatrons.PickRandom(Rng);
         => availablePatrons.PickRandom(rng);
 
-    public override Move Play(GameState gameState, List<Move> possibleMoves)
+    public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
         if (startOfGame)
         {

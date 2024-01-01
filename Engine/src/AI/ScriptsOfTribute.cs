@@ -23,16 +23,20 @@ public class ScriptsOfTribute
     public TextWriter P2LogTarget { get; set; } = Console.Out;
     public bool P1LoggerEnabled { get; set; } = false;
     public bool P2LoggerEnabled { get; set; } = false;
-    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
+    public TimeSpan Timeout { get; set; }
 
-    public ScriptsOfTribute(AI player1, AI player2)
+    public ScriptsOfTribute(AI player1, AI player2, TimeSpan timeout)
     {
         _players[0] = player1;
         _players[1] = player2;
         player1.Id = PlayerEnum.PLAYER1;
         player2.Id = PlayerEnum.PLAYER2;
         Seed = (ulong)Environment.TickCount;
+        Timeout = timeout;
     }
+
+    public ScriptsOfTribute(AI player1, AI player2) : this(player1, player2, TimeSpan.FromSeconds(30))
+    { }
 
     private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
     {
