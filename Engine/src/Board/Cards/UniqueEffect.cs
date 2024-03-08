@@ -15,7 +15,7 @@ public enum EffectType
     TOSS,
     KNOCKOUT,
     PATRON_CALL,
-    CREATE_BOARDINGPARTY,
+    CREATE_SUMMERSET_SACKING,
     HEAL,
 }
 
@@ -172,12 +172,12 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                     new(player.ID, CompletedActionType.ADD_PATRON_CALLS,
                         ParentCard, Amount)
                 });
-            case EffectType.CREATE_BOARDINGPARTY:
+            case EffectType.CREATE_SUMMERSET_SACKING:
                 for (var i = 0; i < Amount; i++)
-                    player.AddToCooldownPile(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
+                    player.AddToCooldownPile(GlobalCardDatabase.Instance.GetCard(CardId.SUMMERSET_SACKING));
                 return (new Success(), new List<CompletedAction>
                 {
-                    new(player.ID, CompletedActionType.ADD_BOARDING_PARTY,
+                    new(player.ID, CompletedActionType.ADD_SUMMERSET_SACKING,
                         ParentCard, Amount)
                 });
             case EffectType.HEAL:
@@ -214,7 +214,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             EffectType.TOSS => $"Choose up to {Amount} of draw pile cards to move to your cooldown pile.",
             EffectType.KNOCKOUT => $"Knockout {Amount} enemy agents",
             EffectType.PATRON_CALL => $"Get {Amount} patron calls",
-            EffectType.CREATE_BOARDINGPARTY => $"Create {Amount} Maormer Boarding Patry cards and place it in CD pile",
+            EffectType.CREATE_SUMMERSET_SACKING => $"Create {Amount} Summerset Sacking cards and place it in CD pile",
             EffectType.HEAL => $"Heal this agent by {Amount}",
             _ => ""
         };
@@ -242,7 +242,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             "Toss" => EffectType.TOSS,
             "KnockOut" => EffectType.KNOCKOUT,
             "Patron" => EffectType.PATRON_CALL,
-            "Create" => EffectType.CREATE_BOARDINGPARTY,
+            "Create" => EffectType.CREATE_SUMMERSET_SACKING,
             "Heal" => EffectType.HEAL,
             _ => throw new EngineException("Invalid effect type.")
         };
