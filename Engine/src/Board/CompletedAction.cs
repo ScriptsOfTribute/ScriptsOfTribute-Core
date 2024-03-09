@@ -24,7 +24,7 @@ public enum CompletedActionType
     TOSS,
     KNOCKOUT,
     ADD_PATRON_CALLS,
-    ADD_BOARDING_PARTY,
+    ADD_SUMMERSET_SACKING,
     ADD_BEWILDERMENT_TO_OPPONENT,
     ADD_WRIT_OF_COIN,
     HEAL_AGENT,
@@ -170,8 +170,8 @@ public class CompletedAction
             case CompletedActionType.KNOCKOUT:
                 sb.Append($"Knockout - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
-            case CompletedActionType.ADD_BOARDING_PARTY:
-                sb.Append($"Add Boarding Party - Source: {SourceCard}{SourcePatron}");
+            case CompletedActionType.ADD_SUMMERSET_SACKING:
+                sb.Append($"Add Summerset Sacking - Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
                 sb.Append($"Add Bewilderment To Opponent - Source: {SourceCard}{SourcePatron}");
@@ -233,7 +233,7 @@ public class CompletedAction
             case CompletedActionType.KNOCKOUT:
                 sb.Append($"{SourceCard}{SourcePatron} {TargetCard}");
                 break;
-            case CompletedActionType.ADD_BOARDING_PARTY:
+            case CompletedActionType.ADD_SUMMERSET_SACKING:
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
             case CompletedActionType.ADD_WRIT_OF_COIN:
                 sb.Append($"{SourceCard}{SourcePatron}");

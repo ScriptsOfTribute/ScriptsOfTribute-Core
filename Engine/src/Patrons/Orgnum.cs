@@ -9,7 +9,7 @@ namespace ScriptsOfTribute
             /*
              * Favored:
              * Pay 3 Coin -> Gain 1 Power for every 4 cards you own, rounded down.
-             * Create 1 Maormer Boarding Party card and place it in your cooldown pile.
+             * Create 1 Summerset Sacking card and place it in your cooldown pile.
              * 
              * Neutral:
              * Pay 3 Coin -> Gain 1 Power for every 6 cards that you own, rounded down.
@@ -32,7 +32,7 @@ namespace ScriptsOfTribute
             {
                 powerGained = ownerCardsAmount / 4;
                 activator.PowerAmount += powerGained;
-                activator.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.MAORMER_BOARDING_PARTY));
+                activator.CooldownPile.Add(GlobalCardDatabase.Instance.GetCard(CardId.SUMMERSET_SACKING));
             }
             else if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED) // Neutral
             {
@@ -54,7 +54,7 @@ namespace ScriptsOfTribute
 
             if (FavoredPlayer == activator.ID)
             {
-                actionList.Add(new CompletedAction(activator.ID, CompletedActionType.ADD_BOARDING_PARTY, PatronID, 1));
+                actionList.Add(new CompletedAction(activator.ID, CompletedActionType.ADD_SUMMERSET_SACKING, PatronID, 1));
             }
 
             if (FavoredPlayer == PlayerEnum.NO_PLAYER_SELECTED)
