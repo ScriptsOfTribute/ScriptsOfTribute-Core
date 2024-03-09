@@ -800,7 +800,7 @@ public class DecisionTreeBot : AI
                 return 200 * gameState.CurrentPlayer.Hand.Count();
             case EffectType.KNOCKOUT:
             case EffectType.PATRON_CALL:
-            case EffectType.CREATE_BOARDINGPARTY:
+            case EffectType.CREATE_SUMMERSET_SACKING:
             //Heal
             default:
                 return 500;
