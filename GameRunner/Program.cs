@@ -78,13 +78,17 @@ BotInfo? FindBot(string name, out string? errorMessage)
     var botInfo = new BotInfo();
 
     bool findByFullName = name.Contains('.');
-    bool isPythonBot = name.EndsWith(".py");
+    bool isExternalBot = name.StartsWith("cmd:");
 
-    if (isPythonBot)
+    if (isExternalBot)
     {
+        name = name.Substring(4);
+        var splittedCommand = name.Split(' ', 2);
+        Console.WriteLine(name);
+        Console.WriteLine($"{splittedCommand[0]}, {splittedCommand[1]}");
         botInfo.BotType = externalBotType;
-        botInfo.ProgramName = "python";
-        botInfo.FileName = name;
+        botInfo.ProgramName = splittedCommand[0];
+        botInfo.FileName = splittedCommand[1];
         return botInfo;
     }
 
