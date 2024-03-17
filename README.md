@@ -96,3 +96,19 @@ Root object contains following keys:
 * `"CompletedActions"` - array of *CompletedActions*
 * `"TavernCards"` - array of *Cards* that are in (whole) tavern.
 * `"PendingChoice"` - *Choice* pending which bot has to handle.
+
+
+## Examples of GameRunner use for external bots
+To run GameRunner with our external langauge bot we have to modify bot argument format. 
+Instead of providing bot's name like in case of C# Bots made with our engine user should use format `"cmd:<command>"`. For example "cmd:python example-bot.py" or "cmd:python3 example-bot.py" depending on what executable is registered in your terminal to run python programs. Remember about the quotes so that whole command line, with program and arguments is passed, without them name of the program will be lost.
+
+Let's take for example [`example-bot.py`](Bots/ExternalLanguageBotsUtils/Python/example-bot.py). Let's clash him with [RandomBot](Bots/src/RandomBot.cs):
+* `.\GameRunner.exe RandomBot "cmd:python example-bot.py" -n 1` 
+
+it works as long as current terminal has `python` registered as name for the Python executable. In case it's `python3` like in some Linux OS
+you want to use 
+* `.\GameRunner.exe RandomBot "cmd:python3 example-bot.py" -n 1`
+
+In case of executable files with bots case is similar. Let's say we compiled our C++ bot. We get some executable. All user has to type is:
+
+* `.\GameRunner.exe RandomBot "cmd:.\MyCppBot" -n 1`
