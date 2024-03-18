@@ -78,13 +78,15 @@ BotInfo? FindBot(string name, out string? errorMessage)
     var botInfo = new BotInfo();
 
     bool findByFullName = name.Contains('.');
-    bool isPythonBot = name.EndsWith(".py");
+    bool isExternalBot = name.StartsWith("cmd:");
 
-    if (isPythonBot)
+    if (isExternalBot)
     {
+        name = name.Substring(4);
+        var splittedCommand = name.Split(' ', 2);
         botInfo.BotType = externalBotType;
-        botInfo.ProgramName = "python";
-        botInfo.FileName = name;
+        botInfo.ProgramName = splittedCommand[0];
+        botInfo.FileName = splittedCommand[1];
         return botInfo;
     }
 
@@ -146,8 +148,8 @@ BotInfo? ParseBotArg(ArgumentResult arg)
     return bot!;
 }
 
-var bot1NameArgument = new Argument<BotInfo?>(name: "bot1Name", description: "Name of the first bot.", parse: ParseBotArg);
-var bot2NameArgument = new Argument<BotInfo?>(name: "bot2Name", description: "Name of the second bot.", parse: ParseBotArg);
+var bot1NameArgument = new Argument<BotInfo?>(name: "bot1", description: "The name of the first bot or the command that will run the bot program. For the command, please follow the format \"cmd:<command>\"", parse: ParseBotArg);
+var bot2NameArgument = new Argument<BotInfo?>(name: "bot2", description: "The name of the second bot or the command that will run the bot program. For the command, please follow the format \"cmd:<command>\"", parse: ParseBotArg);
 
 var mainCommand = new RootCommand("A game runner for bots.")
 {
