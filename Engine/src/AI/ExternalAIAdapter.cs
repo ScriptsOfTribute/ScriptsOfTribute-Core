@@ -48,7 +48,6 @@ public class ExternalAIAdapter : AI
         botProcess.BeginErrorReadLine();
         sw = botProcess.StandardInput;
         sr = botProcess.StandardOutput;
-
     }
 
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
@@ -56,11 +55,7 @@ public class ExternalAIAdapter : AI
         // TODO: parse EndGameSTate and FullGameState to JSON object and send it
         sw.WriteLine("FINISHED" + " " + state.ToSimpleString());
         sw.WriteLine(EOT);
-        sw.Close();
-        sr.Close();
-        botProcess.CloseMainWindow();
-        botProcess.WaitForExit();
-        botProcess.Dispose();
+        botProcess.Close();
     }
 
     public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
