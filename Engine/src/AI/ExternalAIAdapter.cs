@@ -11,9 +11,17 @@ public class ExternalAIAdapter : AI
     private Process botProcess;
     private StreamWriter sw;
     private StreamReader sr;
+    private string programName;
+    private string fileName;
 
     private string EOT = "EOT";
     public ExternalAIAdapter(string programName, string fileName)
+    {
+        this.programName = programName;
+        this.fileName = fileName;
+    }
+
+    public override void PregamePrepare()
     {
         botProcess = new Process
         {
@@ -47,9 +55,7 @@ public class ExternalAIAdapter : AI
         // TODO: parse EndGameSTate and FullGameState to JSON object and send it
         sw.WriteLine("FINISHED" + " " + state.ToSimpleString());
         sw.WriteLine(EOT);
-        sw.Flush();
-        botProcess.CloseMainWindow();
-        botProcess.WaitForExit();
+        botProcess.Close();
     }
 
     public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
@@ -75,7 +81,7 @@ public class ExternalAIAdapter : AI
 
     private Move MapStringToMove(string move, GameState gameState)
     {
-        Console.WriteLine(move);
+        //Console.WriteLine(move);
         string[] tokens = move.Split(" ");
         if (tokens.Length < 2)
             return Move.EndTurn();

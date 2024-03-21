@@ -117,7 +117,19 @@ public class ScriptsOfTribute
 
     public (EndGameState, FullGameState?) Play()
     {
-        var (endGameState, patrons) = PatronSelection();
+        EndGameState? endGameState;
+        PatronId[]? patrons;
+
+        endGameState = PrepareBots(_players[0], _players[1], 5);
+        
+        if (endGameState is not null)
+        {
+            _players[0].GameEnd(endGameState, null);
+            _players[1].GameEnd(endGameState, null);
+            return (endGameState, null);
+        }
+
+        (endGameState, patrons) = PatronSelection();
 
         if (endGameState is not null)
         {
@@ -141,5 +153,31 @@ public class ScriptsOfTribute
         var r = _game!.Play();
 
         return r;
+    }
+
+
+    private EndGameState? PrepareBots(AI player1, AI player2, int timeout)
+    {
+        Task task = Task.Run(() =>
+        {
+            player1.PregamePrepare();
+        });
+
+        if (!task.Wait(TimeSpan.FromSeconds(timeout)))
+        {
+            return new EndGameState(PlayerEnum.PLAYER2, GameEndReason.PREPARE_TIME_EXCEEDED);
+        }
+
+        task = Task.Run(() =>
+        {
+            player2.PregamePrepare();
+        });
+
+        if (!task.Wait(TimeSpan.FromSeconds(timeout)))
+        {
+            return new EndGameState(PlayerEnum.PLAYER1, GameEndReason.PREPARE_TIME_EXCEEDED);
+        }
+
+        return null;
     }
 }
