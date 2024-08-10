@@ -53,20 +53,32 @@ public class ExternalAIAdapter : AI
     public override void GameEnd(EndGameState state, FullGameState? finalBoardState)
     {
         // TODO: parse EndGameSTate and FullGameState to JSON object and send it
-        sw.WriteLine("FINISHED" + " " + state.ToSimpleString());
+        sw.WriteLine("FINISHED " + state.Winner.ToString() + " " + state.Reason.ToString() + " " + state.AdditionalContext.ToString());
         sw.WriteLine(EOT);
+        Thread.Sleep(100);
         botProcess.Close();
     }
 
     public override Move Play(GameState gameState, List<Move> possibleMoves, TimeSpan remainingTime)
     {
+
         var obj = gameState.SerializeGameState();
+        sw.WriteLine("{ \"State\":");
         sw.WriteLine(obj.ToString());
+        sw.WriteLine(", \"Actions\": [");
+        //var obj2 = possibleMoves.Select(m => m.Command.ToString()).ToList();
+        sw.WriteLine(string.Join(',', possibleMoves.Select(m => "\"" + m.ToString() + "\"").ToList()));
+        sw.WriteLine("]}");
         sw.WriteLine(EOT);
+
+
         string botOutput;
         botOutput = sr.ReadLine();
-        //Console.WriteLine($"Bot response: {botOutput}");
-        return MapStringToMove(botOutput, gameState);
+        // Console.WriteLine(string.Join(",", possibleMoves.Select(m => m.ToString()).ToList()));
+
+        // Console.WriteLine($"Bot response: {botOutput}");
+        return possibleMoves[int.Parse(botOutput)];
+        //return MapStringToMove(botOutput, gameState, possibleMoves);
     }
 
     public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
@@ -79,7 +91,7 @@ public class ExternalAIAdapter : AI
         return patronPicked;
     }
 
-    private Move MapStringToMove(string move, GameState gameState)
+    private Move MapStringToMove(string move, GameState gameState, List<Move> possibleMoves)
     {
         //Console.WriteLine(move);
         string[] tokens = move.Split(" ");
@@ -132,7 +144,7 @@ public class ExternalAIAdapter : AI
             var cards = gameState.PendingChoice.PossibleCards.Where(c => args.Contains(c.UniqueId)).ToList();
             return Move.MakeChoice(cards);
         }
-        
+
         // In case of no match or something else treat it as giving up a turn.
         return Move.EndTurn();
     }
