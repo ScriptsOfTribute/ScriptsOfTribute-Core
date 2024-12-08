@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package ScriptsOfTributeGRPC;
+
+import "enums.proto";
+
+message PatronStates {
+	map<int32, PlayerEnum> all = 1;
+}
+
+message Effect {
+    EffectType Type = 1;
+    int32 Amount = 2;
+    int32 Combo = 3;
+    Card ParentCard = 4;
+}
+
+message EffectOr {
+    Effect Left = 1;
+    Effect Right = 2;
+    Card ParentCard = 3;
+}
+
+message EffectAnd {
+    Effect Left = 1;
+    Effect Right = 2;
+    Card ParentCard = 3;
+}
+
+message ComplexEffect
+{
+    optional Effect SingleEffect = 1;
+    optional EffectOr AlternativeEffect = 2;
+    optional EffectAnd CompositeEffect = 3;
+    optional bool IsEmpty = 4;
+}
+
+message ComboState {
+    repeated Effect All = 1;
+    int32 CurrentCombo = 2;
+}
+
+message ComboStates {
+	map<int32, ComboState> All = 1;
+}
+
+message Card {
+	int32 UniqueId = 1;
+	string Name = 2;
+    PatronId Deck = 3;
+    CardId CommonId = 4;
+    int32 Cost = 5;
+    CardType Type = 6;
+    optional int32 HP = 7;
+    repeated ComplexEffect Effects = 8;
+    int32 Hash = 9;
+    CardId Family = 10;
+    bool Taunt = 11;
+    int32 Copies = 12;
+}
+
+message Agent {
+    int32 CurrentHp = 1;
+    Card RepresentingCard = 2;
+    bool Activated = 3;
+}
+
+message EndGameState {
+    PlayerEnum Winner = 1;
+    string Reason = 2;
+    string AdditionalContext = 3;
+}
+
+message Player {
+    PlayerEnum PlayerId = 1;
+    repeated Card Hand = 2;
+    repeated Card CooldownPile = 3;
+    repeated Card Played = 4;
+    repeated Card KnownUpcomingDraws = 5;
+    repeated Agent Agents = 6;
+    int32 Power = 7;
+    int32 PatronCalls = 8;
+    int32 Coins = 9;
+    int32 Prestige = 10;
+    repeated Card DrawPile = 11;
+}
+
+message EnemyPlayer
+{
+    PlayerEnum PlayerId = 1;
+    repeated Agent Agents = 2;
+    int32 Power = 3;
+    int32 Coins = 4;
+    int32 Prestige = 5;
+    repeated Card HandAndDraw = 6;
+    repeated Card Played = 7;
+    repeated Card CooldownPile = 8;
+}
+
+message CompletedAction {
+    PlayerEnum PlayerId = 1;
+    CompletedActionType Type = 2;
+    Card SourceCard = 3;
+    Card TargetCard = 4;
+    PatronId SourcePatron = 5;
+    int32 Combo = 6;
+    int32 Amount = 7;
+}
+
+message ChoiceContext
+{
+    optional PatronId PatronSource = 1;
+    optional Card CardSource = 2;
+    optional ChoiceType ChoiceType = 3;
+    int32 Combo = 4;
+}
+
+message Choice
+{
+    int32 MaxChoices = 1;
+    int32 MinChoices = 2;
+    ChoiceContext Context = 3;
+    ChoiceFollowUp ChoiceFollowUp = 4;
+    ChoiceDataType Type = 5;
+    repeated Card PossibleCards = 6;
+    repeated Effect PossibleEffects = 7;
+}
+
+message Move {
+    oneof moveType {
+        BasicMove Basic = 1;
+        SimpleCardMove CardMove = 2;
+        SimplePatronMove PatronMove = 3;
+        MakeChoiceMoveUniqueCard CardChoiceMove = 4;
+        MakeChoiceMoveUniqueEffect EffectChoiceMove = 5;
+    }
+}
+
+message BasicMove {
+    MoveEnum command = 1;
+}
+
+message SimpleCardMove {
+    MoveEnum command = 1;
+    Card card = 2;
+}
+
+message SimplePatronMove {
+    MoveEnum command = 1;
+    PatronId patronId = 2;
+}
+
+message MakeChoiceMoveUniqueCard {
+    MoveEnum command = 1;
+    repeated Card cards = 2;
+}
+
+message MakeChoiceMoveUniqueEffect {
+    MoveEnum command = 1;
+    repeated Effect effects = 2;
+}

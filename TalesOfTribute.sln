@@ -3,17 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalesOfTribute", "Engine\TalesOfTribute.csproj", "{EB3F347F-352F-46A2-AE78-F18F6E26C4E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalesOfTribute", "Engine\TalesOfTribute.csproj", "{EB3F347F-352F-46A2-AE78-F18F6E26C4E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{510B930E-B2E4-4BD4-B9B1-63A5D79B3FB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bots", "Bots\Bots.csproj", "{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bots", "Bots\Bots.csproj", "{4E023242-6A9D-4EB3-96E5-FAAD88ED98ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotsTests", "BotsTests\BotsTests.csproj", "{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotsTests", "BotsTests\BotsTests.csproj", "{5ECFE73A-E69C-47BE-96B0-9C622C7A4DF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleTests", "ModuleTests\ModuleTests.csproj", "{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleTests", "ModuleTests\ModuleTests.csproj", "{F774B81D-1631-4EC9-B3CE-2D82C92DFB3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameRunner", "GameRunner\GameRunner.csproj", "{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameRunner", "GameRunner\GameRunner.csproj", "{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gRPC", "gRPC\gRPC.csproj", "{E0379F2C-4A39-4DE7-9808-CDD21F8BB2DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gRPCTests", "gRPCTests\gRPCTests.csproj", "{4958640B-6B31-4FB5-843D-3C223861913B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C321A7-CAFC-4AD0-B513-DBD565E0BDE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0379F2C-4A39-4DE7-9808-CDD21F8BB2DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0379F2C-4A39-4DE7-9808-CDD21F8BB2DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0379F2C-4A39-4DE7-9808-CDD21F8BB2DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0379F2C-4A39-4DE7-9808-CDD21F8BB2DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4958640B-6B31-4FB5-843D-3C223861913B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4958640B-6B31-4FB5-843D-3C223861913B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4958640B-6B31-4FB5-843D-3C223861913B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4958640B-6B31-4FB5-843D-3C223861913B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package ScriptsOfTributeGRPC;
+
+import "enums.proto";
+import "basics.proto";
+
+message Empty {}
+
+message SelectPatronRequest {
+    repeated PatronId availablePatrons = 1;
+    int32 round = 2;
+}
+
+message PlayRequest {
+    GameState gameState = 1;
+    repeated Move possibleMoves = 2;
+    int64 remainingTimeMs = 3;
+}
+
+message GameEndRequest {
+    EndGameState state = 1;
+    GameState finalBoardState = 2;
+}
+
+message ApplyMoveRequest {
+    Move move = 1;
+    uint64 seed = 2;
+}
+
+message PatronIdMessage {
+	PatronId patronId = 1;
+}
+
+message GameState {
+	PatronStates patronStates = 1;
+	repeated PatronId patrons = 2;
+	repeated Card tavernAvailableCards = 3;
+	BoardState boardState = 4;
+	ComboStates comboStates = 5;
+	repeated Effect upcomingEffects = 6;
+	repeated Effect startOfNextTurnEffects = 7;
+	EndGameState gameEndState = 8;
+
+	Player currentPlayer = 9;
+	EnemyPlayer enemyPlayer = 10;
+
+	repeated CompletedAction completedActions = 11;
+	repeated Card tavernCards = 12;
+	Choice pendingChoice = 13;
+}
+
+message SeededGameState {
+	PatronStates patronStates = 1;
+	repeated PatronId patrons = 2;
+	repeated Card tavernAvailableCards = 3;
+	BoardState boardState = 4;
+	ComboStates comboStates = 5;
+	repeated Effect upcomingEffects = 6;
+	repeated Effect startOfNextTurnEffects = 7;
+	EndGameState gameEndState = 8;
+
+	Player currentPlayer = 9;
+	Player enemyPlayer = 10;
+
+	repeated CompletedAction completedActions = 11;
+	repeated Card tavernCards = 12;
+	Choice pendingChoice = 13;
+	uint64 InitialSeed = 14;
+    uint64 CurrentSeed = 15;
+}
+
+service AIService {
+    rpc PregamePrepare(Empty) returns (Empty);
+
+    rpc SelectPatron(SelectPatronRequest) returns (PatronIdMessage);
+
+    rpc Play(PlayRequest) returns (Move);
+
+    rpc GameEnd(GameEndRequest) returns (Empty);
+}
+
+service EngineService {
+    rpc ApplyMove(ApplyMoveRequest) returns (SeededGameState);
+}

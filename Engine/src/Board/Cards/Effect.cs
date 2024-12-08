@@ -98,6 +98,9 @@ public class EffectOr : ComplexEffect
         );
     }
 
+    public Effect GetLeft() { return _left; }
+    public Effect GetRight() { return _right; }
+
     public override string ToString()
     {
         return $"{this._left} OR {this._right}";
@@ -128,6 +131,9 @@ public class EffectComposite : ComplexEffect
             parentCard
         );
     }
+
+    public Effect GetLeft() { return _left; }
+    public Effect GetRight() { return _right; }
 
     public override string ToString()
     {
