@@ -19,15 +19,16 @@ public class Mapper
             Type = (CardType)card.Type,
             HP = card.HP,
             Hash = card.Hash,
-            Family = (CardId)card.Family,
+            Family = card.Family != null ? (CardId)card.Family : CardId.WritOfCoin,
             Taunt = card.Taunt,
             Copies = card.Copies,
         };
-        grpcCard.Effects.AddRange(card.Effects.Select(eff => MapEffect(eff, grpcCard)).ToList());
+        var effs = card.Effects.Select(eff => MapEffect(eff, card.UniqueId.Value)).ToList();
+        grpcCard.Effects.AddRange(effs);
         return grpcCard;
     }
 
-    private static ComplexEffect MapEffect(ScriptsOfTribute.Board.Cards.UniqueComplexEffect? effect, Card parentCard)
+    private static ComplexEffect MapEffect(ScriptsOfTribute.Board.Cards.UniqueComplexEffect? effect, int parentCardID)
     {
         if (effect == null)
         {
@@ -39,38 +40,38 @@ public class Mapper
         var complexEffect = new ComplexEffect();
         if (effect is ScriptsOfTribute.Board.Cards.Effect baseEffect)
         {
-            complexEffect.SingleEffect = MapSingleEffect(baseEffect, parentCard);
+            complexEffect.SingleEffect = MapSingleEffect(baseEffect, parentCardID);
         }
         else if (effect is ScriptsOfTribute.Board.Cards.EffectOr orEffect)
         {
             complexEffect.AlternativeEffect = new EffectOr
             {
-                Left = MapSingleEffect(orEffect.GetLeft(), parentCard),
-                Right = MapSingleEffect(orEffect.GetRight(), parentCard),
+                Left = MapSingleEffect(orEffect.GetLeft(), parentCardID),
+                Right = MapSingleEffect(orEffect.GetRight(), parentCardID),
             };
-            complexEffect.AlternativeEffect.ParentCard = parentCard;
+            complexEffect.AlternativeEffect.ParentCardID = parentCardID;
         }
         else if (effect is ScriptsOfTribute.Board.Cards.EffectComposite andEffect)
         {
             complexEffect.CompositeEffect = new EffectAnd
             {
-                Left = MapSingleEffect(andEffect.GetLeft(), parentCard),
-                Right = MapSingleEffect(andEffect.GetRight(), parentCard),
+                Left = MapSingleEffect(andEffect.GetLeft(), parentCardID),
+                Right = MapSingleEffect(andEffect.GetRight(), parentCardID),
             };
-            complexEffect.AlternativeEffect.ParentCard = parentCard;
+            complexEffect.AlternativeEffect.ParentCardID = parentCardID;
         }
 
         return complexEffect;
     }
 
-    private static Effect MapSingleEffect(ScriptsOfTribute.Board.Cards.Effect baseEffect, Card parentCard)
+    private static Effect MapSingleEffect(ScriptsOfTribute.Board.Cards.Effect baseEffect, int parentCardID)
     {
         return new Effect
         {
             Type = (EffectType)baseEffect.Type,
             Amount = baseEffect.Amount,
             Combo = baseEffect.Combo,
-            ParentCard = parentCard
+            ParentCardID = parentCardID
         };
     }
     

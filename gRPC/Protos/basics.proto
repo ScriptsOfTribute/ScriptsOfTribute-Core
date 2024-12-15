@@ -12,19 +12,19 @@ message Effect {
     EffectType Type = 1;
     int32 Amount = 2;
     int32 Combo = 3;
-    Card ParentCard = 4;
+    int32 ParentCardID = 4;
 }
 
 message EffectOr {
     Effect Left = 1;
     Effect Right = 2;
-    Card ParentCard = 3;
+    int32 ParentCardID = 3;
 }
 
 message EffectAnd {
     Effect Left = 1;
     Effect Right = 2;
-    Card ParentCard = 3;
+    int32 ParentCardID = 3;
 }
 
 message ComplexEffect
