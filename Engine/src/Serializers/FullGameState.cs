@@ -23,15 +23,15 @@ namespace ScriptsOfTribute
         public readonly BoardState BoardState;
         public readonly SerializedChoice? PendingChoice;
         public readonly ComboStates ComboStates;
-        public readonly List<UniqueBaseEffect> UpcomingEffects;
-        public readonly List<UniqueBaseEffect> StartOfNextTurnEffects;
+        public readonly List<UniqueSimpleEffect> UpcomingEffects;
+        public readonly List<UniqueSimpleEffect> StartOfNextTurnEffects;
         public readonly List<CompletedAction> CompletedActions;
         public readonly EndGameState? GameEndState;
         public readonly ulong InitialSeed;
         public readonly ulong CurrentSeed;
         public readonly bool Cheats = false;
 
-        public FullGameState(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
+        public FullGameState(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueSimpleEffect> upcomingEffects, List<UniqueSimpleEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
         {
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
@@ -59,8 +59,8 @@ namespace ScriptsOfTribute
             TavernCards = tavernCards.ToList();
             CurrentSeed = currentSeed;
             ComboStates = new ComboStates(new Dictionary<PatronId, ComboState>());
-            UpcomingEffects = new List<UniqueBaseEffect>();
-            StartOfNextTurnEffects = new List<UniqueBaseEffect>();
+            UpcomingEffects = new List<UniqueSimpleEffect>();
+            StartOfNextTurnEffects = new List<UniqueSimpleEffect>();
             CompletedActions = new List<CompletedAction>();
             InitialSeed = currentSeed;
             CurrentSeed = currentSeed;
@@ -69,7 +69,7 @@ namespace ScriptsOfTribute
 
         public FullGameState(
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
-            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueBaseEffect> upcomingEffects, List<UniqueBaseEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
+            BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueSimpleEffect> upcomingEffects, List<UniqueSimpleEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);

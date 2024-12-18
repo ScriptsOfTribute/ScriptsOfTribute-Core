@@ -791,7 +791,7 @@ public class DecisionTreeBot : AI
             case EffectType.TOSS:
                 /*
                 foreach(ComboState comboState in gameState.ComboStates.All.Values){
-                    foreach(UniqueBaseEffect e in comboState.All){
+                    foreach(UniqueSimpleEffect e in comboState.All){
                         Console.WriteLine(e.ToString());
                     }
                     //Console.WriteLine('')
@@ -922,7 +922,7 @@ public class DecisionTreeBot : AI
         maxGoldInTurn = Math.Max(gameState.CurrentPlayer.Coins, maxGoldInTurn);
         /*
         foreach(ComboState comboState in gameState.ComboStates.All.Values){
-            foreach(UniqueBaseEffect e in comboState.All){
+            foreach(UniqueSimpleEffect e in comboState.All){
                 Console.WriteLine(e.ToString());
             }
             //Console.WriteLine('')

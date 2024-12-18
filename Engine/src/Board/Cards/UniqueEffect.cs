@@ -19,17 +19,19 @@ public enum EffectType
     HEAL,
 }
 
-public interface UniqueBaseEffect
+public interface IUniqueBaseEffect { }
+
+public interface UniqueSimpleEffect : IUniqueBaseEffect
 {
     public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern);
 }
 
-public interface UniqueComplexEffect
+public interface UniqueComplexEffect: IUniqueBaseEffect
 {
-    public List<UniqueBaseEffect> Decompose();
+    public List<UniqueSimpleEffect> Decompose();
 }
 
-public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
+public class UniqueEffect : Effect, UniqueSimpleEffect, UniqueComplexEffect
 {
     public readonly UniqueCard ParentCard;
 
@@ -220,9 +222,9 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
         };
     }
 
-    public List<UniqueBaseEffect> Decompose()
+    public List<UniqueSimpleEffect> Decompose()
     {
-        return new List<UniqueBaseEffect> { this };
+        return new List<UniqueSimpleEffect> { this };
     }
 
     public static EffectType MapEffectType(string effect)
@@ -249,7 +251,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
     }
 }
 
-public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueBaseEffect
+public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueSimpleEffect
 {
     private readonly UniqueEffect _left;
     private readonly UniqueEffect _right;
@@ -262,9 +264,9 @@ public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueBaseEffect
         ParentCard = card;
     }
 
-    public List<UniqueBaseEffect> Decompose()
+    public List<UniqueSimpleEffect> Decompose()
     {
-        return new List<UniqueBaseEffect> { this };
+        return new List<UniqueSimpleEffect> { this };
     }
 
     public UniqueComplexEffect MakeUniqueCopy(UniqueCard card)
@@ -277,6 +279,8 @@ public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueBaseEffect
         );
     }
 
+    public UniqueEffect GetLeft() { return _left; }
+    public UniqueEffect GetRight() { return _right; }
     public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern)
     {
         var context = new ChoiceContext(ParentCard, ChoiceType.EFFECT_CHOICE, Combo);
@@ -307,9 +311,9 @@ public class UniqueEffectComposite : EffectComposite, UniqueComplexEffect
         ParentCard = parentCard;
     }
 
-    public List<UniqueBaseEffect> Decompose()
+    public List<UniqueSimpleEffect> Decompose()
     {
-        return new List<UniqueBaseEffect> { _left, _right };
+        return new List<UniqueSimpleEffect> { _left, _right };
     }
 
     public UniqueComplexEffect MakeUniqueCopy(UniqueCard parentCard)
@@ -320,6 +324,9 @@ public class UniqueEffectComposite : EffectComposite, UniqueComplexEffect
             parentCard
         );
     }
+
+    public UniqueEffect GetLeft() { return _left; }
+    public UniqueEffect GetRight() { return _right; }
 
     public override string ToString()
     {

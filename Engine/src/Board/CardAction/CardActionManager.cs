@@ -17,12 +17,12 @@ public class CardActionManager
     private ITavern _tavern;
     private ExecutionChain _pendingExecutionChain;
     public ComboContext ComboContext { get; private set; } = new();
-    public List<UniqueBaseEffect> StartOfNextTurnEffects = new();
+    public List<UniqueSimpleEffect> StartOfNextTurnEffects = new();
     private ComplexEffectExecutor _complexEffectExecutor;
 
     private Choice? _pendingPatronChoice;
     public Choice? PendingChoice => State == BoardState.PATRON_CHOICE_PENDING ? _pendingPatronChoice : _pendingExecutionChain.PendingChoice;
-    public IReadOnlyCollection<UniqueBaseEffect> PendingEffects => _pendingExecutionChain.PendingEffects;
+    public IReadOnlyCollection<UniqueSimpleEffect> PendingEffects => _pendingExecutionChain.PendingEffects;
     public BoardState State { get; private set; } = BoardState.NORMAL;
     public List<CompletedAction> CompletedActions = new();
 
@@ -223,7 +223,7 @@ public class CardActionManager
         }
 
         var chain = ExecutionChain.FromEffects(fullGameState.UpcomingEffects, choiceForChain);
-        var startOfNextTurnEffects = new List<UniqueBaseEffect>(fullGameState.StartOfNextTurnEffects.Count);
+        var startOfNextTurnEffects = new List<UniqueSimpleEffect>(fullGameState.StartOfNextTurnEffects.Count);
         startOfNextTurnEffects.AddRange(fullGameState.StartOfNextTurnEffects);
 
         var completedActions = new List<CompletedAction>(fullGameState.CompletedActions.Count + 2);

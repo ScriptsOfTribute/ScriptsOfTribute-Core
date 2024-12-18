@@ -33,41 +33,13 @@ message PatronIdMessage {
 }
 
 message GameState {
-	PatronStates patronStates = 1;
-	repeated PatronId patrons = 2;
-	repeated Card tavernAvailableCards = 3;
-	BoardState boardState = 4;
-	ComboStates comboStates = 5;
-	repeated Effect upcomingEffects = 6;
-	repeated Effect startOfNextTurnEffects = 7;
-	EndGameState gameEndState = 8;
-
-	Player currentPlayer = 9;
-	EnemyPlayer enemyPlayer = 10;
-
-	repeated CompletedAction completedActions = 11;
-	repeated Card tavernCards = 12;
-	Choice pendingChoice = 13;
+	string game_state_json = 1;
 }
 
 message SeededGameState {
-	PatronStates patronStates = 1;
-	repeated PatronId patrons = 2;
-	repeated Card tavernAvailableCards = 3;
-	BoardState boardState = 4;
-	ComboStates comboStates = 5;
-	repeated Effect upcomingEffects = 6;
-	repeated Effect startOfNextTurnEffects = 7;
-	EndGameState gameEndState = 8;
-
-	Player currentPlayer = 9;
-	Player enemyPlayer = 10;
-
-	repeated CompletedAction completedActions = 11;
-	repeated Card tavernCards = 12;
-	Choice pendingChoice = 13;
-	uint64 InitialSeed = 14;
-    uint64 CurrentSeed = 15;
+	string game_state_json = 1;
+	uint64 InitialSeed = 2;
+    uint64 CurrentSeed = 3;
 }
 
 service AIService {

@@ -6,8 +6,8 @@ namespace ScriptsOfTribute;
 
 public class ExecutionChain
 {
-    private List<UniqueBaseEffect> _pendingEffects;
-    public IReadOnlyCollection<UniqueBaseEffect> PendingEffects => _pendingEffects.AsReadOnly();
+    private List<UniqueSimpleEffect> _pendingEffects;
+    public IReadOnlyCollection<UniqueSimpleEffect> PendingEffects => _pendingEffects.AsReadOnly();
     public bool Empty => _pendingEffects.Count == 0;
     public Choice? PendingChoice { get; private set; }
     public bool Completed => Empty && PendingChoice is null;
@@ -19,10 +19,10 @@ public class ExecutionChain
 
     public ExecutionChain(int capacity)
     {
-        _pendingEffects = new List<UniqueBaseEffect>(capacity);
+        _pendingEffects = new List<UniqueSimpleEffect>(capacity);
     }
 
-    public void Add(UniqueBaseEffect effect)
+    public void Add(UniqueSimpleEffect effect)
     {
         _pendingEffects.Add(effect);
     }
@@ -92,7 +92,7 @@ public class ExecutionChain
         return actions;
     }
 
-    public static ExecutionChain FromEffects(List<UniqueBaseEffect> effects, Choice? pendingChoice)
+    public static ExecutionChain FromEffects(List<UniqueSimpleEffect> effects, Choice? pendingChoice)
     {
         var chain = new ExecutionChain(effects.Count);
         effects.ForEach(e => chain.Add(e));

@@ -2,6 +2,7 @@
 using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Board.CardAction;
 using ScriptsOfTribute.Board.Cards;
+using System.IO;
 
 namespace ScriptsOfTribute.Serializers;
 
@@ -13,8 +14,8 @@ public class GameState
     public BoardState BoardState => _board.BoardState;
     //Isn't it little cheating to share this? xd I think good bot should memorize and find combos on its own
     public ComboStates ComboStates => _board.ComboStates; 
-    public List<UniqueBaseEffect> UpcomingEffects => _board.UpcomingEffects;
-    public List<UniqueBaseEffect> StartOfNextTurnEffects => _board.StartOfNextTurnEffects;
+    public List<UniqueSimpleEffect> UpcomingEffects => _board.UpcomingEffects;
+    public List<UniqueSimpleEffect> StartOfNextTurnEffects => _board.StartOfNextTurnEffects;
     public EndGameState? GameEndState => _board.GameEndState;
 
     // Bot shouldn't have access to hand etc of enemy player.
