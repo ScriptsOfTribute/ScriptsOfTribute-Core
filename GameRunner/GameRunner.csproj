@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Engine\TalesOfTribute.csproj" />
+      <ProjectReference Include="..\gRPC\gRPC.csproj" />
     </ItemGroup>
 
     <ItemGroup>

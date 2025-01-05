@@ -4,6 +4,7 @@ using System;
 using ScriptsOfTribute;
 using ScriptsOfTribute.Board.Cards;
 using ScriptsOfTribute.Serializers;
+using System.Runtime.InteropServices;
 
 
 namespace ScriptsOfTributeGRPC;
@@ -12,13 +13,24 @@ public class AIServiceAdapter : IDisposable
 {
     private readonly AIService.AIServiceClient _client;
     private readonly GrpcChannel _channel;
-    public AIServiceAdapter(string address = "localhost:5000")
+    private string _host;
+    private int _port;
+    public AIServiceAdapter(string host="localhost", int port=50000)
     {
+        _host = host;
+        _port = port;
+        string address = $"http://{host}:{port}";
         _channel = GrpcChannel.ForAddress(address);
         _client = new AIService.AIServiceClient(_channel);
     }
 
-    public void PrepareGame()
+    public string RegisterBot()
+    {
+        var response = _client.RegisterBot(new Empty() { });
+        return response.Name;
+    }
+
+    public void PregamePrepare()
     {
         _client.PregamePrepare(new Empty() { });
     }
@@ -63,6 +75,11 @@ public class AIServiceAdapter : IDisposable
             State = new EndGameState { Winner = state.Winner.ToString(), Reason = state.Reason.ToString(), AdditionalContext = state.AdditionalContext},
             FinalBoardState = new GameState { GameStateJson = gameState.SerializeGameState().ToString() },
         };
+    }
+
+    public void CloseConnection()
+    {
+        _client.CloseServer(new Empty() { });
     }
 
     public void Dispose()

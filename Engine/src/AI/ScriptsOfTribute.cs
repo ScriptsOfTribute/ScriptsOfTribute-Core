@@ -101,7 +101,8 @@ public class ScriptsOfTribute
         }
         patronsSelected.Add((PatronId)patron!);
         patrons.Remove((PatronId)patron);
-
+        var patronsStr = string.Join(", ", patronsSelected.Select(p => p.ToString()).ToArray());
+        Console.WriteLine($"Chosen patrons: {patronsStr}");
         return (null, patronsSelected.ToArray());
     }
 

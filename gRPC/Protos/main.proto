@@ -42,7 +42,14 @@ message SeededGameState {
     uint64 CurrentSeed = 3;
 }
 
+message RegistrationStatus {
+    string name = 1;
+    string message = 2;
+}
+
 service AIService {
+    rpc RegisterBot(Empty) returns (RegistrationStatus);
+
     rpc PregamePrepare(Empty) returns (Empty);
 
     rpc SelectPatron(SelectPatronRequest) returns (PatronIdMessage);
@@ -50,6 +57,8 @@ service AIService {
     rpc Play(PlayRequest) returns (Move);
 
     rpc GameEnd(GameEndRequest) returns (Empty);
+
+    rpc CloseServer(Empty) returns (Empty);
 }
 
 service EngineService {
