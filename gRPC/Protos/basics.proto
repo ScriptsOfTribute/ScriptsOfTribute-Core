@@ -25,7 +25,7 @@ message SimpleCardMove {
 
 message SimplePatronMove {
     MoveEnum command = 1;
-    PatronId patronId = 2;
+    PatronIdProto patronId = 2;
 }
 
 message MakeChoiceMoveUniqueCard {
@@ -42,4 +42,70 @@ message EndGameState {
     string winner = 1;
     string reason = 2;
     string AdditionalContext = 3;
+}
+
+message PatronStatesProto {
+  map<string, string> patrons = 1; // Key: PatronId, Value: PlayerEnum
+}
+
+message UniqueCardProto {
+  string name = 1;
+  PatronIdProto deck = 2;
+  int32 cost = 3;
+  CardTypeProto type = 4;
+  int32 hp = 5;
+  bool taunt = 6;
+  int32 unique_id = 7;
+  repeated string effects = 8;
+}
+
+message PlayerProto {
+  PlayerEnumProto player_id = 1;
+  repeated UniqueCardProto hand = 2;
+  repeated UniqueCardProto cooldown_pile = 3;
+  repeated UniqueCardProto played = 4;
+  repeated UniqueCardProto known_upcoming_draws = 5;
+  repeated SerializedAgentProto agents = 6;
+  int32 power = 7;
+  uint32 patron_calls = 8;
+  int32 coins = 9;
+  int32 prestige = 10;
+  repeated UniqueCardProto draw_pile = 11;
+}
+
+message EnemyPlayerProto {
+  PlayerEnumProto player_id = 1;
+  repeated SerializedAgentProto agents = 2;
+  int32 power = 3;
+  int32 coins = 4;
+  int32 prestige = 5;
+  repeated UniqueCardProto hand_and_draw = 6;
+  repeated UniqueCardProto played = 7;
+  repeated UniqueCardProto cooldown_pile = 8;
+}
+
+message SerializedAgentProto {
+  int32 currentHP = 1;
+  UniqueCardProto representing_card = 2;
+  bool activated = 3;
+}
+
+message ChoiceProto {
+    int32 max_choices = 1;
+    int32 min_choices = 2;
+    string context = 3;
+    string choice_follow_up = 4;
+    ChoiceDataTypeProto type = 5;
+    oneof possible_options {
+        CardOptions card_options = 6;
+        EffectOptions effect_options = 7;
+    }
+}
+
+message CardOptions {
+  repeated UniqueCardProto possible_cards = 1;
+}
+
+message EffectOptions {
+  repeated string possible_effects = 1;
 }

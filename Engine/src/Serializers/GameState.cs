@@ -8,6 +8,7 @@ namespace ScriptsOfTribute.Serializers;
 
 public class GameState
 {
+    public string StateId => _board.StateId;
     public PatronStates PatronStates => _board.PatronStates;
     public List<PatronId> Patrons => PatronStates.All.Select(p => p.Key).ToList();
     public List<UniqueCard> TavernAvailableCards => _board.TavernAvailableCards;
@@ -64,6 +65,8 @@ public class GameState
         return (new SeededGameState(newBoard, seed), newMoves);
     }
 
+    // TODO: Add rollout simulation: from this GameState start simulating random moves
+
     /// <summary>
     /// Serialize GameState object to string that is converted JSON file, suited
     /// for sharing GameState between processes made in different languages.
@@ -87,4 +90,5 @@ public class GameState
 
         return jsonGameState;
     }
+
 }

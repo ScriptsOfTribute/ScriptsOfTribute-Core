@@ -13,11 +13,13 @@ public class gRPCBot : AI
 {
     private AIServiceAdapter _AIService;
     private EngineServiceAdapter _engineService;
+    private GrpcServer _grpcServer;
 
-    public gRPCBot(string host="localhost", int port=50000)
+    public gRPCBot(string host="localhost", int clientPort=50000, int serverPort = 49000)
     {
-        _AIService = new AIServiceAdapter(host, port);
+        _AIService = new AIServiceAdapter(host, clientPort);
         _engineService = new EngineServiceAdapter();
+        _grpcServer = new GrpcServer(host, serverPort, _engineService);
     }
 
     public string RegisterBot()
@@ -30,7 +32,7 @@ public class gRPCBot : AI
         _AIService.PregamePrepare();
     }
 
-    public override ScriptsOfTribute.PatronId SelectPatron(List<ScriptsOfTribute.PatronId> availablePatrons, int round)
+    public override PatronId SelectPatron(List<PatronId> availablePatrons, int round)
     {
         var patronId = _AIService.SelectPatron(availablePatrons, round);
         return patronId;
@@ -42,6 +44,7 @@ public class gRPCBot : AI
         TimeSpan remainingTime
     )
     {
+        _engineService.RegisterState(gameState);
         var move = _AIService.Play(gameState, possibleMoves, remainingTime);
         return move;
     }
@@ -57,5 +60,6 @@ public class gRPCBot : AI
     public void CloseConnection()
     {
         _AIService.CloseConnection();
+        _grpcServer?.Dispose();
     }
 }

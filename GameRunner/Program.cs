@@ -69,9 +69,10 @@ BotInfo? FindBot(string name, out string? errorMessage)
     {
         return new gRPCBotInfo
         {
+            BotName = name[5..],
             BotType = typeof(gRPCBot),
-            HostName = "localhost", // Domyślne wartości
-            Port = 5000
+            HostName = "localhost",
+            Port = 50000
         };
     }
 
@@ -81,8 +82,10 @@ BotInfo? FindBot(string name, out string? errorMessage)
 BotInfo? FindInternalBot(string name, out string? errorMessage)
 {
     errorMessage = null;
-    var botInfo = new LocalBotInfo();
-
+    var botInfo = new LocalBotInfo()
+    {
+        BotName = name,
+    };
     bool findByFullName = name.Contains('.');
     if (cachedBot is not null && (findByFullName ? cachedBot.BotFullName : cachedBot.BotName) == name)
     {
@@ -210,12 +213,14 @@ mainCommand.SetHandler((InvocationContext context) =>
     {
         grpcBot1.HostName = baseHost;
         grpcBot1.Port = basePort;
+        basePort++;
     }
 
     if (bot2Info is gRPCBotInfo grpcBot2)
     {
         grpcBot2.HostName = baseHost;
-        grpcBot2.Port = basePort + 1;
+        grpcBot2.Port = basePort;
+        basePort++;
     }
 
     if (!ValidateInputs(threads, timeout)) return;
@@ -229,8 +234,7 @@ mainCommand.SetHandler((InvocationContext context) =>
 
 void RunSingleThreaded(int runs, BotInfo bot1Info, BotInfo bot2Info, LogsEnabled enableLogs, LogFileNameProvider? logFileNameProvider, ulong actualSeed, int timeout)
 {
-    Console.WriteLine($"Running {runs} games - {bot1Info.BotType.Name} vs {bot2Info.BotType.Name}");
-
+    Console.WriteLine($"Running {runs} games - {bot1Info.BotName} vs {bot2Info.BotName}");
     var counter = new GameEndStatsCounter();
     var timeMeasurements = new long[runs];
     var granularWatch = new Stopwatch();
@@ -257,7 +261,7 @@ void RunSingleThreaded(int runs, BotInfo bot1Info, BotInfo bot2Info, LogsEnabled
     {
         grpcBot1.CloseConnection();
     }
-    if (bot2 is gRPCBot grpcBot2)
+    else if (bot2 is gRPCBot grpcBot2)
     {
         grpcBot2.CloseConnection();
     }

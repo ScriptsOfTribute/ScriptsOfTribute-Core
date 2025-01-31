@@ -45,7 +45,6 @@ public class ScriptsOfTributeGame
     {
         var board = _api.GetFullGameState();
         var state = new GameState(board);
-        var _ = state.SerializeGameState();
         var moves = _api.GetListOfPossibleMoves();
 
         var task = MoveTask(state, moves);

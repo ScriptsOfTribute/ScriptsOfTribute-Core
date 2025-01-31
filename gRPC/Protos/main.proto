@@ -8,43 +8,73 @@ import "basics.proto";
 message Empty {}
 
 message SelectPatronRequest {
-    repeated PatronId availablePatrons = 1;
+    repeated PatronIdProto availablePatrons = 1;
     int32 round = 2;
 }
 
 message PlayRequest {
-    GameState gameState = 1;
+    GameStateProto gameState = 1;
     repeated Move possibleMoves = 2;
     int64 remainingTimeMs = 3;
 }
 
 message GameEndRequest {
     EndGameState state = 1;
-    GameState finalBoardState = 2;
+    GameStateProto finalBoardState = 2;
 }
 
 message ApplyMoveRequest {
-    Move move = 1;
-    uint64 seed = 2;
+    string state_id = 1;
+    Move move = 2;
+    uint64 seed = 3;
 }
 
 message PatronIdMessage {
-	PatronId patronId = 1;
+	PatronIdProto patronId = 1;
 }
 
-message GameState {
-	string game_state_json = 1;
+message StateId {
+    string id = 1;
 }
 
-message SeededGameState {
-	string game_state_json = 1;
-	uint64 InitialSeed = 2;
-    uint64 CurrentSeed = 3;
+message GameStateProto {
+    string state_id = 1;
+    PatronStatesProto patron_states = 2;
+    repeated UniqueCardProto tavern_available_cards = 3;
+    BoardStateProto board_state = 4;
+    repeated string upcoming_effects = 5;
+    repeated string start_of_next_turn_effects = 6;
+    PlayerProto current_player = 7;
+    EnemyPlayerProto enemy_player = 8;
+    repeated string completed_actions = 9;
+    repeated UniqueCardProto tavern_cards = 10;
+    ChoiceProto pending_choice = 11;
+}
+
+message SeededGameStateProto {
+    string state_id = 1;
+    PatronStatesProto patron_states = 2;
+    repeated UniqueCardProto tavern_available_cards = 3;
+    BoardStateProto board_state = 4;
+    repeated string upcoming_effects = 5;
+    repeated string start_of_next_turn_effects = 6;
+    PlayerProto current_player = 7;
+    PlayerProto enemy_player = 8;
+    repeated string completed_actions = 9;
+    repeated UniqueCardProto tavern_cards = 10;
+    ChoiceProto pending_choice = 11;
+	uint64 InitialSeed = 12;
+    uint64 CurrentSeed = 13;
 }
 
 message RegistrationStatus {
     string name = 1;
     string message = 2;
+}
+
+message SimulationResult {
+    SeededGameStateProto gameState = 1;
+    repeated Move possibleMoves = 2;
 }
 
 service AIService {
@@ -62,5 +92,7 @@ service AIService {
 }
 
 service EngineService {
-    rpc ApplyMove(ApplyMoveRequest) returns (SeededGameState);
+    rpc ApplyMove(ApplyMoveRequest) returns (SimulationResult);
+    rpc GetState(StateId) returns (GameStateProto);
+    rpc ReleaseState(StateId) returns (Empty);
 }

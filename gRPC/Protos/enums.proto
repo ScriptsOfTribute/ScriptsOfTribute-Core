@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package ScriptsOfTributeGRPC;
 
-enum PatronId {
+enum PatronIdProto {
 	ANSEI = 0;
 	DUKE_OF_CROWS = 1;
 	RAJHIN = 2;
@@ -23,4 +23,30 @@ enum MoveEnum
     CALL_PATRON = 4;
     MAKE_CHOICE = 5;
     END_TURN = 6;
+}
+
+enum BoardStateProto {
+	NORMAL = 0;
+	CHOICE_PENDING = 1;
+	START_OF_TURN_CHOICE_PENDING = 2;
+	PATRON_CHOICE_PENDING = 3;
+}
+
+enum PlayerEnumProto {
+	PLAYER1 = 0;
+	PLAYER2 = 1;
+	NO_PLAYER_SELECTED = 2;
+}
+enum CardTypeProto {
+	ACTION = 0;
+	AGENT = 1;
+	CONTRACT_ACTION = 2;
+	CONTRACT_AGENT = 3;
+	STARTER = 4;
+	CURSE = 5;
+}
+
+enum ChoiceDataTypeProto {
+  CARD = 0;
+  EFFECT = 1;
 }

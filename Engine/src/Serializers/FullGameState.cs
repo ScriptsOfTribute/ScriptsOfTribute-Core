@@ -13,7 +13,7 @@ namespace ScriptsOfTribute
          * for the user/bot. Contains all info that player needs to calculate 
          * and make next move
          */
-
+        public readonly string StateId;
         public readonly SerializedPlayer CurrentPlayer;
         public readonly SerializedPlayer EnemyPlayer;
         public readonly PatronStates PatronStates;
@@ -33,6 +33,7 @@ namespace ScriptsOfTribute
 
         public FullGameState(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, BoardState boardState, SerializedChoice? pendingChoice, ComboStates comboStates, List<UniqueSimpleEffect> upcomingEffects, List<UniqueSimpleEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, EndGameState? gameEndState, ulong initialSeed, ulong currentSeed, bool cheats)
         {
+            StateId = Guid.NewGuid().ToString();
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
             PatronStates = patronStates;
@@ -52,6 +53,7 @@ namespace ScriptsOfTribute
 
         public FullGameState(SerializedPlayer currentPlayer, SerializedPlayer enemyPlayer, PatronStates patronStates, List<UniqueCard> tavernAvailableCards, List<UniqueCard> tavernCards, ulong currentSeed, bool cheats = false)
         {
+            StateId = Guid.NewGuid().ToString();
             CurrentPlayer = currentPlayer;
             EnemyPlayer = enemyPlayer;
             PatronStates = patronStates;
@@ -71,6 +73,7 @@ namespace ScriptsOfTribute
             SeededRandom rng, EndGameState? endGameState, IPlayer currentPlayer, IPlayer enemyPlayer, ITavern tavern, IEnumerable<Patron> patrons,
             BoardState state, Choice? maybeChoice, ComboContext comboContext, IEnumerable<UniqueSimpleEffect> upcomingEffects, List<UniqueSimpleEffect> startOfNextTurnEffects, List<CompletedAction> completedActions, bool cheats)
         {
+            StateId = Guid.NewGuid().ToString();
             CurrentPlayer = new SerializedPlayer(currentPlayer);
             EnemyPlayer = new SerializedPlayer(enemyPlayer);
             TavernAvailableCards = tavern.AvailableCards;
