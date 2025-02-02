@@ -16,8 +16,8 @@ public class SeededGameState
     public BoardState BoardState => _board.BoardState;
     public SerializedChoice? PendingChoice => _board.PendingChoice;
     public ComboStates ComboStates => _board.ComboStates;
-    public List<UniqueSimpleEffect> UpcomingEffects => _board.UpcomingEffects;
-    public List<UniqueSimpleEffect> StartOfNextTurnEffects => _board.StartOfNextTurnEffects;
+    public List<UniqueBaseEffect> UpcomingEffects => _board.UpcomingEffects;
+    public List<UniqueBaseEffect> StartOfNextTurnEffects => _board.StartOfNextTurnEffects;
     public List<CompletedAction> CompletedActions => _board.CompletedActions;
     public EndGameState? GameEndState => _board.GameEndState;
     public ulong InitialSeed => _board.InitialSeed;

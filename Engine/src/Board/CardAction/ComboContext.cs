@@ -6,14 +6,14 @@ namespace ScriptsOfTribute;
 public class Combo
 {
     public static int MAX_COMBO = 4;
-    public List<UniqueSimpleEffect>[] EffectQueue { get; } = new List<UniqueSimpleEffect>[MAX_COMBO];
+    public List<UniqueBaseEffect>[] EffectQueue { get; } = new List<UniqueBaseEffect>[MAX_COMBO];
     public int ComboCounter { get; private set; } = 0;
 
     public Combo()
     {
         for (var i = 0; i < MAX_COMBO; i++)
         {
-            EffectQueue[i] = new List<UniqueSimpleEffect>();
+            EffectQueue[i] = new List<UniqueBaseEffect>();
         }
     }
 
@@ -37,7 +37,7 @@ public class Combo
         IncrementCombo();
     }
 
-    public IEnumerable<UniqueSimpleEffect> GetCurrentComboEffects()
+    public IEnumerable<UniqueBaseEffect> GetCurrentComboEffects()
     {
         for (var i = 0; i < ComboCounter; i++)
         {
@@ -54,7 +54,7 @@ public class Combo
         return new ComboState(EffectQueue.ToArray(), ComboCounter);
     }
 
-    private Combo(List<UniqueSimpleEffect>[] effects, int comboCounter)
+    private Combo(List<UniqueBaseEffect>[] effects, int comboCounter)
     {
         for (var i = 0; i < MAX_COMBO; i++)
         {
@@ -78,7 +78,7 @@ public class ComboContext
     {
     }
 
-    public (List<UniqueSimpleEffect> immediateEffects, List<UniqueSimpleEffect> startOfNextTurnEffects) PlayCard(UniqueCard card)
+    public (List<UniqueBaseEffect> immediateEffects, List<UniqueBaseEffect> startOfNextTurnEffects) PlayCard(UniqueCard card)
     {
         var combo = GetCombo(card);
 

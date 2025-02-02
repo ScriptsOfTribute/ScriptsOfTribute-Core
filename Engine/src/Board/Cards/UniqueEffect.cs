@@ -19,19 +19,17 @@ public enum EffectType
     HEAL,
 }
 
-public interface IUniqueBaseEffect { }
-
-public interface UniqueSimpleEffect : IUniqueBaseEffect
+public interface UniqueBaseEffect
 {
     public (PlayResult, List<CompletedAction>) Enact(IPlayer player, IPlayer enemy, ITavern tavern);
 }
 
-public interface UniqueComplexEffect: IUniqueBaseEffect
+public interface UniqueComplexEffect
 {
-    public List<UniqueSimpleEffect> Decompose();
+    public List<UniqueBaseEffect> Decompose();
 }
 
-public class UniqueEffect : Effect, UniqueSimpleEffect, UniqueComplexEffect
+public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
 {
     public readonly UniqueCard ParentCard;
 
@@ -222,36 +220,14 @@ public class UniqueEffect : Effect, UniqueSimpleEffect, UniqueComplexEffect
         };
     }
 
-    public List<UniqueSimpleEffect> Decompose()
+    public List<UniqueBaseEffect> Decompose()
     {
-        return new List<UniqueSimpleEffect> { this };
+        return new List<UniqueBaseEffect> { this };
     }
 
-    public static EffectType MapEffectType(string effect)
-    {
-        return effect switch
-        {
-            "Coin" => EffectType.GAIN_COIN,
-            "Power" => EffectType.GAIN_POWER,
-            "Prestige" => EffectType.GAIN_PRESTIGE,
-            "OppLosePrestige" => EffectType.OPP_LOSE_PRESTIGE,
-            "Remove" => EffectType.REPLACE_TAVERN,
-            "Acquire" => EffectType.ACQUIRE_TAVERN,
-            "Destroy" => EffectType.DESTROY_CARD,
-            "Draw" => EffectType.DRAW,
-            "Discard" => EffectType.OPP_DISCARD,
-            "Return" => EffectType.RETURN_TOP,
-            "Toss" => EffectType.TOSS,
-            "KnockOut" => EffectType.KNOCKOUT,
-            "Patron" => EffectType.PATRON_CALL,
-            "Create" => EffectType.CREATE_SUMMERSET_SACKING,
-            "Heal" => EffectType.HEAL,
-            _ => throw new EngineException("Invalid effect type.")
-        };
-    }
 }
 
-public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueSimpleEffect
+public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueBaseEffect
 {
     private readonly UniqueEffect _left;
     private readonly UniqueEffect _right;
@@ -264,19 +240,9 @@ public class UniqueEffectOr : EffectOr, UniqueComplexEffect, UniqueSimpleEffect
         ParentCard = card;
     }
 
-    public List<UniqueSimpleEffect> Decompose()
+    public List<UniqueBaseEffect> Decompose()
     {
-        return new List<UniqueSimpleEffect> { this };
-    }
-
-    public UniqueComplexEffect MakeUniqueCopy(UniqueCard card)
-    {
-        return new UniqueEffectOr(
-            _left.MakeUniqueCopy(card) as UniqueEffect ?? throw new InvalidOperationException(),
-            _right.MakeUniqueCopy(card) as UniqueEffect ?? throw new InvalidOperationException(),
-            Combo,
-            card
-        );
+        return new List<UniqueBaseEffect> { this };
     }
 
     public UniqueEffect GetLeft() { return _left; }
@@ -311,18 +277,9 @@ public class UniqueEffectComposite : EffectComposite, UniqueComplexEffect
         ParentCard = parentCard;
     }
 
-    public List<UniqueSimpleEffect> Decompose()
+    public List<UniqueBaseEffect> Decompose()
     {
-        return new List<UniqueSimpleEffect> { _left, _right };
-    }
-
-    public UniqueComplexEffect MakeUniqueCopy(UniqueCard parentCard)
-    {
-        return new UniqueEffectComposite(
-            _left.MakeUniqueCopy(parentCard) as UniqueEffect ?? throw new InvalidOperationException(),
-            _right.MakeUniqueCopy(parentCard) as UniqueEffect ?? throw new InvalidOperationException(),
-            parentCard
-        );
+        return new List<UniqueBaseEffect> { _left, _right };
     }
 
     public UniqueEffect GetLeft() { return _left; }

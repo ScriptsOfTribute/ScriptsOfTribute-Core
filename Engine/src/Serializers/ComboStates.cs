@@ -5,10 +5,10 @@ namespace ScriptsOfTribute.Serializers;
 public class ComboState
 {
     // TODO: Make this readonly.
-    public List<UniqueSimpleEffect>[] All { get; } = new List<UniqueSimpleEffect>[Combo.MAX_COMBO];
+    public List<UniqueBaseEffect>[] All { get; } = new List<UniqueBaseEffect>[Combo.MAX_COMBO];
     public readonly int CurrentCombo;
 
-    public ComboState(List<UniqueSimpleEffect>[] combos, int currentCombo)
+    public ComboState(List<UniqueBaseEffect>[] combos, int currentCombo)
     {
         All = combos;
         CurrentCombo = currentCombo;

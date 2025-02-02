@@ -22,7 +22,6 @@ public class UniqueIdTests
         Assert.False(id1 != id1copy);
         Assert.True(id1 != id2);
         Assert.False(id1 == id2);
-        Assert.True(id1 == id1);
     }
 
     [Fact]
