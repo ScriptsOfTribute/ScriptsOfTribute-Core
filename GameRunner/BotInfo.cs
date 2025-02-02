@@ -1,5 +1,4 @@
 ﻿using ScriptsOfTribute.AI;
-using ScriptsOfTributeGRPC;
 
 namespace GameRunner;
 

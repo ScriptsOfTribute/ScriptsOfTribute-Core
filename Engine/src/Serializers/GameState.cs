@@ -2,7 +2,6 @@
 using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Board.CardAction;
 using ScriptsOfTribute.Board.Cards;
-using System.IO;
 
 namespace ScriptsOfTribute.Serializers;
 
@@ -90,5 +89,4 @@ public class GameState
 
         return jsonGameState;
     }
-
 }
