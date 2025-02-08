@@ -5,37 +5,34 @@ package ScriptsOfTributeGRPC;
 import "enums.proto";
 
 message Move {
+    int32 id = 1;
+    MoveEnum command = 2;
     oneof moveType {
-        BasicMove Basic = 1;
-        SimpleCardMove CardMove = 2;
-        SimplePatronMove PatronMove = 3;
-        MakeChoiceMoveUniqueCard CardChoiceMove = 4;
-        MakeChoiceMoveUniqueEffect EffectChoiceMove = 5;
+        BasicMove Basic = 3;
+        SimpleCardMove CardMove = 4;
+        SimplePatronMove PatronMove = 5;
+        MakeChoiceMoveUniqueCard CardChoiceMove = 6;
+        MakeChoiceMoveUniqueEffect EffectChoiceMove = 7;
     }
 }
 
 message BasicMove {
-    MoveEnum command = 1;
 }
 
 message SimpleCardMove {
-    MoveEnum command = 1;
-    int32 cardUniqueId = 2;
+    int32 cardUniqueId = 1;
 }
 
 message SimplePatronMove {
-    MoveEnum command = 1;
-    PatronIdProto patronId = 2;
+    PatronIdProto patronId = 1;
 }
 
 message MakeChoiceMoveUniqueCard {
-    MoveEnum command = 1;
-    repeated int32 cardsUniqueIds = 2;
+    repeated int32 cardsUniqueIds = 1;
 }
 
 message MakeChoiceMoveUniqueEffect {
-    MoveEnum command = 1;
-    repeated string effects = 2;
+    repeated string effects = 1;
 }
 
 message EndGameState {

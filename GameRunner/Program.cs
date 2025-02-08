@@ -24,7 +24,7 @@ List<Type> allBots = allDlls.Select(f => f.FullName)
 
 BotInfo? cachedBot = null;
 var returnValue = 0;
-#region Opcje i Argumenty
+#region Options and arguments
 
 var noOfRunsOption = CreateOption<int>("--runs", "Number of games to run.", 1, "-n");
 var threadsOption = CreateOption<int>("--threads", "Number of CPU threads to use.", 1, "-t");
@@ -50,7 +50,7 @@ var mainCommand = new RootCommand("A game runner for bots.")
 
 #endregion
 
-#region Logika Botów
+#region Bot logic
 BotInfo? FindBot(string name, out string? errorMessage)
 {
     errorMessage = null;
@@ -72,7 +72,8 @@ BotInfo? FindBot(string name, out string? errorMessage)
             BotName = name[5..],
             BotType = typeof(gRPCBot),
             HostName = "localhost",
-            Port = 50000
+            ClientPort = 50000,
+            ServerPort = 49000
         };
     }
 
@@ -146,7 +147,7 @@ BotInfo? ParseBotArg(ArgumentResult arg)
 }
 #endregion
 
-#region Przygotowanie Gry
+#region Prepare game
 
 ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logProvider, int timeout)
 {
@@ -185,7 +186,7 @@ ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled e
 
 #endregion
 
-#region Obsługa Głównej Komendy
+#region Main command handler
 
 mainCommand.SetHandler((InvocationContext context) =>
 {
@@ -206,21 +207,26 @@ mainCommand.SetHandler((InvocationContext context) =>
     }
 
     //TODO allow users to set these up in the future
-    int basePort = 50000;
+    int baseClientPort = 50000;
+    int baseServerPort = 49000;
     string baseHost = "localhost";
 
     if (bot1Info is gRPCBotInfo grpcBot1)
     {
         grpcBot1.HostName = baseHost;
-        grpcBot1.Port = basePort;
-        basePort++;
+        grpcBot1.ClientPort = baseClientPort;
+        grpcBot1.ServerPort = baseServerPort;
+        baseClientPort++;
+        baseServerPort++;
     }
 
     if (bot2Info is gRPCBotInfo grpcBot2)
     {
         grpcBot2.HostName = baseHost;
-        grpcBot2.Port = basePort;
-        basePort++;
+        grpcBot2.ClientPort = baseClientPort;
+        grpcBot2.ServerPort = baseServerPort;
+        baseClientPort++;
+        baseServerPort++;
     }
 
     if (!ValidateInputs(threads, timeout)) return;
@@ -229,7 +235,7 @@ mainCommand.SetHandler((InvocationContext context) =>
     if (threads == 1)
         RunSingleThreaded(runs, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout);
     else
-        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, basePort);
+        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort);
 });
 
 void RunSingleThreaded(int runs, BotInfo bot1Info, BotInfo bot2Info, LogsEnabled enableLogs, LogFileNameProvider? logFileNameProvider, ulong actualSeed, int timeout)
@@ -261,7 +267,7 @@ void RunSingleThreaded(int runs, BotInfo bot1Info, BotInfo bot2Info, LogsEnabled
     {
         grpcBot1.CloseConnection();
     }
-    else if (bot2 is gRPCBot grpcBot2)
+    if (bot2 is gRPCBot grpcBot2)
     {
         grpcBot2.CloseConnection();
     }
@@ -281,7 +287,8 @@ void RunMultiThreaded(
     LogFileNameProvider? logFileNameProvider,
     ulong actualSeed,
     int timeout,
-    int basePort
+    int baseClientPort,
+    int baseServerPort
 )
 {
     Console.WriteLine($"Running {runs} games with {noOfThreads} threads.");
@@ -325,7 +332,8 @@ void RunMultiThreaded(
         var additionalGames = gamesPerThreadRemainder-- > 0 ? 1 : 0;
         var gamesToPlay = gamesPerThread + additionalGames;
         var threadNo = i;
-        var threadPort = basePort + i;
+        var threadClientPort = baseClientPort + i;
+        var threadServerPort = baseServerPort + i;
         var currentSeedCopy = currentSeed;
         var bot1ThreadInfo = bot1Info is gRPCBotInfo grpcBot1
             ? new gRPCBotInfo
@@ -333,7 +341,8 @@ void RunMultiThreaded(
                 BotName = grpcBot1.BotName,
                 BotType = grpcBot1.BotType,
                 HostName = grpcBot1.HostName,
-                Port = threadPort,
+                ClientPort = threadClientPort,
+                ServerPort = threadServerPort,
             }
             : bot1Info;
 
@@ -343,7 +352,8 @@ void RunMultiThreaded(
                 BotName = grpcBot2.BotName,
                 BotType = grpcBot2.BotType,
                 HostName = grpcBot2.HostName,
-                Port = threadPort + noOfThreads,
+                ClientPort = threadClientPort + noOfThreads,
+                ServerPort = threadServerPort + noOfThreads,
             }
             : bot2Info;
 
@@ -366,7 +376,7 @@ void RunMultiThreaded(
 
 #endregion
 
-#region Funkcje Pomocnicze
+#region Helpers
 
 Option<T> CreateOption<T>(string name, string description, T defaultValue, string alias = "")
 {

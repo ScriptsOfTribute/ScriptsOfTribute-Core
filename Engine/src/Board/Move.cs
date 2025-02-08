@@ -16,10 +16,12 @@ namespace ScriptsOfTribute
     public class Move
     {
         public CommandEnum Command { get; }
+        public UniqueId UniqueId { get; }
 
         protected Move(CommandEnum command)
         {
             Command = command;
+            UniqueId = UniqueId.Create();
         }
 
         public static Move PlayCard(UniqueCard card)

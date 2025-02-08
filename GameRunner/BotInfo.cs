@@ -32,11 +32,12 @@ internal class ExternalBotInfo : BotInfo
 internal class gRPCBotInfo : BotInfo
 {
     public string? HostName { get; set; }
-    public int? Port { get; set; }
+    public int? ClientPort { get; set; }
+    public int? ServerPort { get; set; }
 
     public override AI CreateBotInstance()
     {
-        return (AI)Activator.CreateInstance(BotType, HostName, Port)!;
+        return (AI)Activator.CreateInstance(BotType, HostName, ClientPort, ServerPort)!;
     }
 }
 

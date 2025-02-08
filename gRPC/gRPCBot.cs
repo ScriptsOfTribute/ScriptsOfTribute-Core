@@ -14,12 +14,17 @@ public class gRPCBot : AI
     private AIServiceAdapter _AIService;
     private EngineServiceAdapter _engineService;
     private GrpcServer _grpcServer;
+    public string Name { get; private set; }
 
     public gRPCBot(string host="localhost", int clientPort=50000, int serverPort = 49000)
     {
+        Console.Error.WriteLine($"Listening on clientPort: {clientPort}");
         _AIService = new AIServiceAdapter(host, clientPort);
         _engineService = new EngineServiceAdapter();
         _grpcServer = new GrpcServer(host, serverPort, _engineService);
+
+        Name = RegisterBot();
+        Console.WriteLine($"Created bot {Name}");
     }
 
     public string RegisterBot()
@@ -45,6 +50,7 @@ public class gRPCBot : AI
     )
     {
         _engineService.RegisterState(gameState);
+        _engineService.RegisterMovesList(gameState, possibleMoves);
         var move = _AIService.Play(gameState, possibleMoves, remainingTime);
         return move;
     }
@@ -59,6 +65,7 @@ public class gRPCBot : AI
 
     public void CloseConnection()
     {
+        Console.Error.WriteLine($"Closing {Name}");
         _AIService.CloseConnection();
         _grpcServer?.Dispose();
     }

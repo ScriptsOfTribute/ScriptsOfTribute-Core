@@ -43,7 +43,7 @@ public class AIServiceAdapter : IDisposable
         };
 
         request.AvailablePatrons.AddRange(availablePatrons.Select(patronId => (PatronIdProto)(patronId)).ToList());
-
+        
         var response = _client.SelectPatron(request);
         return (PatronId)(response.PatronId);
     }
@@ -60,10 +60,9 @@ public class AIServiceAdapter : IDisposable
             RemainingTimeMs = time
         };
         request.PossibleMoves.AddRange(moves);
-
         var response = _client.Play(request);
-
-        return Mapper.MapMove(response, gameState.PendingChoice);
+        var move = Mapper.MapMove(response, gameState.PendingChoice, availableMoves);
+        return move;
     }
 
     public void GameEnd(ScriptsOfTribute.Board.EndGameState state, FullGameState finalBoardState)

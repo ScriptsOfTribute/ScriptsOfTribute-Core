@@ -183,59 +183,68 @@ public class Mapper
 
         if (move.Command == CommandEnum.END_TURN)
         {
-            var newMove = new Move();
-            newMove.Basic = new BasicMove
+            var newMove = new Move
             {
-                Command = MoveEnum.EndTurn
+                Id = move.UniqueId.Value,
+                Command = MoveEnum.EndTurn,
             };
+            newMove.Basic = new BasicMove();
             return newMove;
         }
 
         if (move is ScriptsOfTribute.SimpleCardMove cardMove)
         {
-            var newMove = new Move();
+            var newMove = new Move
+            {
+                Id = move.UniqueId.Value,
+                Command = (MoveEnum)((int)cardMove.Command),
+            };
             newMove.CardMove = new SimpleCardMove
             {
-                Command = (MoveEnum)((int)cardMove.Command),
-                CardUniqueId = cardMove.Card.UniqueId.Value
+                CardUniqueId = cardMove.Card.UniqueId.Value,
             };
             return newMove;
         }
 
         if (move is ScriptsOfTribute.SimplePatronMove patronMove)
         {
-            var newMove = new Move();
+            var newMove = new Move
+            {
+                Id = move.UniqueId.Value,
+                Command = MoveEnum.CallPatron,
+            };
             newMove.PatronMove = new SimplePatronMove
             {
-                Command = MoveEnum.CallPatron,
                 PatronId = (PatronIdProto)(patronMove.PatronId)
             };
             return newMove;
         }
 
-        if (move is ScriptsOfTribute.MakeChoiceMoveUniqueCard choiceCardMove || move is ScriptsOfTribute.MakeChoiceMove<UniqueCard> genericChoiceCardMove)
+        if (move is ScriptsOfTribute.MakeChoiceMoveUniqueCard choiceCardMove || move is MakeChoiceMove<UniqueCard> genericChoiceCardMove)
         {
-            var newMove = new Move();
-            newMove.CardChoiceMove = new MakeChoiceMoveUniqueCard
+            var newMove = new Move
             {
+                Id = move.UniqueId.Value,
                 Command = MoveEnum.MakeChoice,
             };
+            newMove.CardChoiceMove = new MakeChoiceMoveUniqueCard();
 
             var choices = move is ScriptsOfTribute.MakeChoiceMoveUniqueCard m
                 ? m.Choices
-                : ((ScriptsOfTribute.MakeChoiceMove<UniqueCard>)move).Choices;
+                : ((MakeChoiceMove<UniqueCard>)move).Choices;
 
             newMove.CardChoiceMove.CardsUniqueIds.AddRange(choices.Select(card => card.UniqueId.Value).ToArray());
             return newMove;
         }
 
-        if (move is ScriptsOfTribute.MakeChoiceMoveUniqueEffect choiceEffectMove || move is ScriptsOfTribute.MakeChoiceMove<UniqueEffect> genericChoiceEffectMove)
+        if (move is ScriptsOfTribute.MakeChoiceMoveUniqueEffect choiceEffectMove || move is MakeChoiceMove<UniqueEffect> genericChoiceEffectMove)
         {
-            var newMove = new Move();
-            newMove.EffectChoiceMove = new MakeChoiceMoveUniqueEffect
+            var newMove = new Move
             {
+                Id = move.UniqueId.Value,
                 Command = MoveEnum.MakeChoice,
             };
+            newMove.EffectChoiceMove = new MakeChoiceMoveUniqueEffect();
 
             var choices = move is ScriptsOfTribute.MakeChoiceMoveUniqueEffect m
                 ? m.Choices
@@ -248,51 +257,17 @@ public class Mapper
         throw new ArgumentException("Undefined behaviour in AIService.MapMove method");
     }
 
-    public static ScriptsOfTribute.Move MapMove(Move move, SerializedChoice? PendingChoice)
+    public static ScriptsOfTribute.Move MapMove(Move move, SerializedChoice? PendingChoice, List<ScriptsOfTribute.Move> availableMoves)
     {
-        if (move == null)
+        try
         {
-            return ScriptsOfTribute.Move.EndTurn();
+            var moveEquivalent = availableMoves.First(m => m.UniqueId.Value == move.Id);
+            return moveEquivalent;
         }
-
-        if (move.Basic != null && move.Basic.Command == MoveEnum.EndTurn)
+        catch
         {
-            return ScriptsOfTribute.Move.EndTurn();
+            throw new ArgumentException("Undefined behaviour in AIService.MapMove method");
         }
-
-        if (move.CardMove != null)
-        {
-            var cardReferencedTo = GlobalCardDatabase.Instance.AllCards.First(card => move.CardMove.CardUniqueId == card.UniqueId.Value);
-            return move.CardMove.Command switch
-            {
-                MoveEnum.PlayCard => ScriptsOfTribute.Move.PlayCard(cardReferencedTo),
-                MoveEnum.ActivateAgent => ScriptsOfTribute.Move.ActivateAgent(cardReferencedTo),
-                MoveEnum.BuyCard => ScriptsOfTribute.Move.BuyCard(cardReferencedTo),
-                MoveEnum.Attack => ScriptsOfTribute.Move.Attack(cardReferencedTo),
-                _ => throw new ArgumentException("Undefined behaviour in AIService.MapMove method")
-            };
-        }
-
-        if (move.PatronMove != null)
-        {
-            var patronReferenced = (ScriptsOfTribute.PatronId)((int)move.PatronMove.PatronId);
-            return ScriptsOfTribute.Move.CallPatron(patronReferenced);
-        }
-
-        if (move.CardChoiceMove != null)
-        {
-            var cardsReferencedTo = GlobalCardDatabase.Instance.AllCards.Where(card => move.CardChoiceMove.CardsUniqueIds.Contains(card.UniqueId.Value)).ToList();
-            return ScriptsOfTribute.Move.MakeChoice(cardsReferencedTo);
-        }
-
-        if (move.EffectChoiceMove != null && PendingChoice != null)
-        {
-            var referencedEffects = move.EffectChoiceMove.Effects;
-            var pickedEffects = PendingChoice.PossibleEffects.Where(eff => referencedEffects.Contains(eff.ToSimpleString())).ToList();
-            return ScriptsOfTribute.Move.MakeChoice(pickedEffects);
-        }
-
-        throw new ArgumentException("Undefined behaviour in AIService.MapMove method");
     }
 
 }
