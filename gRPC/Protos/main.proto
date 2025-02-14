@@ -49,6 +49,7 @@ message GameStateProto {
     repeated string completed_actions = 9;
     repeated UniqueCardProto tavern_cards = 10;
     ChoiceProto pending_choice = 11;
+    EndGameState end_game_state = 12;
 }
 
 message SeededGameStateProto {
@@ -63,8 +64,9 @@ message SeededGameStateProto {
     repeated string completed_actions = 9;
     repeated UniqueCardProto tavern_cards = 10;
     ChoiceProto pending_choice = 11;
-	uint64 InitialSeed = 12;
-    uint64 CurrentSeed = 13;
+    EndGameState end_game_state = 12;
+	uint64 InitialSeed = 13;
+    uint64 CurrentSeed = 14;
 }
 
 message RegistrationStatus {

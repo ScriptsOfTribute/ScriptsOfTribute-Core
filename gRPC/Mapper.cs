@@ -20,7 +20,8 @@ public class Mapper
             EnemyPlayer = ToEnemyPlayerProto(gameState.EnemyPlayer),
             TavernCards = { gameState.TavernCards.Select(ToUniqueCardProto) },
             CompletedActions = {gameState.CompletedActions.Select(act => act.SimpleString()) },
-            PendingChoice = ToChoiceProto(gameState.PendingChoice)
+            PendingChoice = ToChoiceProto(gameState.PendingChoice),
+            EndGameState = ToEndGameStateProto(gameState.GameEndState),
         };
     }
 
@@ -37,7 +38,8 @@ public class Mapper
             EnemyPlayer = ToPlayerProto(gameState.EnemyPlayer),
             TavernCards = { gameState.TavernCards.Select(ToUniqueCardProto) },
             CompletedActions = {gameState.CompletedActions.Select(act => act.SimpleString()) },
-            PendingChoice = ToChoiceProto(gameState.PendingChoice)
+            PendingChoice = ToChoiceProto(gameState.PendingChoice),
+            EndGameState = ToEndGameStateProto(gameState.GameEndState),
         };
     }
 
@@ -268,6 +270,19 @@ public class Mapper
         {
             throw new ArgumentException("Undefined behaviour in AIService.MapMove method");
         }
+    }
+
+    public static EndGameState? ToEndGameStateProto(ScriptsOfTribute.Board.EndGameState? endGameState)
+    {
+        if (endGameState == null)
+            return null;
+
+        return new EndGameState
+        {
+            Winner = endGameState.Winner.ToString(),
+            Reason = endGameState.Reason.ToString(),
+            AdditionalContext = endGameState.AdditionalContext
+        };
     }
 
 }

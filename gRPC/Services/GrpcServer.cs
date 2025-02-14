@@ -19,7 +19,7 @@ public class GrpcServer : IDisposable
         _app.MapGrpcService<EngineServiceAdapter>();
 
         _app.RunAsync($"http://{host}:{port}");
-        Console.WriteLine($"gRPC server listening on http://{host}:{port}");
+        //Console.WriteLine($"gRPC server listening on http://{host}:{port}");
     }
 
     public void Dispose()

@@ -4,12 +4,9 @@ using System.Reflection;
 using GameRunner;
 using Bots;
 using ScriptsOfTribute.AI;
-using ScriptsOfTribute.Board;
 using ScriptsOfTributeGRPC;
 using System.CommandLine.Parsing;
 using System.CommandLine.Invocation;
-using System.Xml.Linq;
-using Microsoft.Extensions.Hosting;
 
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
@@ -211,40 +208,51 @@ mainCommand.SetHandler((InvocationContext context) =>
     int baseServerPort = 49000;
     string baseHost = "localhost";
 
-    if (bot1Info is gRPCBotInfo grpcBot1)
-    {
-        grpcBot1.HostName = baseHost;
-        grpcBot1.ClientPort = baseClientPort;
-        grpcBot1.ServerPort = baseServerPort;
-        baseClientPort++;
-        baseServerPort++;
-    }
-
-    if (bot2Info is gRPCBotInfo grpcBot2)
-    {
-        grpcBot2.HostName = baseHost;
-        grpcBot2.ClientPort = baseClientPort;
-        grpcBot2.ServerPort = baseServerPort;
-        baseClientPort++;
-        baseServerPort++;
-    }
-
     if (!ValidateInputs(threads, timeout)) return;
     ulong actualSeed = seed ?? (ulong)new Random().NextInt64();
 
     if (threads == 1)
-        RunSingleThreaded(runs, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout);
+        RunSingleThreaded(runs, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, baseHost);
     else
-        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort);
+        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, baseHost);
 });
 
-void RunSingleThreaded(int runs, BotInfo bot1Info, BotInfo bot2Info, LogsEnabled enableLogs, LogFileNameProvider? logFileNameProvider, ulong actualSeed, int timeout)
+void RunSingleThreaded(
+    int runs,
+    BotInfo bot1Info,
+    BotInfo bot2Info,
+    LogsEnabled enableLogs,
+    LogFileNameProvider? logFileNameProvider,
+    ulong actualSeed,
+    int timeout,
+    int baseClientPort,
+    int baseServerPort,
+    string baseHost = "localhost"
+)
 {
     Console.WriteLine($"Running {runs} games - {bot1Info.BotName} vs {bot2Info.BotName}");
     var counter = new GameEndStatsCounter();
     var timeMeasurements = new long[runs];
     var granularWatch = new Stopwatch();
     var currentSeed = actualSeed;
+
+    if (bot1Info is gRPCBotInfo grpcBotInfo1)
+    {
+        grpcBotInfo1.HostName = baseHost;
+        grpcBotInfo1.ClientPort = baseClientPort;
+        grpcBotInfo1.ServerPort = baseServerPort;
+        baseClientPort++;
+        baseServerPort++;
+    }
+
+    if (bot2Info is gRPCBotInfo grpcBotInfo2)
+    {
+        grpcBotInfo2.HostName = baseHost;
+        grpcBotInfo2.ClientPort = baseClientPort;
+        grpcBotInfo2.ServerPort = baseServerPort;
+        baseClientPort++;
+        baseServerPort++;
+    }
 
     var bot1 = bot1Info.CreateBotInstance();
     var bot2 = bot2Info.CreateBotInstance();
@@ -288,7 +296,8 @@ void RunMultiThreaded(
     ulong actualSeed,
     int timeout,
     int baseClientPort,
-    int baseServerPort
+    int baseServerPort,
+    string baseHost = "localhost"
 )
 {
     Console.WriteLine($"Running {runs} games with {noOfThreads} threads.");
@@ -319,7 +328,14 @@ void RunMultiThreaded(
             results[i] = endReason;
             timeMeasurements[i] = watch.ElapsedMilliseconds;
         }
-
+        if (bot1 is gRPCBot grpcBot1)
+        {
+            grpcBot1.CloseConnection();
+        }
+        if (bot2 is gRPCBot grpcBot2)
+        {
+            grpcBot2.CloseConnection();
+        }
         Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}ms.");
         return results.ToList();
     }
@@ -332,8 +348,6 @@ void RunMultiThreaded(
         var additionalGames = gamesPerThreadRemainder-- > 0 ? 1 : 0;
         var gamesToPlay = gamesPerThread + additionalGames;
         var threadNo = i;
-        var threadClientPort = baseClientPort + i;
-        var threadServerPort = baseServerPort + i;
         var currentSeedCopy = currentSeed;
         var bot1ThreadInfo = bot1Info is gRPCBotInfo grpcBot1
             ? new gRPCBotInfo
@@ -341,8 +355,8 @@ void RunMultiThreaded(
                 BotName = grpcBot1.BotName,
                 BotType = grpcBot1.BotType,
                 HostName = grpcBot1.HostName,
-                ClientPort = threadClientPort,
-                ServerPort = threadServerPort,
+                ClientPort = baseClientPort + i,
+                ServerPort = baseServerPort + i,
             }
             : bot1Info;
 
@@ -352,12 +366,11 @@ void RunMultiThreaded(
                 BotName = grpcBot2.BotName,
                 BotType = grpcBot2.BotType,
                 HostName = grpcBot2.HostName,
-                ClientPort = threadClientPort + noOfThreads,
-                ServerPort = threadServerPort + noOfThreads,
+                ClientPort = baseClientPort + noOfThreads + i,
+                ServerPort = baseServerPort + noOfThreads + i,
             }
             : bot2Info;
-
-        threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Info, bot2Info, threadNo, currentSeedCopy));
+        threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1ThreadInfo, bot2ThreadInfo, threadNo, currentSeedCopy));
         currentSeed += (ulong)gamesToPlay;
     }
 

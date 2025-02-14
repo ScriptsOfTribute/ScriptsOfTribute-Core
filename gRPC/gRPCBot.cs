@@ -19,6 +19,7 @@ public class gRPCBot : AI
     public gRPCBot(string host="localhost", int clientPort=50000, int serverPort = 49000)
     {
         Console.Error.WriteLine($"Listening on clientPort: {clientPort}");
+        Console.Error.WriteLine($"Listening on serverPort: {serverPort}");
         _AIService = new AIServiceAdapter(host, clientPort);
         _engineService = new EngineServiceAdapter();
         _grpcServer = new GrpcServer(host, serverPort, _engineService);
