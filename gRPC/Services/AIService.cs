@@ -27,6 +27,7 @@ public class AIServiceAdapter : IDisposable
     public string RegisterBot()
     {
         var response = _client.RegisterBot(new Empty() { });
+        Console.WriteLine($"Requested on http://{_host}:{_port}");
         return response.Name;
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,14 +51,15 @@ public class gRPCBot : AI
         TimeSpan remainingTime
     )
     {
-        _engineService.RegisterState(gameState);
-        _engineService.RegisterMovesList(gameState, possibleMoves);
+        _engineService.RegisterState(gameState.StateId, gameState);
+        _engineService.RegisterMovesList(gameState.StateId, possibleMoves);
         var move = _AIService.Play(gameState, possibleMoves, remainingTime);
         return move;
     }
 
     public override void GameEnd(ScriptsOfTribute.Board.EndGameState state, FullGameState? finalBoardState)
     {
+        _engineService.CleanCache();
         if ( finalBoardState != null ) 
         {
             _AIService.GameEnd(state, finalBoardState);

@@ -241,17 +241,13 @@ void RunSingleThreaded(
         grpcBotInfo1.HostName = baseHost;
         grpcBotInfo1.ClientPort = baseClientPort;
         grpcBotInfo1.ServerPort = baseServerPort;
-        baseClientPort++;
-        baseServerPort++;
     }
 
     if (bot2Info is gRPCBotInfo grpcBotInfo2)
     {
         grpcBotInfo2.HostName = baseHost;
-        grpcBotInfo2.ClientPort = baseClientPort;
-        grpcBotInfo2.ServerPort = baseServerPort;
-        baseClientPort++;
-        baseServerPort++;
+        grpcBotInfo2.ClientPort = baseClientPort+1;
+        grpcBotInfo2.ServerPort = baseServerPort+1;
     }
 
     var bot1 = bot1Info.CreateBotInstance();
@@ -266,7 +262,7 @@ void RunSingleThreaded(
         granularWatch.Start();
         var (endReason, _) = game.Play();
         granularWatch.Stop();
-
+        Console.WriteLine(endReason);
         timeMeasurements[i] = granularWatch.ElapsedMilliseconds;
         counter.Add(endReason);
     }

@@ -1,72 +1,68 @@
 ﻿using Grpc.Core;
-using ScriptsOfTribute;
+using ScriptsOfTribute.Board;
 using ScriptsOfTribute.Serializers;
-using System;
-using System.Collections.Concurrent;
-
+using System.Linq;
 
 namespace ScriptsOfTributeGRPC;
 
 public class EngineServiceAdapter : EngineService.EngineServiceBase
 {
-    private readonly Dictionary<string, GameState> _states = new();
-    private readonly Dictionary<string, List<ScriptsOfTribute.Move>> _moves = new();
+    private Dictionary<string, object> _states = new();
+    private Dictionary<string, List<ScriptsOfTribute.Move>> _moves = new();
     public override Task<SimulationResult> ApplyMove(ApplyMoveRequest request, ServerCallContext context)
     {
         var gameState = GetState(request.StateId);
         var movesList = GetMovesList(request.StateId);
-        var (newGameState, moves) = gameState.ApplyMove(Mapper.MapMove(request.Move, gameState.PendingChoice, movesList), request.Seed);
-        var gameStateProto = Mapper.ToProto(newGameState);
+        (SeededGameState newGameState, List<ScriptsOfTribute.Move> moves) result = gameState switch
+        {
+            GameState gs => gs.ApplyMove(Mapper.MapMove(request.Move, gs.PendingChoice, movesList), request.Seed),
+            SeededGameState sgs => sgs.ApplyMove(Mapper.MapMove(request.Move, sgs.PendingChoice, movesList), request.Seed),
+            _ => throw new InvalidOperationException("Unknown game state type.")
+        };
+        RegisterState(result.newGameState.StateId, result.newGameState);
+        RegisterMovesList(result.newGameState.StateId, result.moves);
         var response = new SimulationResult
         {
-            GameState = gameStateProto,
+            GameState = Mapper.ToProto(result.newGameState),
         };
-        response.PossibleMoves.AddRange(moves.Select(Mapper.MapMove).ToList());
-        return Task.FromResult(response);
-    }
-
-    public override Task<GameStateProto> GetState(StateId request, ServerCallContext context)
-    {
-        var gameState = GetState(request.Id);
-        var response = Mapper.ToProto(gameState);
+        response.PossibleMoves.AddRange(result.moves.Select(Mapper.MapMove).ToList());
         return Task.FromResult(response);
     }
 
     public override Task<Empty> ReleaseState(StateId request, ServerCallContext context)
     {
+        Console.WriteLine($"Releasing state {request.Id}");
         ReleaseState(request.Id);
         ReleaseMoves(request.Id);
         return Task.FromResult(new Empty());
     }
 
-    public void RegisterState(GameState state)
+    public void RegisterState(string id, object state)
     {
-        _states[state.StateId] = state;
+        _states[id] = state;
     }
 
-    public void RegisterMovesList(GameState state, List<ScriptsOfTribute.Move> moves)
+    public void RegisterMovesList(string id, List<ScriptsOfTribute.Move> moves)
     {
-        _moves[state.StateId] = moves;
+        _moves[id] = moves;
     }
 
-    public GameState GetState(string id)
+    public object GetState(string id)
     {
         if (_states.TryGetValue(id, out var entry))
         {
-            _states[id] = entry;
             return entry;
         }
-        throw new KeyNotFoundException("State not found");
+        throw new KeyNotFoundException($"State {id} not found");
     }
 
     public List<ScriptsOfTribute.Move> GetMovesList(string id)
     {
         if (_moves.TryGetValue(id, out var entry))
         {
-            _moves[id] = entry;
             return entry;
         }
-        throw new KeyNotFoundException("State not found");
+        throw new KeyNotFoundException($"State {id} not found");
     }
 
     public void ReleaseState(string id)
@@ -82,5 +78,11 @@ public class EngineServiceAdapter : EngineService.EngineServiceBase
         {
             _moves.Remove(id);
         }
+    }
+
+    public void CleanCache()
+    {
+        _states = new();
+        _moves = new();
     }
 }

@@ -95,6 +95,5 @@ service AIService {
 
 service EngineService {
     rpc ApplyMove(ApplyMoveRequest) returns (SimulationResult);
-    rpc GetState(StateId) returns (GameStateProto);
     rpc ReleaseState(StateId) returns (Empty);
 }

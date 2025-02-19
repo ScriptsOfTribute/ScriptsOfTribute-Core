@@ -11,6 +11,7 @@ public class Mapper
     {
         return new GameStateProto
         {
+            StateId = gameState.StateId,
             PatronStates = ToPatronStatesProto(gameState.PatronStates),
             TavernAvailableCards = { gameState.TavernAvailableCards.Select(ToUniqueCardProto) },
             BoardState = ToBoardStateProto(gameState.BoardState),
@@ -29,6 +30,7 @@ public class Mapper
     {
         return new SeededGameStateProto
         {
+            StateId = gameState.StateId,
             PatronStates = ToPatronStatesProto(gameState.PatronStates),
             TavernAvailableCards = { gameState.TavernAvailableCards.Select(ToUniqueCardProto) },
             BoardState = ToBoardStateProto(gameState.BoardState),
