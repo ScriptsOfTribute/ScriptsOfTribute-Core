@@ -1,12 +1,12 @@
-﻿
-using System.CommandLine;
-using System.CommandLine.Parsing;
+﻿using System.CommandLine;
 using System.Diagnostics;
 using System.Reflection;
 using GameRunner;
 using Bots;
 using ScriptsOfTribute.AI;
-using ScriptsOfTribute.Board;
+using ScriptsOfTributeGRPC;
+using System.CommandLine.Parsing;
+using System.CommandLine.Invocation;
 
 var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
@@ -19,77 +19,72 @@ List<Type> allBots = allDlls.Select(f => f.FullName)
     .Where(t => aiType.IsAssignableFrom(t) && !t.IsInterface)
     .ToList();
 
-var noOfRunsOption = new Option<int>(
-    name: "--runs",
-    description: "Number of games to run.",
-    getDefaultValue: () => 1);
-noOfRunsOption.AddAlias("-n");
-
-var threadsOption = new Option<int>(
-    name: "--threads",
-    description: "Number of CPU threads to use.",
-    getDefaultValue: () => 1);
-threadsOption.AddAlias("-t");
-
-var logsOption = new Option<LogsEnabled>(
-    name: "--enable-logs",
-    description: "Enable logging (to standard output by default).",
-    getDefaultValue: () => LogsEnabled.NONE);
-logsOption.AddAlias("-l");
-
-var seedOption = new Option<ulong?>(
-    name: "--seed",
-    description: "Specify seed for RNG. In case of multiple games, each subsequent game will be played with <seed+1>.",
-    getDefaultValue: () => null);
-seedOption.AddAlias("-s");
-
-var logFileDestination = new Option<LogFileNameProvider?>(
-    name: "--log-destination",
-    description: "Log to files with names 'directory/<seed_bot.log>' instead of standard output. Specify the directory here.",
-    isDefault: true,
-    parseArgument: result =>
-    {
-        if (result.Tokens.Count == 0)
-        {
-            return null;
-        }
-
-        var dirName = result.Tokens.Single().Value;
-        var dir = Directory.CreateDirectory(dirName);
-        return new LogFileNameProvider(dir);
-    })
-{
-    IsRequired = false,
-};
-logFileDestination.AddAlias("-d");
-
-var timeoutOption = new Option<int>(
-    name: "--timeout",
-    description: "Specify time limit in seconds that will be set for games. The default value is 30.",
-    getDefaultValue: () => 30);
-timeoutOption.AddAlias("-to");
-
-
 BotInfo? cachedBot = null;
+var returnValue = 0;
+#region Options and arguments
 
+var noOfRunsOption = CreateOption<int>("--runs", "Number of games to run.", 1, "-n");
+var threadsOption = CreateOption<int>("--threads", "Number of CPU threads to use.", 1, "-t");
+var logsOption = CreateOption<LogsEnabled>("--enable-logs", "Enable logging.", LogsEnabled.NONE, "-l");
+var seedOption = CreateOption<ulong?>("--seed", "Specify RNG seed.", null, "-s");
+var logFileDestination = CreateLogFileOption("--log-destination", "Directory for log files.", "-d");
+var timeoutOption = CreateOption<int>("--timeout", "Game timeout in seconds.", 30, "-to");
+
+var bot1NameArgument = CreateBotArgument("bot1", "Name of the first bot or command.");
+var bot2NameArgument = CreateBotArgument("bot2", "Name of the second bot or command.");
+
+var mainCommand = new RootCommand("A game runner for bots.")
+{
+    noOfRunsOption,
+    threadsOption,
+    logsOption,
+    logFileDestination,
+    seedOption,
+    timeoutOption,
+    bot1NameArgument,
+    bot2NameArgument,
+};
+
+#endregion
+
+#region Bot logic
 BotInfo? FindBot(string name, out string? errorMessage)
 {
     errorMessage = null;
-    var botInfo = new BotInfo();
 
-    bool findByFullName = name.Contains('.');
-    bool isExternalBot = name.StartsWith("cmd:");
-
-    if (isExternalBot)
+    if (name.StartsWith("cmd:"))
     {
-        name = name.Substring(4);
-        var splittedCommand = name.Split(' ', 2);
-        botInfo.BotType = externalBotType;
-        botInfo.ProgramName = splittedCommand[0];
-        botInfo.FileName = splittedCommand[1];
-        return botInfo;
+        var parts = name[4..].Split(' ', 2);
+        return new ExternalBotInfo
+        {
+            BotType = typeof(ExternalAIAdapter),
+            ProgramName = parts[0],
+            FileName = parts.Length > 1 ? parts[1] : null
+        };
+    }
+    if (name.StartsWith("grpc:"))
+    {
+        return new gRPCBotInfo
+        {
+            BotName = name[5..],
+            BotType = typeof(gRPCBot),
+            HostName = "localhost",
+            ClientPort = 50000,
+            ServerPort = 49000
+        };
     }
 
+    return FindInternalBot(name, out errorMessage) ?? throw new Exception(errorMessage);
+}
+
+BotInfo? FindInternalBot(string name, out string? errorMessage)
+{
+    errorMessage = null;
+    var botInfo = new LocalBotInfo()
+    {
+        BotName = name,
+    };
+    bool findByFullName = name.Contains('.');
     if (cachedBot is not null && (findByFullName ? cachedBot.BotFullName : cachedBot.BotName) == name)
     {
         return cachedBot;
@@ -110,7 +105,7 @@ BotInfo? FindBot(string name, out string? errorMessage)
         errorMessage += string.Join('\n', allBots.Select(b => b.FullName));
         return null;
     }
-    // TODO: Support also specifying which file to use.
+
     else if (botCount > 1 && findByFullName)
     {
         errorMessage = "More than one bots with the same full name found. This means you have different DLLs with the same namespaces and bot names.\n" +
@@ -126,7 +121,7 @@ BotInfo? FindBot(string name, out string? errorMessage)
     {
         errorMessage = $"Bot {name} bot can't be instantiated as it doesn't provide a parameterless constructor.";
     }
-    
+
     return cachedBot;
 }
 
@@ -147,25 +142,17 @@ BotInfo? ParseBotArg(ArgumentResult arg)
 
     return bot!;
 }
+#endregion
 
-var bot1NameArgument = new Argument<BotInfo?>(name: "bot1", description: "The name of the first bot or the command that will run the bot program. For the command, please follow the format \"cmd:<command>\"", parse: ParseBotArg);
-var bot2NameArgument = new Argument<BotInfo?>(name: "bot2", description: "The name of the second bot or the command that will run the bot program. For the command, please follow the format \"cmd:<command>\"", parse: ParseBotArg);
+#region Prepare game
 
-var mainCommand = new RootCommand("A game runner for bots.")
+ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logProvider, int timeout)
 {
-    noOfRunsOption,
-    threadsOption,
-    logsOption,
-    logFileDestination,
-    seedOption,
-    timeoutOption,
-    bot1NameArgument,
-    bot2NameArgument,
-};
+    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2, TimeSpan.FromSeconds(timeout))
+    {
+        Seed = seed,
+    };
 
-ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logFileNameProvider, int timeout)
-{
-    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1!, bot2!, TimeSpan.FromSeconds(timeout));
     switch (enableLogs)
     {
         case LogsEnabled.P1:
@@ -184,12 +171,9 @@ ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled e
             throw new ArgumentOutOfRangeException(nameof(enableLogs), enableLogs, null);
     }
 
-    game.Seed = seed;
-
-    if (logFileNameProvider is not null)
+    if (logProvider is not null)
     {
-        var (p1LogDest, p2LogDest) =
-            logFileNameProvider.GetForPlayers(game.Seed, game.P1LoggerEnabled, game.P2LoggerEnabled);   
+        var (p1LogDest, p2LogDest) = logProvider.GetForPlayers(seed, game.P1LoggerEnabled, game.P2LoggerEnabled);
         game.P1LogTarget = p1LogDest;
         game.P2LogTarget = p2LogDest;
     }
@@ -197,135 +181,268 @@ ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled e
     return game;
 }
 
-var returnValue = 0;
-mainCommand.SetHandler((runs, noOfThreads, enableLogs, logFileNameProvider, maybeSeed, timeout, bot1Info, bot2Info) =>
+#endregion
+
+#region Main command handler
+
+mainCommand.SetHandler((InvocationContext context) =>
 {
-    if (noOfThreads < 1)
+    int runs = context.ParseResult.GetValueForOption(noOfRunsOption);
+    int threads = context.ParseResult.GetValueForOption(threadsOption);
+    LogsEnabled logs = context.ParseResult.GetValueForOption(logsOption);
+    LogFileNameProvider? logProvider = context.ParseResult.GetValueForOption(logFileDestination);
+    ulong? seed = context.ParseResult.GetValueForOption(seedOption);
+    int timeout = context.ParseResult.GetValueForOption(timeoutOption);
+    BotInfo? bot1Info = context.ParseResult.GetValueForArgument(bot1NameArgument);
+    BotInfo? bot2Info = context.ParseResult.GetValueForArgument(bot2NameArgument);
+
+    if (bot1Info is null || bot2Info is null)
+    {
+        Console.Error.WriteLine("ERROR: Bots were not parsed correctly.");
+        returnValue = -1;
+        return;
+    }
+
+    //TODO allow users to set these up in the future
+    int baseClientPort = 50000;
+    int baseServerPort = 49000;
+    string baseHost = "localhost";
+
+    if (!ValidateInputs(threads, timeout)) return;
+    ulong actualSeed = seed ?? (ulong)new Random().NextInt64();
+
+    if (threads == 1)
+        RunSingleThreaded(runs, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, baseHost);
+    else
+        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, baseHost);
+});
+
+void RunSingleThreaded(
+    int runs,
+    BotInfo bot1Info,
+    BotInfo bot2Info,
+    LogsEnabled enableLogs,
+    LogFileNameProvider? logFileNameProvider,
+    ulong actualSeed,
+    int timeout,
+    int baseClientPort,
+    int baseServerPort,
+    string baseHost = "localhost"
+)
+{
+    Console.WriteLine($"Running {runs} games - {bot1Info.BotName} vs {bot2Info.BotName}");
+    var counter = new GameEndStatsCounter();
+    var timeMeasurements = new long[runs];
+    var granularWatch = new Stopwatch();
+    var currentSeed = actualSeed;
+
+    if (bot1Info is gRPCBotInfo grpcBotInfo1)
+    {
+        grpcBotInfo1.HostName = baseHost;
+        grpcBotInfo1.ClientPort = baseClientPort;
+        grpcBotInfo1.ServerPort = baseServerPort;
+    }
+
+    if (bot2Info is gRPCBotInfo grpcBotInfo2)
+    {
+        grpcBotInfo2.HostName = baseHost;
+        grpcBotInfo2.ClientPort = baseClientPort+1;
+        grpcBotInfo2.ServerPort = baseServerPort+1;
+    }
+
+    var bot1 = bot1Info.CreateBotInstance();
+    var bot2 = bot2Info.CreateBotInstance();
+
+    for (var i = 0; i < runs; i++)
+    {
+        var game = PrepareGame(bot1, bot2, enableLogs, currentSeed, logFileNameProvider, timeout);
+        currentSeed += 1;
+
+        granularWatch.Reset();
+        granularWatch.Start();
+        var (endReason, _) = game.Play();
+        granularWatch.Stop();
+        if (endReason.Reason == ScriptsOfTribute.Board.GameEndReason.BOT_EXCEPTION)
+            Console.WriteLine(endReason);
+        timeMeasurements[i] = granularWatch.ElapsedMilliseconds;
+        counter.Add(endReason);
+    }
+
+    if (bot1 is gRPCBot grpcBot1)
+    {
+        grpcBot1.CloseConnection();
+    }
+    if (bot2 is gRPCBot grpcBot2)
+    {
+        grpcBot2.CloseConnection();
+    }
+    Console.WriteLine($"\nInitial seed used: {actualSeed}");
+    Console.WriteLine($"Total time taken: {timeMeasurements.Sum()}ms");
+    Console.WriteLine($"Average time per game: {timeMeasurements.Average()}ms");
+    Console.WriteLine("\nStats from the games played:");
+    Console.WriteLine(counter.ToString());
+}
+
+void RunMultiThreaded(
+    int runs,
+    int noOfThreads,
+    BotInfo bot1Info,
+    BotInfo bot2Info,
+    LogsEnabled enableLogs,
+    LogFileNameProvider? logFileNameProvider,
+    ulong actualSeed,
+    int timeout,
+    int baseClientPort,
+    int baseServerPort,
+    string baseHost = "localhost"
+)
+{
+    Console.WriteLine($"Running {runs} games with {noOfThreads} threads.");
+
+    var gamesPerThread = runs / noOfThreads;
+    var gamesPerThreadRemainder = runs % noOfThreads;
+    var threads = new Task<List<ScriptsOfTribute.Board.EndGameState>>[noOfThreads];
+
+    List<ScriptsOfTribute.Board.EndGameState> PlayGames(int amount, BotInfo bot1Info, BotInfo bot2Info, int threadNo, ulong seed)
+    {
+        var results = new ScriptsOfTribute.Board.EndGameState[amount];
+        var timeMeasurements = new long[amount];
+        var watch = new Stopwatch();
+
+        var bot1 = bot1Info.CreateBotInstance();
+        var bot2 = bot2Info.CreateBotInstance();
+
+        for (var i = 0; i < amount; i++)
+        {
+            var game = PrepareGame(bot1, bot2, enableLogs, seed, logFileNameProvider, timeout);
+            seed += 1;
+
+            watch.Reset();
+            watch.Start();
+            var (endReason, _) = game.Play();
+            watch.Stop();
+
+            results[i] = endReason;
+            timeMeasurements[i] = watch.ElapsedMilliseconds;
+        }
+        if (bot1 is gRPCBot grpcBot1)
+        {
+            grpcBot1.CloseConnection();
+        }
+        if (bot2 is gRPCBot grpcBot2)
+        {
+            grpcBot2.CloseConnection();
+        }
+        Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}ms.");
+        return results.ToList();
+    }
+
+    var watch = Stopwatch.StartNew();
+    var currentSeed = actualSeed;
+
+    for (var i = 0; i < noOfThreads; i++)
+    {
+        var additionalGames = gamesPerThreadRemainder-- > 0 ? 1 : 0;
+        var gamesToPlay = gamesPerThread + additionalGames;
+        var threadNo = i;
+        var currentSeedCopy = currentSeed;
+        var bot1ThreadInfo = bot1Info is gRPCBotInfo grpcBot1
+            ? new gRPCBotInfo
+            {
+                BotName = grpcBot1.BotName,
+                BotType = grpcBot1.BotType,
+                HostName = grpcBot1.HostName,
+                ClientPort = baseClientPort + i,
+                ServerPort = baseServerPort + i,
+            }
+            : bot1Info;
+
+        var bot2ThreadInfo = bot2Info is gRPCBotInfo grpcBot2
+            ? new gRPCBotInfo
+            {
+                BotName = grpcBot2.BotName,
+                BotType = grpcBot2.BotType,
+                HostName = grpcBot2.HostName,
+                ClientPort = baseClientPort + noOfThreads + i,
+                ServerPort = baseServerPort + noOfThreads + i,
+            }
+            : bot2Info;
+        threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1ThreadInfo, bot2ThreadInfo, threadNo, currentSeedCopy));
+        currentSeed += (ulong)gamesToPlay;
+    }
+
+    Task.WaitAll(threads);
+
+    var timeTaken = watch.ElapsedMilliseconds;
+
+    var counter = new GameEndStatsCounter();
+    threads.SelectMany(t => t.Result).ToList().ForEach(counter.Add);
+
+    Console.WriteLine($"\nInitial seed used: {actualSeed}");
+    Console.WriteLine($"Total time taken: {timeTaken}ms");
+    Console.WriteLine("\nStats from the games played:");
+    Console.WriteLine(counter.ToString());
+}
+
+#endregion
+
+#region Helpers
+
+Option<T> CreateOption<T>(string name, string description, T defaultValue, string alias = "")
+{
+    var option = new Option<T>(name, () =>  defaultValue, description);
+    option.AddAlias(alias);
+    return option;
+}
+    
+
+Option<LogFileNameProvider?> CreateLogFileOption(string name, string description, string alias)
+{
+    var option = new Option<LogFileNameProvider?>(
+         name: "--log-destination",
+        description: "Log to files with names 'directory/<seed_bot.log>' instead of standard output. Specify the directory here.",
+        isDefault: true,
+        parseArgument: result =>
+        {
+            if (result.Tokens.Count == 0)
+            {
+                return null;
+            }
+
+            var dirName = result.Tokens.Single().Value;
+            var dir = Directory.CreateDirectory(dirName);
+            return new LogFileNameProvider(dir);
+        }
+    )
+    {
+        IsRequired = false,
+    };
+    option.AddAlias("-d");
+    return option;
+}
+
+Argument<BotInfo?> CreateBotArgument(string name, string description) =>
+    new(name, description: description, parse: ParseBotArg);
+
+bool ValidateInputs(int threads, int timeout)
+{
+    if (threads < 1)
     {
         Console.Error.WriteLine("ERROR: Can't use less than 1 thread.");
         returnValue = -1;
+        return false;
     }
 
     if (timeout < 0)
     {
         Console.Error.WriteLine("ERROR: Time limit can't be negative.");
         returnValue = -1;
+        return false;
     }
+    return true;
+}
 
-    ulong actualSeed;
-    if (maybeSeed is null)
-    {
-        actualSeed = (ulong)new Random().NextInt64();
-    }
-    else
-    {
-        actualSeed = (ulong)maybeSeed;
-    }
-
-    if (noOfThreads == 1)
-    {
-        Console.WriteLine($"Running {runs} games - {bot1Info!.BotType.Name} vs {bot2Info!.BotType.Name}");
-
-        var counter = new GameEndStatsCounter();
-
-        var timeMeasurements = new long[runs];
-
-        var granularWatch = new Stopwatch();
-        var currentSeed = actualSeed;
-        var bot1 = bot1Info.IsExternal ? (AI?)Activator.CreateInstance(bot1Info.BotType, bot1Info.ProgramName, bot1Info.FileName) : (AI?)Activator.CreateInstance(bot1Info.BotType);
-        var bot2 = bot2Info.IsExternal ? (AI?)Activator.CreateInstance(bot2Info.BotType, bot2Info.ProgramName, bot2Info.FileName) : (AI?)Activator.CreateInstance(bot2Info.BotType);
-        for (var i = 0; i < runs; i++)
-        {
-            var game = PrepareGame(bot1!, bot2!, enableLogs, currentSeed, logFileNameProvider, timeout);
-            currentSeed += 1;
-
-            granularWatch.Reset();
-            granularWatch.Start();
-            var (endReason, _) = game.Play();
-            granularWatch.Stop();
-
-            var gameTimeTaken = granularWatch.ElapsedMilliseconds;
-            timeMeasurements[i] = gameTimeTaken;
-
-            counter.Add(endReason);
-        }
-
-        Console.WriteLine($"\nInitial seed used: {actualSeed}");
-        Console.WriteLine($"Total time taken: {timeMeasurements.Sum()}ms");
-        Console.WriteLine($"Average time per game: {timeMeasurements.Average()}ms");
-        Console.WriteLine("\nStats from the games played:");
-        Console.WriteLine(counter.ToString());    
-    }
-    else
-    {
-        if (enableLogs != LogsEnabled.NONE && logFileNameProvider is null)
-        {
-            Console.Error.WriteLine("ERROR: Logs to stdout are not supported with multi-threading. Specify file destination.");
-            returnValue = -1;
-            return;
-        }
-
-        if (noOfThreads > Environment.ProcessorCount)
-        {
-            Console.Error.WriteLine($"WARNING: More threads ({noOfThreads}) specified than logical processor count ({Environment.ProcessorCount}).");
-        }
-
-        var gamesPerThread = runs / noOfThreads;
-        var gamesPerThreadRemainder = runs % noOfThreads;
-        var threads = new Task<List<EndGameState>>[noOfThreads];
-        
-        List<EndGameState> PlayGames(int amount, BotInfo bot1Info, BotInfo bot2Info, int threadNo, ulong seed)
-        {
-            var results = new EndGameState[amount];
-            var timeMeasurements = new long[amount];
-            var watch = new Stopwatch();
-            var bot1 = bot1Info.IsExternal ? (AI?)Activator.CreateInstance(bot1Info.BotType, bot1Info.ProgramName, bot1Info.FileName) : (AI?)Activator.CreateInstance(bot1Info.BotType);
-            var bot2 = bot2Info.IsExternal ? (AI?)Activator.CreateInstance(bot2Info.BotType, bot2Info.ProgramName, bot2Info.FileName) : (AI?)Activator.CreateInstance(bot2Info.BotType);
-            for (var i = 0; i < amount; i++)
-            {
-                var game = PrepareGame(bot1!, bot2!, enableLogs, seed, logFileNameProvider, timeout);
-                seed += 1;
-
-                watch.Reset();
-                watch.Start();
-                var (endReason, _) = game.Play();
-                watch.Stop();
-                results[i] = endReason;
-                timeMeasurements[i] = watch.ElapsedMilliseconds;
-            }
-        
-            Console.WriteLine($"Thread #{threadNo} finished. Total: {timeMeasurements.Sum()}ms, average: {timeMeasurements.Average()}ms.");
-        
-            return results.ToList();
-        }
-        
-        var watch = Stopwatch.StartNew();
-        var currentSeed = actualSeed;
-        for (var i = 0; i < noOfThreads; i++)
-        {
-            var spawnAdditionalGame = gamesPerThreadRemainder <= 0 ? 0 : 1;
-            gamesPerThreadRemainder -= 1;
-            var gamesToPlay = gamesPerThread + spawnAdditionalGame;
-            Console.WriteLine($"Playing {gamesToPlay} games in thread #{i}");
-            var threadNo = i;
-            var currentSeedCopy = currentSeed;
-            threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1Info!, bot2Info!, threadNo, currentSeedCopy));
-            currentSeed += (ulong)gamesToPlay;
-        }
-        Task.WaitAll(threads.ToArray<Task>());
-        
-        var timeTaken = watch.ElapsedMilliseconds;
-        
-        var counter = new GameEndStatsCounter();
-        threads.SelectMany(t => t.Result).ToList().ForEach(r => counter.Add(r));
-        
-        Console.WriteLine($"\nInitial seed used: {actualSeed}");
-        Console.WriteLine($"Total time taken: {timeTaken}ms");
-        Console.WriteLine("\nStats from the games played:");
-        Console.WriteLine(counter.ToString());
-    }
-}, noOfRunsOption, threadsOption, logsOption, logFileDestination, seedOption, timeoutOption, bot1NameArgument, bot2NameArgument);
+#endregion
 
 mainCommand.Invoke(args);
-
 return returnValue;

@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+	    <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+	    <ProjectReference Include="..\Engine\TalesOfTribute.csproj" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\enums.proto" ProtoRoot="Protos" />
+		<Protobuf Include="Protos\basics.proto" ProtoRoot="Protos" />
+		<Protobuf Include="Protos\main.proto" ProtoRoot="Protos" GrpcServices="Both" />
+	</ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
+      <PackageReference Include="Grpc.Net.ClientFactory" Version="2.66.0" />
+      <PackageReference Include="Grpc.Tools" Version="2.67.0">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+
+</Project>

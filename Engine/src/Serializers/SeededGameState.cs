@@ -6,6 +6,7 @@ namespace ScriptsOfTribute.Serializers;
 
 public class SeededGameState
 {
+    public string StateId => _board.StateId;
     public SerializedPlayer CurrentPlayer => _board.CurrentPlayer;
     public SerializedPlayer EnemyPlayer => _board.EnemyPlayer;
     public PatronStates PatronStates => _board.PatronStates;
