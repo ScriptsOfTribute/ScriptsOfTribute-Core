@@ -31,7 +31,7 @@ public class EngineServiceAdapter : EngineService.EngineServiceBase
 
     public override Task<Empty> ReleaseState(StateId request, ServerCallContext context)
     {
-        Console.WriteLine($"Releasing state {request.Id}");
+        //Console.WriteLine($"Releasing state {request.Id}");
         ReleaseState(request.Id);
         ReleaseMoves(request.Id);
         return Task.FromResult(new Empty());

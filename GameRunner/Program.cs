@@ -262,7 +262,8 @@ void RunSingleThreaded(
         granularWatch.Start();
         var (endReason, _) = game.Play();
         granularWatch.Stop();
-        Console.WriteLine(endReason);
+        if (endReason.Reason == ScriptsOfTribute.Board.GameEndReason.BOT_EXCEPTION)
+            Console.WriteLine(endReason);
         timeMeasurements[i] = granularWatch.ElapsedMilliseconds;
         counter.Add(endReason);
     }
