@@ -1,0 +1,109 @@
+name: Build and Package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            runtime: win-x64
+          - os: ubuntu-latest
+            runtime: linux-x64
+          - os: macos-latest
+            runtime: osx-x64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build projects
+      run: |
+        dotnet publish Engine/TalesOfTribute.csproj -c Release -r ${{ matrix.runtime }} --output ./publish/Engine/${{ matrix.runtime }}
+        dotnet publish GameRunner/GameRunner.csproj -c Release -r ${{ matrix.runtime }} --output ./publish/GameRunner/${{ matrix.runtime }}
+
+    - name: Create Releases directory
+      run: mkdir -p Releases/${{ matrix.runtime }}
+
+    - name: Zip Engine files (Windows)
+      if: runner.os == 'Windows'
+      run: Compress-Archive -Path ./publish/Engine/${{ matrix.runtime }}/* -DestinationPath ./Releases/${{ matrix.runtime }}/Engine-${{ matrix.runtime }}.zip
+      shell: pwsh
+
+    - name: Zip Engine files (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        cd ./publish/Engine/${{ matrix.runtime }}
+        zip -r ../../../Releases/${{ matrix.runtime }}/Engine-${{ matrix.runtime }}.zip .
+
+    - name: Zip GameRunner files (Windows)
+      if: runner.os == 'Windows'
+      run: Compress-Archive -Path ./publish/GameRunner/${{ matrix.runtime }}/* -DestinationPath ./Releases/${{ matrix.runtime }}/GameRunner-${{ matrix.runtime }}.zip
+      shell: pwsh
+
+    - name: Zip GameRunner files (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        cd ./publish/GameRunner/${{ matrix.runtime }}
+        zip -r ../../../Releases/${{ matrix.runtime }}/GameRunner-${{ matrix.runtime }}.zip .
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Packages-${{ matrix.runtime }}
+        path: ./Releases/${{ matrix.runtime }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download Windows artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: Packages-win-x64
+        path: ./Releases/win-x64
+
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: Packages-linux-x64
+        path: ./Releases/linux-x64
+
+    - name: Download macOS artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: Packages-osx-x64
+        path: ./Releases/osx-x64
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v1.0.0
+        name: Release v1.0.0
+        body: |
+          This release contains the Engine and GameRunner packages for Windows, Linux, and macOS.
+        draft: false
+        prerelease: false
+        files: |
+          Releases/win-x64/Engine-win-x64.zip
+          Releases/win-x64/GameRunner-win-x64.zip
+          Releases/linux-x64/Engine-linux-x64.zip
+          Releases/linux-x64/GameRunner-linux-x64.zip
+          Releases/osx-x64/Engine-osx-x64.zip
+          Releases/osx-x64/GameRunner-osx-x64.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
