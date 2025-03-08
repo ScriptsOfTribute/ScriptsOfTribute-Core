@@ -33,8 +33,8 @@ jobs:
 
     - name: Build projects
       run: |
-        dotnet publish Engine/TalesOfTribute.csproj -c Release -r ${{ matrix.runtime }} --output ./publish/Engine/${{ matrix.runtime }}
-        dotnet publish GameRunner/GameRunner.csproj -c Release -r ${{ matrix.runtime }} --output ./publish/GameRunner/${{ matrix.runtime }}
+        dotnet publish Engine/TalesOfTribute.csproj -c Release -r ${{ matrix.runtime }} --self-contained true --output ./publish/Engine/${{ matrix.runtime }}
+        dotnet publish GameRunner/GameRunner.csproj -c Release -r ${{ matrix.runtime }} --self-contained true --output ./publish/GameRunner/${{ matrix.runtime }}
 
     - name: Create Releases directory
       run: mkdir -p Releases/${{ matrix.runtime }}
