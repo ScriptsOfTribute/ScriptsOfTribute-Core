@@ -5,11 +5,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-		<SelfContained>true</SelfContained>
-		<PublishTrimmed>false</PublishTrimmed>
-		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<PublishReadyToRun>true</PublishReadyToRun>
-		<PublishSingleFile>false</PublishSingleFile>
     </PropertyGroup>
 
     <ItemGroup>
