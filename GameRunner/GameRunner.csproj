@@ -23,11 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="SimpleBots.dll">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="Bots.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<Link>Bots\Bots.dll</Link>
       </None>
     </ItemGroup>
 
