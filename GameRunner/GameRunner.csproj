@@ -5,6 +5,11 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+		<SelfContained>true</SelfContained>
+		<PublishTrimmed>false</PublishTrimmed>
+		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<PublishSingleFile>false</PublishSingleFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,11 +28,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="SimpleBots.dll">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="Bots.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<Link>Bots\Bots.dll</Link>
       </None>
     </ItemGroup>
 

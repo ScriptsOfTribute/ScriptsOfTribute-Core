@@ -1,22 +1,26 @@
 ﻿using System.CommandLine;
 using System.Diagnostics;
-using System.Reflection;
 using GameRunner;
 using Bots;
 using ScriptsOfTribute.AI;
 using ScriptsOfTributeGRPC;
 using System.CommandLine.Parsing;
 using System.CommandLine.Invocation;
+using System.Runtime.Loader;
 
-var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
+var currentDirectory = new DirectoryInfo(AppContext.BaseDirectory);
+var botsDirectory = Path.Combine(currentDirectory.FullName, "Bots");
 
 var aiType = typeof(AI);
 var externalBotType = typeof(ExternalAIAdapter);
-var allDlls = currentDirectory.GetFiles("*.dll").ToList();
-List<Type> allBots = allDlls.Select(f => f.FullName)
-    .Select(Assembly.LoadFile)
+var botDlls = Directory.Exists(botsDirectory)
+    ? Directory.GetFiles(botsDirectory, "*.dll")
+    : Array.Empty<string>();
+
+List<Type> allBots = botDlls
+    .Select(f => AssemblyLoadContext.Default.LoadFromAssemblyPath(f))
     .SelectMany(a => a.GetTypes())
-    .Where(t => aiType.IsAssignableFrom(t) && !t.IsInterface)
+    .Where(t => aiType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
     .ToList();
 
 BotInfo? cachedBot = null;
