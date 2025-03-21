@@ -19,10 +19,10 @@ public class CardDatabase
         return card;
     }
 
-    public List<UniqueCard> GetCardsByPatron(PatronId[] patrons)
+    public List<UniqueCard> GetCardsByPatron(PatronId[] patrons, CardId[] starterCardsId)
     {
         var allCardsGrouped = from card in _allCards
-            where patrons.Contains(card.Deck) && card.Type != CardType.STARTER && card.Type != CardType.CURSE
+            where patrons.Contains(card.Deck) && !starterCardsId.Contains(card.CommonId) && card.Type != CardType.CURSE
             select Enumerable.Range(0, card.Copies).Select(_ => card.CreateUniqueCopy()).ToList();
 
         return allCardsGrouped.SelectMany(c => c).ToList();

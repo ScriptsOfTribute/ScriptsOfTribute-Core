@@ -23,8 +23,11 @@ public enum CompletedActionType
     REFRESH,
     TOSS,
     KNOCKOUT,
+    KNOCKOUT_ALL,
     ADD_PATRON_CALLS,
     ADD_SUMMERSET_SACKING,
+    ADD_CHAINBREAKER_SERGEANT,
+    ADD_SOLDIER_OF_THE_EMPIRE,
     ADD_BEWILDERMENT_TO_OPPONENT,
     ADD_WRIT_OF_COIN,
     HEAL_AGENT,
@@ -176,6 +179,12 @@ public class CompletedAction
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
                 sb.Append($"Add Bewilderment To Opponent - Source: {SourceCard}{SourcePatron}");
                 break;
+            case CompletedActionType.ADD_CHAINBREAKER_SERGEANT:
+                sb.Append($"Add Chainbreaker Sergeant - Source: {SourceCard}{SourcePatron}");
+                break;
+            case CompletedActionType.ADD_SOLDIER_OF_THE_EMPIRE:
+                sb.Append($"Add Soldier of the Empire - Source: {SourceCard}{SourcePatron}");
+                break;
             case CompletedActionType.HEAL_AGENT:
                 sb.Append($"Heal Agent: Amount: {Amount} Agent: {TargetCard} Source: {SourceCard}{SourcePatron}");
                 break;
@@ -235,6 +244,8 @@ public class CompletedAction
                 break;
             case CompletedActionType.ADD_SUMMERSET_SACKING:
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
+            case CompletedActionType.ADD_CHAINBREAKER_SERGEANT:
+            case CompletedActionType.ADD_SOLDIER_OF_THE_EMPIRE:
             case CompletedActionType.ADD_WRIT_OF_COIN:
                 sb.Append($"{SourceCard}{SourcePatron}");
                 break;

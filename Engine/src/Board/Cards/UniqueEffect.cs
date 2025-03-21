@@ -12,11 +12,14 @@ public enum EffectType
     DRAW,
     OPP_DISCARD,
     RETURN_TOP,
+    RETURN_AGENT_TOP,
     TOSS,
     KNOCKOUT,
     PATRON_CALL,
     CREATE_SUMMERSET_SACKING,
     HEAL,
+    KNOCKOUT_ALL,
+    DONATE,
 }
 
 public interface UniqueBaseEffect
@@ -192,6 +195,36 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                     new(player.ID, CompletedActionType.HEAL_AGENT,
                         ParentCard, healAmount, ParentCard)
                 });
+            case EffectType.KNOCKOUT_ALL:
+                player.KnockOutAll(tavern);
+                enemy.KnockOutAll(tavern);
+                return (
+                    new Success(), new List<CompletedAction>
+                    {
+                        new(player.ID, CompletedActionType.KNOCKOUT_ALL, ParentCard)
+                    }
+                );
+            case EffectType.RETURN_AGENT_TOP:
+                var agentsList = player.CooldownPile.Where(card => card.Type == CardType.AGENT).ToList();
+                var agentsCount = agentsList.Count < Amount ? agentsList.Count : Amount;
+                context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
+                return (new Choice(
+                    agentsList,
+                    ChoiceFollowUp.REFRESH_CARDS,
+                    context,
+                    agentsCount,
+                    agentsCount
+                ), new List<CompletedAction>());
+            case EffectType.DONATE:
+            {
+                context = new ChoiceContext(this.ParentCard, ChoiceType.CARD_EFFECT, Combo);
+                return (new Choice(
+                    player.Hand,
+                    ChoiceFollowUp.DONATE,
+                    context,
+                    Amount
+                ), new List<CompletedAction>());
+            }
         }
 
         throw new EngineException($"Unknown effect - {Type}.");
@@ -216,6 +249,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             EffectType.PATRON_CALL => $"Get {Amount} patron calls",
             EffectType.CREATE_SUMMERSET_SACKING => $"Create {Amount} Summerset Sacking cards and place it in CD pile",
             EffectType.HEAL => $"Heal this agent by {Amount}",
+            EffectType.DONATE => $"Discard up to {Amount} cards from hand, draw {Amount} cards",
             _ => ""
         };
     }

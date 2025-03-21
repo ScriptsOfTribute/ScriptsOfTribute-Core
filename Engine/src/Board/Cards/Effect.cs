@@ -32,11 +32,14 @@ public class Effect : ComplexEffect
             EffectType.DRAW => $"Draw {Amount} cards",
             EffectType.OPP_DISCARD => $"Enemy discards {Amount} cards from hand at start of their turn",
             EffectType.RETURN_TOP => $"Put {Amount} cards from cooldown pile on top of draw pile",
+            EffectType.RETURN_AGENT_TOP => $"Put {Amount} agents from cooldown pile on top of draw pile",
             EffectType.TOSS => $"Choose up to {Amount} of draw pile cards to move to your cooldown pile.",
             EffectType.KNOCKOUT => $"Knockout {Amount} enemy agents",
+            EffectType.KNOCKOUT_ALL => $"Knockout all agents",
             EffectType.PATRON_CALL => $"Get {Amount} patron calls",
             EffectType.CREATE_SUMMERSET_SACKING => $"Create {Amount} Summerset Sacking cards and place it in CD pile",
             EffectType.HEAL => $"Heal this agent by {Amount}",
+            EffectType.DONATE => $"Discard up to {Amount} cards from hand, draw {Amount} cards",
             _ => ""
         };
     }
@@ -60,12 +63,15 @@ public class Effect : ComplexEffect
             "Draw" => EffectType.DRAW,
             "Discard" => EffectType.OPP_DISCARD,
             "Return" => EffectType.RETURN_TOP,
+            "ReturnAgent" => EffectType.RETURN_AGENT_TOP,
             "Toss" => EffectType.TOSS,
             "KnockOut" => EffectType.KNOCKOUT,
+            "KnockOutAll" => EffectType.KNOCKOUT_ALL,
             "Patron" => EffectType.PATRON_CALL,
-            "Create" => EffectType.CREATE_SUMMERSET_SACKING,
+            "CreateSummersetSacking" => EffectType.CREATE_SUMMERSET_SACKING,
             "Heal" => EffectType.HEAL,
-            _ => throw new EngineException("Invalid effect type.")
+            "Donate" => EffectType.DONATE,
+            _ => throw new EngineException($"Invalid effect type: {effect}")
         };
     }
 

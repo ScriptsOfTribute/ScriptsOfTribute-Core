@@ -21,9 +21,9 @@ namespace ScriptsOfTribute
         public BoardManager(PatronId[] patrons, ulong seed)
         {
             _rng = new SeededRandom(seed);
-            this.Patrons = GetPatrons(patrons);
-            // TODO: This is actually not correct, as some cards should have multiple copies.
-            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons), _rng);
+            Patrons = GetPatrons(patrons);
+            var patronStarterCardsIds = Patrons.SelectMany(patron => patron.GetStarterCards()).ToArray();
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons, patronStarterCardsIds), _rng);
             _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rng), new Player(PlayerEnum.PLAYER2, _rng));
             CardActionManager = new CardActionManager(_playerContext, Tavern);
         }
@@ -47,8 +47,8 @@ namespace ScriptsOfTribute
 
         public void PlayCard(UniqueCard card)
         {
-            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
             CurrentPlayer.PlayCard(card);
+            CardActionManager.AddToCompletedActionsList(new CompletedAction(CurrentPlayer.ID, CompletedActionType.PLAY_CARD, card));
             CardActionManager.PlayCard(card);
         }
 

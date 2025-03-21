@@ -26,6 +26,7 @@ public enum ChoiceFollowUp
     COMPLETE_PELLIN,
     COMPLETE_PSIJIC,
     COMPLETE_TREASURY,
+    DONATE,
 }
 
 public class Choice : PlayResult
