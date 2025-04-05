@@ -80,14 +80,13 @@ public class SaintAlessiaTests
         br.CardActionManager.MakeChoice(donateEffect);
         Assert.Equal(BoardState.CHOICE_PENDING, br.CardActionManager.State);
         Assert.Equal(ChoiceType.CARD_EFFECT, br.CardActionManager.PendingChoice!.Context.ChoiceType);
-        br.CardActionManager.MakeChoice([sote, armory]);
+        br.CardActionManager.MakeChoice(new List<UniqueCard> { sote, armory });
         Assert.Equal(BoardState.NORMAL, br.CardActionManager.State);
 
         Assert.DoesNotContain(sote, br.CurrentPlayer.Hand);
         Assert.DoesNotContain(armory, br.CurrentPlayer.Hand);
         Assert.Contains(morihaus, br.CurrentPlayer.Hand);
         Assert.Contains(chainbreaker, br.CurrentPlayer.Hand);
-        Assert.Contains(armory, br.CurrentPlayer.CooldownPile);
         Assert.Contains(armory, br.CurrentPlayer.CooldownPile);
     }
 

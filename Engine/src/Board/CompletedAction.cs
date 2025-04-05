@@ -174,7 +174,7 @@ public class CompletedAction
                 sb.Append($"Knockout - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
             case CompletedActionType.KNOCKOUT_ALL:
-                sb.Append($"Knockout aLL - Source: {TargetCard}");
+                sb.Append($"Knockout All - Source: {TargetCard}");
                 break;
             case CompletedActionType.ADD_SUMMERSET_SACKING:
                 sb.Append($"Add Summerset Sacking - Source: {SourceCard}{SourcePatron}");
