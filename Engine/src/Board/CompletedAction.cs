@@ -173,6 +173,9 @@ public class CompletedAction
             case CompletedActionType.KNOCKOUT:
                 sb.Append($"Knockout - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
+            case CompletedActionType.KNOCKOUT_ALL:
+                sb.Append($"Knockout aLL - Source: {TargetCard}");
+                break;
             case CompletedActionType.ADD_SUMMERSET_SACKING:
                 sb.Append($"Add Summerset Sacking - Source: {SourceCard}{SourcePatron}");
                 break;
@@ -198,7 +201,7 @@ public class CompletedAction
                 sb.Append($"Add Writ Of Coin - Source {SourceCard}{SourcePatron}");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException($"Type {Type} not matched in SimpleString()");
         }
 
         return sb.ToString();
@@ -207,13 +210,14 @@ public class CompletedAction
     public string SimpleString()
     {
         var sb = new StringBuilder();
-        sb.Append(Type.ToString());
+        sb.Append(Type.ToString() + " ");
 
         switch (Type)
         {
             case CompletedActionType.BUY_CARD:
             case CompletedActionType.PLAY_CARD:
             case CompletedActionType.ACTIVATE_AGENT:
+            case CompletedActionType.KNOCKOUT_ALL:
             case CompletedActionType.AGENT_DEATH:
                 sb.Append($"{TargetCard}");
                 break;
@@ -255,7 +259,7 @@ public class CompletedAction
             case CompletedActionType.END_TURN:
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException($"Type {Type} not matched in SimpleString()");
         }
 
         return sb.ToString();

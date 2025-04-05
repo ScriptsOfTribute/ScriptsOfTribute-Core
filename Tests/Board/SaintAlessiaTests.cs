@@ -134,12 +134,71 @@ public class SaintAlessiaTests
     [Fact]
     void TestMorihausTriggers()
     {
+        var br = new BoardManager([PatronId.TREASURY, PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.SAINT_ALESSIA], 123);
+        br.EnemyPlayer.Agents.Add(Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.MORIHAUS_SACRED_BULL)));
+        br.EnemyPlayer.Agents.Add(Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.SOLDIER_OF_THE_EMPIRE)));
+        var black_sacrament = GlobalCardDatabase.Instance.GetCard(CardId.BLACK_SACRAMENT);
+        br.CurrentPlayer.Hand.Add(black_sacrament);
+        Assert.Equal(BoardState.NORMAL, br.CardActionManager.State);
+        br.PlayCard(black_sacrament);
+        Assert.Equal(BoardState.CHOICE_PENDING, br.CardActionManager.State);
+        Assert.Equal(ChoiceType.CARD_EFFECT, br.CardActionManager.PendingChoice!.Context.ChoiceType);
+        Assert.Equal(0, br.EnemyPlayer.CoinsAmount);
+        var knockout = br.CardActionManager.PendingChoice!.PossibleCards.Where(card => card.CommonId == CardId.SOLDIER_OF_THE_EMPIRE).ToList();
+        br.CardActionManager.MakeChoice(knockout);
+        Assert.Equal(1, br.EnemyPlayer.CoinsAmount);
+    }
 
+    [Fact]
+    void TestTwoMorihausTriggers()
+    {
+        var br = new BoardManager([PatronId.TREASURY, PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.SAINT_ALESSIA], 123);
+        br.EnemyPlayer.Agents.Add(Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.MORIHAUS_SACRED_BULL)));
+        br.EnemyPlayer.Agents.Add(Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.MORIHAUS_THE_ARCHER)));
+        br.EnemyPlayer.Agents.Add(Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.SOLDIER_OF_THE_EMPIRE)));
+        var black_sacrament = GlobalCardDatabase.Instance.GetCard(CardId.BLACK_SACRAMENT);
+        var black_sacrament2 = GlobalCardDatabase.Instance.GetCard(CardId.BLACK_SACRAMENT);
+        br.CurrentPlayer.Hand.Add(black_sacrament);
+        br.CurrentPlayer.Hand.Add(black_sacrament2);
+        Assert.Equal(BoardState.NORMAL, br.CardActionManager.State);
+        br.PlayCard(black_sacrament);
+        Assert.Equal(BoardState.CHOICE_PENDING, br.CardActionManager.State);
+        Assert.Equal(ChoiceType.CARD_EFFECT, br.CardActionManager.PendingChoice!.Context.ChoiceType);
+        Assert.Equal(0, br.EnemyPlayer.CoinsAmount);
+        var knockout = br.CardActionManager.PendingChoice!.PossibleCards.Where(card => card.CommonId == CardId.SOLDIER_OF_THE_EMPIRE).ToList();
+        br.CardActionManager.MakeChoice(knockout);
+        Assert.Equal(2, br.EnemyPlayer.CoinsAmount);
+
+        br.PlayCard(black_sacrament2);
+        Assert.Equal(BoardState.CHOICE_PENDING, br.CardActionManager.State);
+        Assert.Equal(ChoiceType.CARD_EFFECT, br.CardActionManager.PendingChoice!.Context.ChoiceType);
+        knockout = br.CardActionManager.PendingChoice!.PossibleCards.Where(card => card.CommonId == CardId.MORIHAUS_THE_ARCHER).ToList();
+        br.CardActionManager.MakeChoice(knockout);
+        Assert.Equal(3, br.EnemyPlayer.CoinsAmount);
     }
 
     [Fact]
     void TestRefreshTopAgents()
     {
+        var br = new BoardManager([PatronId.TREASURY, PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.SAINT_ALESSIA], 123);
+        var chainbreaker_sergeant = GlobalCardDatabase.Instance.GetCard(CardId.CHAINBREAKER_SERGEANT);
+        var whitestrake_ascendant = GlobalCardDatabase.Instance.GetCard(CardId.WHITESTRAKE_ASCENDANT);
+        br.CurrentPlayer.CooldownPile.Add(chainbreaker_sergeant);
+        br.CurrentPlayer.Hand.Add(whitestrake_ascendant);
 
+        Assert.Equal(BoardState.NORMAL, br.CardActionManager.State);
+        br.PlayCard(whitestrake_ascendant);
+        Assert.Equal(BoardState.CHOICE_PENDING, br.CardActionManager.State);
+        Assert.Equal(ChoiceType.EFFECT_CHOICE, br.CardActionManager.PendingChoice!.Context.ChoiceType);
+        br.CardActionManager.MakeChoice(
+            br.CardActionManager.PendingChoice!.PossibleEffects.First(choice => choice.Type == EffectType.RETURN_AGENT_TOP)
+        );
+        Assert.Equal(BoardState.CHOICE_PENDING, br.CardActionManager.State);
+        Assert.Equal(ChoiceType.CARD_EFFECT, br.CardActionManager.PendingChoice!.Context.ChoiceType);
+        br.CardActionManager.MakeChoice(
+            br.CardActionManager.PendingChoice!.PossibleCards.Where(choice => choice.CommonId == CardId.CHAINBREAKER_SERGEANT).ToList()
+        );
+        Assert.Equal(BoardState.NORMAL, br.CardActionManager.State);
+        Assert.Contains(chainbreaker_sergeant, br.CurrentPlayer.DrawPile);
     }
 }
