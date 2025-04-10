@@ -114,17 +114,22 @@ namespace ScriptsOfTribute
             EnemyPlayer.CoinsAmount = 1; // Second player starts with one gold
             Tavern.SetUp(_rng);
 
-            List<UniqueCard> starterDecks = new List<UniqueCard>();
+            List<UniqueCard> starterDecksPlayer1 = new List<UniqueCard>();
+            List<UniqueCard> starterDecksPlayer2 = new List<UniqueCard>();
 
-            foreach (var patron in this.Patrons)
+            foreach (var patron in Patrons)
             {
-                starterDecks.AddRange(
-                    patron.GetStarterCards().Select(cardId => GlobalCardDatabase.Instance.GetCard(cardId)).ToList()
+                var starterIds = patron.GetStarterCards();
+                starterDecksPlayer1.AddRange(
+                    starterIds.Select(cardId => GlobalCardDatabase.Instance.GetCard(cardId))
+                );
+                starterDecksPlayer2.AddRange(
+                    starterIds.Select(cardId => GlobalCardDatabase.Instance.GetCard(cardId))
                 );
             }
 
-            CurrentPlayer.InitDrawPile(starterDecks);
-            EnemyPlayer.InitDrawPile(starterDecks);
+            CurrentPlayer.InitDrawPile(starterDecksPlayer1);
+            EnemyPlayer.InitDrawPile(starterDecksPlayer2);
 
             CurrentPlayer.Draw(5);
             EnemyPlayer.Draw(5);
