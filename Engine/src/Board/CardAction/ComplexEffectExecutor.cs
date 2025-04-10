@@ -40,6 +40,7 @@ public class ComplexEffectExecutor
             ChoiceFollowUp.COMPLETE_PELLIN => (CompletePelin(choice, choices), new List<CompletedAction>()),
             ChoiceFollowUp.COMPLETE_PSIJIC => (CompletePsijic(choice, choices), new List<CompletedAction>()),
             ChoiceFollowUp.COMPLETE_TREASURY => (CompleteTreasury(choice, choices), new List<CompletedAction>()),
+            ChoiceFollowUp.DONATE => (Donate(choice, choices), new List<CompletedAction>()),
             _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, null)
         };
     }
@@ -117,6 +118,7 @@ public class ComplexEffectExecutor
 
     public PlayResult Knockout(Choice choice, List<UniqueCard> choices)
     {
+        handleSaintAlessiaTriggers(choices);
         var contractAgents = choices.FindAll(card => card.Type == CardType.CONTRACT_AGENT);
         var normalAgents = choices.FindAll(card => card.Type == CardType.AGENT);
         contractAgents.ForEach(_enemyPlayer.Destroy);
@@ -212,4 +214,29 @@ public class ComplexEffectExecutor
         }
         return new Success();
     }
+
+    public PlayResult Donate(Choice choice, List<UniqueCard> choices)
+    {
+        choices.ForEach(_currentPlayer.Discard);
+        choices.ForEach(c => _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.DISCARD, choice.Context!.CardSource!, c)));
+        var cardsToDraw = choices.Count();
+        _currentPlayer.Draw(cardsToDraw);
+        _parent.AddToCompletedActionsList(new CompletedAction(_currentPlayer.ID, CompletedActionType.DRAW, choice.Context!.CardSource!, cardsToDraw));
+        return new Success();
+    }
+    private void handleSaintAlessiaTriggers(List<UniqueCard> knockoutedCards)
+    {
+        if (!_enemyPlayer.AgentCards.Any(c => c.CommonId == CardId.MORIHAUS_SACRED_BULL || c.CommonId == CardId.MORIHAUS_THE_ARCHER))
+            return;
+        
+        foreach (var triggerCard in _enemyPlayer.AgentCards.Where(c => c.CommonId == CardId.MORIHAUS_SACRED_BULL || c.CommonId == CardId.MORIHAUS_THE_ARCHER).ToList())
+        {
+            if (knockoutedCards.Any(c => c.UniqueId == triggerCard.UniqueId))
+                continue;
+            _enemyPlayer.CoinsAmount++;
+            _parent.AddToCompletedActionsList(new CompletedAction(_enemyPlayer.ID, CompletedActionType.GAIN_COIN, triggerCard, 1));
+        }
+        
+    }
+
 }

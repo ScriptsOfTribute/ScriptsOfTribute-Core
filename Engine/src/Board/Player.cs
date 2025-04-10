@@ -174,6 +174,15 @@ namespace ScriptsOfTribute
             }
         }
 
+        public void KnockOutAll(ITavern tavern)
+        {
+            var contract_agents = Agents.Where(agent => agent.RepresentingCard.Type == CardType.CONTRACT_AGENT).Select(agent => agent.RepresentingCard).ToList();
+            var normal_agents = Agents.Where(agent => agent.RepresentingCard.Type == CardType.AGENT).Select(agent => agent.RepresentingCard).ToList();
+            CooldownPile.AddRange(normal_agents);
+            tavern.Cards.AddRange(contract_agents);
+            Agents.Clear();
+        }
+
         public void AddToCooldownPile(UniqueCard card)
         {
             CooldownPile.Add(card);

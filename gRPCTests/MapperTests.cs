@@ -8,7 +8,6 @@ public class MapperTests
     [Fact]
     void SerializeCard()
     {
-        var br = new BoardManager(new[] { PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU }, 123);
         var engine_card = GlobalCardDatabase.Instance.GetCard(CardId.WAY_OF_THE_SWORD);
         var serialized = Mapper.ToUniqueCardProto(engine_card);
         Assert.Equal(engine_card.Name, serialized.Name);

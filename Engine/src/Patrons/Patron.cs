@@ -13,6 +13,7 @@ namespace ScriptsOfTribute
         PELIN = 6,
         RED_EAGLE = 7,
         TREASURY = 8,
+        SAINT_ALESSIA = 9,
     }
     public abstract class Patron
     {
@@ -46,6 +47,7 @@ namespace ScriptsOfTribute
                 PatronId.PELIN => new Pelin(),
                 PatronId.RED_EAGLE => new RedEagle(),
                 PatronId.TREASURY => new Treasury(),
+                PatronId.SAINT_ALESSIA => new SaintAlessia(),
                 _ => throw new InvalidOperationException()
             };
         }
@@ -63,6 +65,7 @@ namespace ScriptsOfTribute
                 "Rajhin" => PatronId.RAJHIN,
                 "Orgnum" => PatronId.ORGNUM,
                 "Treasury" => PatronId.TREASURY,
+                "Saint Alessia" => PatronId.SAINT_ALESSIA,
                 _ => throw new InvalidOperationException()
             };
         }

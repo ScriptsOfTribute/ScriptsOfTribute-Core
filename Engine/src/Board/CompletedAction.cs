@@ -23,8 +23,11 @@ public enum CompletedActionType
     REFRESH,
     TOSS,
     KNOCKOUT,
+    KNOCKOUT_ALL,
     ADD_PATRON_CALLS,
     ADD_SUMMERSET_SACKING,
+    ADD_CHAINBREAKER_SERGEANT,
+    ADD_SOLDIER_OF_THE_EMPIRE,
     ADD_BEWILDERMENT_TO_OPPONENT,
     ADD_WRIT_OF_COIN,
     HEAL_AGENT,
@@ -170,11 +173,20 @@ public class CompletedAction
             case CompletedActionType.KNOCKOUT:
                 sb.Append($"Knockout - Source: {SourceCard}{SourcePatron} Target: {TargetCard}");
                 break;
+            case CompletedActionType.KNOCKOUT_ALL:
+                sb.Append($"Knockout All - Source: {TargetCard}");
+                break;
             case CompletedActionType.ADD_SUMMERSET_SACKING:
                 sb.Append($"Add Summerset Sacking - Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
                 sb.Append($"Add Bewilderment To Opponent - Source: {SourceCard}{SourcePatron}");
+                break;
+            case CompletedActionType.ADD_CHAINBREAKER_SERGEANT:
+                sb.Append($"Add Chainbreaker Sergeant - Source: {SourceCard}{SourcePatron}");
+                break;
+            case CompletedActionType.ADD_SOLDIER_OF_THE_EMPIRE:
+                sb.Append($"Add Soldier of the Empire - Source: {SourceCard}{SourcePatron}");
                 break;
             case CompletedActionType.HEAL_AGENT:
                 sb.Append($"Heal Agent: Amount: {Amount} Agent: {TargetCard} Source: {SourceCard}{SourcePatron}");
@@ -189,7 +201,7 @@ public class CompletedAction
                 sb.Append($"Add Writ Of Coin - Source {SourceCard}{SourcePatron}");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException($"Type {Type} not matched in SimpleString()");
         }
 
         return sb.ToString();
@@ -198,13 +210,14 @@ public class CompletedAction
     public string SimpleString()
     {
         var sb = new StringBuilder();
-        sb.Append(Type.ToString());
+        sb.Append(Type.ToString() + " ");
 
         switch (Type)
         {
             case CompletedActionType.BUY_CARD:
             case CompletedActionType.PLAY_CARD:
             case CompletedActionType.ACTIVATE_AGENT:
+            case CompletedActionType.KNOCKOUT_ALL:
             case CompletedActionType.AGENT_DEATH:
                 sb.Append($"{TargetCard}");
                 break;
@@ -235,6 +248,8 @@ public class CompletedAction
                 break;
             case CompletedActionType.ADD_SUMMERSET_SACKING:
             case CompletedActionType.ADD_BEWILDERMENT_TO_OPPONENT:
+            case CompletedActionType.ADD_CHAINBREAKER_SERGEANT:
+            case CompletedActionType.ADD_SOLDIER_OF_THE_EMPIRE:
             case CompletedActionType.ADD_WRIT_OF_COIN:
                 sb.Append($"{SourceCard}{SourcePatron}");
                 break;
@@ -244,7 +259,7 @@ public class CompletedAction
             case CompletedActionType.END_TURN:
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException($"Type {Type} not matched in SimpleString()");
         }
 
         return sb.ToString();
