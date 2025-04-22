@@ -41,4 +41,12 @@ public class BoardManagerTests
         Assert.Contains(agent, br.EnemyPlayer.Agents);
         Assert.DoesNotContain(CompletedActionType.AGENT_DEATH, br.CardActionManager.CompletedActions.Select(a => a.Type).ToList());
     }
+
+    [Fact]
+    void StarterCardsTest()
+    {
+        var br = new BoardManager(new[] { PatronId.DUKE_OF_CROWS, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.HLAALU }, 123);
+        br.SetUpGame();
+        Assert.Contains(CardId.PECK, br.EnemyPlayer.Hand.Concat(br.EnemyPlayer.DrawPile).Select(c => c.CommonId).ToList());
+    }
 }

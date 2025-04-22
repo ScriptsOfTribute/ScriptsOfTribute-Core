@@ -62,7 +62,6 @@
     "Combo 2":"Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":5,
     "Copies":1
   },
   {
@@ -76,9 +75,7 @@
     "Combo 2":"Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":5,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":6,
@@ -91,7 +88,6 @@
     "Combo 2":"Acquire 7",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":7,
     "Copies":1
   },
   {
@@ -105,9 +101,7 @@
     "Combo 2":"Acquire 7",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":7,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":8,
@@ -120,8 +114,7 @@
     "Combo 2":null,
     "Combo 3":"Coin 3",
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":9,
@@ -134,8 +127,7 @@
     "Combo 2":"Acquire 5",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":10,
@@ -157,7 +149,7 @@
     "Cost":4,
     "Type":"Action",
     "HP":-1,
-    "Activation":"Acquire 5",
+    "Activation":"Acquire 6",
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
@@ -200,7 +192,6 @@
     "Combo 2":"Draw 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family": 15,
     "Copies":1
   },
   {
@@ -214,9 +205,7 @@
     "Combo 2":"Draw 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":15,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":16,
@@ -255,8 +244,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":19,
@@ -282,9 +270,7 @@
     "Combo 2":"Power 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":20,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":21,
@@ -297,7 +283,6 @@
     "Combo 2":"Power 3",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":20,
     "Copies":1
   },
   {
@@ -324,8 +309,7 @@
     "Combo 2":"Coin 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":24,
@@ -364,7 +348,6 @@
     "Combo 2":null,
     "Combo 3":"Draw 1",
     "Combo 4":null,
-    "Family": 36,
     "Copies": 1
   },
   {
@@ -391,8 +374,7 @@
     "Combo 2":"Draw 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies": 4,
-    "PostUpgradeCopies": 2
+    "Copies": 2
   },
   {
     "id":29,
@@ -418,7 +400,6 @@
     "Combo 2":"Coin 2 AND Power 2",
     "Combo 3":"Power 2",
     "Combo 4":null,
-    "Family":35,
     "Copies": 2
   },
   {
@@ -432,8 +413,7 @@
     "Combo 2":null,
     "Combo 3":"Draw 1",
     "Combo 4":null,
-    "Copies": 2,
-    "PostUpgradeCopies": 1
+    "Copies":1
   },
   {
     "id":32,
@@ -472,8 +452,7 @@
     "Combo 2":"Draw 1",
     "Combo 3":null,
     "Combo 4":"Coin 3",
-    "Copies": 4,
-    "PostUpgradeCopies": 2
+    "Copies": 2
   },
   {
     "id":35,
@@ -486,9 +465,7 @@
     "Combo 2":"Coin 2 AND Power 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":35,
-    "Copies":4,
-    "PostUpgradeCopies":2
+    "Copies":2
   },
   {
     "id":36,
@@ -501,9 +478,7 @@
     "Combo 2":null,
     "Combo 3":"Draw 1",
     "Combo 4":null,
-    "Family": 36,
-    "Copies": 2,
-    "PostUpgradeCopies": 1
+    "Copies":1
   },
   {
     "id":37,
@@ -555,7 +530,6 @@
     "Combo 2":"Coin 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":48,
     "Copies":2
   },
   {
@@ -595,8 +569,7 @@
     "Combo 2":"Power 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":44,
@@ -635,9 +608,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":46,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":47,
@@ -650,7 +621,6 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":46,
     "Copies":1
   },
   {
@@ -664,9 +634,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":48,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":49,
@@ -679,8 +647,7 @@
     "Combo 2":"Power 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":50,
@@ -695,9 +662,162 @@
     "Combo 4":null,
     "Copies":1
   },
-  
-
-
+  {
+    "id":51,
+    "Name":"Prophesy",
+    "Deck":"Psijic",
+    "Cost":4,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Coin 3 AND Remove 2",
+    "Combo 2":null,
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":2
+  },
+  {
+    "id":52,
+    "Name":"Scrying Globe",
+    "Deck":"Psijic",
+    "Cost":2,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Coin 2 AND Toss 2",
+    "Combo 2":null,
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":4
+  },
+  {
+    "id":53,
+    "Name":"The Dreaming Cave",
+    "Deck":"Psijic",
+    "Cost":6,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Draw 1 AND Toss 4",
+    "Combo 2":"Power 2",
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":3
+  },
+  {
+    "id":54,
+    "Name":"Augur's Counsel",
+    "Deck":"Psijic",
+    "Cost":3,
+    "Type":"Contract Action",
+    "HP":-1,
+    "Activation":"Toss 3",
+    "Combo 2":"Power 2",
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":2
+  },
+  {
+    "id":55,
+    "Name":"Psijic Relicmaster",
+    "Deck":"Psijic",
+    "Cost":6,
+    "Type":"Agent",
+    "HP":3,
+    "Activation":"Toss 4 AND Coin 1",
+    "Combo 2":null,
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
+  {
+    "id":56,
+    "Name":"Sage Counsel",
+    "Deck":"Psijic",
+    "Cost":3,
+    "Type":"Contract Action",
+    "HP":-1,
+    "Activation":"Toss 3",
+    "Combo 2":"Power 1",
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
+  {
+    "id":57,
+    "Name":"Prescience",
+    "Deck":"Psijic",
+    "Cost":4,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Coin 3 AND Remove 1",
+    "Combo 2":null,
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
+  {
+    "id":58,
+    "Name":"Psijic Apprentice",
+    "Deck":"Psijic",
+    "Cost":6,
+    "Type":"Agent",
+    "HP":3,
+    "Activation":"Toss 4",
+    "Combo 2":null,
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
+  {
+    "id":59,
+    "Name":"Ceporah's Insight",
+    "Deck":"Psijic",
+    "Cost":5,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Toss 4 AND Coin 2",
+    "Combo 2":"Power 3",
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
+  {
+    "id":60,
+    "Name":"Psijic's Insight",
+    "Deck":"Psijic",
+    "Cost":5,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Toss 4 AND Coin 2",
+    "Combo 2":"Power 2",
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
+  {
+    "id":61,
+    "Name":"Time Mastery",
+    "Deck":"Psijic",
+    "Cost":3,
+    "Type":"Action",
+    "HP":-1,
+    "Activation":"Toss 5",
+    "Combo 2":"Coin 2",
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":3
+  },
+  {
+    "id":62,
+    "Name":"Mainland Inquiries",
+    "Deck":"Psijic",
+    "Cost":0,
+    "Type":"Starter",
+    "HP":-1,
+    "Activation":"Coin 1",
+    "Combo 2":null,
+    "Combo 3":null,
+    "Combo 4":null,
+    "Copies":1
+  },
   {
     "id":63,
     "Name":"Rally",
@@ -749,9 +869,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":66,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":67,
@@ -765,7 +883,6 @@
     "Combo 2":"Heal 2",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":66,
     "Copies":1
   },
   {
@@ -779,9 +896,7 @@
     "Combo 2":"Power 2",
     "Combo 3":"Power 1",
     "Combo 4":null,
-    "Family":68,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":69,
@@ -794,8 +909,7 @@
     "Combo 2":"Coin 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":4,
-    "PostUpgradeCopies":2
+    "Copies":2
   },
   {
     "id":70,
@@ -808,7 +922,6 @@
     "Combo 2":"Power 3",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":68,
     "Copies":2
   },
   {
@@ -837,9 +950,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Family":72,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":73,
@@ -853,7 +964,6 @@
     "Combo 2":"Power 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":72,
     "Copies":1
   },
   {
@@ -893,9 +1003,7 @@
     "Combo 2":"Draw 1",
     "Combo 3":"Discard 1",
     "Combo 4":null,
-    "Family":76,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":77,
@@ -921,7 +1029,6 @@
     "Combo 2":"KnockOut 1 AND OppLosePrestige 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":82,
     "Copies":2
   },
   {
@@ -935,8 +1042,7 @@
     "Combo 2":"Coin 2",
     "Combo 3":"Discard 1",
     "Combo 4":null,
-    "Copies":2,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":80,
@@ -949,8 +1055,7 @@
     "Combo 2":"OppLosePrestige 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":81,
@@ -976,9 +1081,7 @@
     "Combo 2":"KnockOut 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":82,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":83,
@@ -1004,7 +1107,6 @@
     "Combo 2":"Draw 1",
     "Combo 3":"Draw 1 AND Discard 1",
     "Combo 4":null,
-    "Family":76,
     "Copies":1
   },
   {
@@ -1084,8 +1186,7 @@
     "Combo 2":"Power 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":91,
@@ -1111,9 +1212,7 @@
     "Combo 2":"Prestige 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":92,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":93,
@@ -1191,7 +1290,6 @@
     "Combo 2":"Power 1 AND Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":101,
     "Copies":2
   },
   {
@@ -1205,21 +1303,20 @@
     "Combo 2":null,
     "Combo 3":"Power 2",
     "Combo 4":null,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
-    "id":100,
-    "Name":"Snakeskin Freebooter",
-    "Deck":"Orgnum",
-    "Cost":5,
-    "Type":"Agent",
-    "HP":3,
-    "Activation":"Coin 1",
-    "Combo 2":"Create 1",
-    "Combo 3":null,
-    "Combo 4":null,
-    "Copies":2
+    "id": 100,
+    "Name": "Snakeskin Freebooter",
+    "Deck": "Orgnum",
+    "Cost": 5,
+    "Type": "Agent",
+    "HP": 3,
+    "Activation": "Coin 1",
+    "Combo 2": "CreateSummersetSacking 1",
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 2
   },
   {
     "id":101,
@@ -1232,9 +1329,7 @@
     "Combo 2":"Remove 1",
     "Combo 3":null,
     "Combo 4":null,
-    "Family":101,
-    "Copies":3,
-    "PostUpgradeCopies":1
+    "Copies":1
   },
   {
     "id":102,
@@ -1247,7 +1342,6 @@
     "Combo 2":"Prestige 1",
     "Combo 3":"Coin 1",
     "Combo 4":null,
-    "Family":92,
     "Copies":2
   },
   {
@@ -1300,7 +1394,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":2
+    "Copies": 2
   },
   {
     "id":107,
@@ -1313,7 +1407,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":6
+    "Copies": 6
   },
   {
     "id":108,
@@ -1326,7 +1420,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3
+    "Copies": 3
   },
   {
     "id":109,
@@ -1339,7 +1433,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":3
+    "Copies": 3
   },
   {
     "id":110,
@@ -1352,7 +1446,7 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":2
+    "Copies": 2
   },
   {
     "id":111,
@@ -1365,19 +1459,175 @@
     "Combo 2":null,
     "Combo 3":null,
     "Combo 4":null,
-    "Copies":2
+    "Copies": 2
   },
   {
-    "id":112,
-    "Name":"Writ of Coin",
-    "Deck":"Treasury",
-    "Cost":0,
-    "Type":"Starter",
-    "HP":-1,
-    "Activation":"Coin 2",
-    "Combo 2":null,
-    "Combo 3":null,
-    "Combo 4":null,
-    "Copies":1
+    "id": 112,
+    "Name": "Writ of Coin",
+    "Deck": "Treasury",
+    "Cost": 0,
+    "Type": "Starter",
+    "HP": -1,
+    "Activation": "Coin 2",
+    "Combo 2": null,
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 1
+  },
+  {
+    "id": 113,
+    "Name": "Alessian Rebel",
+    "Deck": "Saint Alessia",
+    "Cost": 0,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": null,
+    "Combo 2": "Coin 1",
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 1
+  },
+  {
+    "id": 114,
+    "Name": "Ayleid Defector",
+    "Deck": "Saint Alessia",
+    "Cost": 5,
+    "Type": "Contract Agent",
+    "HP": 1,
+    "Activation": "Draw 1 OR KnockOutAll 1",
+    "Combo 2": null,
+    "Combo 3": "Prestige 1",
+    "Combo 4": null,
+    "Copies": 1
+  },
+  {
+    "id": 115,
+    "Name": "Ayleid Quartermaster",
+    "Deck": "Saint Alessia",
+    "Cost": 5,
+    "Type": "Contract Agent",
+    "HP": 1,
+    "Activation": "Draw 1 OR KnockOutAll 1",
+    "Combo 2": null,
+    "Combo 3": "Prestige 2",
+    "Combo 4": null,
+    "Copies": 2
+  },
+  {
+    "id": 116,
+    "Name": "Chainbreaker Captain",
+    "Deck": "Saint Alessia",
+    "Cost": 4,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": "Coin 3 OR Power 2",
+    "Combo 2": null,
+    "Combo 3": "Prestige 1",
+    "Combo 4": null,
+    "Copies": 2
+  },
+  {
+    "id": 117,
+    "Name": "Chainbreaker Sergeant",
+    "Deck": "Saint Alessia",
+    "Cost": 4,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": "Coin 3 OR Power 2",
+    "Combo 2": null,
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 1
+  },
+  {
+    "id": 118,
+    "Name": "Morihaus, Sacred Bull",
+    "Deck": "Saint Alessia",
+    "Cost": 5,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": "KnockOut 1",
+    "Combo 2": null,
+    "Combo 3": "Prestige 3",
+    "Combo 4": null,
+    "Copies": 2
+  },
+  {
+    "id": 119,
+    "Name": "Morihaus, the Archer",
+    "Deck": "Saint Alessia",
+    "Cost": 5,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": "KnockOut 1",
+    "Combo 2": null,
+    "Combo 3": "Prestige 2",
+    "Combo 4": null,
+    "Copies": 1
+  },
+  {
+    "id": 120,
+    "Name": "Pelinal Whitestrake",
+    "Deck": "Saint Alessia",
+    "Cost": 7,
+    "Type": "Agent",
+    "HP": 2,
+    "Activation": "KnockOut 2 OR ReturnAgent 4",
+    "Combo 2": null,
+    "Combo 3": "Prestige 3",
+    "Combo 4": null,
+    "Copies": 1
+  },
+  {
+    "id": 121,
+    "Name": "Priestess of the Eight",
+    "Deck": "Saint Alessia",
+    "Cost": 5,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": "Remove 1 OR Donate 2",
+    "Combo 2": "Prestige 1",
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 3
+  },
+  {
+    "id": 122,
+    "Name": "Saint's Wrath",
+    "Deck": "Saint Alessia",
+    "Cost": 4,
+    "Type": "Action",
+    "HP": -1,
+    "Activation": "KnockOutAll 1 OR Return 3",
+    "Combo 2": null,
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 3
+  },
+  {
+    "id": 123,
+    "Name": "Soldier of the Empire",
+    "Deck": "Saint Alessia",
+    "Cost": 3,
+    "Type": "Agent",
+    "HP": 1,
+    "Activation": "Coin 2 OR Power 1",
+    "Combo 2": null,
+    "Combo 3": null,
+    "Combo 4": null,
+    "Copies": 3
+  },
+  {
+    "id": 124,
+    "Name": "Whitestrake Ascendant",
+    "Deck": "Saint Alessia",
+    "Cost": 7,
+    "Type": "Agent",
+    "HP": 2,
+    "Activation": "KnockOut 2 OR ReturnAgent 4",
+    "Combo 2": null,
+    "Combo 3": "Prestige 4",
+    "Combo 4": null,
+    "Copies": 2
   }
 ]

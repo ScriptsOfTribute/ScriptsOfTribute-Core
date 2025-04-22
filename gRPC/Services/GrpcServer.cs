@@ -16,14 +16,12 @@ public class GrpcServer : IDisposable
 
         builder.WebHost.ConfigureKestrel(options =>
         {
-            // Czyści wszystkie istniejące bindingi (opcja dla pewności)
             options.ConfigureEndpointDefaults(endpointOptions =>
             {
                 endpointOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.None;
             });
 
-            // Ustawia JEDYNY obsługiwany adres i wymusza HTTP/2
-            options.ListenAnyIP(port, listenOptions =>
+            options.ListenLocalhost(port, listenOptions =>
             {
                 listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
             });
@@ -36,7 +34,7 @@ public class GrpcServer : IDisposable
 
         _app.MapGrpcService<EngineServiceAdapter>();
 
-        _serverTask = _app.RunAsync($"http://{host}:{port}");
+        _serverTask = _app.RunAsync();
         //Console.WriteLine($"gRPC server listening on http://{host}:{port}");
     }
 

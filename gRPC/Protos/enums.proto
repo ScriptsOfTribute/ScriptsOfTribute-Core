@@ -12,6 +12,7 @@ enum PatronIdProto {
 	PELIN = 6;
 	RED_EAGLE = 7;
 	TREASURY = 8;
+	SAINT_ALESSIA = 9;
 }
 
 enum MoveEnum
