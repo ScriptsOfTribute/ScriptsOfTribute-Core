@@ -1,2 +1,0 @@
-WINS: 121
-LOSSES: 137
