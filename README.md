@@ -27,6 +27,7 @@
 - **Deadline for the agent submission is August 10.**
 - **More details about participating, including updates in the game, [here](#ieee-conference-on-games-2025).**
 - **In particular, our framework currently [supports multiple programming languages](#external-language).**
+- **Important note** - engine uses .NET 8.0 now, instead of .NET 7.0, as NET 7.0 is not supported by Microsoft anymore.
 
 
 
