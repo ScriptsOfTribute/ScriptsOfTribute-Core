@@ -16,16 +16,6 @@
   - [External Language](#external-language)
   - [Example Agents](#example-agents)
   - [Console Game Runner](#console-game-runner)
-  - [GUI](#gui)
-- [Tales of Tribute AI Competition](#tales-of-tribute-ai-competition)
-  - [IEEE Conference on Games 2025](#ieee-conference-on-games-2025)
-      - [Changes from 2024 edition](#changes-from-2024-edition)
-    - [Important Dates](#important-dates)
-    - [Submission Rules](#submission-rules)
-    - [Evaluation](#evaluation)
-    - [Prizes](#prizes)
-  - [Organizers](#organizers)
-  - [Past Competitions](#past-competitions)
 - [References](#references)
 - [Legal Notice](#legal-notice)
 
@@ -156,8 +146,8 @@ This section introduces some objects that are used in the engine and knowing the
 
 ## Creating a Bot
 
-1. Create a file in `ScriptsOfTribute-Core\Bots\src` folder e.g. `MyFirstAgent.cs.` Please remember that your class (in this case, `MyFirstAgent`) should inherit from AI abstract class.
-
+1. You can either download `dll` library file from [here](https://github.com/ScriptsOfTribute/ScriptsOfTribute-Core/releases) and use it as normal .NET library or you can clone engine repository and create a file in `ScriptsOfTribute-Core\Bots\src` folder e.g. `MyFirstAgent.cs`. 
+Please remember that your class (in this case, `MyFirstAgent`) should inherit from AI abstract class.
 
 2. Implement the body of `SelectPatron` method.
 Arguments of this method are a list of available patrons and which round of selection of patron it is (first or second). Your method should return `Enum` object of the type `PatronId`.
@@ -172,8 +162,9 @@ of this function is to allow the programmer to analyze the data from the `EndGam
 5. [Optional] Add logs
 To add logs to your bot, call the method `Log` with a string that you want to put in your log. Logs can be shown in the GUI during play.
 
-6. Compile your bot
-Just run `dotnet build` in `ScriptsOfTribute-Core\Bots` folder. A `Bots.dll` file should be created in the folder - you can use it to test your bot by copying that to the `GameRunner` folder, where you can test your bot against our sample bots or your other bots.
+6. Compile your bot: \
+In case you use our engine through `dll` file just compile your project as library, but if you work inside the reposity just run `dotnet build` in `ScriptsOfTribute-Core\Bots` folder. 
+Created `dll` file is now ready to use either by GameRunner or GUI app.
 
 ## External Language
 
@@ -205,107 +196,6 @@ For more flags and usage help, run `GameRunner -h`
 To run game with bot made in different language, for example python via gRPC use `grpc:` before bot's name. For example: `GameRunner RandomBot grpc:RandomBot -n 1000 -t 2`
 
 It is available for download [here](https://github.com/ScriptsOfTribute/ScriptsOfTribute-Core/releases) for Windows, Linux and MacOS
-
-##  GUI
-
-To test your bot, you can also use [our application]((https://github.com/ScriptsOfTribute/ScriptsOfTribute-GUI)) in the Unity framework. 
-
-Just download the [built version]((https://github.com/ScriptsOfTribute/ScriptsOfTribute-GUI/releases/tag/v0.9)) for your operating system and copy `.dll` file with your bots into 
-- for Windows: `ScriptsOfTribute_Data\StreamingAssets`
-- for Linux: `Linux_Data\StreamingAssets` (also make sure that you make `Linux.x86_64` executable),
-- for Mac: `Mac.app\Contents\Resources\Data\StreamingAssets`
-
-
-# Tales of Tribute AI Competition
-
-The deckbuilding card game *Tales of Tribute* is a special activity recently added to the massively popular multiplayer online role-playing video game [The Elder Scrolls Online](https://www.elderscrollsonline.com). Although the game remains small by CCG standards (about 120 cards and only a few keywords), it is interesting and challenging for humans, with a significant potential for being a good AI testbed.
-
-The players start with the same base cards and build their decks during the game by buying cards from a shared resource pool called the Tavern (a concept similar to Dominion). Tales of Tributes encourages long-term strategic planning - to ensure the deck we build contains enough strong cards and is not clustered with weak ones. In the meantime, because of a huge randomness factor influencing e.g., which cards occur in the Tavern, it is usually hard to stick with a pre-made plan - so it also requires considerable adaptiveness. 
-
-Tales of Tribute AI Competition aims to fill the void after the [Hearthstone AI Competition](https://hearthstoneai.github.io) while being significantly more challenging than a toy problem covered by [Legends of Code and Magic](https://legendsofcodeandmagic.com/) and the [Strategy Card Game AI Competition](https://github.com/acatai/Strategy-Card-Game-AI-Competition).
-
-The competition is running using *ScriptsOfTribute*, an open reimplementation of the original game in .NET framework designed especially for this event. It features the game manager that allows running AI agents implemented as C# classes against each other and a graphical user interface that support human vs. AI games. Current version supports also other programming languages.
-
-
-## IEEE Conference on Games 2025
-
-Tales of Tribute AI Competition has been accepted as one of the events at [IEEE CoG 2025](https://cog2025.inesc-id.pt/tales-of-tribute/).
-
-#### Changes from 2024 edition
-
-- gRPC communication
-- Python ScriptsOfTribute library
-- Added Saint Alessia deck
-- Applied balance changes compatible with latest ESO patch
-- Multiple QoL changes for writing and testing agents
-
-
-### Important Dates
-
-- **10th August 2025**, 23:59 GMT - **Submission deadline**
-- 26th-29th August 2025 - [COG conference](https://cog2025.inesc-id.pt/) and results announcement
-
-
-### Submission Rules
-
-- Please send a single `.cs` file containing your agent's source code or a zip archive with all the others necessary files to jko@cs.uni.wroc.pl.
-- In case of bots made in Python please provide files with source code + `requirements.txt` file archived in zip file.
-- In case of agents written in other programming languages please attach compilation/run instructions.
-- Additionally, the email should contain:
-  - Agent's name.
-  - Names (and institutions, if any) of all agent's authors.
-  - Short description of the agent. Preferably a few slides or a short note in markdown or PDF; it has to describe what does the agent do, e.g., whether it employs some search algorithms or neural networks.
-- Multiple bots can be submitted, but please indicate if a submission should replace an old one or be counted as a new submission (with a different agent's name). Each participant can have up to 2 final submissions. 
-- Please be aware that submitted agents are going to be published in this repository after the competition. With the submission, you agree with this procedure.
-
-
-### Evaluation
-
-Agents will be evaluated using the [SoT-Core Game Runner](https://github.com/ScriptsOfTribute/ScriptsOfTribute-Core), on a large number of mirror matches using randomly generated seeds in an all-play-all system. The deciding factor will be the average winrate.
-
-Evaluation environment will be compatible with the one provided by [Dockerfile](https://github.com/ScriptsOfTribute/ScriptsOfTribute-Core/blob/master/Dockerfile).
-
-Time limit:
-- 10 seconds for every turn
-
-Memory limit and other constraints:
-- while playing, the bot should not exceed 256 MB of memory. Anytime exceedance of 1024 MB of RAM usage will result in excluding the bot from the contest
-- the size of sent file/archive should not exceed 25 MB
-
-
-Game version:
-- compatible with Tales of Tribute from ESO PC/Mac Patch 10.3.5 (10.03.2025) 
-- 6 patrons available: [Pelin](https://eso-hub.com/en/tales-of-tribute/saint-pelin), [Crows](https://eso-hub.com/en/tales-of-tribute/duke-of-crows), [Ansei](https://eso-hub.com/en/tales-of-tribute/ansei-frandar-hunding), [Rajhin](https://eso-hub.com/en/tales-of-tribute/rajhin-the-purring-liar), [Orgnum](https://eso-hub.com/en/tales-of-tribute/sorcerer-king-orgnum), and [Alessia](hhttps://eso-hub.com/en/tales-of-tribute/saint-alessia).
-- all decks are assumed to be fully upgraded
-
-
-### Prizes
-
-We will apply for prizes; more info soon.
-
-<!--
-- $500USD for the first place
-- $300USD for the second place
-- $200USD for the third place
-
-Prize founded by the [IEEE CIS Education Competition Subcommittee](https://cis.ieee.org/).
-
--->
-
-
-
-## Organizers
-
-The Tales of Tribute AI competition is organized by Jakub Kowalski, Dominik Budzki, Damian Kowalik, Katarzyna Polak, and Radosław Miernik ([University of Wrocław, Institute of Computer Science](https://ii.uni.wroc.pl/)).
-
-Have any questions or suggestions? Feel free to contact us on [Discord](https://discord.gg/RSZjNHuHGm) or send a [mail](mailto:jko@cs.uni.wroc.pl).
-
-
-## Past Competitions
-
-Information about the previous Tales of Tribute AI competitions, including submitted agents, can be found [here](https://github.com/ScriptsOfTribute/ScriptsOfTribute-CompetitionsArchive).
-
-
 
 # References
 
