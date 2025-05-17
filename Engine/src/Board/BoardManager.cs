@@ -23,7 +23,7 @@ namespace ScriptsOfTribute
             _rng = new SeededRandom(seed);
             Patrons = GetPatrons(patrons);
             var patronStarterCardsIds = Patrons.SelectMany(patron => patron.GetStarterCards()).ToArray();
-            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons, patronStarterCardsIds), _rng);
+            Tavern = new Tavern(GlobalCardDatabase.Instance.GetCardsByPatron(patrons, patronStarterCardsIds, CardId.WRIT_OF_COIN), _rng);
             _playerContext = new PlayerContext(new Player(PlayerEnum.PLAYER1, _rng), new Player(PlayerEnum.PLAYER2, _rng));
             CardActionManager = new CardActionManager(_playerContext, Tavern);
         }

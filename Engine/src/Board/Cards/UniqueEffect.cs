@@ -143,7 +143,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                     ChoiceFollowUp.REFRESH_CARDS,
                     context,
                     amount,
-                    amount
+                    0
                 ), new List<CompletedAction>());
             }
             case EffectType.TOSS:
@@ -213,7 +213,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
                     ChoiceFollowUp.REFRESH_CARDS,
                     context,
                     agentsCount,
-                    agentsCount
+                    0
                 ), new List<CompletedAction>());
             case EffectType.DONATE:
             {
@@ -250,6 +250,7 @@ public class UniqueEffect : Effect, UniqueBaseEffect, UniqueComplexEffect
             EffectType.CREATE_SUMMERSET_SACKING => $"Create {Amount} Summerset Sacking cards and place it in CD pile",
             EffectType.HEAL => $"Heal this agent by {Amount}",
             EffectType.DONATE => $"Discard up to {Amount} cards from hand, draw {Amount} cards",
+            EffectType.KNOCKOUT_ALL => $"Knockout all agents",
             _ => ""
         };
     }

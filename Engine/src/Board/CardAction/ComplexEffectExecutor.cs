@@ -226,17 +226,23 @@ public class ComplexEffectExecutor
     }
     private void handleSaintAlessiaTriggers(List<UniqueCard> knockoutedCards)
     {
-        if (!_enemyPlayer.AgentCards.Any(c => c.CommonId == CardId.MORIHAUS_SACRED_BULL || c.CommonId == CardId.MORIHAUS_THE_ARCHER))
-            return;
-        
-        foreach (var triggerCard in _enemyPlayer.AgentCards.Where(c => c.CommonId == CardId.MORIHAUS_SACRED_BULL || c.CommonId == CardId.MORIHAUS_THE_ARCHER).ToList())
+        void HandleForPlayer(IPlayer player)
         {
-            if (knockoutedCards.Any(c => c.UniqueId == triggerCard.UniqueId))
-                continue;
-            _enemyPlayer.CoinsAmount++;
-            _parent.AddToCompletedActionsList(new CompletedAction(_enemyPlayer.ID, CompletedActionType.GAIN_COIN, triggerCard, 1));
-        }
-        
-    }
+            var morihausAgents = player.AgentCards
+                .Where(c => c.CommonId == CardId.MORIHAUS_SACRED_BULL || c.CommonId == CardId.MORIHAUS_THE_ARCHER)
+                .ToList();
 
+            foreach (var triggerCard in morihausAgents)
+            {
+                if (knockoutedCards.Any(c => c.UniqueId == triggerCard.UniqueId))
+                    continue;
+
+                player.CoinsAmount++;
+                _parent.AddToCompletedActionsList(new CompletedAction(player.ID, CompletedActionType.GAIN_COIN, triggerCard, 1));
+            }
+        }
+
+        HandleForPlayer(_currentPlayer);
+        HandleForPlayer(_enemyPlayer);
+    }
 }

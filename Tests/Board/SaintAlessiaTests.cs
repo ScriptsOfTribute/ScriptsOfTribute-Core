@@ -67,7 +67,7 @@ public class SaintAlessiaTests
         br.CurrentPlayer.Hand.Add(priestess);
         br.CurrentPlayer.Hand.Add(sote);
         br.CurrentPlayer.Hand.Add(armory);
-        
+
         var chainbreaker = GlobalCardDatabase.Instance.GetCard(CardId.CHAINBREAKER_CAPTAIN);
         var morihaus = GlobalCardDatabase.Instance.GetCard(CardId.MORIHAUS_SACRED_BULL);
         br.CurrentPlayer.DrawPile.Add(chainbreaker);
@@ -199,5 +199,36 @@ public class SaintAlessiaTests
         );
         Assert.Equal(BoardState.NORMAL, br.CardActionManager.State);
         Assert.Contains(chainbreaker_sergeant, br.CurrentPlayer.DrawPile);
+    }
+    
+    [Fact]
+    void TestMorihausTriggersBothPlayers()
+    {
+        var br = new BoardManager([PatronId.TREASURY, PatronId.PELIN, PatronId.RED_EAGLE, PatronId.ANSEI, PatronId.SAINT_ALESSIA], 123);
+
+        var morihaus1 = Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.MORIHAUS_SACRED_BULL));
+        var morihaus2 = Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.MORIHAUS_THE_ARCHER));
+        var soldier1 = Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.SOLDIER_OF_THE_EMPIRE));
+        var soldier2 = Agent.FromCard(GlobalCardDatabase.Instance.GetCard(CardId.SOLDIER_OF_THE_EMPIRE));
+
+        br.CurrentPlayer.Agents.Add(morihaus1);
+        br.CurrentPlayer.Agents.Add(soldier1);
+
+        br.EnemyPlayer.Agents.Add(morihaus2);
+        br.EnemyPlayer.Agents.Add(soldier2);
+
+        var black_sacrament = GlobalCardDatabase.Instance.GetCard(CardId.BLACK_SACRAMENT);
+        br.CurrentPlayer.Hand.Add(black_sacrament);
+
+        br.PlayCard(black_sacrament);
+        
+        var knockout = br.CardActionManager.PendingChoice!.PossibleCards
+            .Where(card => card.CommonId == CardId.SOLDIER_OF_THE_EMPIRE && br.EnemyPlayer.Agents.Any(a => a.RepresentingCard.UniqueId == card.UniqueId))
+            .ToList();
+
+        br.CardActionManager.MakeChoice(knockout);
+
+        Assert.Equal(1, br.EnemyPlayer.CoinsAmount);
+        Assert.Equal(1, br.CurrentPlayer.CoinsAmount);
     }
 }

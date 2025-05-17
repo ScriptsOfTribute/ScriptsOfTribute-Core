@@ -18,9 +18,10 @@
 
   <ItemGroup>
     <None Remove="Tests\**" />
-    <None Update="cards.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Remove="cards.json" />
+    <EmbeddedResource Include="cards.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

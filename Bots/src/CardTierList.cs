@@ -148,7 +148,20 @@ public class CardTierList
         new CardTier("Ragpicker", PatronId.TREASURY, TierEnum.C),
         new CardTier("Tithe", PatronId.TREASURY, TierEnum.C),
         new CardTier("Writ of Coin", PatronId.TREASURY, TierEnum.D),
-        new CardTier("Unknown", PatronId.TREASURY, TierEnum.UNKNOWN)
+        new CardTier("Unknown", PatronId.TREASURY, TierEnum.UNKNOWN),
+        // Added Saint Alessia
+        new CardTier("Alessian Rebel", PatronId.SAINT_ALESSIA, TierEnum.C),
+        new CardTier("Ayleid Defector", PatronId.SAINT_ALESSIA, TierEnum.B),
+        new CardTier("Ayleid Quartermaster", PatronId.SAINT_ALESSIA, TierEnum.B),
+        new CardTier("Chainbreaker Captain", PatronId.SAINT_ALESSIA, TierEnum.A),
+        new CardTier("Chainbreaker Sergeant", PatronId.SAINT_ALESSIA, TierEnum.B),
+        new CardTier("Morihuas Sacred Bull", PatronId.SAINT_ALESSIA, TierEnum.S),
+        new CardTier("Morihuas the Archer", PatronId.SAINT_ALESSIA, TierEnum.A),
+        new CardTier("Pelinal Whitestrake", PatronId.SAINT_ALESSIA, TierEnum.S),
+        new CardTier("Priestess of the Eight", PatronId.SAINT_ALESSIA, TierEnum.B),
+        new CardTier("Saints Wrath", PatronId.SAINT_ALESSIA, TierEnum.B),
+        new CardTier("Soldier of the Empire", PatronId.SAINT_ALESSIA, TierEnum.C),
+        new CardTier("Whitestrake Ascendant", PatronId.SAINT_ALESSIA, TierEnum.S),
     };
 
     public static TierEnum GetCardTier(string cardName)
