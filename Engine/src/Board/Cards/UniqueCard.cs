@@ -18,7 +18,7 @@ public class UniqueCard : Card
     public override string ToString()
     {
         return string.Format($"Card: {this.Name}, " +
-                             $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}, UniqueId: {UniqueId.Value}");
+                            $"Deck: {this.Deck}, Cost: {this.Cost}, Type: {this.Type}, UniqueId: {UniqueId.Value}");
     }
 
     public override bool Equals(object? obj)

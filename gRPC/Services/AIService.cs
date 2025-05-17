@@ -44,7 +44,7 @@ public class AIServiceAdapter : IDisposable
         };
 
         request.AvailablePatrons.AddRange(availablePatrons.Select(patronId => (PatronIdProto)(patronId)).ToList());
-        
+
         var response = _client.SelectPatron(request);
         return (PatronId)(response.PatronId);
     }
