@@ -13,7 +13,10 @@ namespace ScriptsOfTribute
             }
 
             activator.CoinsAmount -= 2;
-            var inPlayCards = activator.Played.Concat(activator.Hand).ToList();
+            var inPlayCards = activator.Played
+                .Concat(activator.Hand)
+                .Concat(activator.AgentCards)
+                .ToList();
 
             return (new Choice(inPlayCards,
                     ChoiceFollowUp.COMPLETE_TREASURY,
@@ -46,7 +49,10 @@ namespace ScriptsOfTribute
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            List<UniqueCard> inPlayCards = activator.Played.Concat(activator.Hand).ToList();
+            List<UniqueCard> inPlayCards = activator.Played
+                .Concat(activator.Hand)
+                .Concat(activator.AgentCards)
+                .ToList();
             return activator.CoinsAmount >= 2 && inPlayCards.Any();
         }
     }
