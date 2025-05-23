@@ -216,6 +216,7 @@ public class ComplexEffectExecutor
         {
             var toRemove = _currentPlayer.Agents.First(agent => agent.RepresentingCard.UniqueId == choice.UniqueId);
             _currentPlayer.Agents.Remove(toRemove);
+            _currentPlayer.CooldownPile.Add(writOfCoin);
         }
         else
         {
