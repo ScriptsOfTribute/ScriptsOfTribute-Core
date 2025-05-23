@@ -146,7 +146,12 @@ public class ComplexEffectExecutor
         {
             _currentPlayer.Hand.Remove(card);
         }
-        else // if not in hand, then it must be in a played pile
+        else if (_currentPlayer.Agents.Any(agent => agent.RepresentingCard.UniqueId == card.UniqueId))
+        {
+            var toRemove = _currentPlayer.Agents.First(agent => agent.RepresentingCard.UniqueId == card.UniqueId);
+            _currentPlayer.Agents.Remove(toRemove);
+        }
+        else // if not in hand and agents, then it must be in a played pile
         {
             _currentPlayer.Played.Remove(card);
         }
@@ -205,6 +210,12 @@ public class ComplexEffectExecutor
         if (_currentPlayer.Played.Contains(choice))
         {
             _currentPlayer.Played.Remove(choice);
+            _currentPlayer.CooldownPile.Add(writOfCoin);
+        }
+        else if (_currentPlayer.Agents.Any(agent => agent.RepresentingCard.UniqueId == choice.UniqueId))
+        {
+            var toRemove = _currentPlayer.Agents.First(agent => agent.RepresentingCard.UniqueId == choice.UniqueId);
+            _currentPlayer.Agents.Remove(toRemove);
             _currentPlayer.CooldownPile.Add(writOfCoin);
         }
         else
