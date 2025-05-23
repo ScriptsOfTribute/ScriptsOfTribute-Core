@@ -30,7 +30,11 @@ namespace ScriptsOfTribute
             else if (FavoredPlayer == enemy.ID)
                 FavoredPlayer = PlayerEnum.NO_PLAYER_SELECTED;
 
-            var cardsInPlay = activator.Hand.Concat(activator.Played).Where(c => c.Cost >= 1).ToList();
+            var cardsInPlay = activator.Hand
+                .Concat(activator.Played)
+                .Concat(activator.AgentCards)
+                .Where(c => c.Cost >= 1)
+                .ToList();
             return (new Choice(cardsInPlay,
                 ChoiceFollowUp.COMPLETE_HLAALU,
                 new ChoiceContext(PatronID), 1, 1), new List<CompletedAction>());
@@ -50,7 +54,12 @@ namespace ScriptsOfTribute
 
         public override bool CanPatronBeActivated(Player activator, Player enemy)
         {
-            return activator.Hand.Concat(activator.Played).ToList().FindAll(card => card.Cost >= 1).Any();
+            return activator.Hand
+                .Concat(activator.Played)
+                .Concat(activator.AgentCards)
+                .ToList()
+                .FindAll(card => card.Cost >= 1)
+                .Any();
         }
     }
 }
