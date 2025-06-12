@@ -33,6 +33,8 @@ var logsOption = CreateOption<LogsEnabled>("--enable-logs", "Enable logging.", L
 var seedOption = CreateOption<ulong?>("--seed", "Specify RNG seed.", null, "-s");
 var logFileDestination = CreateLogFileOption("--log-destination", "Directory for log files.", "-d");
 var timeoutOption = CreateOption<int>("--timeout", "Game timeout in seconds.", 30, "-to");
+var clientPortOption = CreateOption<int>("--client-port", "Base client port for gRPC bots.", 50000, "-cp");
+var serverPortOption = CreateOption<int>("--server-port", "Base server port for gRPC bots.", 49000, "-sp");
 
 var bot1NameArgument = CreateBotArgument("bot1", "Name of the first bot or command.");
 var bot2NameArgument = CreateBotArgument("bot2", "Name of the second bot or command.");
@@ -45,6 +47,8 @@ var mainCommand = new RootCommand("A game runner for bots.")
     logFileDestination,
     seedOption,
     timeoutOption,
+    clientPortOption,
+    serverPortOption,
     bot1NameArgument,
     bot2NameArgument,
 };
@@ -197,6 +201,8 @@ mainCommand.SetHandler((InvocationContext context) =>
     LogFileNameProvider? logProvider = context.ParseResult.GetValueForOption(logFileDestination);
     ulong? seed = context.ParseResult.GetValueForOption(seedOption);
     int timeout = context.ParseResult.GetValueForOption(timeoutOption);
+    int baseClientPort = context.ParseResult.GetValueForOption(clientPortOption);
+    int baseServerPort = context.ParseResult.GetValueForOption(serverPortOption);
     BotInfo? bot1Info = context.ParseResult.GetValueForArgument(bot1NameArgument);
     BotInfo? bot2Info = context.ParseResult.GetValueForArgument(bot2NameArgument);
 
@@ -207,9 +213,6 @@ mainCommand.SetHandler((InvocationContext context) =>
         return;
     }
 
-    //TODO allow users to set these up in the future
-    int baseClientPort = 50000;
-    int baseServerPort = 49000;
     string baseHost = "localhost";
 
     if (!ValidateInputs(threads, timeout)) return;
