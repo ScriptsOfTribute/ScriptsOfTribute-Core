@@ -334,6 +334,10 @@ public class DecisionTreeBot : AI
 
     private UniqueCard PlayCard()
     {
+        if (!sortedByPatronCardsInHand.ContainsKey(deckInPlay))
+        {
+            throw new Exception($"deckInPlay = {deckInPlay} not found in sortedByPatronCardsInHand!");
+        }
         if (sortedByPatronCardsInHand[deckInPlay].LeftToPlay <= 0)
         {
             for (int i = 0; i < 5; i++)
@@ -895,13 +899,13 @@ public class DecisionTreeBot : AI
         if (startOfTurn)
         {
             startOfTurn = false;
-            if (gameState.Patrons.Contains(PatronId.PSIJIC))
+            if (gameState.Patrons.Contains(PatronId.PELIN))
             {
-                deckInPlay = PatronId.PSIJIC;
+                deckInPlay = PatronId.PELIN;
             }
             else
             {
-                deckInPlay = PatronId.TREASURY;
+                deckInPlay = gameState.Patrons[0];
             }
             coinsNeed = 0;
             powerNeed = 0;
@@ -931,7 +935,14 @@ public class DecisionTreeBot : AI
 
         if (playCardMoves.Count > 0)
         {
-            chosenCard = PlayCard();
+            try
+            {
+                chosenCard = PlayCard();
+            }
+            catch
+            {
+                return Move.EndTurn();
+            }
             if ((chosenCard.Type == CardType.AGENT || chosenCard.Type == CardType.CONTRACT_AGENT) && gameState.CurrentPlayer.Agents.Any(x => x.RepresentingCard.UniqueId == chosenCard.UniqueId))
             {
                 return Move.ActivateAgent(chosenCard);
