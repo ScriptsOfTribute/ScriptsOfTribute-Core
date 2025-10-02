@@ -1,13 +1,19 @@
 ﻿using ScriptsOfTribute.Board;
-using ScriptsOfTribute.utils;
-using ScriptsOfTribute.Serializers;
 
 namespace ScriptsOfTribute.AI;
 
 public class ScriptsOfTribute
 {
-    private AI[] _players = new AI[2];
+    private static readonly PatronId[] DefaultPatrons =
+        Enum.GetValues(typeof(PatronId))
+            .Cast<PatronId>()
+            .Where(id => id != PatronId.TREASURY)
+            .ToArray();
 
+    public static PatronId[] GetDefaultPatrons() => (PatronId[])DefaultPatrons.Clone();
+
+    private AI[] _players = new AI[2];
+    private PatronId[] _patrons;
     private ScriptsOfTributeGame? _game;
     private ulong _seed;
 
@@ -25,7 +31,7 @@ public class ScriptsOfTribute
     public bool P2LoggerEnabled { get; set; } = false;
     public TimeSpan Timeout { get; set; }
 
-    public ScriptsOfTribute(AI player1, AI player2, TimeSpan timeout)
+    public ScriptsOfTribute(AI player1, AI player2, TimeSpan timeout, PatronId[] patrons)
     {
         _players[0] = player1;
         _players[1] = player2;
@@ -33,9 +39,14 @@ public class ScriptsOfTribute
         player2.Id = PlayerEnum.PLAYER2;
         Seed = (ulong)Environment.TickCount;
         Timeout = timeout;
+        _patrons = patrons;
     }
 
-    public ScriptsOfTribute(AI player1, AI player2) : this(player1, player2, TimeSpan.FromSeconds(30))
+    public ScriptsOfTribute(AI player1, AI player2) : this(player1, player2, TimeSpan.FromSeconds(30), DefaultPatrons)
+    { }
+
+    public ScriptsOfTribute(AI player1, AI player2, TimeSpan timeout, IEnumerable<string>? patronTokens)
+        : this(player1, player2, timeout, ResolvePatrons(patronTokens))
     { }
 
     private Task<PatronId> SelectPatronTask(AI currentPlayer, List<PatronId> availablePatrons, int round)
@@ -61,11 +72,9 @@ public class ScriptsOfTribute
         return (new EndGameState(playerToWin, GameEndReason.PATRON_SELECTION_TIMEOUT), null);
     }
 
-    private (EndGameState? ,PatronId[]?) PatronSelection()
+    private (EndGameState?, PatronId[]?) PatronSelection()
     {
-        List<PatronId> patrons = Enum.GetValues(typeof(PatronId)).Cast<PatronId>()
-            // TODO: Hardcoded banned patrons, improve this.
-            .Where(patronId => patronId != PatronId.TREASURY && patronId != PatronId.PSIJIC).ToList();
+        List<PatronId> patrons = _patrons.ToList();
 
         List<PatronId> patronsSelected = new List<PatronId>();
         var (endGameState, patron) = SelectPatronWithTimeout(PlayerEnum.PLAYER2, _players[0], patrons, 1);
@@ -121,7 +130,7 @@ public class ScriptsOfTribute
         PatronId[]? patrons;
 
         endGameState = PrepareBots(_players[0], _players[1], 5);
-        
+
         if (endGameState is not null)
         {
             _players[0].GameEnd(endGameState, null);
@@ -179,5 +188,67 @@ public class ScriptsOfTribute
         }
 
         return null;
+    }
+
+    public static PatronId[] ResolvePatrons(IEnumerable<string>? rawTokens)
+    {
+        bool userSpecified = false;
+
+        if (rawTokens == null)
+            return GetDefaultPatrons();
+
+        var tokens = rawTokens
+            .SelectMany(s => s.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            .Select(t => t.Trim())
+            .Where(t => t.Length > 0)
+            .ToArray();
+
+        userSpecified = tokens.Length > 0;
+
+        if (!userSpecified)
+            return GetDefaultPatrons();
+
+        if (tokens.Length == 1 && (tokens[0].Equals("default", StringComparison.OrdinalIgnoreCase)
+                                || tokens[0].Equals("all", StringComparison.OrdinalIgnoreCase)))
+            return GetDefaultPatrons();
+
+        var parsed = new List<PatronId>(tokens.Length);
+        var invalid = new List<string>();
+
+        foreach (var t in tokens)
+        {
+            if (TryParsePatronToken(t, out var id))
+                parsed.Add(id);
+            else
+                invalid.Add(t);
+        }
+
+        if (invalid.Count > 0)
+        {
+            var valid = string.Join(", ", Enum.GetNames(typeof(PatronId)));
+            throw new ArgumentException($"Unknown patron(s): {string.Join(", ", invalid)}\nValid: {valid}");
+        }
+
+        var result = parsed.Where(p => p != PatronId.TREASURY).Distinct().ToArray();
+
+        if (userSpecified && result.Length < 4)
+            throw new ArgumentException("Provide at least 4 selectable patrons.");
+
+        return result.Length > 0 ? result : GetDefaultPatrons();
+    }
+
+    private static bool TryParsePatronToken(string token, out PatronId id)
+    {
+        if (Enum.TryParse(token, ignoreCase: true, out id))
+            return true;
+
+        if (int.TryParse(token, out var numeric) && Enum.IsDefined(typeof(PatronId), numeric))
+        {
+            id = (PatronId)numeric;
+            return true;
+        }
+
+        id = default;
+        return false;
     }
 }
