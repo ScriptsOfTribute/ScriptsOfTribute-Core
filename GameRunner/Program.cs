@@ -35,6 +35,7 @@ var logFileDestination = CreateLogFileOption("--log-destination", "Directory for
 var timeoutOption = CreateOption<int>("--timeout", "Game timeout in seconds.", 30, "-to");
 var clientPortOption = CreateOption<int>("--client-port", "Base client port for gRPC bots.", 50000, "-cp");
 var serverPortOption = CreateOption<int>("--server-port", "Base server port for gRPC bots.", 49000, "-sp");
+var patronsOption = CreateOption<string[]>("--patrons", "Allowed patrons for this run. Use 'default' (alias: 'all') for standard set (all selectable, no TREASURY).", Array.Empty<string>(), "-p");
 
 var bot1NameArgument = CreateBotArgument("bot1", "Name of the first bot or command.");
 var bot2NameArgument = CreateBotArgument("bot2", "Name of the second bot or command.");
@@ -49,6 +50,7 @@ var mainCommand = new RootCommand("A game runner for bots.")
     timeoutOption,
     clientPortOption,
     serverPortOption,
+    patronsOption,
     bot1NameArgument,
     bot2NameArgument,
 };
@@ -154,9 +156,13 @@ BotInfo? ParseBotArg(ArgumentResult arg)
 
 #region Prepare game
 
-ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(AI bot1, AI bot2, LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logProvider, int timeout)
+ScriptsOfTribute.AI.ScriptsOfTribute PrepareGame(
+    AI bot1,
+    AI bot2,
+    LogsEnabled enableLogs, ulong seed, LogFileNameProvider? logProvider, int timeout, IEnumerable<string>? patronTokens
+)
 {
-    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2, TimeSpan.FromSeconds(timeout))
+    var game = new ScriptsOfTribute.AI.ScriptsOfTribute(bot1, bot2, TimeSpan.FromSeconds(timeout), patronTokens)
     {
         Seed = seed,
     };
@@ -203,6 +209,7 @@ mainCommand.SetHandler((InvocationContext context) =>
     int timeout = context.ParseResult.GetValueForOption(timeoutOption);
     int baseClientPort = context.ParseResult.GetValueForOption(clientPortOption);
     int baseServerPort = context.ParseResult.GetValueForOption(serverPortOption);
+    IEnumerable<string>? patrons = context.ParseResult.GetValueForOption(patronsOption);
     BotInfo? bot1Info = context.ParseResult.GetValueForArgument(bot1NameArgument);
     BotInfo? bot2Info = context.ParseResult.GetValueForArgument(bot2NameArgument);
 
@@ -219,9 +226,9 @@ mainCommand.SetHandler((InvocationContext context) =>
     ulong actualSeed = seed ?? (ulong)new Random().NextInt64();
 
     if (threads == 1)
-        RunSingleThreaded(runs, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, baseHost);
+        RunSingleThreaded(runs, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, patrons, baseHost);
     else
-        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, baseHost);
+        RunMultiThreaded(runs, threads, bot1Info, bot2Info, logs, logProvider, actualSeed, timeout, baseClientPort, baseServerPort, patrons, baseHost);
 });
 
 void RunSingleThreaded(
@@ -234,6 +241,7 @@ void RunSingleThreaded(
     int timeout,
     int baseClientPort,
     int baseServerPort,
+    IEnumerable<string>? patrons,
     string baseHost = "localhost"
 )
 {
@@ -262,7 +270,7 @@ void RunSingleThreaded(
 
     for (var i = 0; i < runs; i++)
     {
-        var game = PrepareGame(bot1, bot2, enableLogs, currentSeed, logFileNameProvider, timeout);
+        var game = PrepareGame(bot1, bot2, enableLogs, currentSeed, logFileNameProvider, timeout, patrons);
         currentSeed += 1;
 
         granularWatch.Reset();
@@ -301,6 +309,7 @@ void RunMultiThreaded(
     int timeout,
     int baseClientPort,
     int baseServerPort,
+    IEnumerable<string>? patrons,
     string baseHost = "localhost"
 )
 {
@@ -310,7 +319,13 @@ void RunMultiThreaded(
     var gamesPerThreadRemainder = runs % noOfThreads;
     var threads = new Task<List<ScriptsOfTribute.Board.EndGameState>>[noOfThreads];
 
-    List<ScriptsOfTribute.Board.EndGameState> PlayGames(int amount, BotInfo bot1Info, BotInfo bot2Info, int threadNo, ulong seed)
+    List<ScriptsOfTribute.Board.EndGameState> PlayGames(
+        int amount,
+        BotInfo bot1Info,
+        BotInfo bot2Info,
+        int threadNo,
+        ulong seed,
+        IEnumerable<string>? patronsLocal)
     {
         var results = new ScriptsOfTribute.Board.EndGameState[amount];
         var timeMeasurements = new long[amount];
@@ -321,7 +336,7 @@ void RunMultiThreaded(
 
         for (var i = 0; i < amount; i++)
         {
-            var game = PrepareGame(bot1, bot2, enableLogs, seed, logFileNameProvider, timeout);
+            var game = PrepareGame(bot1, bot2, enableLogs, seed, logFileNameProvider, timeout, patronsLocal);
             seed += 1;
 
             watch.Reset();
@@ -374,7 +389,7 @@ void RunMultiThreaded(
                 ServerPort = baseServerPort + noOfThreads + i,
             }
             : bot2Info;
-        threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1ThreadInfo, bot2ThreadInfo, threadNo, currentSeedCopy));
+        threads[i] = Task.Factory.StartNew(() => PlayGames(gamesToPlay, bot1ThreadInfo, bot2ThreadInfo, threadNo, currentSeedCopy, patrons));
         currentSeed += (ulong)gamesToPlay;
     }
 
